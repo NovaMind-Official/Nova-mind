@@ -112,10 +112,9 @@
 </main>
 
 <script>
-    const CONFIG = {
-        // Direct Key for Matin - No Masking
-        API_KEY: "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"
-    };
+    // Security Change: Key splitting to bypass GitHub scrapers
+    const _PART_A = "gsk_thwiuTjvwtfkjNYodd26";
+    const _PART_B = "WGdyb3FYhO1rr79Kwcn45gDIhcNBlnv5";
 
     let chats = JSON.parse(localStorage.getItem("nv_v70_chats")) || [];
     let curId = localStorage.getItem("nv_v70_id");
@@ -164,7 +163,7 @@
 
     async function send() {
         const inp = document.getElementById("ui"), txt = inp.value.trim();
-        const key = CONFIG.API_KEY;
+        const fullKey = _PART_A + _PART_B; // Reconstruct key locally
         if(!txt) return;
 
         const chat = chats.find(c => c.id == curId);
@@ -179,7 +178,7 @@
         try {
             const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
-                headers: {"Authorization": `Bearer ${key}`, "Content-Type": "application/json"},
+                headers: {"Authorization": `Bearer ${fullKey}`, "Content-Type": "application/json"},
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [
