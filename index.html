@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nova Mind - Intelligence Interface</title>
+    <title>Nova Mind AI - Intelligence Interface</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -48,6 +48,14 @@
         .user { background: var(--p); color: #000; border-bottom-right-radius: 4px; font-weight: 500; }
         .ai { background: rgba(255,255,255,0.03); color: #fff; border: 1px solid var(--brd); border-bottom-left-radius: 4px; }
 
+        #scroll-btn {
+            position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%);
+            background: var(--p); color: #000; border: none; border-radius: 50%;
+            width: 44px; height: 44px; font-size: 20px; cursor: pointer;
+            display: none; align-items: center; justify-content: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4); z-index: 2000; transition: 0.3s;
+        }
+
         pre { background: #0b0b0b !important; border: 1px solid var(--brd); border-radius: 20px; padding: 20px; position: relative; margin: 20px 0; overflow-x: auto; }
         .msg-ops { display: flex; gap: 18px; margin-top: 12px; opacity: 0.4; transition: 0.3s; }
         .msg-ops:hover { opacity: 1; }
@@ -86,11 +94,13 @@
 <main>
     <header>
         <button class="btn-icon" onclick="toggleS(event)">☰</button>
-        <div class="logo">Nova Mind</div>
+        <div class="logo">Nova Mind AI</div>
         <div style="width:28px;"></div>
     </header>
 
     <div id="chat-box"></div>
+    
+    <button id="scroll-btn" onclick="scrollToBottom()">↓</button>
 
     <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
         <div class="menu-item" onclick="toggleDeep()">🧠 Deep Thinking <span id="deep-status" style="margin-left:auto; font-weight:bold; opacity:0.5;">OFF</span></div>
@@ -105,14 +115,13 @@
         </div>
         <div class="input-bar" onclick="event.stopPropagation()">
             <button class="btn-icon" onclick="toggleGear(event)">⚙️</button>
-            <textarea id="ui" placeholder="Message Nova Mind..." spellcheck="false"></textarea>
+            <textarea id="ui" placeholder="Message Nova Mind AI..." spellcheck="false"></textarea>
             <button id="send-btn" class="btn-icon" onclick="send()">🚀</button>
         </div>
     </footer>
 </main>
 
 <script>
-    // Security Change: Key splitting to bypass GitHub scrapers
     const _PART_A = "gsk_thwiuTjvwtfkjNYodd26";
     const _PART_B = "WGdyb3FYhO1rr79Kwcn45gDIhcNBlnv5";
 
@@ -123,14 +132,26 @@
 
     marked.setOptions({ highlight: (c) => hljs.highlightAuto(c).value, breaks: true });
 
+    const chatBox = document.getElementById("chat-box");
+    const scrollBtn = document.getElementById("scroll-btn");
+
     window.onload = () => {
         if (!chats.length) newChat(); else loadChat(curId);
-        document.getElementById("ui").addEventListener("input", function() {
+        
+        const ui = document.getElementById("ui");
+        ui.addEventListener("input", function() {
             this.style.height = '50px';
             this.style.height = this.scrollHeight + 'px';
             analyzeMood(this.value);
         });
+
+        chatBox.addEventListener("scroll", () => {
+            const diff = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight;
+            scrollBtn.style.display = diff > 300 ? "flex" : "none";
+        });
     };
+
+    function scrollToBottom() { chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' }); }
 
     function analyzeMood(t) {
         const p = /good|great|happy|yes|perfect/i, n = /bad|sad|wrong|no|error/i;
@@ -163,7 +184,7 @@
 
     async function send() {
         const inp = document.getElementById("ui"), txt = inp.value.trim();
-        const fullKey = _PART_A + _PART_B; // Reconstruct key locally
+        const fullKey = _PART_A + _PART_B;
         if(!txt) return;
 
         const chat = chats.find(c => c.id == curId);
@@ -182,7 +203,7 @@
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [
-                        {role: "system", content: "You are Nova Mind, an elite AI for Matin. Use professional and clear English."},
+                        {role: "system", content: "You are Nova Mind AI, an advanced artificial intelligence. Respond professionally and clearly."},
                         ...chat.msgs.flatMap(m=>[{role:"user",content:m.u},{role:"assistant",content:m.a}]),
                         {role: "user", content: (deepThinking ? "Deep Analysis: " : "") + txt}
                     ]
@@ -196,25 +217,25 @@
             if(chat.msgs.length === 0) chat.name = txt.substring(0, 20);
             chat.msgs.push({u: txt, a: full}); 
             save(); renderH(); addCopyLogic();
-            document.getElementById("chat-box").scrollTo(0, document.getElementById("chat-box").scrollHeight);
+            scrollToBottom();
         } catch(e) { 
             document.getElementById(aiId).innerHTML = "Critical Error: " + e.message;
         }
     }
 
     function addUI(t, r, id, idx) {
-        const box = document.getElementById("chat-box"), w = document.createElement("div");
+        const w = document.createElement("div");
         w.className = `msg-wrap ${r}-wrap`;
         if(id === 'welcome') {
-            w.innerHTML = `<div class="welcome-wrap"><h1>NOVA MIND</h1><p>Welcome, Matin. Ready to explore?</p></div>`;
+            w.innerHTML = `<div class="welcome-wrap"><h1>NOVA MIND AI</h1><p>Hello! How can I help you today?</p></div>`;
         } else {
             const ops = r === 'user' 
                 ? `<div class="msg-ops"><span class="op-btn" onclick="triggerEdit(${idx})">Edit</span><span class="op-btn" onclick="copyRaw('${id}', this)">Copy</span></div>`
                 : `<div class="msg-ops"><span class="op-btn" onclick="copyRaw('${id}', this)">Copy</span><span class="op-btn" onclick="speak('${id}', this)">Listen</span><span class="op-btn" onclick="stopSpeak()" style="color:#fff;">Stop</span></div>`;
-            w.innerHTML = `<div class="msg ${r}" id="${id}">${r === 'ai' ? t : t}</div>${ops}`;
+            w.innerHTML = `<div class="msg ${r}" id="${id}">${t}</div>${ops}`;
         }
-        box.appendChild(w);
-        box.scrollTo(0, box.scrollHeight);
+        chatBox.appendChild(w);
+        scrollToBottom();
     }
 
     function triggerEdit(idx) {
@@ -256,7 +277,7 @@
     function loadChat(id) {
         curId = id; save();
         const chat = chats.find(c => c.id == id);
-        const box = document.getElementById("chat-box"); box.innerHTML = "";
+        chatBox.innerHTML = "";
         addUI("", "ai", "welcome");
         if(chat && chat.msgs.length) chat.msgs.forEach((m, i) => { addUI(m.u, "user", "u-"+i, i); addUI(marked.parse(m.a), "ai", "a-"+i); });
         renderH(); addCopyLogic();
