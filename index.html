@@ -14,9 +14,13 @@
             --glow: rgba(118, 185, 0, 0.15);
         }
         
+        /* Expanded Mood Colors */
         body.mood-pos { --p: #00f2ff; --glow: rgba(0, 242, 255, 0.3); }
         body.mood-neg { --p: #ff3b30; --glow: rgba(255, 59, 48, 0.3); }
         body.mood-neu { --p: #af52de; --glow: rgba(175, 82, 222, 0.3); }
+        body.mood-excited { --p: #ff9500; --glow: rgba(255, 149, 0, 0.3); } /* Orange */
+        body.mood-calm { --p: #5ac8fa; --glow: rgba(90, 200, 250, 0.3); } /* Teal/Light Blue */
+        body.mood-angry { --p: #ff2d55; --glow: rgba(255, 45, 85, 0.3); } /* Pink/Red */
 
         * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; outline: none; }
         body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: 0.8s var(--apple-ease); overflow: hidden; }
@@ -71,10 +75,22 @@
 
         footer { position: absolute; bottom: 0; width: 100%; padding: 20px 5% 45px; background: linear-gradient(transparent, var(--bg) 80%); }
         .input-bar { background: rgba(255,255,255,0.08); backdrop-filter: blur(30px); border: 1px solid var(--brd); border-radius: 35px; display: flex; align-items: center; padding: 8px 22px; gap: 15px; }
-        #ui { flex: 1; background: transparent; border: none; color: #fff; padding: 12px 0; font-size: 17px; resize: none; height: 50px; }
+        #ui { flex: 1; background: transparent; border: none; color: #fff; padding: 12px 0; font-size: 17px; resize: none; height: 50px; max-height: 150px; overflow-y: auto; }
 
-        .btn-icon { background: none; border: none; color: var(--p); font-size: 28px; cursor: pointer; display: flex; align-items: center; }
+        .btn-icon { background: none; border: none; color: var(--p); font-size: 25px; cursor: pointer; display: flex; align-items: center; transition: 0.2s; }
+        .btn-icon:hover { transform: scale(1.1); }
+        
+        .file-badge { display: none; margin-left: 20px; margin-bottom: 10px; background: rgba(255,255,255,0.1); padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; color: var(--p); border: 1px solid var(--p); width: fit-content; animation: fadeIn 0.3s; }
+
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 3000; backdrop-filter: blur(8px); }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .input-bar { padding: 6px 15px; gap: 10px; }
+            #ui { font-size: 15px; height: 45px; padding: 10px 0; max-height: 100px; }
+            .btn-icon { font-size: 22px; }
+            #chat-box { padding: 20px 5% 150px; }
+        }
     </style>
 </head>
 <body onclick="closeAll()">
@@ -113,8 +129,11 @@
         <div id="edit-indicator" style="display:none; color:var(--p); font-size:11px; margin-bottom:8px; padding-left:25px; font-weight:700;">
             EDITING... <span onclick="cancelEdit()" style="color:#fff; cursor:pointer; margin-left:15px; text-decoration:underline;">CANCEL</span>
         </div>
+        <div id="file-badge" class="file-badge">📎 <span id="file-name"></span></div>
         <div class="input-bar" onclick="event.stopPropagation()">
-            <button class="btn-icon" onclick="toggleGear(event)">⚙️</button>
+            <input type="file" id="file-upload" style="display:none;" onchange="handleFile(event)">
+            <button class="btn-icon" onclick="document.getElementById('file-upload').click()" title="Attach File">📎</button>
+            <button class="btn-icon" onclick="toggleGear(event)" title="Tools">⚙️</button>
             <textarea id="ui" placeholder="Message Nova Mind AI..." spellcheck="false"></textarea>
             <button id="send-btn" class="btn-icon" onclick="send()">🚀</button>
         </div>
@@ -122,13 +141,16 @@
 </main>
 
 <script>
-    const _PART_A = "gsk_thwiuTjvwtfkjNYodd26";
-    const _PART_B = "WGdyb3FYhO1rr79Kwcn45gDIhcNBlnv5";
+    // Security Key Split
+    const _PART_A = "gsk_AJNzgI5X09s1awxwonid";
+    const _PART_B = "WGdyb3FYJEQ4bxmGUdiGQyFqyJyWdfLl";
 
     let chats = JSON.parse(localStorage.getItem("nv_v70_chats")) || [];
     let curId = localStorage.getItem("nv_v70_id");
     let deepThinking = false;
     let editIdx = -1;
+    let attachedFileData = ""; 
+    let attachedFileName = "";
 
     marked.setOptions({ highlight: (c) => hljs.highlightAuto(c).value, breaks: true });
 
@@ -141,7 +163,7 @@
         const ui = document.getElementById("ui");
         ui.addEventListener("input", function() {
             this.style.height = '50px';
-            this.style.height = this.scrollHeight + 'px';
+            this.style.height = Math.min(this.scrollHeight, 150) + 'px';
             analyzeMood(this.value);
         });
 
@@ -151,11 +173,40 @@
         });
     };
 
+    function handleFile(e) {
+        const file = e.target.files[0];
+        if(!file) return;
+        attachedFileName = file.name;
+        document.getElementById("file-name").innerText = file.name;
+        document.getElementById("file-badge").style.display = "block";
+        
+        if (file.type.startsWith("text/") || file.name.endsWith(".md") || file.name.endsWith(".js") || file.name.endsWith(".json") || file.name.endsWith(".html") || file.name.endsWith(".py")) {
+            const reader = new FileReader();
+            reader.onload = (evt) => { attachedFileData = evt.target.result; };
+            reader.readAsText(file);
+        } else {
+            attachedFileData = `[User uploaded a media/binary file: ${file.name}. Please acknowledge it and analyze based on the user's description.]`;
+        }
+    }
+
     function scrollToBottom() { chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' }); }
 
     function analyzeMood(t) {
-        const p = /good|great|happy|yes|perfect/i, n = /bad|sad|wrong|no|error/i;
-        document.body.className = p.test(t) ? "mood-pos" : (n.test(t) ? "mood-neg" : (t.includes("?") ? "mood-neu" : ""));
+        const ex = /wow|awesome|amazing|omg|incredible|fire| عالی|محشر/i;
+        const ca = /relax|calm|peace|chill|quiet|آرام/i;
+        const an = /hate|angry|mad|damn|stupid|بد|احمق|عصبانی/i;
+        const p = /good|great|happy|yes|perfect|love|خوب|بله/i;
+        const n = /bad|sad|wrong|no|error|fail|نه|اشتباه/i;
+        
+        let m = "";
+        if(ex.test(t)) m = "mood-excited";
+        else if(an.test(t)) m = "mood-angry";
+        else if(ca.test(t)) m = "mood-calm";
+        else if(p.test(t)) m = "mood-pos";
+        else if(n.test(t)) m = "mood-neg";
+        else if(t.includes("?") || t.includes("چرا") || t.includes("چگونه")) m = "mood-neu";
+        
+        document.body.className = m;
     }
 
     function toggleS(e) { if(e) e.stopPropagation(); const a = document.getElementById("sidebar").classList.toggle("active"); document.getElementById("overlay").style.display = a ? "block" : "none"; }
@@ -185,13 +236,22 @@
     async function send() {
         const inp = document.getElementById("ui"), txt = inp.value.trim();
         const fullKey = _PART_A + _PART_B;
-        if(!txt) return;
+        if(!txt && !attachedFileName) return;
+
+        let finalPrompt = txt;
+        if(attachedFileName) {
+            finalPrompt += `\n\n[Attached File Content: ${attachedFileData}]`;
+            document.getElementById("file-badge").style.display = "none";
+            document.getElementById("file-upload").value = "";
+            attachedFileData = "";
+        }
 
         const chat = chats.find(c => c.id == curId);
         if(editIdx > -1) { chat.msgs = chat.msgs.slice(0, editIdx); editIdx = -1; document.getElementById("edit-indicator").style.display="none"; loadChat(curId); }
 
         inp.value = ""; inp.style.height = "50px";
-        addUI(txt, "user", "u-"+Date.now(), chat.msgs.length);
+        addUI(txt || `[Sent File: ${attachedFileName}]`, "user", "u-"+Date.now(), chat.msgs.length);
+        attachedFileName = "";
         
         const aiId = "ai-"+Date.now();
         addUI("Neural Core processing...", "ai", aiId);
@@ -203,9 +263,9 @@
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [
-                        {role: "system", content: "You are Nova Mind AI, an advanced artificial intelligence. Respond professionally and clearly."},
+                        {role: "system", content: "You are Nova Mind AI, an advanced artificial intelligence. Respond professionally and clearly. You have powerful analytical skills. If the user provides file content, code, or mentions an image/video, analyze it deeply and give comprehensive insights."},
                         ...chat.msgs.flatMap(m=>[{role:"user",content:m.u},{role:"assistant",content:m.a}]),
-                        {role: "user", content: (deepThinking ? "Deep Analysis: " : "") + txt}
+                        {role: "user", content: (deepThinking ? "Deep Analysis: " : "") + finalPrompt}
                     ]
                 })
             });
@@ -214,8 +274,8 @@
             
             const full = data.choices[0].message.content;
             document.getElementById(aiId).innerHTML = marked.parse(full);
-            if(chat.msgs.length === 0) chat.name = txt.substring(0, 20);
-            chat.msgs.push({u: txt, a: full}); 
+            if(chat.msgs.length === 0) chat.name = (txt || "File Upload").substring(0, 20);
+            chat.msgs.push({u: finalPrompt, a: full}); 
             save(); renderH(); addCopyLogic();
             scrollToBottom();
         } catch(e) { 
@@ -232,7 +292,10 @@
             const ops = r === 'user' 
                 ? `<div class="msg-ops"><span class="op-btn" onclick="triggerEdit(${idx})">Edit</span><span class="op-btn" onclick="copyRaw('${id}', this)">Copy</span></div>`
                 : `<div class="msg-ops"><span class="op-btn" onclick="copyRaw('${id}', this)">Copy</span><span class="op-btn" onclick="speak('${id}', this)">Listen</span><span class="op-btn" onclick="stopSpeak()" style="color:#fff;">Stop</span></div>`;
-            w.innerHTML = `<div class="msg ${r}" id="${id}">${t}</div>${ops}`;
+            
+            // Clean up file tags visually for the user message bubble
+            let displayTxt = t.replace(/\[Attached File Content:.*?\]/gs, '[File Attached]');
+            w.innerHTML = `<div class="msg ${r}" id="${id}">${r === 'ai' ? t : displayTxt}</div>${ops}`;
         }
         chatBox.appendChild(w);
         scrollToBottom();
@@ -240,7 +303,7 @@
 
     function triggerEdit(idx) {
         const chat = chats.find(c => c.id == curId);
-        document.getElementById("ui").value = chat.msgs[idx].u;
+        document.getElementById("ui").value = chat.msgs[idx].u.replace(/\[Attached File Content:.*?\]/gs, '');
         document.getElementById("ui").focus();
         editIdx = idx;
         document.getElementById("edit-indicator").style.display = "block";
