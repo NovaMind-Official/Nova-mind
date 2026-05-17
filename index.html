@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nova Mind AI - Intelligence Interface</title>
+    <title>Aethel AI - Intelligence Interface</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -12,6 +12,9 @@
             --p: #76b900; --bg: #000; --txt: #ffffff; 
             --brd: rgba(255,255,255,0.12); --apple-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
             --glow: rgba(118, 185, 0, 0.15);
+            /* Premium Rare Color Token */
+            --premium-color: #dfb257;
+            --premium-glow: rgba(223, 178, 87, 0.25);
         }
         
         /* Expanded Mood Colors (Restored) */
@@ -48,9 +51,13 @@
         .account-item { padding: 12px 15px; font-size: 13px; color: #ccc; border-radius: 12px; cursor: pointer; transition: 0.2s; }
         .account-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
+        /* Premium Button Custom Design */
+        .account-item.premium-btn { color: var(--premium-color); border: 1px dashed var(--premium-color); background: rgba(223, 178, 87, 0.03); font-weight: 700; letter-spacing: 0.5px; transition: 0.3s; margin-bottom: 4px; box-shadow: 0 0 8px var(--premium-glow); }
+        .account-item.premium-btn:hover { background: rgba(223, 178, 87, 0.1); color: #fff; border-style: solid; box-shadow: 0 0 15px var(--premium-glow); transform: scale(1.02); }
+
         #chat-box { flex: 1; overflow-y: auto; padding: 20px 8% 180px; display: flex; flex-direction: column; gap: 32px; scroll-behavior: smooth; }
         .welcome-wrap { text-align: center; margin: 60px 0; animation: fadeIn 1.2s ease; }
-        .welcome-wrap h1 { font-size: 32px; font-weight: 800; margin-bottom: 10px; color: var(--p); letter-spacing: -1px; }
+        .welcome-wrap h1 { font-size: 32px; font-weight: 800; margin-bottom: 10px; color: var(--p); letter-spacing: -1px; text-transform: uppercase; }
         .welcome-wrap p { color: rgba(255,255,255,0.5); font-size: 16px; }
 
         .msg-wrap { display: flex; flex-direction: column; max-width: 90%; animation: slideUp 0.6s var(--apple-ease); }
@@ -98,14 +105,25 @@
 
         #overlay, #widget-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 3000; backdrop-filter: blur(8px); }
         
-        /* Modal for Live Links/Charts */
+        /* Modal for Live Links & Aura Call */
         #widget-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 90%; max-width: 800px; height: 80vh; background: #111; border: 1px solid var(--p); border-radius: 24px; z-index: 6000; display: none; flex-direction: column; overflow: hidden; transition: 0.3s var(--apple-ease); opacity: 0; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
         #widget-modal.show { display: flex; transform: translate(-50%, -50%) scale(1); opacity: 1; }
         .modal-header { padding: 15px 20px; background: rgba(0,0,0,0.8); border-bottom: 1px solid var(--brd); display: flex; justify-content: space-between; align-items: center; }
         .modal-header span { color: var(--p); font-weight: bold; letter-spacing: 1px; }
         .modal-close { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; transition: 0.2s; }
         .modal-close:hover { color: var(--p); transform: scale(1.1); }
-        iframe { flex: 1; width: 100%; border: none; }
+        iframe { flex: 1; width: 100%; border: none; display: none; }
+        .modal-content-area { flex: 1; overflow-y: auto; display: none; }
+
+        /* Aura Call Modal Styles */
+        .call-menu-container { display: flex; flex-direction: column; gap: 12px; padding: 20px; }
+        .call-section-title { font-size: 12px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 700; }
+        .call-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; margin-bottom: 15px; }
+        .call-card { background: rgba(255,255,255,0.03); border: 1px solid var(--brd); border-radius: 16px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.3s var(--apple-ease); }
+        .call-card:hover { border-color: var(--p); background: rgba(255,255,255,0.08); transform: translateY(-2px); box-shadow: 0 10px 20px var(--glow); }
+        .call-avatar { width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.1); margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; font-size: 20px; color: var(--p); }
+        .call-name { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+        .call-desc { font-size: 10px; color: rgba(255,255,255,0.5); }
 
         @media (max-width: 768px) {
             .input-bar { padding: 6px 15px; gap: 10px; }
@@ -122,10 +140,11 @@
 
 <div id="widget-modal">
     <div class="modal-header">
-        <span>LIVE INTELLIGENCE</span>
+        <span id="modal-title">LIVE INTELLIGENCE</span>
         <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <iframe id="widget-frame" src=""></iframe>
+    <div id="modal-custom-content" class="modal-content-area"></div>
 </div>
 
 <div id="sidebar" onclick="event.stopPropagation()">
@@ -140,7 +159,7 @@
 <main>
     <header>
         <button class="btn-icon" onclick="toggleS(event)">☰</button>
-        <div class="logo">Nova Mind AI</div>
+        <div class="logo">Aethel AI</div>
         
         <div class="account-hub" onclick="toggleAccount(event)">
             <div class="account-avatar" id="user-avatar">ME</div>
@@ -151,6 +170,7 @@
                 </div>
                 <div class="account-item">⚙️ Settings</div>
                 <div class="account-item" onclick="viewTraits()">🧠 My AI Profile</div>
+                <div class="account-item premium-btn">Premium</div>
                 <div class="account-item" style="color: #ff3b30;">🚪 Logout</div>
             </div>
         </div>
@@ -161,6 +181,7 @@
 
     <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
         <div class="menu-item" onclick="toggleDeep()">🧠 Deep Thinking <span id="deep-status" style="margin-left:auto; font-weight:bold; opacity:0.5;">OFF</span></div>
+        <div class="menu-item" onclick="openAuraCall()">📞 Aura Call</div>
         <div class="menu-item" onclick="tool('image')">🎨 AI Image Engine</div>
         <div class="menu-item" onclick="tool('music')">🎵 AI Music Engine</div>
         <div class="menu-item" onclick="tool('video')">🎬 AI Video Engine</div>
@@ -175,7 +196,7 @@
             <input type="file" id="file-upload" style="display:none;" onchange="handleFile(event)">
             <button class="btn-icon" onclick="document.getElementById('file-upload').click()" title="Attach File">📎</button>
             <button class="btn-icon" onclick="toggleGear(event)" title="Tools">⚙️</button>
-            <textarea id="ui" placeholder="Message Nova Mind AI..." spellcheck="false" onkeydown="handleEnter(event)"></textarea>
+            <textarea id="ui" placeholder="Message Aethel AI..." spellcheck="false" onkeydown="handleEnter(event)"></textarea>
             <button id="send-btn" class="btn-icon" onclick="send()">🚀</button>
         </div>
     </footer>
@@ -297,16 +318,53 @@
         document.getElementById("gear-menu").classList.remove("show");
     }
 
-    // Live Modals (Smart Cards)
+    // Live Modals Update (Smart Cards + Aura Call)
     function openModal(url) {
-        document.getElementById("widget-frame").src = url;
+        document.getElementById("modal-title").innerText = "LIVE INTELLIGENCE";
+        document.getElementById("modal-custom-content").style.display = "none";
+        const f = document.getElementById("widget-frame");
+        f.src = url; f.style.display = "block";
         document.getElementById("widget-modal-overlay").style.display = "block";
         document.getElementById("widget-modal").classList.add("show");
     }
+
+    function openAuraCall() {
+        document.getElementById("gear-menu").classList.remove("show");
+        document.getElementById("modal-title").innerText = "AURA CALL INTERFACE";
+        document.getElementById("widget-frame").style.display = "none";
+        
+        const area = document.getElementById("modal-custom-content");
+        area.innerHTML = `
+            <div class="call-menu-container">
+                <div class="call-section-title">Human Personas</div>
+                <div class="call-grid">
+                    <div class="call-card" onclick="startCall('Professor Dana')"><div class="call-avatar">👨‍🏫</div><div class="call-name">Prof. Dana</div><div class="call-desc">Wise Philosopher</div></div>
+                    <div class="call-card" onclick="startCall('Jack Rogue')"><div class="call-avatar">💻</div><div class="call-name">Jack Rogue</div><div class="call-desc">Cyber Tech-Hacker</div></div>
+                    <div class="call-card" onclick="startCall('Sarah Zen')"><div class="call-avatar">🧘‍♀️</div><div class="call-name">Sarah Zen</div><div class="call-desc">Mindset & Calm</div></div>
+                </div>
+                <div class="call-section-title">Fantasy Companions</div>
+                <div class="call-grid">
+                    <div class="call-card" onclick="startCall('Wise Cat')"><div class="call-avatar">🐈</div><div class="call-name">Wise Cat</div><div class="call-desc">Sarcastic Thinker</div></div>
+                    <div class="call-card" onclick="startCall('Apex Lion')"><div class="call-avatar">🦁</div><div class="call-name">Apex Lion</div><div class="call-desc">Motivator Ruler</div></div>
+                </div>
+            </div>`;
+        area.style.display = "block";
+        document.getElementById("widget-modal-overlay").style.display = "block";
+        document.getElementById("widget-modal").classList.add("show");
+    }
+
+    function startCall(name) {
+        closeModal();
+        document.getElementById("ui").value = `[Initiating Aura Call with ${name}] Hello ${name}, let's start talking.`;
+        send();
+    }
+
     function closeModal() {
         document.getElementById("widget-modal").classList.remove("show");
         document.getElementById("widget-modal-overlay").style.display = "none";
         document.getElementById("widget-frame").src = "";
+        document.getElementById("widget-frame").style.display = "none";
+        document.getElementById("modal-custom-content").style.display = "none";
     }
 
     // Intelligence Engine: Analyze and Learn
@@ -379,7 +437,8 @@
         const aiId = "ai-"+Date.now();
         addUI("Neural Core processing...", "ai", aiId);
 
-        let sysContent = "You are Nova Mind AI. You can analyze images and codes deeply. Answer professionally.";
+        let sysContent = "You are Aethel AI. You can analyze images and codes deeply. Answer professionally.";
+        sysContent += " If the user prompt starts with [Initiating Aura Call with Persona Name], you must fully roleplay as that specific persona/animal using their character trait guidelines.";
         sysContent += " CRITICAL: If the user asks for comparisons, data sets, or schedules, YOU MUST output it using a Markdown Table format.";
         if (userTraits.length > 0) sysContent += ` Also, personalize your response knowing the user is interested in/identifies as: ${userTraits.join(", ")}.`;
 
@@ -439,7 +498,7 @@
         const w = document.createElement("div");
         w.className = `msg-wrap ${r}-wrap`;
         if(id === 'welcome') {
-            w.innerHTML = `<div class="welcome-wrap"><h1>NOVA MIND AI</h1><p>Hello! How can I help you today?</p></div>`;
+            w.innerHTML = `<div class="welcome-wrap"><h1>AETHEL AI</h1><p>Hello! How can I help you today?</p></div>`;
         } else {
             const ops = r === 'user' 
                 ? `<div class="msg-ops"><span class="op-btn" onclick="triggerEdit(${idx})">Edit</span><span class="op-btn" onclick="copyRaw('${id}', this)">Copy</span></div>`
