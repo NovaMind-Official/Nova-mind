@@ -41,7 +41,7 @@
         header { height: 65px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); }
         .logo { font-size: 14px; letter-spacing: 5px; font-weight: 900; color: var(--p); text-transform: uppercase; }
 
-        /* Account Hub Styles (New) */
+        /* Account Hub Styles */
         .account-hub { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .account-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--p), #000); border: 2px solid var(--brd); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; color: #fff; transition: 0.3s; }
         .account-hub:hover .account-avatar { transform: scale(1.05); box-shadow: 0 0 15px var(--glow); }
@@ -69,13 +69,14 @@
         .user { background: var(--p); color: #000; border-bottom-right-radius: 4px; font-weight: 500; }
         .ai { background: rgba(255,255,255,0.03); color: #fff; border: 1px solid var(--brd); border-bottom-left-radius: 4px; }
 
-        /* Dynamic Tables (New) */
-        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 14px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--brd); }
-        th { background: rgba(255,255,255,0.1); color: var(--p); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        tr:hover { background: rgba(255,255,255,0.05); }
+        /* UPGRADED Dynamic Tables */
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 15px; border-radius: 14px; overflow: hidden; border: 1px solid var(--brd); background: rgba(255, 255, 255, 0.02); }
+        th, td { padding: 14px 18px; text-align: left; border: 1px solid var(--brd); color: #ffffff; }
+        th { background: rgba(255, 255, 255, 0.08); color: var(--p); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        tr:nth-child(even) { background: rgba(255, 255, 255, 0.01); }
+        tr:hover { background: rgba(255, 255, 255, 0.04); }
 
-        /* Smart Cards (Widgets) (New) */
+        /* Smart Cards (Widgets) */
         .smart-card { background: rgba(255,255,255,0.05); border: 1px solid var(--p); border-radius: 16px; padding: 15px 20px; margin: 15px 0; cursor: pointer; display: inline-block; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .smart-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.1); box-shadow: 0 8px 25px rgba(118,185,0,0.2); }
         .smart-card h3 { margin: 0 0 5px; font-size: 16px; color: var(--p); }
@@ -91,9 +92,13 @@
         .msg-ops:hover { opacity: 1; }
         .op-btn { cursor: pointer; font-size: 11px; font-weight: 700; color: var(--p); text-transform: uppercase; }
 
-        .drop-menu { position: absolute; bottom: 100px; left: 25px; width: 280px; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(50px); border-radius: 28px; border: 1px solid var(--brd); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
+        /* UPGRADED Gear Menu (Text Only & Neon Hover) */
+        .drop-menu { position: absolute; bottom: 100px; left: 25px; width: 280px; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(50px); border-radius: 28px; border: 1px solid var(--brd); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.8); overflow: hidden; padding: 10px 0; }
         .drop-menu.show { display: flex; animation: menuPop 0.4s var(--apple-ease); }
-        .menu-item { padding: 20px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 15px; }
+        .menu-item { position: relative; padding: 18px 25px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.3s; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;}
+        .menu-item::after { content: ''; position: absolute; left: 0; bottom: 0; width: 0; height: 2px; background: var(--p); transition: 0.3s var(--apple-ease); box-shadow: 0 0 10px var(--glow); }
+        .menu-item:hover::after { width: 100%; }
+        .menu-item:hover { color: var(--p); background: rgba(255,255,255,0.03); }
 
         footer { position: absolute; bottom: 0; width: 100%; padding: 20px 5% 45px; background: linear-gradient(transparent, var(--bg) 80%); }
         .input-bar { background: rgba(255,255,255,0.08); backdrop-filter: blur(30px); border: 1px solid var(--brd); border-radius: 35px; display: flex; align-items: center; padding: 8px 22px; gap: 15px; }
@@ -105,7 +110,7 @@
 
         #overlay, #widget-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 3000; backdrop-filter: blur(8px); }
         
-        /* Modal for Live Links & Aura Call */
+        /* Modal for Live Links & Aura Call Menu */
         #widget-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 90%; max-width: 800px; height: 80vh; background: #111; border: 1px solid var(--p); border-radius: 24px; z-index: 6000; display: none; flex-direction: column; overflow: hidden; transition: 0.3s var(--apple-ease); opacity: 0; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
         #widget-modal.show { display: flex; transform: translate(-50%, -50%) scale(1); opacity: 1; }
         .modal-header { padding: 15px 20px; background: rgba(0,0,0,0.8); border-bottom: 1px solid var(--brd); display: flex; justify-content: space-between; align-items: center; }
@@ -125,6 +130,25 @@
         .call-name { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 2px; }
         .call-desc { font-size: 10px; color: rgba(255,255,255,0.5); }
 
+        /* UPGRADED: Active Call Screen Styles */
+        #active-call-overlay { display: none; position: fixed; inset: 0; background: rgba(5,5,5,0.95); backdrop-filter: blur(20px); z-index: 7000; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s; }
+        #active-call-overlay.show { opacity: 1; }
+        .glow-ring { position: absolute; width: 250px; height: 250px; border-radius: 50%; background: var(--glow); filter: blur(60px); animation: pulseGlow 2s infinite alternate; }
+        @keyframes pulseGlow { 0% { transform: scale(0.8); opacity: 0.4; } 100% { transform: scale(1.3); opacity: 1; } }
+        .call-title { color: #fff; z-index: 2; font-weight: 900; font-size: 32px; letter-spacing: 3px; margin-bottom: 5px; text-transform: uppercase; }
+        .call-status { color: var(--p); z-index: 2; margin-bottom: 60px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; animation: fadeInOut 1.5s infinite; }
+        @keyframes fadeInOut { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        .wave-container { display: flex; gap: 8px; height: 80px; align-items: center; z-index: 2; margin-bottom: 40px; }
+        .wave-container .bar { width: 8px; background: var(--p); border-radius: 4px; animation: wave 1s ease-in-out infinite alternate; box-shadow: 0 0 15px var(--glow); }
+        .wave-container .bar:nth-child(1) { height: 30px; animation-delay: 0.0s; }
+        .wave-container .bar:nth-child(2) { height: 60px; animation-delay: 0.2s; }
+        .wave-container .bar:nth-child(3) { height: 80px; animation-delay: 0.4s; }
+        .wave-container .bar:nth-child(4) { height: 60px; animation-delay: 0.2s; }
+        .wave-container .bar:nth-child(5) { height: 30px; animation-delay: 0.0s; }
+        @keyframes wave { 0% { transform: scaleY(0.4); opacity: 0.5; } 100% { transform: scaleY(1.2); opacity: 1; } }
+        .end-call-btn { z-index: 2; background: #ff3b30; color: #fff; border: none; padding: 18px 50px; border-radius: 35px; font-weight: 800; font-size: 15px; letter-spacing: 1px; cursor: pointer; box-shadow: 0 10px 30px rgba(255,59,48,0.4); transition: 0.3s; margin-top: 20px;}
+        .end-call-btn:hover { transform: scale(1.05); box-shadow: 0 15px 40px rgba(255,59,48,0.6); }
+
         @media (max-width: 768px) {
             .input-bar { padding: 6px 15px; gap: 10px; }
             #ui { font-size: 15px; height: 45px; padding: 10px 0; max-height: 100px; }
@@ -137,6 +161,16 @@
 <div class="bg-glow"></div>
 <div id="overlay" onclick="toggleS()"></div>
 <div id="widget-modal-overlay" onclick="closeModal()"></div>
+
+<div id="active-call-overlay">
+    <div class="glow-ring"></div>
+    <h2 id="caller-name" class="call-title">NAME</h2>
+    <p class="call-status">Neural Connection Established</p>
+    <div class="wave-container">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+    <button class="end-call-btn" onclick="endCall()">END CALL</button>
+</div>
 
 <div id="widget-modal">
     <div class="modal-header">
@@ -180,11 +214,11 @@
     <button id="scroll-btn" onclick="scrollToBottom()">↓</button>
 
     <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
-        <div class="menu-item" onclick="toggleDeep()">🧠 Deep Thinking <span id="deep-status" style="margin-left:auto; font-weight:bold; opacity:0.5;">OFF</span></div>
-        <div class="menu-item" onclick="openAuraCall()">📞 Aura Call</div>
-        <div class="menu-item" onclick="tool('image')">🎨 AI Image Engine</div>
-        <div class="menu-item" onclick="tool('music')">🎵 AI Music Engine</div>
-        <div class="menu-item" onclick="tool('video')">🎬 AI Video Engine</div>
+        <div class="menu-item" onclick="toggleDeep()">Deep Thinking <span id="deep-status" style="opacity:0.5;">OFF</span></div>
+        <div class="menu-item" onclick="openAuraCall()">Aura Call Interface</div>
+        <div class="menu-item" onclick="tool('image')">AI Image Engine</div>
+        <div class="menu-item" onclick="tool('music')">AI Music Engine</div>
+        <div class="menu-item" onclick="tool('video')">AI Video Engine</div>
     </div>
 
     <footer>
@@ -237,8 +271,14 @@
         });
     };
     
+    // UPGRADED: Enter Key Logic
     function handleEnter(e) {
-        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+        // Now Enter simply goes to a new line natively without sending.
+        // Sending is handled via the rocket icon button 🚀 or by pressing Ctrl + Enter.
+        if (e.key === 'Enter' && e.ctrlKey) { 
+            e.preventDefault(); 
+            send(); 
+        }
     }
 
     // Fully Restored handleFile
@@ -318,7 +358,6 @@
         document.getElementById("gear-menu").classList.remove("show");
     }
 
-    // Live Modals Update (Smart Cards + Aura Call)
     function openModal(url) {
         document.getElementById("modal-title").innerText = "LIVE INTELLIGENCE";
         document.getElementById("modal-custom-content").style.display = "none";
@@ -353,10 +392,35 @@
         document.getElementById("widget-modal").classList.add("show");
     }
 
+    // UPGRADED: Aura Call Full Screen Activation
     function startCall(name) {
-        closeModal();
-        document.getElementById("ui").value = `[Initiating Aura Call with ${name}] Hello ${name}, let's start talking.`;
-        send();
+        closeModal(); // Close the menu modal
+        const callOverlay = document.getElementById("active-call-overlay");
+        callOverlay.style.display = "flex";
+        
+        // Timeout used to trigger CSS transition properly
+        setTimeout(() => {
+            callOverlay.classList.add("show");
+        }, 10);
+
+        document.getElementById("caller-name").innerText = name.toUpperCase();
+        
+        // Simulating Voice Intro
+        window.speechSynthesis.cancel();
+        let introVoice = new SpeechSynthesisUtterance("Call connected with " + name);
+        introVoice.lang = 'en-US';
+        window.speechSynthesis.speak(introVoice);
+    }
+
+    // UPGRADED: End Aura Call
+    function endCall() {
+        window.speechSynthesis.cancel();
+        const callOverlay = document.getElementById("active-call-overlay");
+        callOverlay.classList.remove("show");
+        
+        setTimeout(() => {
+            callOverlay.style.display = "none";
+        }, 500); // Matches CSS transition time
     }
 
     function closeModal() {
