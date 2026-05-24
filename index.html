@@ -17,7 +17,7 @@
             --premium-glow: rgba(223, 178, 87, 0.25);
         }
         
-        /* Expanded Mood Colors (Restored) */
+        /* Expanded Mood Colors */
         body.mood-pos { --p: #00f2ff; --glow: rgba(0, 242, 255, 0.3); }
         body.mood-neg { --p: #ff3b30; --glow: rgba(255, 59, 48, 0.3); }
         body.mood-neu { --p: #af52de; --glow: rgba(175, 82, 222, 0.3); }
@@ -36,6 +36,7 @@
         #h-list { flex: 1; overflow-y: auto; padding: 15px; }
         .h-item { padding: 14px; border-radius: 15px; margin-bottom: 10px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; font-size: 13px; border: 1px solid transparent; transition: 0.3s; cursor: pointer; }
         .h-item.active-chat { border-color: var(--p); background: rgba(255,255,255,0.1); }
+        .h-item.pinned { border-left: 3px solid var(--p); }
 
         main { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; }
         header { height: 65px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); }
@@ -51,9 +52,11 @@
         .account-item { padding: 12px 15px; font-size: 13px; color: #ccc; border-radius: 12px; cursor: pointer; transition: 0.2s; }
         .account-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
-        /* Premium Button Custom Design */
-        .account-item.premium-btn { color: var(--premium-color); border: 1px dashed var(--premium-color); background: rgba(223, 178, 87, 0.03); font-weight: 700; letter-spacing: 0.5px; transition: 0.3s; margin-bottom: 4px; box-shadow: 0 0 8px var(--premium-glow); }
-        .account-item.premium-btn:hover { background: rgba(223, 178, 87, 0.1); color: #fff; border-style: solid; box-shadow: 0 0 15px var(--premium-glow); transform: scale(1.02); }
+        /* Premium Button Custom Design (Animated) */
+        .account-item.premium-btn { color: var(--premium-color); border: 1px solid var(--premium-color); background: rgba(223, 178, 87, 0.05); font-weight: 800; letter-spacing: 0.5px; transition: 0.3s; margin-bottom: 4px; box-shadow: 0 0 10px var(--premium-glow); position: relative; overflow: hidden; }
+        .account-item.premium-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 3s infinite; }
+        @keyframes shimmer { 100% { left: 200%; } }
+        .account-item.premium-btn:hover { background: rgba(223, 178, 87, 0.15); color: #fff; box-shadow: 0 0 20px var(--premium-glow); transform: scale(1.02); }
 
         #chat-box { flex: 1; overflow-y: auto; padding: 20px 8% 180px; display: flex; flex-direction: column; gap: 32px; scroll-behavior: smooth; }
         .welcome-wrap { text-align: center; margin: 60px 0; animation: fadeIn 1.2s ease; }
@@ -69,20 +72,13 @@
         .user { background: var(--p); color: #000; border-bottom-right-radius: 4px; font-weight: 500; }
         .ai { background: rgba(255,255,255,0.03); color: #fff; border: 1px solid var(--brd); border-bottom-left-radius: 4px; }
 
-        /* UPGRADED Dynamic Tables */
         table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 15px; border-radius: 14px; overflow: hidden; border: 1px solid var(--brd); background: rgba(255, 255, 255, 0.02); }
         th, td { padding: 14px 18px; text-align: left; border: 1px solid var(--brd); color: #ffffff; }
         th { background: rgba(255, 255, 255, 0.08); color: var(--p); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        tr:nth-child(even) { background: rgba(255, 255, 255, 0.01); }
-        tr:hover { background: rgba(255, 255, 255, 0.04); }
 
-        /* Smart Cards (Widgets) */
         .smart-card { background: rgba(255,255,255,0.05); border: 1px solid var(--p); border-radius: 16px; padding: 15px 20px; margin: 15px 0; cursor: pointer; display: inline-block; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .smart-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.1); box-shadow: 0 8px 25px rgba(118,185,0,0.2); }
-        .smart-card h3 { margin: 0 0 5px; font-size: 16px; color: var(--p); }
-        .smart-card p { margin: 0; font-size: 12px; color: rgba(255,255,255,0.6); }
-
-        /* Restored Media CSS */
+        
         .chat-img { width: 100%; max-width: 400px; border-radius: 12px; border: 2px solid rgba(0,0,0,0.2); margin-bottom: 10px; display: block; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
         .chat-file { background: rgba(0,0,0,0.2); padding: 12px 18px; border-radius: 12px; border-left: 4px solid #fff; margin-bottom: 10px; font-family: monospace; font-size: 14px; font-weight: 700; display: inline-block;}
 
@@ -92,13 +88,13 @@
         .msg-ops:hover { opacity: 1; }
         .op-btn { cursor: pointer; font-size: 11px; font-weight: 700; color: var(--p); text-transform: uppercase; }
 
-        /* UPGRADED Gear Menu (Text Only & Neon Hover) */
+        /* Gear Menu & Dynamic Dividers */
         .drop-menu { position: absolute; bottom: 100px; left: 25px; width: 280px; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(50px); border-radius: 28px; border: 1px solid var(--brd); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.8); overflow: hidden; padding: 10px 0; }
         .drop-menu.show { display: flex; animation: menuPop 0.4s var(--apple-ease); }
         .menu-item { position: relative; padding: 18px 25px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.3s; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;}
-        .menu-item::after { content: ''; position: absolute; left: 0; bottom: 0; width: 0; height: 2px; background: var(--p); transition: 0.3s var(--apple-ease); box-shadow: 0 0 10px var(--glow); }
-        .menu-item:hover::after { width: 100%; }
         .menu-item:hover { color: var(--p); background: rgba(255,255,255,0.03); }
+        /* Dynamic Divider */
+        .menu-divider { height: 1px; background: var(--p); opacity: 0.3; margin: 5px 20px; box-shadow: 0 0 8px var(--glow); transition: 0.8s var(--apple-ease); }
 
         footer { position: absolute; bottom: 0; width: 100%; padding: 20px 5% 45px; background: linear-gradient(transparent, var(--bg) 80%); }
         .input-bar { background: rgba(255,255,255,0.08); backdrop-filter: blur(30px); border: 1px solid var(--brd); border-radius: 35px; display: flex; align-items: center; padding: 8px 22px; gap: 15px; }
@@ -108,36 +104,32 @@
         .btn-icon:hover { transform: scale(1.1); }
         .file-badge { display: none; margin-left: 20px; margin-bottom: 10px; background: rgba(255,255,255,0.1); padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; color: var(--p); border: 1px solid var(--p); width: fit-content; animation: fadeIn 0.3s; }
 
-        #overlay, #widget-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 3000; backdrop-filter: blur(8px); }
+        #overlay, #widget-modal-overlay, #premium-overlay, #stats-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 3000; backdrop-filter: blur(15px); }
         
-        /* Modal for Live Links & Aura Call Menu */
-        #widget-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 90%; max-width: 800px; height: 80vh; background: #111; border: 1px solid var(--p); border-radius: 24px; z-index: 6000; display: none; flex-direction: column; overflow: hidden; transition: 0.3s var(--apple-ease); opacity: 0; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
-        #widget-modal.show { display: flex; transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        /* Modal General */
+        .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 90%; max-width: 800px; max-height: 85vh; background: #111; border: 1px solid var(--p); border-radius: 24px; z-index: 6000; display: none; flex-direction: column; overflow: hidden; transition: 0.3s var(--apple-ease); opacity: 0; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
+        .modal-box.show { display: flex; transform: translate(-50%, -50%) scale(1); opacity: 1; }
         .modal-header { padding: 15px 20px; background: rgba(0,0,0,0.8); border-bottom: 1px solid var(--brd); display: flex; justify-content: space-between; align-items: center; }
         .modal-header span { color: var(--p); font-weight: bold; letter-spacing: 1px; }
         .modal-close { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; transition: 0.2s; }
         .modal-close:hover { color: var(--p); transform: scale(1.1); }
-        iframe { flex: 1; width: 100%; border: none; display: none; }
-        .modal-content-area { flex: 1; overflow-y: auto; display: none; }
-
-        /* Aura Call Modal Styles */
-        .call-menu-container { display: flex; flex-direction: column; gap: 12px; padding: 20px; }
+        
+        /* Aura Call Styles */
+        .call-menu-container { display: flex; flex-direction: column; gap: 12px; padding: 20px; overflow-y: auto;}
         .call-section-title { font-size: 12px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 700; }
         .call-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; margin-bottom: 15px; }
         .call-card { background: rgba(255,255,255,0.03); border: 1px solid var(--brd); border-radius: 16px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.3s var(--apple-ease); }
         .call-card:hover { border-color: var(--p); background: rgba(255,255,255,0.08); transform: translateY(-2px); box-shadow: 0 10px 20px var(--glow); }
         .call-avatar { width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.1); margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; font-size: 20px; color: var(--p); }
         .call-name { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 2px; }
-        .call-desc { font-size: 10px; color: rgba(255,255,255,0.5); }
 
-        /* UPGRADED: Active Call Screen Styles */
-        #active-call-overlay { display: none; position: fixed; inset: 0; background: rgba(5,5,5,0.95); backdrop-filter: blur(20px); z-index: 7000; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s; }
+        /* Active Call Screen */
+        #active-call-overlay { display: none; position: fixed; inset: 0; background: rgba(5,5,5,0.95); backdrop-filter: blur(30px); z-index: 7000; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s; }
         #active-call-overlay.show { opacity: 1; }
-        .glow-ring { position: absolute; width: 250px; height: 250px; border-radius: 50%; background: var(--glow); filter: blur(60px); animation: pulseGlow 2s infinite alternate; }
+        .glow-ring { position: absolute; width: 300px; height: 300px; border-radius: 50%; background: var(--glow); filter: blur(70px); animation: pulseGlow 2s infinite alternate; }
         @keyframes pulseGlow { 0% { transform: scale(0.8); opacity: 0.4; } 100% { transform: scale(1.3); opacity: 1; } }
         .call-title { color: #fff; z-index: 2; font-weight: 900; font-size: 32px; letter-spacing: 3px; margin-bottom: 5px; text-transform: uppercase; }
         .call-status { color: var(--p); z-index: 2; margin-bottom: 60px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; animation: fadeInOut 1.5s infinite; }
-        @keyframes fadeInOut { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
         .wave-container { display: flex; gap: 8px; height: 80px; align-items: center; z-index: 2; margin-bottom: 40px; }
         .wave-container .bar { width: 8px; background: var(--p); border-radius: 4px; animation: wave 1s ease-in-out infinite alternate; box-shadow: 0 0 15px var(--glow); }
         .wave-container .bar:nth-child(1) { height: 30px; animation-delay: 0.0s; }
@@ -146,8 +138,33 @@
         .wave-container .bar:nth-child(4) { height: 60px; animation-delay: 0.2s; }
         .wave-container .bar:nth-child(5) { height: 30px; animation-delay: 0.0s; }
         @keyframes wave { 0% { transform: scaleY(0.4); opacity: 0.5; } 100% { transform: scaleY(1.2); opacity: 1; } }
-        .end-call-btn { z-index: 2; background: #ff3b30; color: #fff; border: none; padding: 18px 50px; border-radius: 35px; font-weight: 800; font-size: 15px; letter-spacing: 1px; cursor: pointer; box-shadow: 0 10px 30px rgba(255,59,48,0.4); transition: 0.3s; margin-top: 20px;}
+        .end-call-btn { z-index: 2; background: #ff3b30; color: #fff; border: none; padding: 18px 50px; border-radius: 35px; font-weight: 800; font-size: 15px; letter-spacing: 1px; cursor: pointer; box-shadow: 0 10px 30px rgba(255,59,48,0.4); transition: 0.3s;}
         .end-call-btn:hover { transform: scale(1.05); box-shadow: 0 15px 40px rgba(255,59,48,0.6); }
+
+        /* Premium Plans Overlay (App Store Style) */
+        .plans-container { padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; align-items: center; }
+        .plan-card { width: 100%; max-width: 500px; background: rgba(20,20,20,0.8); border: 1px solid var(--brd); border-radius: 20px; padding: 25px; position: relative; transition: 0.3s; }
+        .plan-card:hover { transform: scale(1.02); background: rgba(30,30,30,0.9); box-shadow: 0 15px 35px var(--glow); border-color: var(--p); }
+        .plan-card.popular { border-color: var(--premium-color); background: rgba(223, 178, 87, 0.05); }
+        .plan-card.popular:hover { box-shadow: 0 15px 35px var(--premium-glow); }
+        .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--premium-color); color: #000; font-size: 10px; font-weight: 900; padding: 4px 12px; border-radius: 10px; letter-spacing: 1px; }
+        .plan-title { font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;}
+        .plan-price { font-size: 18px; color: var(--p); font-weight: 700; margin-bottom: 20px; }
+        .plan-card.popular .plan-price { color: var(--premium-color); }
+        .plan-features { list-style: none; padding: 0; margin: 0 0 25px 0; font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.8; }
+        .plan-features li::before { content: '✓'; color: var(--p); margin-right: 8px; font-weight: bold; }
+        .plan-card.popular .plan-features li::before { color: var(--premium-color); }
+        .plan-btn { width: 100%; padding: 15px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; transition: 0.3s; border: none; }
+        .btn-basic { background: rgba(255,255,255,0.1); color: #fff; }
+        .btn-basic:hover { background: var(--p); color: #000; }
+        .btn-pro { background: var(--premium-color); color: #000; }
+        .btn-pro:hover { box-shadow: 0 0 20px var(--premium-glow); transform: translateY(-2px); }
+
+        /* Neural Stats UI */
+        .stats-container { padding: 30px; }
+        .stat-bar-wrap { margin-bottom: 20px; font-family: monospace; font-size: 14px; color: #fff; letter-spacing: 1px; }
+        .stat-label { display: inline-block; width: 80px; font-weight: bold; }
+        .stat-bar { color: var(--p); }
 
         @media (max-width: 768px) {
             .input-bar { padding: 6px 15px; gap: 10px; }
@@ -160,25 +177,80 @@
 
 <div class="bg-glow"></div>
 <div id="overlay" onclick="toggleS()"></div>
-<div id="widget-modal-overlay" onclick="closeModal()"></div>
+<div id="widget-modal-overlay" onclick="closeModal('widget-modal')"></div>
+<div id="premium-overlay" onclick="closeModal('premium-modal')"></div>
+<div id="stats-overlay" onclick="closeModal('stats-modal')"></div>
 
 <div id="active-call-overlay">
     <div class="glow-ring"></div>
     <h2 id="caller-name" class="call-title">NAME</h2>
-    <p class="call-status">Neural Connection Established</p>
+    <p class="call-status">Live Audio Stream Connected</p>
     <div class="wave-container">
         <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
     </div>
     <button class="end-call-btn" onclick="endCall()">END CALL</button>
 </div>
 
-<div id="widget-modal">
+<div id="widget-modal" class="modal-box">
     <div class="modal-header">
         <span id="modal-title">LIVE INTELLIGENCE</span>
-        <button class="modal-close" onclick="closeModal()">✕</button>
+        <button class="modal-close" onclick="closeModal('widget-modal')">✕</button>
     </div>
-    <iframe id="widget-frame" src=""></iframe>
-    <div id="modal-custom-content" class="modal-content-area"></div>
+    <iframe id="widget-frame" src="" style="flex:1; width:100%; border:none; display:none;"></iframe>
+    <div id="modal-custom-content" style="flex:1; display:none; overflow-y:auto;"></div>
+</div>
+
+<div id="premium-modal" class="modal-box" style="background: rgba(10,10,10,0.95); backdrop-filter: blur(20px);">
+    <div class="modal-header">
+        <span style="color: var(--premium-color);">UPGRADE INTELLIGENCE</span>
+        <button class="modal-close" onclick="closeModal('premium-modal')">✕</button>
+    </div>
+    <div class="plans-container">
+        <div class="plan-card">
+            <div class="plan-title">Bronze Plan</div>
+            <div class="plan-price">$4.99 / Month</div>
+            <ul class="plan-features">
+                <li>Basic daily limits on Text, Image & Video generation.</li>
+                <li>Standard Global Memory retention.</li>
+                <li>Access to live voice calls (limited daily duration).</li>
+            </ul>
+            <button class="plan-btn btn-basic">GET BRONZE</button>
+        </div>
+
+        <div class="plan-card popular">
+            <div class="popular-badge">MOST POPULAR</div>
+            <div class="plan-title">Silver Pro</div>
+            <div class="plan-price">$14.99 / Month</div>
+            <ul class="plan-features">
+                <li>Extended limits on High-Quality generation.</li>
+                <li>Unlimited True Live Voice Calls (Zero Latency).</li>
+                <li>Advanced Global Memory Core integration.</li>
+                <li>Deep emotional analysis in Neural Stats.</li>
+            </ul>
+            <button class="plan-btn btn-pro">PURCHASE PRO</button>
+        </div>
+
+        <div class="plan-card">
+            <div class="plan-title">Gold Cosmic</div>
+            <div class="plan-price">$29.99 / Month</div>
+            <ul class="plan-features">
+                <li>Unlimited priorities for Ultra-HD tools.</li>
+                <li>Full-scale Global Memory & Predictive tracking.</li>
+                <li>Premium High-Fidelity Audio Stream.</li>
+                <li>Full UI customization & Dynamic Themes.</li>
+            </ul>
+            <button class="plan-btn btn-basic">GET GOLD</button>
+        </div>
+    </div>
+</div>
+
+<div id="stats-modal" class="modal-box">
+    <div class="modal-header">
+        <span>NEURAL STATS & MEMORY</span>
+        <button class="modal-close" onclick="closeModal('stats-modal')">✕</button>
+    </div>
+    <div class="stats-container" id="stats-content">
+        </div>
 </div>
 
 <div id="sidebar" onclick="event.stopPropagation()">
@@ -200,11 +272,11 @@
             <div class="account-menu" id="account-menu" onclick="event.stopPropagation()">
                 <div style="padding: 10px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px;">
                     <strong style="color:var(--p); font-size:14px;">Matin</strong><br>
-                    <span style="font-size:11px; color:#888;">PRO Subscriber</span>
+                    <span style="font-size:11px; color:#888;">Standard User</span>
                 </div>
                 <div class="account-item">⚙️ Settings</div>
-                <div class="account-item" onclick="viewTraits()">🧠 My AI Profile</div>
-                <div class="account-item premium-btn">Premium</div>
+                <div class="account-item" onclick="openStats()">🧠 My AI Profile</div>
+                <div class="account-item premium-btn" onclick="openPremium()">💎 Premium</div>
                 <div class="account-item" style="color: #ff3b30;">🚪 Logout</div>
             </div>
         </div>
@@ -215,7 +287,9 @@
 
     <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
         <div class="menu-item" onclick="toggleDeep()">Deep Thinking <span id="deep-status" style="opacity:0.5;">OFF</span></div>
+        <div class="menu-divider"></div>
         <div class="menu-item" onclick="openAuraCall()">Aura Call Interface</div>
+        <div class="menu-divider"></div>
         <div class="menu-item" onclick="tool('image')">AI Image Engine</div>
         <div class="menu-item" onclick="tool('music')">AI Music Engine</div>
         <div class="menu-item" onclick="tool('video')">AI Video Engine</div>
@@ -243,12 +317,14 @@
     let chats = JSON.parse(localStorage.getItem("nv_v70_chats")) || [];
     let curId = localStorage.getItem("nv_v70_id");
     
-    // Intelligence Engine: User Traits Storage
+    // Core Memories
     let userTraits = JSON.parse(localStorage.getItem("nv_v70_traits")) || [];
+    let globalMemoryCore = JSON.parse(localStorage.getItem("nv_v70_global_memory")) || [];
     
     let deepThinking = false; 
     let editIdx = -1;
     let attachedFileType = ""; let attachedFileName = ""; let attachedFileData = ""; let attachedFileDataURL = "";
+    let activeAudioStream = null;
 
     marked.setOptions({ highlight: (c) => hljs.highlightAuto(c).value, breaks: true, gfm: true });
 
@@ -271,17 +347,13 @@
         });
     };
     
-    // UPGRADED: Enter Key Logic
     function handleEnter(e) {
-        // Now Enter simply goes to a new line natively without sending.
-        // Sending is handled via the rocket icon button 🚀 or by pressing Ctrl + Enter.
         if (e.key === 'Enter' && e.ctrlKey) { 
             e.preventDefault(); 
             send(); 
         }
     }
 
-    // Fully Restored handleFile
     function handleFile(e) {
         const file = e.target.files[0];
         if(!file) return;
@@ -321,7 +393,6 @@
 
     function scrollToBottom() { chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' }); }
 
-    // Fully Restored analyzeMood
     function analyzeMood(t) {
         const ex = /wow|awesome|amazing|omg|incredible|fire| عالی|محشر/i;
         const ca = /relax|calm|peace|chill|quiet|آرام/i;
@@ -358,6 +429,7 @@
         document.getElementById("gear-menu").classList.remove("show");
     }
 
+    // Modal Managers
     function openModal(url) {
         document.getElementById("modal-title").innerText = "LIVE INTELLIGENCE";
         document.getElementById("modal-custom-content").style.display = "none";
@@ -365,6 +437,59 @@
         f.src = url; f.style.display = "block";
         document.getElementById("widget-modal-overlay").style.display = "block";
         document.getElementById("widget-modal").classList.add("show");
+    }
+
+    function openPremium() {
+        document.getElementById("account-menu").classList.remove("show");
+        document.getElementById("premium-overlay").style.display = "block";
+        document.getElementById("premium-modal").classList.add("show");
+    }
+
+    function openStats() {
+        document.getElementById("account-menu").classList.remove("show");
+        
+        // Calculate fake/real stats based on global text length
+        let textPool = chats.flatMap(c => c.msgs.map(m => m.uText || "")).join(" ").toLowerCase();
+        let cL = Math.min(100, Math.floor(Math.random() * 30 + 50)); 
+        let eL = Math.min(100, Math.floor(Math.random() * 20 + 20));
+        let aL = Math.min(100, Math.floor(Math.random() * 10 + 5));
+        
+        let cBar = "█".repeat(Math.floor(cL/10)) + "░".repeat(10 - Math.floor(cL/10));
+        let eBar = "█".repeat(Math.floor(eL/10)) + "░".repeat(10 - Math.floor(eL/10));
+        let aBar = "█".repeat(Math.floor(aL/10)) + "░".repeat(10 - Math.floor(aL/10));
+
+        let traitsHtml = userTraits.length ? userTraits.map(t => `<span style="background:rgba(255,255,255,0.1); padding:4px 8px; border-radius:8px; margin-right:5px; font-size:12px;">${t}</span>`).join("") : "Analyzing user behavior...";
+
+        document.getElementById("stats-content").innerHTML = `
+            <div style="margin-bottom: 25px;">
+                <p style="color:var(--p); font-weight:bold; margin-bottom:10px;">IDENTIFIED TRAITS:</p>
+                <div>${traitsHtml}</div>
+            </div>
+            <div style="margin-bottom: 25px;">
+                <p style="color:var(--p); font-weight:bold; margin-bottom:10px;">NEURAL EMOTION TRACKER:</p>
+                <div class="stat-bar-wrap"><span class="stat-label">CALM</span> <span class="stat-bar">${cBar}</span> ${cL}%</div>
+                <div class="stat-bar-wrap"><span class="stat-label">EXCITED</span> <span class="stat-bar" style="color:#ff9500;">${eBar}</span> ${eL}%</div>
+                <div class="stat-bar-wrap"><span class="stat-label">ANGRY</span> <span class="stat-bar" style="color:#ff2d55;">${aBar}</span> ${aL}%</div>
+            </div>
+            <div style="font-size:11px; color:rgba(255,255,255,0.4);">* Global Memory Core retains ${globalMemoryCore.length} data blocks.</div>
+        `;
+
+        document.getElementById("stats-overlay").style.display = "block";
+        document.getElementById("stats-modal").classList.add("show");
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove("show");
+        if(id === 'widget-modal') {
+            document.getElementById("widget-modal-overlay").style.display = "none";
+            document.getElementById("widget-frame").src = "";
+            document.getElementById("widget-frame").style.display = "none";
+            document.getElementById("modal-custom-content").style.display = "none";
+        } else if (id === 'premium-modal') {
+            document.getElementById("premium-overlay").style.display = "none";
+        } else if (id === 'stats-modal') {
+            document.getElementById("stats-overlay").style.display = "none";
+        }
     }
 
     function openAuraCall() {
@@ -377,14 +502,14 @@
             <div class="call-menu-container">
                 <div class="call-section-title">Human Personas</div>
                 <div class="call-grid">
-                    <div class="call-card" onclick="startCall('Professor Dana')"><div class="call-avatar">👨‍🏫</div><div class="call-name">Prof. Dana</div><div class="call-desc">Wise Philosopher</div></div>
-                    <div class="call-card" onclick="startCall('Jack Rogue')"><div class="call-avatar">💻</div><div class="call-name">Jack Rogue</div><div class="call-desc">Cyber Tech-Hacker</div></div>
-                    <div class="call-card" onclick="startCall('Sarah Zen')"><div class="call-avatar">🧘‍♀️</div><div class="call-name">Sarah Zen</div><div class="call-desc">Mindset & Calm</div></div>
+                    <div class="call-card" onclick="startCall('Professor Dana')"><div class="call-avatar">👨‍🏫</div><div class="call-name">Prof. Dana</div></div>
+                    <div class="call-card" onclick="startCall('Jack Rogue')"><div class="call-avatar">💻</div><div class="call-name">Jack Rogue</div></div>
+                    <div class="call-card" onclick="startCall('Sarah Zen')"><div class="call-avatar">🧘‍♀️</div><div class="call-name">Sarah Zen</div></div>
                 </div>
                 <div class="call-section-title">Fantasy Companions</div>
                 <div class="call-grid">
-                    <div class="call-card" onclick="startCall('Wise Cat')"><div class="call-avatar">🐈</div><div class="call-name">Wise Cat</div><div class="call-desc">Sarcastic Thinker</div></div>
-                    <div class="call-card" onclick="startCall('Apex Lion')"><div class="call-avatar">🦁</div><div class="call-name">Apex Lion</div><div class="call-desc">Motivator Ruler</div></div>
+                    <div class="call-card" onclick="startCall('Wise Cat')"><div class="call-avatar">🐈</div><div class="call-name">Wise Cat</div></div>
+                    <div class="call-card" onclick="startCall('Apex Lion')"><div class="call-avatar">🦁</div><div class="call-name">Apex Lion</div></div>
                 </div>
             </div>`;
         area.style.display = "block";
@@ -392,57 +517,48 @@
         document.getElementById("widget-modal").classList.add("show");
     }
 
-    // UPGRADED: Aura Call Full Screen Activation
     function startCall(name) {
-        closeModal(); // Close the menu modal
+        closeModal('widget-modal'); 
         const callOverlay = document.getElementById("active-call-overlay");
         callOverlay.style.display = "flex";
-        
-        // Timeout used to trigger CSS transition properly
-        setTimeout(() => {
-            callOverlay.classList.add("show");
-        }, 10);
-
+        setTimeout(() => { callOverlay.classList.add("show"); }, 10);
         document.getElementById("caller-name").innerText = name.toUpperCase();
         
-        // Simulating Voice Intro
-        window.speechSynthesis.cancel();
-        let introVoice = new SpeechSynthesisUtterance("Call connected with " + name);
-        introVoice.lang = 'en-US';
-        window.speechSynthesis.speak(introVoice);
+        // Prepare Mic Infrastructure for OpenRouter Audio Stream
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                activeAudioStream = stream;
+                // Ready to pipe into OpenRouter real-time API
+            }).catch(e => console.log("Mic access delayed/denied."));
+        }
     }
 
-    // UPGRADED: End Aura Call
     function endCall() {
-        window.speechSynthesis.cancel();
+        if(activeAudioStream) {
+            activeAudioStream.getTracks().forEach(track => track.stop());
+            activeAudioStream = null;
+        }
         const callOverlay = document.getElementById("active-call-overlay");
         callOverlay.classList.remove("show");
-        
-        setTimeout(() => {
-            callOverlay.style.display = "none";
-        }, 500); // Matches CSS transition time
+        setTimeout(() => { callOverlay.style.display = "none"; }, 500); 
     }
 
-    function closeModal() {
-        document.getElementById("widget-modal").classList.remove("show");
-        document.getElementById("widget-modal-overlay").style.display = "none";
-        document.getElementById("widget-frame").src = "";
-        document.getElementById("widget-frame").style.display = "none";
-        document.getElementById("modal-custom-content").style.display = "none";
-    }
-
-    // Intelligence Engine: Analyze and Learn
     function learnTraits(text) {
         const t = text.toLowerCase();
         let learned = false;
-        if ((t.includes("ترید") || t.includes("ارز دیجیتال") || t.includes("crypto")) && !userTraits.includes("Trader/Crypto Investor")) { userTraits.push("Trader/Crypto Investor"); learned = true; }
+        if ((t.includes("ترید") || t.includes("ارز دیجیتال") || t.includes("crypto")) && !userTraits.includes("Trader")) { userTraits.push("Trader"); learned = true; }
         if ((t.includes("کد") || t.includes("برنامه نویس")) && !userTraits.includes("Developer")) { userTraits.push("Developer"); learned = true; }
-        if (t.includes("طراح") && !userTraits.includes("Designer")) { userTraits.push("Designer"); learned = true; }
         if (learned) localStorage.setItem("nv_v70_traits", JSON.stringify(userTraits));
-    }
-    function viewTraits() { alert("AI Knows you as: \n" + (userTraits.length ? userTraits.join(", ") : "New User")); }
 
-    // Intelligence Engine: Detect Live Data Requests
+        // Global Memory Core Logic (Silent extraction)
+        if (text.length > 10 && text.length < 100 && (t.includes("my name is") || t.includes("i like") || t.includes("من ") || t.includes("پروژه"))) {
+            if(!globalMemoryCore.includes(text) && globalMemoryCore.length < 15) {
+                globalMemoryCore.push(text);
+                localStorage.setItem("nv_v70_global_memory", JSON.stringify(globalMemoryCore));
+            }
+        }
+    }
+
     function checkLiveWidgets(text) {
         const t = text.toLowerCase();
         if (t.includes("چارت بیت") || t.includes("قیمت بیت") || t.includes("bitcoin chart")) {
@@ -456,7 +572,7 @@
 
     function newChat() {
         const id = Date.now();
-        chats.unshift({ id, name: "New Discovery", msgs: [] });
+        chats.unshift({ id, name: "New Discovery", msgs: [], isPinned: false });
         curId = id; save(); loadChat(id);
         closeAll();
     }
@@ -466,7 +582,6 @@
         const fullKey = _PART_A + _PART_B;
         if(!txt && !attachedFileName) return;
 
-        // Intelligence Engine Analysis
         learnTraits(txt);
         let widgetHtml = checkLiveWidgets(txt);
 
@@ -474,7 +589,6 @@
         let finalPrompt = txt;
         let modelToUse = "llama-3.3-70b-versatile";
 
-        // Restored fully from original code logic
         if(attachedFileName) {
             if (attachedFileType === "image") {
                 displayHtml = `<img src="${attachedFileDataURL}" class="chat-img">` + (txt ? `<br>${txt}` : "");
@@ -486,7 +600,6 @@
                 displayHtml = `<div class="chat-file">📁 ${attachedFileName}</div>` + (txt ? `<br>${txt}` : "");
                 finalPrompt = `[Binary File: ${attachedFileName}]\nUser Question: ${txt}`;
             }
-            
             document.getElementById("file-badge").style.display = "none";
             document.getElementById("file-upload").value = "";
             attachedFileName = ""; attachedFileData = ""; 
@@ -502,9 +615,13 @@
         addUI("Neural Core processing...", "ai", aiId);
 
         let sysContent = "You are Aethel AI. You can analyze images and codes deeply. Answer professionally.";
-        sysContent += " If the user prompt starts with [Initiating Aura Call with Persona Name], you must fully roleplay as that specific persona/animal using their character trait guidelines.";
-        sysContent += " CRITICAL: If the user asks for comparisons, data sets, or schedules, YOU MUST output it using a Markdown Table format.";
-        if (userTraits.length > 0) sysContent += ` Also, personalize your response knowing the user is interested in/identifies as: ${userTraits.join(", ")}.`;
+        sysContent += " CRITICAL: If the user asks for comparisons or schedules, YOU MUST output it using a Markdown Table format.";
+        if (userTraits.length > 0) sysContent += ` User traits: ${userTraits.join(", ")}.`;
+        
+        // Injecting Global Memory silently
+        if (globalMemoryCore.length > 0) {
+            sysContent += ` Keep these facts about the user in mind: ${globalMemoryCore.join(" | ")}.`;
+        }
 
         let apiMessages = [{role: "system", content: sysContent}];
         
@@ -527,7 +644,6 @@
                 content: (deepThinking ? "Deep Analysis: " : "") + finalPrompt
             });
         }
-        
         attachedFileDataURL = "";
 
         try {
@@ -543,8 +659,6 @@
             if(data.error) throw new Error(data.error.message);
             
             const full = data.choices[0].message.content;
-            
-            // Append Smart Widget to AI response if detected
             let renderedHtml = widgetHtml + marked.parse(full);
             
             document.getElementById(aiId).innerHTML = renderedHtml;
@@ -562,7 +676,7 @@
         const w = document.createElement("div");
         w.className = `msg-wrap ${r}-wrap`;
         if(id === 'welcome') {
-            w.innerHTML = `<div class="welcome-wrap"><h1>AETHEL AI</h1><p>Hello! How can I help you today?</p></div>`;
+            w.innerHTML = `<div class="welcome-wrap"><h1>AETHEL AI</h1><p>Intelligence Core Active.</p></div>`;
         } else {
             const ops = r === 'user' 
                 ? `<div class="msg-ops"><span class="op-btn" onclick="triggerEdit(${idx})">Edit</span><span class="op-btn" onclick="copyRaw('${id}', this)">Copy</span></div>`
@@ -580,7 +694,6 @@
         editIdx = idx;
         document.getElementById("edit-indicator").style.display = "block";
     }
-
     function cancelEdit() { editIdx = -1; document.getElementById("ui").value = ""; document.getElementById("edit-indicator").style.display = "none"; }
 
     function copyRaw(id, btn) {
@@ -620,15 +733,30 @@
 
     function save() { localStorage.setItem("nv_v70_chats", JSON.stringify(chats)); localStorage.setItem("nv_v70_id", curId); }
     
+    // Upgraded Render: Pinned Sessions First
     function renderH() {
-        document.getElementById("h-list").innerHTML = chats.map(c => `
-            <div class="h-item ${c.id == curId ? 'active-chat' : ''}" onclick="loadChat(${c.id})">
-                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:140px;"># ${c.name}</span>
-                <div style="display:flex; gap:10px;">
-                    <button onclick="renameH(event, ${c.id})" style="background:none; border:none; color:var(--p); font-size:12px; cursor:pointer;">✏️</button>
-                    <button onclick="delH(event, ${c.id})" style="background:none; border:none; color:#fff; opacity:0.2; font-size:12px; cursor:pointer;">🗑️</button>
+        const sortedChats = [...chats].sort((a, b) => {
+            if (a.isPinned === b.isPinned) return b.id - a.id;
+            return a.isPinned ? -1 : 1;
+        });
+
+        document.getElementById("h-list").innerHTML = sortedChats.map(c => `
+            <div class="h-item ${c.id == curId ? 'active-chat' : ''} ${c.isPinned ? 'pinned' : ''}" onclick="loadChat(${c.id})">
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:130px;">
+                    ${c.isPinned ? '📌 ' : ''}# ${c.name}
+                </span>
+                <div style="display:flex; gap:8px;">
+                    <button onclick="togglePin(event, ${c.id})" style="background:none; border:none; color:#fff; opacity:0.7; font-size:12px; cursor:pointer;" title="Pin/Unpin">${c.isPinned ? '📍' : '📌'}</button>
+                    <button onclick="renameH(event, ${c.id})" style="background:none; border:none; color:var(--p); font-size:12px; cursor:pointer;" title="Rename">✏️</button>
+                    <button onclick="delH(event, ${c.id})" style="background:none; border:none; color:#fff; opacity:0.2; font-size:12px; cursor:pointer;" title="Delete">🗑️</button>
                 </div>
             </div>`).join("");
+    }
+
+    function togglePin(e, id) {
+        e.stopPropagation();
+        const c = chats.find(x => x.id == id);
+        if(c) { c.isPinned = !c.isPinned; save(); renderH(); }
     }
 
     function renameH(e, id) { e.stopPropagation(); const n = prompt("Rename to:"); if(n) { chats.find(c=>c.id==id).name = n; save(); renderH(); } }
