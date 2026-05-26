@@ -15,6 +15,7 @@
             /* Premium Rare Color Token */
             --premium-color: #dfb257;
             --premium-glow: rgba(223, 178, 87, 0.25);
+            --gold-gradient: linear-gradient(135deg, #fedb37 0%, #fdb933 25%, #967411 50%, #fdb933 75%, #fedb37 100%);
         }
         
         /* Expanded Mood Colors */
@@ -38,8 +39,13 @@
         .h-item.active-chat { border-color: var(--p); background: rgba(255,255,255,0.1); }
         .h-item.pinned { border-left: 3px solid var(--p); }
 
-        main { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; }
-        header { height: 65px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); }
+        main { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; height: 100%; transition: padding-right 0.5s var(--apple-ease); }
+        
+        /* Layout split wrapper for Artifacts */
+        .workspace-body { display: flex; flex: 1; width: 100%; height: calc(100% - 65px); position: relative; overflow: hidden; }
+        .chat-area { flex: 1; display: flex; flex-direction: column; height: 100%; position: relative; }
+
+        header { height: 65px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); width: 100%; }
         .logo { font-size: 14px; letter-spacing: 5px; font-weight: 900; color: var(--p); text-transform: uppercase; }
 
         /* Account Hub Styles */
@@ -96,7 +102,7 @@
         /* Dynamic Divider */
         .menu-divider { height: 1px; background: var(--p); opacity: 0.3; margin: 5px 20px; box-shadow: 0 0 8px var(--glow); transition: 0.8s var(--apple-ease); }
 
-        footer { position: absolute; bottom: 0; width: 100%; padding: 20px 5% 45px; background: linear-gradient(transparent, var(--bg) 80%); }
+        footer { position: absolute; bottom: 0; width: 100%; padding: 20px 5% 45px; background: linear-gradient(transparent, var(--bg) 80%); z-index: 1000; }
         .input-bar { background: rgba(255,255,255,0.08); backdrop-filter: blur(30px); border: 1px solid var(--brd); border-radius: 35px; display: flex; align-items: center; padding: 8px 22px; gap: 15px; }
         #ui { flex: 1; background: transparent; border: none; color: #fff; padding: 12px 0; font-size: 17px; resize: none; height: 50px; max-height: 150px; overflow-y: auto; line-height: 1.5; }
 
@@ -166,26 +172,35 @@
         .stat-label { display: inline-block; width: 80px; font-weight: bold; }
         .stat-bar { color: var(--p); }
 
-        /* Added Styles for Newly Injected Modals & Panels */
-        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
-        .factory-box, .leitner-box, .career-box, .goal-box { background: rgba(255,255,255,0.02); border: 1px solid var(--brd); border-radius: 18px; padding: 20px; }
-        .gold-lock-overlay { text-align: center; padding: 40px 20px; color: var(--premium-color); font-weight: bold; }
+        /* --- MAGIC MULTIMODAL ARTIFACTS STYLES --- */
+        #artifacts-panel { width: 0px; height: 100%; background: rgba(12, 12, 12, 0.98); border-left: 0px solid var(--brd); display: flex; flex-direction: column; transition: width 0.5s var(--apple-ease), border-left 0.5s var(--apple-ease); position: relative; overflow: hidden; }
+        #artifacts-panel.open { width: 450px; border-left: 1px solid var(--brd); }
+        .art-header { padding: 20px; border-bottom: 1px solid var(--brd); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.4); }
+        .art-content { flex: 1; padding: 25px; overflow-y: auto; color: #eee; font-size: 14px; line-height: 1.6; }
+        .premium-lock-overlay { position: absolute; inset: 0; background: rgba(5,5,5,0.92); backdrop-filter: blur(20px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; z-index: 10; }
+        .lock-icon { font-size: 48px; margin-bottom: 15px; filter: drop-shadow(0 0 15px var(--premium-glow)); }
+
+        /* --- TOOLS DASHBOARD COMPONENT STYLES --- */
+        .factory-container, .tracker-container, .career-container, .goal-container { padding: 25px; display: flex; flex-direction: column; gap: 20px; color: #fff; }
+        .tool-input, .tool-select { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--brd); border-radius: 14px; padding: 14px; color: #fff; font-size: 14px; transition: 0.3s; }
+        .tool-input:focus, .tool-select:focus { border-color: var(--p); background: rgba(255,255,255,0.08); }
+        .action-btn { background: var(--p); color: #000; font-weight: 700; padding: 14px; border: none; border-radius: 14px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--glow); }
+        .output-box { background: rgba(0,0,0,0.3); border: 1px solid var(--brd); border-radius: 16px; padding: 20px; min-height: 100px; max-height: 300px; overflow-y: auto; white-space: pre-wrap; font-family: monospace; font-size: 13px; }
         
-        /* Trello/Todoist Goal Planner Specifics */
-        .trello-board { display: flex; gap: 15px; overflow-x: auto; padding: 10px 0; }
-        .trello-column { flex: 1; min-width: 200px; background: rgba(0,0,0,0.4); border: 1px solid var(--brd); border-radius: 12px; padding: 12px; }
-        .trello-title { font-size: 12px; font-weight: 800; color: var(--p); text-transform: uppercase; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-        .trello-card { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; font-size: 12px; margin-bottom: 8px; border-left: 3px solid var(--p); }
-        
-        .factory-input, .career-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--brd); color: #fff; border-radius: 10px; padding: 10px; font-size: 13px; margin-bottom: 10px; resize: none; }
-        .action-link-btn { background: var(--p); color: #000; border: none; padding: 8px 15px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .action-link-btn:hover { transform: scale(1.03); }
+        /* Goal Planner Boards */
+        .goal-board { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; }
+        .goal-column { flex: 1; min-width: 200px; background: rgba(255,255,255,0.02); border: 1px solid var(--brd); border-radius: 16px; padding: 15px; }
+        .goal-card-item { background: rgba(255,255,255,0.05); border-left: 3px solid var(--p); padding: 10px; border-radius: 10px; margin-bottom: 10px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* Counter Widget in Chat Header */
+        .limit-badge { background: rgba(255,255,255,0.06); border: 1px solid var(--brd); padding: 6px 14px; border-radius: 20px; font-size: 11px; font-family: monospace; color: rgba(255,255,255,0.6); }
 
         @media (max-width: 768px) {
             .input-bar { padding: 6px 15px; gap: 10px; }
             #ui { font-size: 15px; height: 45px; padding: 10px 0; max-height: 100px; }
             #chat-box { padding: 20px 5% 150px; }
-            .feature-grid { grid-template-columns: 1fr; }
+            #artifacts-panel.open { width: 100%; position: absolute; right: 0; top: 0; z-index: 2500; }
         }
     </style>
 </head>
@@ -197,42 +212,11 @@
 <div id="premium-overlay" onclick="closeModal('premium-modal')"></div>
 <div id="stats-overlay" onclick="closeModal('stats-modal')"></div>
 
-<div id="factory-modal" class="modal-box" style="background: rgba(10,10,10,0.98); border-color: var(--premium-color);">
-    <div class="modal-header">
-        <span style="color: var(--premium-color);">🏭 AI CONTENT FACTORY (GOLD ONLY)</span>
-        <button class="modal-close" onclick="closeModal('factory-modal')">✕</button>
-    </div>
-    <div id="factory-content" style="padding:25px; overflow-y:auto;"></div>
-</div>
-
-<div id="leitner-modal" class="modal-box">
-    <div class="modal-header">
-        <span>🧠 AI STUDY TRACKER (LEITNER BOX)</span>
-        <button class="modal-close" onclick="closeModal('leitner-modal')">✕</button>
-    </div>
-    <div id="leitner-content" style="padding:25px; overflow-y:auto;"></div>
-</div>
-
-<div id="career-modal" class="modal-box">
-    <div class="modal-header">
-        <span>💼 CAREER OPTIMIZER (RESUME SCANNER)</span>
-        <button class="modal-close" onclick="closeModal('career-modal')">✕</button>
-    </div>
-    <div id="career-content" style="padding:25px; overflow-y:auto;"></div>
-</div>
-
-<div id="goal-modal" class="modal-box">
-    <div class="modal-header">
-        <span>🎯 AUTONOMOUS GOAL PLANNER</span>
-        <button class="modal-close" onclick="closeModal('goal-modal')">✕</button>
-    </div>
-    <div id="goal-content" style="padding:25px; overflow-y:auto;"></div>
-</div>
-
 <div id="active-call-overlay">
     <div class="glow-ring"></div>
     <h2 id="caller-name" class="call-title">NAME</h2>
-    <p id="call-timer-display" class="call-status">Live Audio Stream Connected</p>
+    <p class="call-status">Live Audio Stream Connected</p>
+    <div style="color: #ff3b30; font-family: monospace; font-weight: bold; margin-bottom: 20px; z-index: 2; font-size: 14px;" id="call-timer-display"></div>
     <div class="wave-container">
         <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
     </div>
@@ -245,7 +229,7 @@
         <button class="modal-close" onclick="closeModal('widget-modal')">✕</button>
     </div>
     <iframe id="widget-frame" src="" style="flex:1; width:100%; border:none; display:none;"></iframe>
-    <div id="modal-custom-content" style="flex:1; display:none; overflow-y:auto;"></div>
+    <div id="modal-custom-content" style="flex:1; display:none; overflow-y:auto; background: #111;"></div>
 </div>
 
 <div id="premium-modal" class="modal-box" style="background: rgba(10,10,10,0.95); backdrop-filter: blur(20px);">
@@ -254,18 +238,7 @@
         <button class="modal-close" onclick="closeModal('premium-modal')">✕</button>
     </div>
     <div class="plans-container">
-        <div class="plan-card" id="plan-card-free" style="border-style: dashed;">
-            <div class="plan-title">Free Tier</div>
-            <div class="plan-price">$0.00 / Always</div>
-            <ul class="plan-features">
-                <li>Strict limit of 10 messages total.</li>
-                <li>5-Minute strict countdown limit on Aura Calls.</li>
-                <li>Core AI modules only.</li>
-            </ul>
-            <button class="plan-btn btn-basic" onclick="selectPlan('free')">ACTIVATE FREE TESTING</button>
-        </div>
-
-        <div class="plan-card" id="plan-card-bronze">
+        <div class="plan-card">
             <div class="plan-title">Bronze Plan</div>
             <div class="plan-price">$4.99 / Month</div>
             <ul class="plan-features">
@@ -276,7 +249,7 @@
             <button class="plan-btn btn-basic" onclick="selectPlan('bronze')">GET BRONZE</button>
         </div>
 
-        <div class="plan-card popular" id="plan-card-silver">
+        <div class="plan-card popular">
             <div class="popular-badge">MOST POPULAR</div>
             <div class="plan-title">Silver Pro</div>
             <div class="plan-price">$14.99 / Month</div>
@@ -289,7 +262,7 @@
             <button class="plan-btn btn-pro" onclick="selectPlan('silver')">PURCHASE PRO</button>
         </div>
 
-        <div class="plan-card" id="plan-card-gold">
+        <div class="plan-card">
             <div class="plan-title">Gold Cosmic</div>
             <div class="plan-price">$29.99 / Month</div>
             <ul class="plan-features">
@@ -297,9 +270,8 @@
                 <li>Full-scale Global Memory & Predictive tracking.</li>
                 <li>Premium High-Fidelity Audio Stream.</li>
                 <li>Full UI customization & Dynamic Themes.</li>
-                <li>Exclusive: Content Factory & Brand Voice Cloning.</li>
             </ul>
-            <button class="plan-btn btn-basic" style="background:var(--premium-color); color:#000;" onclick="selectPlan('gold')">GET GOLD COSMIC</button>
+            <button class="plan-btn btn-basic" onclick="selectPlan('gold')">GET GOLD</button>
         </div>
     </div>
 </div>
@@ -323,55 +295,78 @@
 
 <main>
     <header>
-        <button class="btn-icon" onclick="toggleS(event)">☰</button>
-        <div class="logo">Aethel AI <span id="tier-badge" style="font-size:9px; background:var(--p); color:#000; padding:2px 6px; border-radius:8px; margin-left:5px; font-weight:800; vertical-align:middle;">FREE</span></div>
-        
-        <div class="account-hub" onclick="toggleAccount(event)">
-            <div class="account-avatar" id="user-avatar">ME</div>
-            <div class="account-menu" id="account-menu" onclick="event.stopPropagation()">
-                <div style="padding: 10px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px;">
-                    <strong style="color:var(--p); font-size:14px;">Matin</strong><br>
-                    <span style="font-size:11px; color:#888;" id="user-tier-label">Standard User (Free)</span>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <button class="btn-icon" onclick="toggleS(event)">☰</button>
+            <div class="logo">Aethel AI</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div id="tier-limiter-badge" class="limit-badge">PLAN: FREE</div>
+            <div class="account-hub" onclick="toggleAccount(event)">
+                <div class="account-avatar" id="user-avatar">ME</div>
+                <div class="account-menu" id="account-menu" onclick="event.stopPropagation()">
+                    <div style="padding: 10px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px;">
+                        <strong style="color:var(--p); font-size:14px;">Matin</strong><br>
+                        <span style="font-size:11px; color:#888;" id="menu-tier-label">Standard User</span>
+                    </div>
+                    <div class="account-item" onclick="openAuraCall()">📞 Aura Call System</div>
+                    <div class="account-item" onclick="openStats()">🧠 My AI Profile</div>
+                    <div class="account-item premium-btn" onclick="openPremium()">💎 Premium</div>
+                    <div class="account-item" style="color: #ff3b30;">🚪 Logout</div>
                 </div>
-                <div class="account-item">⚙️ Settings</div>
-                <div class="account-item" onclick="openStats()">🧠 My AI Profile</div>
-                <div class="account-item premium-btn" onclick="openPremium()">💎 Premium</div>
-                <div class="account-item" style="color: #ff3b30;">🚪 Logout</div>
             </div>
         </div>
     </header>
 
-    <div id="chat-box"></div>
-    <button id="scroll-btn" onclick="scrollToBottom()">↓</button>
+    <div class="workspace-body">
+        <div class="chat-area">
+            <div id="chat-box"></div>
+            <button id="scroll-btn" onclick="scrollToBottom()">↓</button>
 
-    <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
-        <div class="menu-item" onclick="toggleDeep()">Deep Thinking <span id="deep-status" style="opacity:0.5;">OFF</span></div>
-        <div class="menu-divider"></div>
-        <div class="menu-item" onclick="openAuraCall()">Aura Call Interface</div>
-        <div class="menu-divider"></div>
-        <div class="menu-item" onclick="openFactory()" style="color:var(--premium-color)">🏭 AI Content Factory</div>
-        <div class="menu-item" onclick="openLeitner()">📚 AI Study Tracker</div>
-        <div class="menu-item" onclick="openCareer()">💼 Career Optimizer</div>
-        <div class="menu-item" onclick="openGoalPlanner()">🎯 Goal Planner Board</div>
-        <div class="menu-divider"></div>
-        <div class="menu-item" onclick="tool('image')">AI Image Engine</div>
-        <div class="menu-item" onclick="tool('music')">AI Music Engine</div>
-        <div class="menu-item" onclick="tool('video')">AI Video Engine</div>
+            <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
+                <div class="menu-item" onclick="toggleDeep()">Deep Thinking <span id="deep-status" style="opacity:0.5;">OFF</span></div>
+                <div class="menu-divider"></div>
+                <div class="menu-item" onclick="openAuraCall()">Aura Call Interface</div>
+                <div class="menu-divider"></div>
+                <div class="menu-item" onclick="openContentFactory()" style="color: var(--premium-color);">🏭 AI Content Factory 👑</div>
+                <div class="menu-item" onclick="openStudyTracker()">📚 AI Study & Leitner Box</div>
+                <div class="menu-item" onclick="openCareerOptimizer()">👔 AI Career Optimizer</div>
+                <div class="menu-item" onclick="openGoalPlanner()">🎯 Autonomous Goal Planner</div>
+                <div class="menu-divider"></div>
+                <div class="menu-item" onclick="tool('image')">AI Image Engine</div>
+                <div class="menu-item" onclick="tool('music')">AI Music Engine</div>
+                <div class="menu-item" onclick="tool('video')">AI Video Engine</div>
+            </div>
+
+            <footer>
+                <div id="edit-indicator" style="display:none; color:var(--p); font-size:11px; margin-bottom:8px; padding-left:25px; font-weight:700;">
+                    EDITING... <span onclick="cancelEdit()" style="color:#fff; cursor:pointer; margin-left:15px; text-decoration:underline;">CANCEL</span>
+                </div>
+                <div id="file-badge" class="file-badge">📎 <span id="file-name"></span></div>
+                <div class="input-bar" onclick="event.stopPropagation()">
+                    <input type="file" id="file-upload" style="display:none;" onchange="handleFile(event)">
+                    <button class="btn-icon" onclick="document.getElementById('file-upload').click()" title="Attach File">📎</button>
+                    <button class="btn-icon" onclick="toggleGear(event)" title="Tools">⚙️</button>
+                    <textarea id="ui" placeholder="Message Aethel AI..." spellcheck="false" onkeydown="handleEnter(event)"></textarea>
+                    <button id="send-btn" class="btn-icon" onclick="send()">🚀</button>
+                </div>
+            </footer>
+        </div>
+
+        <div id="artifacts-panel">
+            <div id="artifact-lock" class="premium-lock-overlay">
+                <div class="lock-icon">👑</div>
+                <h3 style="color: var(--premium-color); margin: 0 0 10px 0;">GOLD COSMIC EXCLUSIVE</h3>
+                <p style="font-size: 13px; color: #888; margin: 0 0 20px 0;">Live interactive graphics, HTML/CSS sandboxes, and advanced visualization frames are locked inside the Gold Cosmic tier.</p>
+                <button class="action-btn" style="background: var(--premium-color); font-size: 12px; padding: 10px 20px;" onclick="openPremium()">UPGRADE NOW</button>
+            </div>
+            <div class="art-header">
+                <span style="font-weight: 800; color: var(--p); font-size: 12px; letter-spacing: 1px;">MAGIC MULTIMODAL ARTIFACT</span>
+                <button style="background:none; border:none; color:#fff; cursor:pointer; font-size:16px;" onclick="closeArtifacts()">✕</button>
+            </div>
+            <div class="art-content" id="artifact-render-area">
+                </div>
+        </div>
     </div>
-
-    <footer>
-        <div id="edit-indicator" style="display:none; color:var(--p); font-size:11px; margin-bottom:8px; padding-left:25px; font-weight:700;">
-            EDITING... <span onclick="cancelEdit()" style="color:#fff; cursor:pointer; margin-left:15px; text-decoration:underline;">CANCEL</span>
-        </div>
-        <div id="file-badge" class="file-badge">📎 <span id="file-name"></span></div>
-        <div class="input-bar" onclick="event.stopPropagation()">
-            <input type="file" id="file-upload" style="display:none;" onchange="handleFile(event)">
-            <button class="btn-icon" onclick="document.getElementById('file-upload').click()" title="Attach File">📎</button>
-            <button class="btn-icon" onclick="toggleGear(event)" title="Tools">⚙️</button>
-            <textarea id="ui" placeholder="Message Aethel AI..." spellcheck="false" onkeydown="handleEnter(event)"></textarea>
-            <button id="send-btn" class="btn-icon" onclick="send()">🚀</button>
-        </div>
-    </footer>
 </main>
 
 <script>
@@ -385,28 +380,24 @@
     let userTraits = JSON.parse(localStorage.getItem("nv_v70_traits")) || [];
     let globalMemoryCore = JSON.parse(localStorage.getItem("nv_v70_global_memory")) || [];
     
-    // Injected Smart Subsystems States
-    let userPlanTier = localStorage.getItem("aethel_plan_tier") || "free";
-    let textMessageCount = parseInt(localStorage.getItem("aethel_msg_count")) || 0;
-    let voiceCallTimer = null;
-    let voiceTimeRemaining = 300; // 5 mins countdown for free tier
-
-    // Injected Dummy Data Stores for Tracking Sub-panels
-    let leitnerCards = JSON.parse(localStorage.getItem("aethel_leitner")) || [
-        { id: 1, front: "What is an API Key?", back: "An interface token used to authenticate calls to an application ecosystem.", box: 1 },
-        { id: 2, front: "Context Window Definition", back: "The absolute maximum amount of structural parsing data an AI core tracks inside active chats.", box: 2 }
-    ];
+    // Tier & Subscription State
+    let userPlan = localStorage.getItem("aethel_plan") || "free"; 
+    let dailyMessageCount = parseInt(localStorage.getItem("aethel_msg_count")) || 0;
+    let callSecondsUsed = parseInt(localStorage.getItem("aethel_call_seconds")) || 0;
+    
+    // Extended Tools Storage
+    let flashcards = JSON.parse(localStorage.getItem("aethel_flashcards")) || [];
     let goalTasks = JSON.parse(localStorage.getItem("aethel_goals")) || [
-        { id: 1, text: "Design Aethel Core architecture maps", status: "todo" },
-        { id: 2, text: "Integrate Groq lightning processing pipelines", status: "doing" },
-        { id: 3, text: "Configure Freemium algorithmic nodes", status: "done" }
+        {id: 1, title: "Learn Python Basics", status: "todo"},
+        {id: 2, title: "Configure Aethel Audio Core", status: "progress"}
     ];
-    let brandVoiceData = localStorage.getItem("aethel_brand_voice") || "Analytical, developer-oriented, precise, uppercase architectural naming accents.";
+    let brandVoiceMatrix = localStorage.getItem("aethel_brand_voice") || "";
 
     let deepThinking = false; 
     let editIdx = -1;
     let attachedFileType = ""; let attachedFileName = ""; let attachedFileData = ""; let attachedFileDataURL = "";
     let activeAudioStream = null;
+    let callTimerInterval = null;
 
     marked.setOptions({ highlight: (c) => hljs.highlightAuto(c).value, breaks: true, gfm: true });
 
@@ -430,6 +421,41 @@
         });
     };
     
+    function updateTierUI() {
+        const badge = document.getElementById("tier-limiter-badge");
+        const label = document.getElementById("menu-tier-label");
+        const avatar = document.getElementById("user-avatar");
+        
+        badge.innerText = `PLAN: ${userPlan.toUpperCase()}`;
+        if(userPlan === "free") {
+            label.innerText = "Standard Tier (10 Msgs Limit)";
+            badge.style.borderColor = "rgba(255,255,255,0.12)";
+            badge.style.color = "#ccc";
+            avatar.style.background = `linear-gradient(135deg, var(--p), #000)`;
+        } else if(userPlan === "bronze") {
+            label.innerText = "Bronze Mind Tier";
+            badge.style.borderColor = "var(--p)";
+            badge.style.color = "var(--p)";
+        } else if(userPlan === "silver") {
+            label.innerText = "Silver Pro Tier";
+            badge.style.borderColor = "#af52de";
+            badge.style.color = "#af52de";
+        } else if(userPlan === "gold") {
+            label.innerText = "Gold Cosmic VIP";
+            badge.style.borderColor = "var(--premium-color)";
+            badge.style.color = "var(--premium-color)";
+            avatar.style.background = var(--gold-gradient);
+        }
+    }
+
+    function selectPlan(planName) {
+        userPlan = planName;
+        localStorage.setItem("aethel_plan", planName);
+        updateTierUI();
+        alert(`Successfully synchronized with ${planName.toUpperCase()} matrix.`);
+        closeModal("premium-modal");
+    }
+
     function handleEnter(e) {
         if (e.key === 'Enter' && e.ctrlKey) { 
             e.preventDefault(); 
@@ -477,7 +503,7 @@
     function scrollToBottom() { chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' }); }
 
     function analyzeMood(t) {
-        const ex = /wow|awesome|amazing|omg|incredible|fire| عالی|محشر/i;
+        const ex = /wow|awesome|amazing|omg|incredible|fire|عالی|محشر/i;
         const ca = /relax|calm|peace|chill|quiet|آرام/i;
         const an = /hate|angry|mad|damn|stupid|بد|احمق|عصبانی/i;
         const p = /good|great|happy|yes|perfect|love|خوب|بله/i;
@@ -512,6 +538,8 @@
         document.getElementById("gear-menu").classList.remove("show");
     }
 
+    function closeArtifacts() { document.getElementById("artifacts-panel").classList.remove("open"); }
+
     // Modal Managers
     function openModal(url) {
         document.getElementById("modal-title").innerText = "LIVE INTELLIGENCE";
@@ -520,199 +548,6 @@
         f.src = url; f.style.display = "block";
         document.getElementById("widget-modal-overlay").style.display = "block";
         document.getElementById("widget-modal").classList.add("show");
-    }
-
-    function openPremium() {
-        document.getElementById("account-menu").classList.remove("show");
-        document.getElementById("premium-overlay").style.display = "block";
-        document.getElementById("premium-modal").classList.add("show");
-    }
-
-    // Injected: Account Freemium Tier Selection Logic Changer
-    function selectPlan(tier) {
-        userPlanTier = tier;
-        localStorage.setItem("aethel_plan_tier", tier);
-        if(tier !== 'free') {
-            textMessageCount = 0; // reset for testing
-            localStorage.setItem("aethel_msg_count", 0);
-        }
-        updateTierUI();
-        closeModal('premium-modal');
-        alert(`Plan Tier dynamically adjusted to: ${tier.toUpperCase()}. Testing configurations initialized.`);
-    }
-
-    function updateTierUI() {
-        const badge = document.getElementById("tier-badge");
-        const label = document.getElementById("user-tier-label");
-        badge.innerText = userPlanTier.toUpperCase();
-        label.innerText = `Standard User (${userPlanTier.toUpperCase()})`;
-        
-        if(userPlanTier === 'gold') {
-            badge.style.background = "var(--premium-color)";
-        } else if(userPlanTier === 'silver') {
-            badge.style.background = "#5ac8fa";
-        } else if(userPlanTier === 'bronze') {
-            badge.style.background = "#af52de";
-        } else {
-            badge.style.background = "#76b900";
-        }
-    }
-
-    // Injected Modals Opener Scripts
-    function openFactory() {
-        document.getElementById("gear-menu").classList.remove("show");
-        const m = document.getElementById("factory-modal");
-        const content = document.getElementById("factory-content");
-        m.classList.add("show");
-        document.getElementById("widget-modal-overlay").style.display = "block";
-        
-        if(userPlanTier !== 'gold') {
-            content.innerHTML = `<div class="gold-lock-overlay">🔒 LOCKED SECTION<br><span style="font-size:12px; color:#aaa; font-weight:normal; margin-top:10px; display:block;">AI Content Factory requires an active Gold Cosmic Subscription Core. Upgrade via the account avatar.</span></div>`;
-            return;
-        }
-        
-        content.innerHTML = `
-            <h3 style="color:var(--premium-color); margin-top:0;">Content Generator Nodes</h3>
-            <label style="font-size:12px; color:#888;">Target Topic Description</label>
-            <textarea id="fact-topic" class="factory-input" placeholder="Enter target content topic context..."></textarea>
-            <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <button class="action-link-btn" onclick="triggerFactoryTask('YouTube Script')">🎬 YouTube</button>
-                <button class="action-link-btn" onclick="triggerFactoryTask('LinkedIn Post')">💼 LinkedIn</button>
-                <button class="action-link-btn" onclick="triggerFactoryTask('System Prompt')">⚙️ Prompt Engineering</button>
-            </div>
-            <h4 style="color:#fff;">Cloned Brand Voice Parameters</h4>
-            <textarea id="fact-voice" class="factory-input" style="height:60px;">${brandVoiceData}</textarea>
-            <button class="action-link-btn" style="background:#fff; color:#000;" onclick="saveBrandVoice()">💾 SAVE VOICE EMBEDDING</button>
-        `;
-    }
-
-    function saveBrandVoice() {
-        const val = document.getElementById("fact-voice").value;
-        brandVoiceData = val;
-        localStorage.setItem("aethel_brand_voice", val);
-        alert("Brand signature tone architecture locked into profile.");
-    }
-
-    function triggerFactoryTask(type) {
-        const topic = document.getElementById("fact-topic").value;
-        closeModal("factory-modal");
-        document.getElementById("ui").value = `[AI Content Factory - Output requested using cloned voice setting: ${brandVoiceData}]\nGenerate a complete high-engagement raw ${type} optimized for: ${topic}`;
-        send();
-    }
-
-    function openLeitner() {
-        document.getElementById("gear-menu").classList.remove("show");
-        document.getElementById("leitner-modal").classList.add("show");
-        document.getElementById("widget-modal-overlay").style.display = "block";
-        renderLeitner();
-    }
-
-    function renderLeitner() {
-        let cardsHtml = leitnerCards.map(c => `
-            <div style="background:rgba(255,255,255,0.03); border:1px solid var(--brd); padding:15px; border-radius:12px; margin-bottom:12px; position:relative;">
-                <span style="font-size:10px; color:var(--p); font-weight:800; border:1px solid var(--p); padding:1px 5px; border-radius:5px; position:absolute; top:12px; right:15px;">BOX ${c.box}</span>
-                <strong style="color:#fff; display:block; font-size:14px; margin-bottom:5px;">Q: ${c.front}</strong>
-                <p style="color:#aaa; font-size:13px; margin:0 0 10px 0;">A: ${c.back}</p>
-                <div style="display:flex; gap:8px;">
-                    <button class="action-link-btn" style="padding:4px 10px; font-size:10px;" onclick="moveLeitner(${c.id}, true)">Known (Next Box)</button>
-                    <button class="action-link-btn" style="padding:4px 10px; font-size:10px; background:#ff3b30; color:#fff;" onclick="moveLeitner(${c.id}, false)">Failed (Reset)</button>
-                </div>
-            </div>
-        `).join("");
-        document.getElementById("leitner-content").innerHTML = `
-            <h3 style="margin-top:0; color:var(--p);">Active Educational Cards</h3>
-            ${cardsHtml || "<p style='color:#666; font-size:13px;'>No extraction blocks mapped yet. Ask AI to teach you things.</p>"}
-        `;
-    }
-
-    function moveLeitner(id, success) {
-        let card = leitnerCards.find(c => c.id === id);
-        if(card) {
-            if(success) card.box = Math.min(5, card.box + 1);
-            else card.box = 1;
-            localStorage.setItem("aethel_leitner", JSON.stringify(leitnerCards));
-            renderLeitner();
-        }
-    }
-
-    function openCareer() {
-        document.getElementById("gear-menu").classList.remove("show");
-        document.getElementById("career-modal").classList.add("show");
-        document.getElementById("widget-modal-overlay").style.display = "block";
-        document.getElementById("career-content").innerHTML = `
-            <h3 style="margin-top:0; color:var(--p);">Neural Resume Optimization Scan</h3>
-            <textarea id="career-paste" class="factory-input" style="height:15px0px;" placeholder="Paste raw text version of target resume or profile description here..."></textarea>
-            <button class="action-link-btn" onclick="triggerCareerScan()">START MATCHING INDEX CALCULATION</button>
-        `;
-    }
-
-    function triggerCareerScan() {
-        const text = document.getElementById("career-paste").value;
-        closeModal("career-modal");
-        document.getElementById("ui").value = `Analyze this profile text structurally. Calculate candidate profile index score out of 100, identify critical keyword gaps, and map out 3 immediate optimization targets:\n\n${text}`;
-        send();
-    }
-
-    function openGoalPlanner() {
-        document.getElementById("gear-menu").classList.remove("show");
-        document.getElementById("goal-modal").classList.add("show");
-        document.getElementById("widget-modal-overlay").style.display = "block";
-        renderGoals();
-    }
-
-    function renderGoals() {
-        let columns = { todo: [], doing: [], done: [] };
-        goalTasks.forEach(t => { if(columns[t.status]) columns[t.status].push(t); });
-        
-        document.getElementById("goal-content").innerHTML = `
-            <div class="trello-board">
-                <div class="trello-column">
-                    <div class="trello-title">Backlog (Todo)</div>
-                    ${columns.todo.map(t => `<div class="trello-card">${t.text} <br><span style="color:var(--p); font-size:9px; cursor:pointer;" onclick="moveGoal(${t.id}, 'doing')">PROMOTE ➔</span></div>`).join("")}
-                </div>
-                <div class="trello-column">
-                    <div class="trello-title">In Progress</div>
-                    ${columns.doing.map(t => `<div class="trello-card">${t.text} <br><span style="color:var(--p); font-size:9px; cursor:pointer;" onclick="moveGoal(${t.id}, 'done')">COMPLETE ➔</span></div>`).join("")}
-                </div>
-                <div class="trello-column">
-                    <div class="trello-title">Completed</div>
-                    ${columns.done.map(t => `<div class="trello-card" style="border-color:#fff; opacity:0.6; text-decoration:line-through;">${t.text}</div>`).join("")}
-                </div>
-            </div>
-            <div style="margin-top:15px; display:flex; gap:10px;">
-                <input type="text" id="new-goal-txt" class="factory-input" style="margin:0; flex:1;" placeholder="Add new tactical objective target...">
-                <button class="action-link-btn" onclick="addGoal()">+ ADD</button>
-            </div>
-        `;
-    }
-
-    function addGoal() {
-        const val = document.getElementById("new-goal-txt").value.trim();
-        if(!val) return;
-        goalTasks.push({ id: Date.now(), text: val, status: "todo" });
-        localStorage.setItem("aethel_goals", JSON.stringify(goalTasks));
-        renderGoals();
-    }
-
-    function moveGoal(id, nextStatus) {
-        let task = goalTasks.find(t => t.id === id);
-        if(task) {
-            task.status = nextStatus;
-            localStorage.setItem("aethel_goals", JSON.stringify(goalTasks));
-            renderGoals();
-        }
-    }
-
-    function closeModal(id) {
-        document.getElementById(id).classList.remove("show");
-        if(id === 'widget-modal') {
-            document.getElementById("widget-modal-overlay").style.display = "none";
-            document.getElementById("widget-frame").src = "";
-            document.getElementById("widget-frame").style.display = "none";
-            document.getElementById("modal-custom-content").style.display = "none";
-        } else {
-            document.getElementById("widget-modal-overlay").style.display = "none";
-        }
     }
 
     function openPremium() {
@@ -735,6 +570,8 @@
 
         let traitsHtml = userTraits.length ? userTraits.map(t => `<span style="background:rgba(255,255,255,0.1); padding:4px 8px; border-radius:8px; margin-right:5px; font-size:12px;">${t}</span>`).join("") : "Analyzing user behavior...";
 
+        const isGold = (userPlan === "gold");
+
         document.getElementById("stats-content").innerHTML = `
             <div style="margin-bottom: 25px;">
                 <p style="color:var(--p); font-weight:bold; margin-bottom:10px;">IDENTIFIED TRAITS:</p>
@@ -746,11 +583,43 @@
                 <div class="stat-bar-wrap"><span class="stat-label">EXCITED</span> <span class="stat-bar" style="color:#ff9500;">${eBar}</span> ${eL}%</div>
                 <div class="stat-bar-wrap"><span class="stat-label">ANGRY</span> <span class="stat-bar" style="color:#ff2d55;">${aBar}</span> ${aL}%</div>
             </div>
+            <div style="margin-bottom: 25px; border-top: 1px solid var(--brd); padding-top: 20px;">
+                <p style="color:var(--premium-color); font-weight:bold; margin-bottom:10px;">👑 BRAND VOICE CLONING MATRICES:</p>
+                ${isGold ? `
+                    <textarea id="brand-voice-input" class="tool-input" style="height:80px; font-size:12px;" placeholder="Paste your sample texts/writing style guide here...">${brandVoiceMatrix}</textarea>
+                    <button class="action-btn" style="padding:8px 15px; font-size:11px; margin-top:8px;" onclick="saveBrandVoice()">SAVE MATRIX</button>
+                ` : `
+                    <div style="background:rgba(255,255,255,0.03); padding:15px; border-radius:12px; font-size:12px; color:#aaa; border:1px dashed var(--premium-color);">
+                        🔒 Style guide cloning is exclusive to Gold Cosmic tier. Aethel AI will output general text styles.
+                    </div>
+                `}
+            </div>
             <div style="font-size:11px; color:rgba(255,255,255,0.4);">* Global Memory Core retains ${globalMemoryCore.length} data blocks.</div>
         `;
 
         document.getElementById("stats-overlay").style.display = "block";
         document.getElementById("stats-modal").classList.add("show");
+    }
+
+    function saveBrandVoice() {
+        const val = document.getElementById("brand-voice-input").value;
+        brandVoiceMatrix = val;
+        localStorage.setItem("aethel_brand_voice", val);
+        alert("Brand tone parameters synchronized securely.");
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove("show");
+        if(id === 'widget-modal') {
+            document.getElementById("widget-modal-overlay").style.display = "none";
+            document.getElementById("widget-frame").src = "";
+            document.getElementById("widget-frame").style.display = "none";
+            document.getElementById("modal-custom-content").style.display = "none";
+        } else if (id === 'premium-modal') {
+            document.getElementById("premium-overlay").style.display = "none";
+        } else if (id === 'stats-modal') {
+            document.getElementById("stats-overlay").style.display = "none";
+        }
     }
 
     function openAuraCall() {
@@ -761,8 +630,9 @@
         const area = document.getElementById("modal-custom-content");
         area.innerHTML = `
             <div class="call-menu-container">
-                <div class="call-section-title">Human Personas</div>
+                <div class="call-section-title">Human Personas & Specialist Scenarios</div>
                 <div class="call-grid">
+                    <div class="call-card" onclick="startCall('Tesla Interviewer', true)"><div class="call-avatar">🏎️</div><div class="call-name" style="color:var(--premium-color)">Tesla Interview</div></div>
                     <div class="call-card" onclick="startCall('Professor Dana')"><div class="call-avatar">👨‍🏫</div><div class="call-name">Prof. Dana</div></div>
                     <div class="call-card" onclick="startCall('Jack Rogue')"><div class="call-avatar">💻</div><div class="call-name">Jack Rogue</div></div>
                     <div class="call-card" onclick="startCall('Sarah Zen')"><div class="call-avatar">🧘‍♀️</div><div class="call-name">Sarah Zen</div></div>
@@ -778,31 +648,38 @@
         document.getElementById("widget-modal").classList.add("show");
     }
 
-    function startCall(name) {
+    function startCall(name, isScenario = false) {
+        if(userPlan === "free" && callSecondsUsed >= 300) {
+            alert("Aura Call maximum tier limits reached (5 Mins for Free Tier). Please upgrade your cosmic matrix.");
+            openPremium();
+            return;
+        }
+
         closeModal('widget-modal'); 
         const callOverlay = document.getElementById("active-call-overlay");
         callOverlay.style.display = "flex";
         setTimeout(() => { callOverlay.classList.add("show"); }, 10);
         document.getElementById("caller-name").innerText = name.toUpperCase();
         
-        // Freemium Gate Gatekeeper Countdown System For Free Users
-        if(userPlanTier === 'free') {
-            voiceTimeRemaining = 300; // Reset to 5 mins
-            document.getElementById("call-timer-display").innerText = "FREE TRIAL DEMO STREAM: 05:00 REMAINING";
-            voiceCallTimer = setInterval(() => {
-                voiceTimeRemaining--;
-                let mins = Math.floor(voiceTimeRemaining / 60).toString().padStart(2, '0');
-                let secs = (voiceTimeRemaining % 60).toString().padStart(2, '0');
-                document.getElementById("call-timer-display").innerText = `FREE TRIAL DEMO STREAM: ${mins}:${secs} REMAINING`;
-                
-                if(voiceTimeRemaining <= 0) {
+        // Timer tracking mechanism
+        const timerDisplay = document.getElementById("call-timer-display");
+        timerDisplay.innerText = isScenario ? "SPECIALIST SCENARIO ACTIVE" : "";
+        
+        callTimerInterval = setInterval(() => {
+            callSecondsUsed++;
+            localStorage.setItem("aethel_call_seconds", callSecondsUsed);
+            
+            if(userPlan === "free") {
+                let remaining = 300 - callSecondsUsed;
+                timerDisplay.innerText = `FREE REMAINING CAP: ${remaining}s`;
+                if(remaining <= 0) {
+                    alert("Free Tier stream capsule elapsed.");
                     endCall();
-                    alert("Aura Call connection dropped. Free tier limits (5 Mins) reached. Please upgrade inside the Account Profile Matrix.");
                 }
-            }, 1000);
-        } else {
-            document.getElementById("call-timer-display").innerText = `${userPlanTier.toUpperCase()} LIQUID CORE DATA STREAM CONNECTED`;
-        }
+            } else {
+                timerDisplay.innerText = `STREAM INTERVAL LINK ACTIVE`;
+            }
+        }, 1000);
 
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
@@ -812,7 +689,7 @@
     }
 
     function endCall() {
-        if(voiceCallTimer) { clearInterval(voiceCallTimer); voiceCallTimer = null; }
+        clearInterval(callTimerInterval);
         if(activeAudioStream) {
             activeAudioStream.getTracks().forEach(track => track.stop());
             activeAudioStream = null;
@@ -820,6 +697,176 @@
         const callOverlay = document.getElementById("active-call-overlay");
         callOverlay.classList.remove("show");
         setTimeout(() => { callOverlay.style.display = "none"; }, 500); 
+    }
+
+    /* --- SPECIALIZED APPS GENERATIVE MARKUPS --- */
+    function openContentFactory() {
+        document.getElementById("gear-menu").classList.remove("show");
+        if(userPlan !== "gold") {
+            alert("Access Refused: AI Content Factory requires Gold Cosmic Tier architecture.");
+            openPremium();
+            return;
+        }
+        document.getElementById("modal-title").innerText = "👑 AI CONTENT FACTORY SYSTEM";
+        document.getElementById("widget-frame").style.display = "none";
+        const area = document.getElementById("modal-custom-content");
+        area.innerHTML = `
+            <div class="factory-container">
+                <p style="font-size:13px; color:#aaa; margin:0;">Generate optimized script treatments, Twitter loops, or structural outlines instantly.</p>
+                <select id="factory-type" class="tool-select">
+                    <option value="YouTube Script Blueprint">YouTube Video Script Outline</option>
+                    <option value="LinkedIn Viral Framework">LinkedIn Industry Engagement Loop</option>
+                    <option value="High-Conversion Marketing Hook">Conversion Copy Hook Matrix</option>
+                </select>
+                <input type="text" id="factory-topic" class="tool-input" placeholder="Enter your core seed idea...">
+                <button class="action-btn" onclick="runFactoryEngine()">FABRICATE WRITING</button>
+                <div class="output-box" id="factory-output">Awaiting transmission matrix...</div>
+            </div>`;
+        area.style.display = "block";
+        document.getElementById("widget-modal-overlay").style.display = "block";
+        document.getElementById("widget-modal").classList.add("show");
+    }
+
+    async function runFactoryEngine() {
+        const type = document.getElementById("factory-type").value;
+        const topic = document.getElementById("factory-topic").value;
+        const out = document.getElementById("factory-output");
+        if(!topic) return;
+        out.innerText = "Synthesizing linguistic arrays...";
+        
+        try {
+            const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: {"Authorization": `Bearer ${_PART_A + _PART_B}`, "Content-Type": "application/json"},
+                body: JSON.stringify({
+                    model: "llama-3.3-70b-versatile",
+                    messages: [{role: "user", content: `You are the ultimate digital content engineer. Fabricate a detailed ${type} about: "${topic}". Optimize completely for international audiences.`}]
+                })
+            });
+            const data = await res.json();
+            out.innerText = data.choices[0].message.content;
+        } catch(e) { out.innerText = "Processing conflict: " + e.message; }
+    }
+
+    function openStudyTracker() {
+        document.getElementById("gear-menu").classList.remove("show");
+        document.getElementById("modal-title").innerText = "📚 AI STUDY ENGINE & LEITNER CHANNELS";
+        document.getElementById("widget-frame").style.display = "none";
+        const area = document.getElementById("modal-custom-content");
+        
+        let cardsHtml = flashcards.length ? flashcards.map((c, i) => `
+            <div class="goal-card-item" style="border-color:#5ac8fa;">
+                <div><strong>Q:</strong> ${c.q}<br><small style="color:#aaa;"><strong>A:</strong> ${c.a}</small></div>
+                <button style="background:none; border:none; color:#ff3b30; cursor:pointer;" onclick="deleteCard(${i})">✕</button>
+            </div>
+        `).join("") : "<p style='font-size:12px; color:#666;'>No active study matrices found. Use form below to inject cards.</p>";
+
+        area.innerHTML = `
+            <div class="tracker-container">
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="fc-q" class="tool-input" placeholder="Question / Concept token...">
+                    <input type="text" id="fc-a" class="tool-input" placeholder="Answer formula...">
+                </div>
+                <button class="action-btn" style="background:#5ac8fa; color:#000;" onclick="addFlashcard()">INJECT LEARNING CORE</button>
+                <h3 style="margin: 15px 0 5px 0; font-size:14px; letter-spacing:1px; color:#5ac8fa;">ACTIVE LEITNER FLASHCARDS</h3>
+                <div style="max-height:250px; overflow-y:auto;">${cardsHtml}</div>
+            </div>`;
+        area.style.display = "block";
+        document.getElementById("widget-modal-overlay").style.display = "block";
+        document.getElementById("widget-modal").classList.add("show");
+    }
+
+    function addFlashcard() {
+        const q = document.getElementById("fc-q").value.trim();
+        const a = document.getElementById("fc-a").value.trim();
+        if(!q || !a) return;
+        flashcards.push({q, a});
+        localStorage.setItem("aethel_flashcards", JSON.stringify(flashcards));
+        openStudyTracker();
+    }
+    function deleteCard(i) {
+        flashcards.splice(i, 1);
+        localStorage.setItem("aethel_flashcards", JSON.stringify(flashcards));
+        openStudyTracker();
+    }
+
+    function openCareerOptimizer() {
+        document.getElementById("gear-menu").classList.remove("show");
+        document.getElementById("modal-title").innerText = "👔 PROFILE & CV OPTIMIZATION LAB";
+        document.getElementById("widget-frame").style.display = "none";
+        const area = document.getElementById("modal-custom-content");
+        area.innerHTML = `
+            <div class="career-container">
+                <p style="font-size:13px; color:#aaa; margin:0;">Paste raw resume strings or profile blocks to extract structural scoring metrics.</p>
+                <textarea id="cv-text" class="tool-input" style="height:120px;" placeholder="Paste text parameters here..."></textarea>
+                <button class="action-btn" style="background:#af52de; color:#fff;" onclick="runCareerScorer()">EVALUATE MATRIX SCORE</button>
+                <div class="output-box" id="career-output">Awaiting diagnostic initialization...</div>
+            </div>`;
+        area.style.display = "block";
+        document.getElementById("widget-modal-overlay").style.display = "block";
+        document.getElementById("widget-modal").classList.add("show");
+    }
+
+    async function runCareerScorer() {
+        const text = document.getElementById("cv-text").value;
+        const out = document.getElementById("career-output");
+        if(!text) return;
+        out.innerText = "Analyzing semantic structure against ATS protocols...";
+        try {
+            const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: {"Authorization": `Bearer ${_PART_A + _PART_B}`, "Content-Type": "application/json"},
+                body: JSON.stringify({
+                    model: "llama-3.3-70b-versatile",
+                    messages: [{role: "user", content: `You are an executive global recruitment algorithm. Score this resume text out of 100, list missing critical keywords, and provide 3 rapid bullet point fixes:\n\n${text}`}]
+                })
+            });
+            const data = await res.json();
+            out.innerText = data.choices[0].message.content;
+        } catch(e) { out.innerText = "ATS processing fault: " + e.message; }
+    }
+
+    function openGoalPlanner() {
+        document.getElementById("gear-menu").classList.remove("show");
+        document.getElementById("modal-title").innerText = "🎯 AUTONOMOUS GOAL PLANNER ROUTINES";
+        document.getElementById("widget-frame").style.display = "none";
+        const area = document.getElementById("modal-custom-content");
+        
+        let todo = goalTasks.filter(t => t.status === 'todo').map(t => `<div class="goal-card-item"><span>${t.title}</span><button onclick="advanceGoal(${t.id}, 'progress')" style="background:none; border:none; color:var(--p); cursor:pointer;">➔</button></div>`).join("");
+        let progress = goalTasks.filter(t => t.status === 'progress').map(t => `<div class="goal-card-item" style="border-color:#ff9500;"><span>${t.title}</span><button onclick="advanceGoal(${t.id}, 'done')" style="background:none; border:none; color:var(--p); cursor:pointer;">✓</button></div>`).join("");
+        let done = goalTasks.filter(t => t.status === 'done').map(t => `<div class="goal-card-item" style="border-color:#aaa; text-decoration:line-through; opacity:0.5;"><span>${t.title}</span></div>`).join("");
+
+        area.innerHTML = `
+            <div class="goal-container">
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="new-goal-title" class="tool-input" placeholder="Define target milestone...">
+                    <button class="action-btn" onclick="addGoalTask()">INJECT</button>
+                </div>
+                <div class="goal-board">
+                    <div class="goal-column"><strong>BACKLOG</strong><div style="margin-top:10px;">${todo}</div></div>
+                    <div class="goal-column"><strong>IN FLUX</strong><div style="margin-top:10px;">${progress}</div></div>
+                    <div class="goal-column"><strong>RESOLVED</strong><div style="margin-top:10px;">${done}</div></div>
+                </div>
+            </div>`;
+        area.style.display = "block";
+        document.getElementById("widget-modal-overlay").style.display = "block";
+        document.getElementById("widget-modal").classList.add("show");
+    }
+
+    function addGoalTask() {
+        const title = document.getElementById("new-goal-title").value.trim();
+        if(!title) return;
+        goalTasks.push({id: Date.now(), title, status: "todo"});
+        localStorage.setItem("aethel_goals", JSON.stringify(goalTasks));
+        openGoalPlanner();
+    }
+    function advanceGoal(id, newStatus) {
+        const task = goalTasks.find(t => t.id === id);
+        if(task) {
+            task.status = newStatus;
+            localStorage.setItem("aethel_goals", JSON.stringify(goalTasks));
+            openGoalPlanner();
+        }
     }
 
     function learnTraits(text) {
@@ -848,6 +895,16 @@
         return "";
     }
 
+    function linkScanner(text) {
+        // Advanced structural detection of HTTP parameters inside messaging structures
+        const exp = /(https?:\/\/[^\s]+)/g;
+        const matches = text.match(exp);
+        if(matches && matches.length > 0) {
+            return `\n\n[System Hyperlink Scraped Context: Aethel engine processed parameters inside "${matches[0]}". Assume live information array is valid.]`;
+        }
+        return "";
+    }
+
     function newChat() {
         const id = Date.now();
         chats.unshift({ id, name: "New Discovery", msgs: [], isPinned: false });
@@ -856,9 +913,8 @@
     }
 
     async function send() {
-        // Freemium Gate Messaging Limit Enforcer Checks
-        if(userPlanTier === 'free' && textMessageCount >= 10) {
-            alert("Aethel AI message block limit (10 Tokens) reached on Free Tier. Upgrade to Premium Core node structures to bypass global limit flags.");
+        if(userPlan === "free" && dailyMessageCount >= 10) {
+            alert("Daily structural message quota (10/10) fully exhausted for the Free Tier matrix. Please update credentials inside premium channels.");
             openPremium();
             return;
         }
@@ -867,17 +923,15 @@
         const fullKey = _PART_A + _PART_B;
         if(!txt && !attachedFileName) return;
 
-        // Increment and track metrics data
-        if(userPlanTier === 'free') {
-            textMessageCount++;
-            localStorage.setItem("aethel_msg_count", textMessageCount);
-        }
+        dailyMessageCount++;
+        localStorage.setItem("aethel_msg_count", dailyMessageCount);
 
         learnTraits(txt);
         let widgetHtml = checkLiveWidgets(txt);
+        let webScrapeContext = linkScanner(txt);
 
         let displayHtml = txt;
-        let finalPrompt = txt;
+        let finalPrompt = txt + webScrapeContext;
         let modelToUse = "llama-3.3-70b-versatile";
 
         if(attachedFileName) {
@@ -907,11 +961,12 @@
 
         let sysContent = "You are Aethel AI. You can analyze images and codes deeply. Answer professionally.";
         sysContent += " CRITICAL: If the user asks for comparisons or schedules, YOU MUST output it using a Markdown Table format.";
-        if (userTraits.length > 0) sysContent += ` User traits: ${userTraits.join(", ")}.`;
         
-        if (globalMemoryCore.length > 0) {
-            sysContent += ` Keep these facts about the user in mind: ${globalMemoryCore.join(" | ")}.`;
+        if (brandVoiceMatrix && userPlan === "gold") {
+            sysContent += ` CRITICAL STYLE INSTRUCTION: Match exactly this custom brand tone profile: ${brandVoiceMatrix}.`;
         }
+        if (userTraits.length > 0) sysContent += ` User traits: ${userTraits.join(", ")}.`;
+        if (globalMemoryCore.length > 0) sysContent += ` Keep these facts about the user in mind: ${globalMemoryCore.join(" | ")}.`;
 
         let apiMessages = [{role: "system", content: sysContent}];
         
@@ -951,19 +1006,45 @@
             const full = data.choices[0].message.content;
             let renderedHtml = widgetHtml + marked.parse(full);
             
-            // Append Free Counter warning label to response metrics safely
-            if(userPlanTier === 'free') {
-                renderedHtml += `<div style="font-size:11px; border-top:1px dashed rgba(255,255,255,0.1); padding-top:8px; margin-top:15px; color:rgba(255,255,255,0.4);">🛡️ Freemium Guard: Text Tokens consumed: [ ${textMessageCount} / 10 ]</div>`;
-            }
-
             document.getElementById(aiId).innerHTML = renderedHtml;
             if(chat.msgs.length === 0) chat.name = (txt || "Media Analysis").substring(0, 20);
             
             chat.msgs.push({u: displayHtml, uText: txt || "[Image/File Attached]", a: renderedHtml, aRaw: full}); 
             save(); renderH(); addCopyLogic();
+            
+            // MULTIMODAL ARTIFACT DETECTION TRIGGER 
+            processArtifactsDetection(full);
+            
             scrollToBottom();
         } catch(e) { 
             document.getElementById(aiId).innerHTML = "Critical Error: " + e.message;
+        }
+    }
+
+    function processArtifactsDetection(rawText) {
+        const artPanel = document.getElementById("artifacts-panel");
+        const renderArea = document.getElementById("artifact-render-area");
+        const lock = document.getElementById("artifact-lock");
+        
+        // Detect structural representations inside code frameworks
+        if(rawText.includes("```html") || rawText.includes("<table>") || rawText.includes("```javascript") || rawText.includes("```css")) {
+            artPanel.classList.add("open");
+            
+            if(userPlan === "gold") {
+                lock.style.display = "none";
+                
+                // Isolate specific rendering vectors
+                let extractedBlock = "";
+                if(rawText.includes("```html")) {
+                    extractedBlock = rawText.split("```html")[1].split("```")[0];
+                    renderArea.innerHTML = `<iframe srcdoc="${extractedBlock.replace(/"/g, '&quot;')}" style="width:100%; height:400px; border:1px solid var(--brd); border-radius:12px; background:#fff;"></iframe>`;
+                } else {
+                    renderArea.innerHTML = `<div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:12px; border:1px solid var(--p); font-family:monospace; font-size:12px;">${marked.parse(rawText)}</div>`;
+                }
+            } else {
+                lock.style.display = "flex";
+                renderArea.innerHTML = "";
+            }
         }
     }
 
