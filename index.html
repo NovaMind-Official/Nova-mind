@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aethel AI - Intelligence Interface</title>
+    <title>Phraortes - Intelligence Interface</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
         :root { 
             --p: #76b900; --bg: #000; --txt: #ffffff; 
-            --brd: rgba(255,255,255,0.12); --apple-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+            --brd: rgba(255,255,255,0.1); 
+            --apple-ease: cubic-bezier(0.25, 1, 0.5, 1);
             --glow: rgba(118, 185, 0, 0.15);
-            /* Premium Rare Color Token */
             --premium-color: #dfb257;
             --premium-glow: rgba(223, 178, 87, 0.25);
+            --glass-bg: rgba(20, 20, 20, 0.45);
         }
         
-        /* Expanded Mood Colors */
+        /* Dynamic Emotion Colors - Background & Accents Only */
         body.mood-pos { --p: #00f2ff; --glow: rgba(0, 242, 255, 0.3); }
         body.mood-neg { --p: #ff3b30; --glow: rgba(255, 59, 48, 0.3); }
         body.mood-neu { --p: #af52de; --glow: rgba(175, 82, 222, 0.3); }
@@ -26,253 +27,177 @@
         body.mood-angry { --p: #ff2d55; --glow: rgba(255, 45, 85, 0.3); } 
 
         * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; outline: none; }
-        body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: 0.8s var(--apple-ease); overflow: hidden; }
-        .bg-glow { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 50% 50%, var(--glow) 0%, transparent 85%); filter: blur(100px); transition: 0.8s; }
-
-        /* Sidebar Push Layout Updates */
-        #sidebar { position: fixed; left: -280px; width: 280px; height: 100%; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(50px); border-right: 1px solid var(--brd); z-index: 4000; transition: transform 0.6s var(--apple-ease); }
-        #sidebar.active { transform: translateX(280px); }
+        body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: background 0.8s var(--apple-ease); overflow: hidden; }
         
-        main { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; transition: transform 0.6s var(--apple-ease); }
-        body.sidebar-active main { transform: translateX(280px); width: calc(100% - 280px); }
+        /* Advanced Mesh Gradient Glow */
+        .bg-glow { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 30% 30%, var(--glow) 0%, transparent 60%), radial-gradient(circle at 80% 80%, var(--glow) 0%, transparent 60%); filter: blur(80px); transition: 1s var(--apple-ease); opacity: 0.8; }
 
-        .btn-new { width: 90%; margin: 20px auto; padding: 16px; background: #fff; border: none; color: #000; border-radius: 18px; font-weight: 700; cursor: pointer; display: block; letter-spacing: -0.5px; }
+        /* Apple Style Glassmorphism Sidebar */
+        #sidebar { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border-right: 1px solid var(--brd); z-index: 4000; transition: transform 0.5s var(--apple-ease); box-shadow: 20px 0 50px rgba(0,0,0,0.5); }
+        #sidebar.active { transform: translateX(300px); }
+        
+        /* Sidebar Overlay for Main Content Blur */
+        #sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 3999; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--apple-ease); }
+        #sidebar-overlay.show { opacity: 1; pointer-events: all; }
+
+        main { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; transition: 0.5s var(--apple-ease); }
+
+        .btn-new { width: 90%; margin: 20px auto; padding: 16px; background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); border: 1px solid var(--brd); color: #fff; border-radius: 20px; font-weight: 700; cursor: pointer; display: block; letter-spacing: -0.5px; transition: 0.3s; }
+        .btn-new:hover { background: rgba(255,255,255,0.2); transform: scale(1.02); border-color: var(--p); }
 
         #h-list { flex: 1; overflow-y: auto; padding: 15px; }
-        .h-item { padding: 14px; border-radius: 15px; margin-bottom: 10px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; font-size: 13px; border: 1px solid transparent; transition: 0.3s; cursor: pointer; }
-        .h-item.active-chat { border-color: var(--p); background: rgba(255,255,255,0.1); }
-        .h-item.pinned { border-left: 3px solid var(--p); }
+        .h-item { padding: 14px; border-radius: 16px; margin-bottom: 10px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: space-between; font-size: 13px; border: 1px solid transparent; transition: 0.3s var(--apple-ease); cursor: pointer; }
+        .h-item:hover { background: rgba(255,255,255,0.08); }
+        .h-item.active-chat { border-color: var(--p); background: rgba(255,255,255,0.1); box-shadow: 0 5px 15px var(--glow); }
 
-        header { height: 65px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); gap: 15px; }
-        .logo { font-size: 14px; letter-spacing: 5px; font-weight: 900; color: var(--p); text-transform: uppercase; }
+        header { height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); gap: 15px; background: rgba(0,0,0,0.2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 100; }
+        .logo { font-size: 16px; letter-spacing: 4px; font-weight: 900; color: var(--p); text-transform: uppercase; text-shadow: 0 0 15px var(--glow); transition: 0.5s; }
 
-        /* Material You Floating Palette */
-        .palette-container { display: flex; gap: 8px; background: rgba(255,255,255,0.03); padding: 6px 12px; border-radius: 30px; border: 1px solid var(--brd); align-items: center; transition: 0.3s; }
-        .palette-container:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.2); }
-        .palette-dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; transition: transform 0.3s var(--apple-ease), box-shadow 0.3s; border: 1px solid rgba(0,0,0,0.3); }
-        .palette-dot:hover { transform: scale(1.25); }
-        .palette-dot.mono { background: #ffffff; box-shadow: 0 0 8px rgba(255,255,255,0.2); }
-        .palette-dot.neon { background: #76b900; box-shadow: 0 0 8px rgba(118,185,0,0.2); }
-        .palette-dot.cyber { background: #00f2ff; box-shadow: 0 0 8px rgba(0,242,255,0.2); }
-        .palette-dot.sunset { background: #ff9500; box-shadow: 0 0 8px rgba(255,149,0,0.2); }
-        .palette-dot.berry { background: #af52de; box-shadow: 0 0 8px rgba(175,82,222,0.2); }
+        .palette-container { display: flex; gap: 8px; background: rgba(255,255,255,0.05); padding: 8px 14px; border-radius: 30px; border: 1px solid var(--brd); align-items: center; transition: 0.3s; backdrop-filter: blur(15px); }
+        .palette-dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; transition: 0.3s var(--apple-ease); border: 1px solid rgba(255,255,255,0.3); }
+        .palette-dot:hover { transform: scale(1.3); }
+        .palette-dot.mono { background: #ffffff; } .palette-dot.neon { background: #76b900; }
+        .palette-dot.cyber { background: #00f2ff; } .palette-dot.sunset { background: #ff9500; }
+        .palette-dot.berry { background: #af52de; }
 
-        /* Account Hub Styles */
         .account-hub { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .account-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--p), #000); border: 2px solid var(--brd); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; color: #fff; transition: 0.3s; }
-        .account-hub:hover .account-avatar { transform: scale(1.05); box-shadow: 0 0 15px var(--glow); }
-        .account-menu { position: absolute; top: 50px; right: 0; width: 220px; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(50px); border: 1px solid var(--brd); border-radius: 20px; padding: 10px; display: none; flex-direction: column; z-index: 5000; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .account-menu.show { display: flex; animation: slideDown 0.3s var(--apple-ease); }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        .account-item { padding: 12px 15px; font-size: 13px; color: #ccc; border-radius: 12px; cursor: pointer; transition: 0.2s; }
-        .account-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .account-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--p), #222); border: 2px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; color: #fff; transition: 0.4s var(--apple-ease); box-shadow: 0 0 10px var(--glow); }
+        .account-hub:hover .account-avatar { transform: scale(1.1); }
+        .account-menu { position: absolute; top: 55px; right: 0; width: 230px; background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 1px solid var(--brd); border-radius: 24px; padding: 12px; display: none; flex-direction: column; z-index: 5000; box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
+        .account-menu.show { display: flex; animation: glassPop 0.4s var(--apple-ease); }
+        @keyframes glassPop { from { opacity: 0; transform: translateY(-10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        
+        .account-item { padding: 12px 15px; font-size: 13px; color: #eee; border-radius: 14px; cursor: pointer; transition: 0.3s var(--apple-ease); font-weight: 500; }
+        .account-item:hover { background: rgba(255,255,255,0.1); color: #fff; transform: translateX(4px); }
 
-        /* Premium Button Custom Design (Animated) */
-        .account-item.premium-btn { color: var(--premium-color); border: 1px solid var(--premium-color); background: rgba(223, 178, 87, 0.05); font-weight: 800; letter-spacing: 0.5px; transition: 0.3s; margin-bottom: 4px; box-shadow: 0 0 10px var(--premium-glow); position: relative; overflow: hidden; }
-        .account-item.premium-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 3s infinite; }
-        @keyframes shimmer { 100% { left: 200%; } }
-        .account-item.premium-btn:hover { background: rgba(223, 178, 87, 0.15); color: #fff; box-shadow: 0 0 20px var(--premium-glow); transform: scale(1.02); }
+        .account-item.premium-btn { color: var(--premium-color); border: 1px solid rgba(223, 178, 87, 0.3); background: rgba(223, 178, 87, 0.08); font-weight: 800; margin-bottom: 5px; }
+        .account-item.premium-btn:hover { background: rgba(223, 178, 87, 0.2); box-shadow: 0 0 20px var(--premium-glow); }
 
-        #chat-box { flex: 1; overflow-y: auto; padding: 20px 8% 180px; display: flex; flex-direction: column; gap: 32px; scroll-behavior: smooth; }
-        .welcome-wrap { text-align: center; margin: 60px 0; animation: fadeIn 1.2s ease; }
-        .welcome-wrap h1 { font-size: 32px; font-weight: 800; margin-bottom: 10px; color: var(--p); letter-spacing: -1px; text-transform: uppercase; }
-        .welcome-wrap p { color: rgba(255,255,255,0.5); font-size: 16px; }
+        #chat-box { flex: 1; overflow-y: auto; padding: 30px 8% 180px; display: flex; flex-direction: column; gap: 35px; scroll-behavior: smooth; }
+        .welcome-wrap { text-align: center; margin: auto 0; animation: fadeIn 1s ease; }
+        .welcome-wrap h1 { font-size: 38px; font-weight: 900; margin-bottom: 10px; color: var(--p); letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 25px var(--glow); }
+        .welcome-wrap p { color: rgba(255,255,255,0.6); font-size: 16px; font-weight: 500; }
 
-        .msg-wrap { display: flex; flex-direction: column; max-width: 90%; animation: slideUp 0.6s var(--apple-ease); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .msg-wrap { display: flex; flex-direction: column; max-width: 85%; animation: slideUp 0.5s var(--apple-ease); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .user-wrap { align-self: flex-end; }
         .ai-wrap { align-self: flex-start; width: 100%; }
         
-        .msg { padding: 18px 24px; border-radius: 24px; font-size: 16px; line-height: 1.7; position: relative; white-space: pre-wrap; word-wrap: break-word; }
-        .user { background: var(--p); color: #000; border-bottom-right-radius: 4px; font-weight: 500; }
+        .msg { padding: 18px 26px; border-radius: 28px; font-size: 16px; line-height: 1.7; position: relative; white-space: pre-wrap; word-wrap: break-word; }
         
-        /* Borderless Dynamic AI Chat Style Update */
-        .ai { background: transparent; color: #fff; border: none; border-bottom-left-radius: 0; padding: 10px 0px; }
-
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 15px; border-radius: 14px; overflow: hidden; border: 1px solid var(--brd); background: rgba(255, 255, 255, 0.02); }
-        th, td { padding: 14px 18px; text-align: left; border: 1px solid var(--brd); color: #ffffff; }
-        th { background: rgba(255, 255, 255, 0.08); color: var(--p); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .smart-card { background: rgba(255,255,255,0.05); border: 1px solid var(--p); border-radius: 16px; padding: 15px 20px; margin: 15px 0; cursor: pointer; display: inline-block; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .smart-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.1); box-shadow: 0 8px 25px rgba(118,185,0,0.2); }
+        /* Apple Glass User Bubbles */
+        .user { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-bottom-right-radius: 6px; font-weight: 500; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
         
-        .chat-img { width: 100%; max-width: 400px; border-radius: 12px; border: 2px solid rgba(0,0,0,0.2); margin-bottom: 10px; display: block; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .chat-file { background: rgba(0,0,0,0.2); padding: 12px 18px; border-radius: 12px; border-left: 4px solid #fff; margin-bottom: 10px; font-family: monospace; font-size: 14px; font-weight: 700; display: inline-block;}
+        /* Clean AI Bubbles */
+        .ai { background: transparent; color: #fff; border: none; padding: 10px 0; font-weight: 400; }
 
-        #scroll-btn { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); background: var(--p); color: #000; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 20px; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.4); z-index: 2000; transition: 0.3s; }
-        pre { background: #0b0b0b !important; border: 1px solid var(--brd); border-radius: 20px; padding: 20px; position: relative; margin: 20px 0; overflow-x: auto; }
-        .msg-ops { display: flex; gap: 18px; margin-top: 4px; opacity: 0.4; transition: 0.3s; }
-        .msg-ops:hover { opacity: 1; }
-        .op-btn { cursor: pointer; font-size: 11px; font-weight: 700; color: var(--p); text-transform: uppercase; }
-
-        /* Gear Menu & Dynamic Dividers */
-        .drop-menu { position: absolute; bottom: 100px; left: 25px; width: 280px; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(50px); border-radius: 28px; border: 1px solid var(--brd); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.8); overflow: hidden; padding: 10px 0; }
-        .drop-menu.show { display: flex; animation: menuPop 0.4s var(--apple-ease); }
-        .menu-item { position: relative; padding: 18px 25px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.3s; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;}
-        .menu-item:hover { color: var(--p); background: rgba(255,255,255,0.03); }
-        /* Dynamic Divider */
-        .menu-divider { height: 1px; background: var(--p); opacity: 0.3; margin: 5px 20px; box-shadow: 0 0 8px var(--glow); transition: 0.8s var(--apple-ease); }
-
-        footer { position: absolute; bottom: 0; width: 100%; padding: 20px 5% 45px; background: linear-gradient(transparent, var(--bg) 80%); }
-        .input-bar { background: rgba(255,255,255,0.08); backdrop-filter: blur(30px); border: 1px solid var(--brd); border-radius: 35px; display: flex; align-items: center; padding: 8px 22px; gap: 15px; }
-        #ui { flex: 1; background: transparent; border: none; color: #fff; padding: 12px 0; font-size: 17px; resize: none; height: 50px; max-height: 150px; overflow-y: auto; line-height: 1.5; }
-
-        .btn-icon { background: none; border: none; color: var(--p); font-size: 25px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; }
-        .btn-icon:hover { transform: scale(1.1); }
-        .file-badge { display: none; margin-left: 20px; margin-bottom: 10px; background: rgba(255,255,255,0.1); padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; color: var(--p); border: 1px solid var(--p); width: fit-content; animation: fadeIn 0.3s; }
-
-        /* Overlay updates -> Removed standard sidebar overlay */
-        #widget-modal-overlay, #premium-overlay, #stats-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 3000; backdrop-filter: blur(15px); }
+        pre { background: rgba(10,10,10,0.6) !important; backdrop-filter: blur(20px); border: 1px solid var(--brd); border-radius: 20px; padding: 20px; margin: 20px 0; overflow-x: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
         
-        /* Modal General */
-        .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 90%; max-width: 800px; max-height: 85vh; background: #111; border: 1px solid var(--p); border-radius: 24px; z-index: 6000; display: none; flex-direction: column; overflow: hidden; transition: 0.3s var(--apple-ease); opacity: 0; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
+        /* Glassy Scroll Button */
+        #scroll-btn { position: fixed; bottom: 130px; left: 50%; transform: translateX(-50%); background: rgba(30, 30, 30, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #fff; border: 1px solid rgba(255,255,255,0.15); border-radius: 50%; width: 50px; height: 50px; font-size: 20px; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 2000; transition: 0.4s var(--apple-ease); }
+        #scroll-btn:hover { background: rgba(50, 50, 50, 0.8); transform: translateX(-50%) translateY(-5px); border-color: var(--p); color: var(--p); }
+
+        .msg-ops { display: flex; gap: 18px; margin-top: 8px; opacity: 0; transition: 0.3s; padding: 0 10px; }
+        .msg-wrap:hover .msg-ops { opacity: 0.7; }
+        .op-btn { cursor: pointer; font-size: 11px; font-weight: 700; color: var(--p); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* Glass Footer & Input */
+        footer { position: absolute; bottom: 0; width: 100%; padding: 20px 8% 40px; background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, transparent); pointer-events: none; }
+        .input-bar { background: rgba(25, 25, 25, 0.55); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 35px; display: flex; align-items: center; padding: 10px 25px; gap: 15px; pointer-events: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: 0.3s var(--apple-ease); }
+        .input-bar:focus-within { border-color: var(--p); background: rgba(35, 35, 35, 0.65); box-shadow: 0 20px 60px var(--glow); }
+        
+        #ui { flex: 1; background: transparent; border: none; color: #fff; padding: 12px 0; font-size: 16px; resize: none; height: 45px; max-height: 150px; overflow-y: auto; line-height: 1.5; }
+        #ui::placeholder { color: rgba(255,255,255,0.4); }
+
+        .btn-icon { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 24px; cursor: pointer; transition: 0.3s var(--apple-ease); display: flex; align-items: center; }
+        .btn-icon:hover { color: var(--p); transform: scale(1.15); }
+        #send-btn { color: var(--p); }
+
+        /* Dynamic Loading Animation Styles */
+        .dynamic-loader { display: flex; align-items: center; gap: 15px; padding: 15px 0; color: var(--p); font-weight: 600; font-size: 14px; letter-spacing: 1px; animation: fadeIn 0.5s ease; }
+        .dot-matrix { display: flex; gap: 5px; }
+        .dot-matrix span { display: block; width: 6px; height: 6px; background: var(--p); border-radius: 50%; box-shadow: 0 0 10px var(--glow); animation: pulseDot 1.2s infinite ease-in-out; }
+        .dot-matrix span:nth-child(2) { animation-delay: 0.2s; }
+        .dot-matrix span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes pulseDot { 0%, 100% { transform: scale(0.5); opacity: 0.3; } 50% { transform: scale(1.2); opacity: 1; } }
+
+        /* Icon specific animations */
+        .load-icon { font-size: 20px; animation: float 2s infinite ease-in-out; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); text-shadow: 0 5px 15px var(--glow); } }
+
+        /* Overlays & Modals */
+        #premium-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 6000; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 90%; max-width: 850px; max-height: 85vh; background: rgba(15,15,15,0.8); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; z-index: 7000; display: none; flex-direction: column; overflow: hidden; transition: 0.4s var(--apple-ease); opacity: 0; box-shadow: 0 40px 80px rgba(0,0,0,0.8); }
         .modal-box.show { display: flex; transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        .modal-header { padding: 15px 20px; background: rgba(0,0,0,0.8); border-bottom: 1px solid var(--brd); display: flex; justify-content: space-between; align-items: center; }
-        .modal-header span { color: var(--p); font-weight: bold; letter-spacing: 1px; }
-        .modal-close { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; transition: 0.2s; }
-        .modal-close:hover { color: var(--p); transform: scale(1.1); }
         
-        /* Aura Call Styles */
-        .call-menu-container { display: flex; flex-direction: column; gap: 12px; padding: 20px; overflow-y: auto;}
-        .call-section-title { font-size: 12px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 700; }
-        .call-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; margin-bottom: 15px; }
-        .call-card { background: rgba(255,255,255,0.03); border: 1px solid var(--brd); border-radius: 16px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.3s var(--apple-ease); }
-        .call-card:hover { border-color: var(--p); background: rgba(255,255,255,0.08); transform: translateY(-2px); box-shadow: 0 10px 20px var(--glow); }
-        .call-avatar { width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.1); margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; font-size: 20px; color: var(--p); }
-        .call-name { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+        .plans-container { padding: 35px; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; align-items: center; }
+        .plan-card { width: 100%; max-width: 550px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 30px; position: relative; transition: 0.4s var(--apple-ease); }
+        .plan-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.06); box-shadow: 0 20px 40px rgba(0,0,0,0.4); border-color: var(--p); }
+        
+        /* Updated Gold Plan Styles */
+        .plan-card.gold { border-color: var(--premium-color); background: rgba(223, 178, 87, 0.05); }
+        .plan-card.gold:hover { box-shadow: 0 20px 50px var(--premium-glow); transform: scale(1.03); }
+        .gold-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, #dfb257, #ffdf8c); color: #000; font-size: 11px; font-weight: 900; padding: 6px 18px; border-radius: 12px; letter-spacing: 1.5px; box-shadow: 0 5px 15px var(--premium-glow); }
+        
+        .plan-title { font-size: 24px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;}
+        .plan-price { font-size: 20px; color: var(--p); font-weight: 800; margin-bottom: 25px; }
+        .plan-card.gold .plan-price { color: var(--premium-color); font-size: 24px; }
+        .plan-features li { color: rgba(255,255,255,0.8); line-height: 2; font-size: 15px; }
+        .plan-features li::before { content: '✦'; color: var(--p); margin-right: 10px; }
+        .plan-card.gold .plan-features li::before { color: var(--premium-color); }
+        
+        .btn-pro { background: linear-gradient(135deg, var(--premium-color), #b88a38); color: #000; border: none; padding: 18px; border-radius: 16px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; font-size: 15px; }
+        .btn-pro:hover { box-shadow: 0 10px 30px var(--premium-glow); transform: translateY(-2px); }
 
-        /* Active Call Screen */
-        #active-call-overlay { display: none; position: fixed; inset: 0; background: rgba(5,5,5,0.95); backdrop-filter: blur(30px); z-index: 7000; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s; }
-        #active-call-overlay.show { opacity: 1; }
-        .glow-ring { position: absolute; width: 300px; height: 300px; border-radius: 50%; background: var(--glow); filter: blur(70px); animation: pulseGlow 2s infinite alternate; }
-        @keyframes pulseGlow { 0% { transform: scale(0.8); opacity: 0.4; } 100% { transform: scale(1.3); opacity: 1; } }
-        .call-title { color: #fff; z-index: 2; font-weight: 900; font-size: 32px; letter-spacing: 3px; margin-bottom: 5px; text-transform: uppercase; }
-        .call-status { color: var(--p); z-index: 2; margin-bottom: 60px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; animation: fadeInOut 1.5s infinite; }
-        .wave-container { display: flex; gap: 8px; height: 80px; align-items: center; z-index: 2; margin-bottom: 40px; }
-        .wave-container .bar { width: 8px; background: var(--p); border-radius: 4px; animation: wave 1s ease-in-out infinite alternate; box-shadow: 0 0 15px var(--glow); }
-        .wave-container .bar:nth-child(1) { height: 30px; animation-delay: 0.0s; }
-        .wave-container .bar:nth-child(2) { height: 60px; animation-delay: 0.2s; }
-        .wave-container .bar:nth-child(3) { height: 80px; animation-delay: 0.4s; }
-        .wave-container .bar:nth-child(4) { height: 60px; animation-delay: 0.2s; }
-        .wave-container .bar:nth-child(5) { height: 30px; animation-delay: 0.0s; }
-        @keyframes wave { 0% { transform: scaleY(0.4); opacity: 0.5; } 100% { transform: scaleY(1.2); opacity: 1; } }
-        .end-call-btn { z-index: 2; background: #ff3b30; color: #fff; border: none; padding: 18px 50px; border-radius: 35px; font-weight: 800; font-size: 15px; letter-spacing: 1px; cursor: pointer; box-shadow: 0 10px 30px rgba(255,59,48,0.4); transition: 0.3s;}
-        .end-call-btn:hover { transform: scale(1.05); box-shadow: 0 15px 40px rgba(255,59,48,0.6); }
-
-        /* Premium Plans Overlay */
-        .plans-container { padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; align-items: center; }
-        .plan-card { width: 100%; max-width: 500px; background: rgba(20,20,20,0.8); border: 1px solid var(--brd); border-radius: 20px; padding: 25px; position: relative; transition: 0.3s; }
-        .plan-card:hover { transform: scale(1.02); background: rgba(30,30,30,0.9); box-shadow: 0 15px 35px var(--glow); border-color: var(--p); }
-        .plan-card.popular { border-color: var(--premium-color); background: rgba(223, 178, 87, 0.05); }
-        .plan-card.popular:hover { box-shadow: 0 15px 35px var(--premium-glow); }
-        .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--premium-color); color: #000; font-size: 10px; font-weight: 900; padding: 4px 12px; border-radius: 10px; letter-spacing: 1px; }
-        .plan-title { font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;}
-        .plan-price { font-size: 18px; color: var(--p); font-weight: 700; margin-bottom: 20px; }
-        .plan-card.popular .plan-price { color: var(--premium-color); }
-        .plan-features { list-style: none; padding: 0; margin: 0 0 25px 0; font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.8; }
-        .plan-features li::before { content: '✓'; color: var(--p); margin-right: 8px; font-weight: bold; }
-        .plan-card.popular .plan-features li::before { color: var(--premium-color); }
-        .plan-btn { width: 100%; padding: 15px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; transition: 0.3s; border: none; }
-        .btn-basic { background: rgba(255,255,255,0.1); color: #fff; }
-        .btn-basic:hover { background: var(--p); color: #000; }
-        .btn-pro { background: var(--premium-color); color: #000; }
-        .btn-pro:hover { box-shadow: 0 0 20px var(--premium-glow); transform: translateY(-2px); }
-
-        /* Neural Stats UI */
-        .stats-container { padding: 30px; }
-        .stat-bar-wrap { margin-bottom: 20px; font-family: monospace; font-size: 14px; color: #fff; letter-spacing: 1px; }
-        .stat-label { display: inline-block; width: 80px; font-weight: bold; }
-        .stat-bar { color: var(--p); }
-
-        @media (max-width: 768px) {
-            .input-bar { padding: 6px 15px; gap: 10px; }
-            #ui { font-size: 15px; height: 45px; padding: 10px 0; max-height: 100px; }
-            #chat-box { padding: 20px 5% 150px; }
-        }
+        .drop-menu { position: absolute; bottom: 85px; left: 8%; width: 280px; background: rgba(25, 25, 25, 0.75); backdrop-filter: blur(40px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.7); overflow: hidden; padding: 10px 0; }
+        .drop-menu.show { display: flex; animation: glassPop 0.4s var(--apple-ease); }
+        .menu-item { padding: 16px 25px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.3s; color: #fff; text-transform: uppercase; font-weight: 700;}
+        .menu-item:hover { color: var(--p); background: rgba(255,255,255,0.05); }
     </style>
 </head>
 <body onclick="closeAll()">
 
 <div class="bg-glow"></div>
-<div id="widget-modal-overlay" onclick="closeModal('widget-modal')"></div>
+<div id="sidebar-overlay" onclick="toggleS(event)"></div>
+
 <div id="premium-overlay" onclick="closeModal('premium-modal')"></div>
-<div id="stats-overlay" onclick="closeModal('stats-modal')"></div>
-
-<div id="active-call-overlay">
-    <div class="glow-ring"></div>
-    <h2 id="caller-name" class="call-title">NAME</h2>
-    <p class="call-status">Live Audio Stream Connected</p>
-    <div class="wave-container">
-        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-    </div>
-    <button class="end-call-btn" onclick="endCall()">END CALL</button>
-</div>
-
-<div id="widget-modal" class="modal-box">
-    <div class="modal-header">
-        <span id="modal-title">LIVE INTELLIGENCE</span>
-        <button class="modal-close" onclick="closeModal('widget-modal')">✕</button>
-    </div>
-    <iframe id="widget-frame" src="" style="flex:1; width:100%; border:none; display:none;"></iframe>
-    <div id="modal-custom-content" style="flex:1; display:none; overflow-y:auto;"></div>
-</div>
-
-<div id="premium-modal" class="modal-box" style="background: rgba(10,10,10,0.95); backdrop-filter: blur(20px);">
-    <div class="modal-header">
-        <span style="color: var(--premium-color);">UPGRADE INTELLIGENCE</span>
-        <button class="modal-close" onclick="closeModal('premium-modal')">✕</button>
+<div id="premium-modal" class="modal-box">
+    <div style="padding: 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
+        <span style="color: var(--premium-color); font-weight: 900; letter-spacing: 2px;">PHRAORTES INTELLIGENCE</span>
+        <button onclick="closeModal('premium-modal')" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">✕</button>
     </div>
     <div class="plans-container">
         <div class="plan-card">
-            <div class="plan-title">Bronze Plan</div>
-            <div class="plan-price">$4.99 / Month</div>
-            <ul class="plan-features">
-                <li>Basic daily limits on Text, Image & Video generation.</li>
-                <li>Standard Global Memory retention.</li>
-                <li>Access to live voice calls (limited daily duration).</li>
-            </ul>
-            <button class="plan-btn btn-basic">GET BRONZE</button>
-        </div>
-
-        <div class="plan-card popular">
-            <div class="popular-badge">MOST POPULAR</div>
-            <div class="plan-title">Silver Pro</div>
+            <div class="plan-title">Silver Core</div>
             <div class="plan-price">$14.99 / Month</div>
-            <ul class="plan-features">
-                <li>Extended limits on High-Quality generation.</li>
-                <li>Unlimited True Live Voice Calls (Zero Latency).</li>
-                <li>Advanced Global Memory Core integration.</li>
-                <li>Deep emotional analysis in Neural Stats.</li>
+            <ul class="plan-features" style="list-style: none; padding:0; margin: 0 0 25px 0;">
+                <li>Advanced Global Memory integration.</li>
+                <li>Deep emotional tracking.</li>
+                <li>Standard Text & Image generation limits.</li>
             </ul>
-            <button class="plan-btn btn-pro">PURCHASE PRO</button>
+            <button style="width:100%; padding:15px; border-radius:14px; background:rgba(255,255,255,0.1); color:#fff; border:none; font-weight:700; cursor:pointer;">GET SILVER</button>
         </div>
 
-        <div class="plan-card">
+        <div class="plan-card gold">
+            <div class="gold-badge">VIP DEVELOPER</div>
             <div class="plan-title">Gold Cosmic</div>
-            <div class="plan-price">$29.99 / Month</div>
-            <ul class="plan-features">
-                <li>Unlimited priorities for Ultra-HD tools.</li>
-                <li>Full-scale Global Memory & Predictive tracking.</li>
-                <li>Premium High-Fidelity Audio Stream.</li>
-                <li>Full UI customization & Dynamic Themes.</li>
+            <div class="plan-price">$49.99 / Month</div>
+            <ul class="plan-features" style="list-style: none; padding:0; margin: 0 0 25px 0;">
+                <li><strong>Dedicated Code Interpreter:</strong> Zero-bug executable outputs.</li>
+                <li><strong>Live Debugger Pro:</strong> Advanced logical bug fixing & analysis.</li>
+                <li><strong>Multi-language Translator:</strong> Convert code across languages instantly.</li>
+                <li><strong>Deep Memory Core:</strong> Remembers your coding style & projects.</li>
+                <li>Full UI customization & Premium Node access.</li>
             </ul>
-            <button class="plan-btn btn-basic">GET GOLD</button>
+            <button class="btn-pro">ACTIVATE GOLD</button>
         </div>
     </div>
-</div>
-
-<div id="stats-modal" class="modal-box">
-    <div class="modal-header">
-        <span>NEURAL STATS & MEMORY</span>
-        <button class="modal-close" onclick="closeModal('stats-modal')">✕</button>
-    </div>
-    <div class="stats-container" id="stats-content"></div>
 </div>
 
 <div id="sidebar" onclick="event.stopPropagation()">
-    <div style="padding: 30px 25px; display: flex; justify-content: space-between;">
-        <span style="font-weight: 900; color: var(--p);">SESSIONS</span>
-        <button class="btn-icon" style="font-size: 20px;" onclick="toggleS(event)">❮</button>
+    <div style="padding: 30px 25px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: 900; color: var(--p); letter-spacing: 2px;">SESSIONS</span>
+        <button class="btn-icon" style="font-size: 20px; color: #fff;" onclick="toggleS(event)">✕</button>
     </div>
     <button onclick="newChat()" class="btn-new">NEW CONVERSATION</button>
     <div id="h-list"></div>
@@ -281,26 +206,25 @@
 <main>
     <header>
         <button class="btn-icon" onclick="toggleS(event)">☰</button>
-        <div class="logo">Aethel AI</div>
+        <div class="logo">PHRAORTES</div>
         
         <div class="palette-container" onclick="event.stopPropagation()">
-            <div class="palette-dot mono" title="Stealth Monochrome" onclick="setPalette('#ffffff')"></div>
-            <div class="palette-dot neon" title="Aethel Green" onclick="setPalette('#76b900')"></div>
-            <div class="palette-dot cyber" title="Cyber Cyan" onclick="setPalette('#00f2ff')"></div>
-            <div class="palette-dot sunset" title="Sunset Amber" onclick="setPalette('#ff9500')"></div>
-            <div class="palette-dot berry" title="Velvet Orchid" onclick="setPalette('#af52de')"></div>
+            <div class="palette-dot mono" onclick="setPalette('#ffffff')"></div>
+            <div class="palette-dot neon" onclick="setPalette('#76b900')"></div>
+            <div class="palette-dot cyber" onclick="setPalette('#00f2ff')"></div>
+            <div class="palette-dot sunset" onclick="setPalette('#ff9500')"></div>
+            <div class="palette-dot berry" onclick="setPalette('#af52de')"></div>
         </div>
         
         <div class="account-hub" onclick="toggleAccount(event)">
-            <div class="account-avatar" id="user-avatar">ME</div>
+            <div class="account-avatar">ME</div>
             <div class="account-menu" id="account-menu" onclick="event.stopPropagation()">
                 <div style="padding: 10px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px;">
-                    <strong style="color:var(--p); font-size:14px;">Matin</strong><br>
+                    <strong style="color:var(--p); font-size:14px;">Creator</strong><br>
                     <span style="font-size:11px; color:#888;">Standard User</span>
                 </div>
+                <div class="account-item premium-btn" onclick="openPremium()">💎 Upgrade to Gold</div>
                 <div class="account-item">⚙️ Settings</div>
-                <div class="account-item" onclick="openStats()">🧠 My AI Profile</div>
-                <div class="account-item premium-btn" onclick="openPremium()">💎 Premium</div>
                 <div class="account-item" style="color: #ff3b30;">🚪 Logout</div>
             </div>
         </div>
@@ -311,44 +235,32 @@
 
     <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
         <div class="menu-item" onclick="toggleDeep()">Deep Thinking <span id="deep-status" style="opacity:0.5;">OFF</span></div>
-        <div class="menu-divider"></div>
-        <div class="menu-item" onclick="openAuraCall()">Aura Call Interface</div>
-        <div class="menu-divider"></div>
-        <div class="menu-item" onclick="tool('image')">AI Image Engine</div>
-        <div class="menu-item" onclick="tool('music')">AI Music Engine</div>
-        <div class="menu-item" onclick="tool('video')">AI Video Engine</div>
+        <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 5px 20px;"></div>
+        <div class="menu-item" onclick="tool('image')">Image Generator</div>
+        <div class="menu-item" onclick="tool('code')">Code Architecture</div>
     </div>
 
     <footer>
-        <div id="edit-indicator" style="display:none; color:var(--p); font-size:11px; margin-bottom:8px; padding-left:25px; font-weight:700;">
-            EDITING... <span onclick="cancelEdit()" style="color:#fff; cursor:pointer; margin-left:15px; text-decoration:underline;">CANCEL</span>
-        </div>
-        <div id="file-badge" class="file-badge">📎 <span id="file-name"></span></div>
         <div class="input-bar" onclick="event.stopPropagation()">
             <input type="file" id="file-upload" style="display:none;" onchange="handleFile(event)">
-            <button class="btn-icon" onclick="document.getElementById('file-upload').click()" title="Attach File">📎</button>
-            <button class="btn-icon" onclick="toggleGear(event)" title="Tools">⚙️</button>
-            <textarea id="ui" placeholder="Message Aethel AI..." spellcheck="false" onkeydown="handleEnter(event)"></textarea>
+            <button class="btn-icon" onclick="document.getElementById('file-upload').click()">📎</button>
+            <button class="btn-icon" onclick="toggleGear(event)">⚙️</button>
+            <textarea id="ui" placeholder="Message Phraortes..." spellcheck="false" onkeydown="handleEnter(event)"></textarea>
             <button id="send-btn" class="btn-icon" onclick="send()">🚀</button>
         </div>
     </footer>
 </main>
 
 <script>
-    const _PART_A = "gsk_AJNzgI5X09s1awxwonid";
-    const _PART_B = "WGdyb3FYJEQ4bxmGUdiGQyFqyJyWdfLl";
+    // New API Key Implementation
+    const _PART_A = "gsk_mIKxutVxzOYZdnFoMRbI";
+    const _PART_B = "WGdyb3FYuI7ZQoU2sZPIDQ0rmUc4GDhv";
 
-    let chats = JSON.parse(localStorage.getItem("nv_v70_chats")) || [];
-    let curId = localStorage.getItem("nv_v70_id");
-    
-    // Core Memories
-    let userTraits = JSON.parse(localStorage.getItem("nv_v70_traits")) || [];
-    let globalMemoryCore = JSON.parse(localStorage.getItem("nv_v70_global_memory")) || [];
+    let chats = JSON.parse(localStorage.getItem("phraortes_chats")) || [];
+    let curId = localStorage.getItem("phraortes_id");
     
     let deepThinking = false; 
-    let editIdx = -1;
-    let attachedFileType = ""; let attachedFileName = ""; let attachedFileData = ""; let attachedFileDataURL = "";
-    let activeAudioStream = null;
+    let attachedFileType = ""; let attachedFileName = ""; let attachedFileDataURL = "";
 
     marked.setOptions({ highlight: (c) => hljs.highlightAuto(c).value, breaks: true, gfm: true });
 
@@ -357,121 +269,71 @@
 
     window.onload = () => {
         if (!chats.length) newChat(); else loadChat(curId);
-        
-        // Restore custom theme preference if any
-        const savedColor = localStorage.getItem("nv_v70_custom_p");
+        const savedColor = localStorage.getItem("phraortes_custom_p");
         if(savedColor) setPalette(savedColor);
 
         const ui = document.getElementById("ui");
         ui.addEventListener("input", function() {
-            this.style.height = '50px';
+            this.style.height = '45px';
             this.style.height = Math.min(this.scrollHeight, 150) + 'px';
             analyzeMood(this.value);
         });
 
         chatBox.addEventListener("scroll", () => {
             const diff = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight;
-            scrollBtn.style.display = diff > 300 ? "flex" : "none";
+            scrollBtn.style.display = diff > 200 ? "flex" : "none";
         });
     };
     
-    // Live Color Generation System (Material You)
     function setPalette(hex) {
-        document.body.className = ""; // clear temporary mood behavior to prioritize manual color selection
+        document.body.className = ""; 
         document.documentElement.style.setProperty('--p', hex);
-        
-        // Auto-generate deep matching translucent shadows and glow values based on hex math
         let c = hex.replace('#', '');
         if(c.length === 3) c = c.split('').map(x => x+x).join('');
-        let r = parseInt(c.substring(0,2), 16);
-        let g = parseInt(c.substring(2,4), 16);
-        let b = parseInt(c.substring(4,6), 16);
-        
-        document.documentElement.style.setProperty('--glow', `rgba(${r}, ${g}, ${b}, 0.15)`);
-        localStorage.setItem("nv_v70_custom_p", hex);
+        let r = parseInt(c.substring(0,2), 16), g = parseInt(c.substring(2,4), 16), b = parseInt(c.substring(4,6), 16);
+        document.documentElement.style.setProperty('--glow', `rgba(${r}, ${g}, ${b}, 0.2)`);
+        localStorage.setItem("phraortes_custom_p", hex);
     }
 
-    function handleEnter(e) {
-        if (e.key === 'Enter' && e.ctrlKey) { 
-            e.preventDefault(); 
-            send(); 
-        }
-    }
+    function handleEnter(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
 
     function handleFile(e) {
         const file = e.target.files[0];
         if(!file) return;
         attachedFileName = file.name;
-        document.getElementById("file-name").innerText = file.name;
-        document.getElementById("file-badge").style.display = "block";
         
         if (file.type.startsWith("image/")) {
             attachedFileType = "image";
             const reader = new FileReader();
-            reader.onload = (evt) => { 
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement("canvas");
-                    let w = img.width, h = img.height;
-                    const max = 800;
-                    if (w > h && w > max) { h *= max / w; w = max; }
-                    else if (h > max) { w *= max / h; h = max; }
-                    canvas.width = w; canvas.height = h;
-                    const ctx = canvas.getContext("2d");
-                    ctx.drawImage(img, 0, 0, w, h);
-                    attachedFileDataURL = canvas.toDataURL("image/jpeg", 0.8);
-                };
-                img.src = evt.target.result;
-            };
+            reader.onload = (evt) => { attachedFileDataURL = evt.target.result; };
             reader.readAsDataURL(file);
-        } else if (file.type.startsWith("text/") || file.name.match(/\.(md|js|json|html|py|csv|txt)$/i)) {
-            attachedFileType = "text";
-            const reader = new FileReader();
-            reader.onload = (evt) => { attachedFileData = evt.target.result; };
-            reader.readAsText(file);
-        } else {
-            attachedFileType = "other";
-            attachedFileData = `[User uploaded a binary file: ${file.name}. Please acknowledge it.]`;
         }
     }
 
     function scrollToBottom() { chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' }); }
 
     function analyzeMood(t) {
-        // Only run if user hasn't locked a custom color scheme
-        if(localStorage.getItem("nv_v70_custom_p")) return;
-
-        const ex = /wow|awesome|amazing|omg|incredible|fire|عالی|محشر/i;
-        const ca = /relax|calm|peace|chill|quiet|آرام/i;
-        const an = /hate|angry|mad|damn|stupid|بد|احمق|عصبانی/i;
-        const p = /good|great|happy|yes|perfect|love|خوب|بله/i;
-        const n = /bad|sad|wrong|no|error|fail|نه|اشتباه/i;
-        
-        let m = "";
-        if(ex.test(t)) m = "mood-excited";
-        else if(an.test(t)) m = "mood-angry";
-        else if(ca.test(t)) m = "mood-calm";
-        else if(p.test(t)) m = "mood-pos";
-        else if(n.test(t)) m = "mood-neg";
-        else if(t.includes("?") || t.includes("چرا") || t.includes("چگونه")) m = "mood-neu";
-        
+        if(localStorage.getItem("phraortes_custom_p")) return;
+        const m = t.match(/عالی|محشر|wow|amazing/i) ? "mood-excited" :
+                  t.match(/عصبانی|بد|احمق|hate|angry/i) ? "mood-angry" :
+                  t.match(/آرام|relax|calm/i) ? "mood-calm" :
+                  t.match(/خوب|بله|good|yes/i) ? "mood-pos" :
+                  t.match(/نه|اشتباه|bad|no/i) ? "mood-neg" :
+                  t.match(/\?|چرا|چگونه/) ? "mood-neu" : "";
         document.body.className = m;
     }
 
-    // Modern Soft-Push Menu Logic (No Overlay Blocks)
     function toggleS(e) { 
         if(e) e.stopPropagation(); 
-        const isAct = document.getElementById("sidebar").classList.toggle("active"); 
-        if(isAct) {
-            document.body.classList.add("sidebar-active");
-        } else {
-            document.body.classList.remove("sidebar-active");
-        }
+        const sb = document.getElementById("sidebar");
+        const ov = document.getElementById("sidebar-overlay");
+        sb.classList.toggle("active"); 
+        ov.classList.toggle("show");
     }
     
     function toggleAccount(e) { e.stopPropagation(); document.getElementById("account-menu").classList.toggle("show"); }
-    function closeAll() { document.getElementById("gear-menu").classList.remove("show"); document.getElementById("account-menu").classList.remove("show"); }
     function toggleGear(e) { e.stopPropagation(); document.getElementById("gear-menu").classList.toggle("show"); }
+    function closeAll() { document.getElementById("gear-menu").classList.remove("show"); document.getElementById("account-menu").classList.remove("show"); }
     
     function toggleDeep() {
         deepThinking = !deepThinking;
@@ -481,19 +343,9 @@
     }
 
     function tool(type) {
-        document.getElementById("ui").value = `Generate high-quality prompt for AI ${type}: `;
+        document.getElementById("ui").value = `Generate ${type}... `;
         document.getElementById("ui").focus();
         document.getElementById("gear-menu").classList.remove("show");
-    }
-
-    // Modal Managers
-    function openModal(url) {
-        document.getElementById("modal-title").innerText = "LIVE INTELLIGENCE";
-        document.getElementById("modal-custom-content").style.display = "none";
-        const f = document.getElementById("widget-frame");
-        f.src = url; f.style.display = "block";
-        document.getElementById("widget-modal-overlay").style.display = "block";
-        document.getElementById("widget-modal").classList.add("show");
     }
 
     function openPremium() {
@@ -502,132 +354,35 @@
         document.getElementById("premium-modal").classList.add("show");
     }
 
-    function openStats() {
-        document.getElementById("account-menu").classList.remove("show");
-        
-        let textPool = chats.flatMap(c => c.msgs.map(m => m.uText || "")).join(" ").toLowerCase();
-        let cL = Math.min(100, Math.floor(Math.random() * 30 + 50)); 
-        let eL = Math.min(100, Math.floor(Math.random() * 20 + 20));
-        let aL = Math.min(100, Math.floor(Math.random() * 10 + 5));
-        
-        let cBar = "█".repeat(Math.floor(cL/10)) + "░".repeat(10 - Math.floor(cL/10));
-        let eBar = "█".repeat(Math.floor(eL/10)) + "░".repeat(10 - Math.floor(eL/10));
-        let aBar = "█".repeat(Math.floor(aL/10)) + "░".repeat(10 - Math.floor(aL/10));
-
-        let traitsHtml = userTraits.length ? userTraits.map(t => `<span style="background:rgba(255,255,255,0.1); padding:4px 8px; border-radius:8px; margin-right:5px; font-size:12px;">${t}</span>`).join("") : "Analyzing user behavior...";
-
-        document.getElementById("stats-content").innerHTML = `
-            <div style="margin-bottom: 25px;">
-                <p style="color:var(--p); font-weight:bold; margin-bottom:10px;">IDENTIFIED TRAITS:</p>
-                <div>${traitsHtml}</div>
-            </div>
-            <div style="margin-bottom: 25px;">
-                <p style="color:var(--p); font-weight:bold; margin-bottom:10px;">NEURAL EMOTION TRACKER:</p>
-                <div class="stat-bar-wrap"><span class="stat-label">CALM</span> <span class="stat-bar">${cBar}</span> ${cL}%</div>
-                <div class="stat-bar-wrap"><span class="stat-label">EXCITED</span> <span class="stat-bar" style="color:#ff9500;">${eBar}</span> ${eL}%</div>
-                <div class="stat-bar-wrap"><span class="stat-label">ANGRY</span> <span class="stat-bar" style="color:#ff2d55;">${aBar}</span> ${aL}%</div>
-            </div>
-            <div style="font-size:11px; color:rgba(255,255,255,0.4);">* Global Memory Core retains ${globalMemoryCore.length} data blocks.</div>
-        `;
-
-        document.getElementById("stats-overlay").style.display = "block";
-        document.getElementById("stats-modal").classList.add("show");
-    }
-
     function closeModal(id) {
         document.getElementById(id).classList.remove("show");
-        if(id === 'widget-modal') {
-            document.getElementById("widget-modal-overlay").style.display = "none";
-            document.getElementById("widget-frame").src = "";
-            document.getElementById("widget-frame").style.display = "none";
-            document.getElementById("modal-custom-content").style.display = "none";
-        } else if (id === 'premium-modal') {
-            document.getElementById("premium-overlay").style.display = "none";
-        } else if (id === 'stats-modal') {
-            document.getElementById("stats-overlay").style.display = "none";
-        }
-    }
-
-    function openAuraCall() {
-        document.getElementById("gear-menu").classList.remove("show");
-        document.getElementById("modal-title").innerText = "AURA CALL INTERFACE";
-        document.getElementById("widget-frame").style.display = "none";
-        
-        const area = document.getElementById("modal-custom-content");
-        area.innerHTML = `
-            <div class="call-menu-container">
-                <div class="call-section-title">Human Personas</div>
-                <div class="call-grid">
-                    <div class="call-card" onclick="startCall('Professor Dana')"><div class="call-avatar">👨‍🏫</div><div class="call-name">Prof. Dana</div></div>
-                    <div class="call-card" onclick="startCall('Jack Rogue')"><div class="call-avatar">💻</div><div class="call-name">Jack Rogue</div></div>
-                    <div class="call-card" onclick="startCall('Sarah Zen')"><div class="call-avatar">🧘‍♀️</div><div class="call-name">Sarah Zen</div></div>
-                </div>
-                <div class="call-section-title">Fantasy Companions</div>
-                <div class="call-grid">
-                    <div class="call-card" onclick="startCall('Wise Cat')"><div class="call-avatar">🐈</div><div class="call-name">Wise Cat</div></div>
-                    <div class="call-card" onclick="startCall('Apex Lion')"><div class="call-avatar">🦁</div><div class="call-name">Apex Lion</div></div>
-                </div>
-            </div>`;
-        area.style.display = "block";
-        document.getElementById("widget-modal-overlay").style.display = "block";
-        document.getElementById("widget-modal").classList.add("show");
-    }
-
-    function startCall(name) {
-        closeModal('widget-modal'); 
-        const callOverlay = document.getElementById("active-call-overlay");
-        callOverlay.style.display = "flex";
-        setTimeout(() => { callOverlay.classList.add("show"); }, 10);
-        document.getElementById("caller-name").innerText = name.toUpperCase();
-        
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-                activeAudioStream = stream;
-            }).catch(e => console.log("Mic access delayed/denied."));
-        }
-    }
-
-    function endCall() {
-        if(activeAudioStream) {
-            activeAudioStream.getTracks().forEach(track => track.stop());
-            activeAudioStream = null;
-        }
-        const callOverlay = document.getElementById("active-call-overlay");
-        callOverlay.classList.remove("show");
-        setTimeout(() => { callOverlay.style.display = "none"; }, 500); 
-    }
-
-    function learnTraits(text) {
-        const t = text.toLowerCase();
-        let learned = false;
-        if ((t.includes("ترید") || t.includes("ارز دیجیتال") || t.includes("crypto")) && !userTraits.includes("Trader")) { userTraits.push("Trader"); learned = true; }
-        if ((t.includes("کد") || t.includes("برنامه نویس")) && !userTraits.includes("Developer")) { userTraits.push("Developer"); learned = true; }
-        if (learned) localStorage.setItem("nv_v70_traits", JSON.stringify(userTraits));
-
-        if (text.length > 10 && text.length < 100 && (t.includes("my name is") || t.includes("i like") || t.includes("من ") || t.includes("پروژه"))) {
-            if(!globalMemoryCore.includes(text) && globalMemoryCore.length < 15) {
-                globalMemoryCore.push(text);
-                localStorage.setItem("nv_v70_global_memory", JSON.stringify(globalMemoryCore));
-            }
-        }
-    }
-
-    function checkLiveWidgets(text) {
-        const t = text.toLowerCase();
-        if (t.includes("چارت بیت") || t.includes("قیمت بیت") || t.includes("bitcoin chart")) {
-            return `<div class="smart-card" onclick="openModal('https://www.tradingview.com/chart/?symbol=BINANCE:BTCUSDT')"><h3>📈 Bitcoin (BTC/USDT) Live Chart</h3><p>Click to open Interactive TradingView Terminal</p></div>`;
-        }
-        if (t.includes("چارت اتریوم") || t.includes("قیمت اتریوم") || t.includes("ethereum chart")) {
-            return `<div class="smart-card" onclick="openModal('https://www.tradingview.com/chart/?symbol=BINANCE:ETHUSDT')"><h3>📈 Ethereum (ETH/USDT) Live Chart</h3><p>Click to open Interactive TradingView Terminal</p></div>`;
-        }
-        return "";
+        setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
     }
 
     function newChat() {
         const id = Date.now();
-        chats.unshift({ id, name: "New Discovery", msgs: [], isPinned: false });
+        chats.unshift({ id, name: "New Discovery", msgs: [] });
         curId = id; save(); loadChat(id);
-        closeAll();
+        if(document.getElementById("sidebar").classList.contains("active")) toggleS();
+    }
+
+    function getDynamicLoader(txt) {
+        const t = txt.toLowerCase();
+        let icon = "🧠";
+        let text = "Phraortes Core Processing...";
+        
+        if (t.includes("کد") || t.includes("code") || t.includes("script")) {
+            icon = "⟨/⟩"; text = "Compiling Code Architecture...";
+        } else if (t.includes("عکس") || t.includes("image") || attachedFileType === "image") {
+            icon = "📷"; text = "Rendering Visuals...";
+        }
+
+        return `
+            <div class="dynamic-loader">
+                <div class="load-icon">${icon}</div>
+                <div class="dot-matrix"><span></span><span></span><span></span></div>
+            </div>
+        `;
     }
 
     async function send() {
@@ -635,88 +390,66 @@
         const fullKey = _PART_A + _PART_B;
         if(!txt && !attachedFileName) return;
 
-        learnTraits(txt);
-        let widgetHtml = checkLiveWidgets(txt);
-
         let displayHtml = txt;
-        let finalPrompt = txt;
         let modelToUse = "llama-3.3-70b-versatile";
 
-        if(attachedFileName) {
-            if (attachedFileType === "image") {
-                displayHtml = `<img src="${attachedFileDataURL}" class="chat-img">` + (txt ? `<br>${txt}` : "");
-                modelToUse = "llama-3.2-11b-vision-preview";
-            } else if (attachedFileType === "text") {
-                displayHtml = `<div class="chat-file">📄 ${attachedFileName}</div>` + (txt ? `<br>${txt}` : "");
-                finalPrompt = `[File Content: ${attachedFileName}]\n\n${attachedFileData}\n\nUser Question: ${txt}`;
-            } else {
-                displayHtml = `<div class="chat-file">📁 ${attachedFileName}</div>` + (txt ? `<br>${txt}` : "");
-                finalPrompt = `[Binary File: ${attachedFileName}]\nUser Question: ${txt}`;
-            }
-            document.getElementById("file-badge").style.display = "none";
+        if(attachedFileName && attachedFileType === "image") {
+            displayHtml = `<img src="${attachedFileDataURL}" style="max-width:300px; border-radius:12px; margin-bottom:10px;"><br>${txt}`;
+            modelToUse = "llama-3.2-11b-vision-preview";
             document.getElementById("file-upload").value = "";
-            attachedFileName = ""; attachedFileData = ""; 
+            attachedFileName = ""; 
         }
 
         const chat = chats.find(c => c.id == curId);
-        if(editIdx > -1) { chat.msgs = chat.msgs.slice(0, editIdx); editIdx = -1; document.getElementById("edit-indicator").style.display="none"; loadChat(curId); }
-
-        inp.value = ""; inp.style.height = "50px";
-        addUI(displayHtml || "[Media Uploaded]", "user", "u-"+Date.now(), chat.msgs.length);
+        inp.value = ""; inp.style.height = "45px";
+        
+        addUI(displayHtml || "[Media Uploaded]", "user", "u-"+Date.now());
         
         const aiId = "ai-"+Date.now();
-        addUI("Neural Core processing...", "ai", aiId);
+        addUI(getDynamicLoader(txt), "ai", aiId);
 
-        let sysContent = "You are Aethel AI. You can analyze images and codes deeply. Answer professionally.";
-        sysContent += " CRITICAL: If the user asks for comparisons or schedules, YOU MUST output it using a Markdown Table format.";
-        if (userTraits.length > 0) sysContent += ` User traits: ${userTraits.join(", ")}.`;
-        
-        if (globalMemoryCore.length > 0) {
-            sysContent += ` Keep these facts about the user in mind: ${globalMemoryCore.join(" | ")}.`;
+        let sysContent = "You are Phraortes, an elite intelligence entity. Answer precisely and professionally.";
+        if(deepThinking) {
+            sysContent += "\nCRITICAL: Deep Thinking is ON. You MUST think step-by-step. Analyze all edge cases, break the problem into fundamental parts, and provide an exceptionally detailed, accurate, and definitive solution.";
+        } else {
+            sysContent += "\nProvide a standard, highly concise and direct response.";
         }
 
         let apiMessages = [{role: "system", content: sysContent}];
-        
         chat.msgs.forEach(m => {
             apiMessages.push({role: "user", content: m.uText || m.u});
             apiMessages.push({role: "assistant", content: m.aRaw || m.a});
         });
 
-        if (attachedFileType === "image" && attachedFileDataURL) {
+        if (attachedFileDataURL) {
             apiMessages.push({
                 role: "user", 
                 content: [
-                    { type: "text", text: (deepThinking ? "Deep Analysis: " : "") + (txt || "Please analyze this image in detail.") },
+                    { type: "text", text: txt || "Analyze this." },
                     { type: "image_url", image_url: { url: attachedFileDataURL } }
                 ]
             });
+            attachedFileDataURL = "";
         } else {
-            apiMessages.push({
-                role: "user", 
-                content: (deepThinking ? "Deep Analysis: " : "") + finalPrompt
-            });
+            apiMessages.push({ role: "user", content: txt });
         }
-        attachedFileDataURL = "";
 
         try {
             const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
                 headers: {"Authorization": `Bearer ${fullKey}`, "Content-Type": "application/json"},
-                body: JSON.stringify({
-                    model: modelToUse,
-                    messages: apiMessages
-                })
+                body: JSON.stringify({ model: modelToUse, messages: apiMessages })
             });
             const data = await res.json();
             if(data.error) throw new Error(data.error.message);
             
             const full = data.choices[0].message.content;
-            let renderedHtml = widgetHtml + marked.parse(full);
+            let renderedHtml = marked.parse(full);
             
             document.getElementById(aiId).innerHTML = renderedHtml;
             if(chat.msgs.length === 0) chat.name = (txt || "Media Analysis").substring(0, 20);
             
-            chat.msgs.push({u: displayHtml, uText: txt || "[Image/File Attached]", a: renderedHtml, aRaw: full}); 
+            chat.msgs.push({u: displayHtml, uText: txt, a: renderedHtml, aRaw: full}); 
             save(); renderH(); addCopyLogic();
             scrollToBottom();
         } catch(e) { 
@@ -724,52 +457,25 @@
         }
     }
 
-    function addUI(t, r, id, idx) {
+    function addUI(t, r, id) {
         const w = document.createElement("div");
         w.className = `msg-wrap ${r}-wrap`;
         if(id === 'welcome') {
-            w.innerHTML = `<div class="welcome-wrap"><h1>AETHEL AI</h1><p>Intelligence Core Active.</p></div>`;
+            w.innerHTML = `<div class="welcome-wrap"><h1>PHRAORTES</h1><p>Intelligence Core Active.</p></div>`;
         } else {
-            const ops = r === 'user' 
-                ? `<div class="msg-ops"><span class="op-btn" onclick="triggerEdit(${idx})">Edit</span><span class="op-btn" onclick="copyRaw('${id}', this)">Copy</span></div>`
-                : `<div class="msg-ops"><span class="op-btn" onclick="copyRaw('${id}', this)">Copy</span><span class="op-btn" onclick="speak('${id}', this)">Listen</span><span class="op-btn" onclick="stopSpeak()" style="color:#fff;">Stop</span></div>`;
-            w.innerHTML = `<div class="msg ${r}" id="${id}">${t}</div>${ops}`;
+            w.innerHTML = `<div class="msg ${r}" id="${id}">${t}</div>`;
         }
         chatBox.appendChild(w);
         scrollToBottom();
     }
 
-    function triggerEdit(idx) {
-        const chat = chats.find(c => c.id == curId);
-        document.getElementById("ui").value = chat.msgs[idx].uText || chat.msgs[idx].u;
-        document.getElementById("ui").focus();
-        editIdx = idx;
-        document.getElementById("edit-indicator").style.display = "block";
-    }
-    function cancelEdit() { editIdx = -1; document.getElementById("ui").value = ""; document.getElementById("edit-indicator").style.display = "none"; }
-
-    function copyRaw(id, btn) {
-        navigator.clipboard.writeText(document.getElementById(id).innerText).then(() => {
-            const old = btn.innerText; btn.innerText = "COPIED";
-            setTimeout(() => btn.innerText = old, 1500);
-        });
-    }
-
-    function speak(id, btn) {
-        window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(document.getElementById(id).innerText);
-        window.speechSynthesis.speak(u);
-        btn.innerText = "SPEAKING...";
-        u.onend = () => btn.innerText = "LISTEN";
-    }
-    function stopSpeak() { window.speechSynthesis.cancel(); }
-
     function addCopyLogic() {
         document.querySelectorAll('pre').forEach(pre => {
             if(pre.querySelector('.copy-btn')) return;
-            const b = document.createElement('button'); b.innerText = 'COPY CODE';
-            b.style = "position:absolute; top:15px; right:15px; background:var(--p); border:none; padding:6px 12px; border-radius:10px; font-size:10px; font-weight:800; cursor:pointer; color:#000;";
-            b.onclick = () => { navigator.clipboard.writeText(pre.innerText); b.innerText = 'DONE'; setTimeout(()=>b.innerText='COPY CODE', 2000); };
+            const b = document.createElement('button'); b.innerText = 'COPY';
+            b.style = "position:absolute; top:15px; right:15px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:6px 12px; border-radius:10px; font-size:10px; font-weight:800; cursor:pointer; color:#fff; backdrop-filter:blur(10px); transition:0.3s;";
+            b.onmouseover = () => b.style.background = 'var(--p)'; b.onmouseout = () => b.style.background = 'rgba(255,255,255,0.1)';
+            b.onclick = () => { navigator.clipboard.writeText(pre.innerText); b.innerText = 'DONE'; setTimeout(()=>b.innerText='COPY', 2000); };
             pre.appendChild(b);
         });
     }
@@ -779,38 +485,20 @@
         const chat = chats.find(c => c.id == id);
         chatBox.innerHTML = "";
         addUI("", "ai", "welcome");
-        if(chat && chat.msgs.length) chat.msgs.forEach((m, i) => { addUI(m.u, "user", "u-"+i, i); addUI(m.a, "ai", "a-"+i); });
+        if(chat && chat.msgs.length) chat.msgs.forEach((m, i) => { addUI(m.u, "user", "u-"+i); addUI(m.a, "ai", "a-"+i); });
         renderH(); addCopyLogic();
     }
 
-    function save() { localStorage.setItem("nv_v70_chats", JSON.stringify(chats)); localStorage.setItem("nv_v70_id", curId); }
+    function save() { localStorage.setItem("phraortes_chats", JSON.stringify(chats)); localStorage.setItem("phraortes_id", curId); }
     
     function renderH() {
-        const sortedChats = [...chats].sort((a, b) => {
-            if (a.isPinned === b.isPinned) return b.id - a.id;
-            return a.isPinned ? -1 : 1;
-        });
-
-        document.getElementById("h-list").innerHTML = sortedChats.map(c => `
-            <div class="h-item ${c.id == curId ? 'active-chat' : ''} ${c.isPinned ? 'pinned' : ''}" onclick="loadChat(${c.id})">
-                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:130px;">
-                    ${c.isPinned ? '📌 ' : ''}# ${c.name}
-                </span>
-                <div style="display:flex; gap:8px;">
-                    <button onclick="togglePin(event, ${c.id})" style="background:none; border:none; color:#fff; opacity:0.7; font-size:12px; cursor:pointer;" title="Pin/Unpin">${c.isPinned ? '📍' : '📌'}</button>
-                    <button onclick="renameH(event, ${c.id})" style="background:none; border:none; color:var(--p); font-size:12px; cursor:pointer;" title="Rename">✏️</button>
-                    <button onclick="delH(event, ${c.id})" style="background:none; border:none; color:#fff; opacity:0.2; font-size:12px; cursor:pointer;" title="Delete">🗑️</button>
-                </div>
+        document.getElementById("h-list").innerHTML = chats.map(c => `
+            <div class="h-item ${c.id == curId ? 'active-chat' : ''}" onclick="loadChat(${c.id})">
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:150px;"># ${c.name}</span>
+                <button onclick="delH(event, ${c.id})" style="background:none; border:none; color:#fff; opacity:0.3; font-size:14px; cursor:pointer;" title="Delete">✕</button>
             </div>`).join("");
     }
 
-    function togglePin(e, id) {
-        e.stopPropagation();
-        const c = chats.find(x => x.id == id);
-        if(c) { c.isPinned = !c.isPinned; save(); renderH(); }
-    }
-
-    function renameH(e, id) { e.stopPropagation(); const n = prompt("Rename to:"); if(n) { chats.find(c=>c.id==id).name = n; save(); renderH(); } }
     function delH(e, id) { e.stopPropagation(); if(confirm("Delete session?")) { chats = chats.filter(c=>c.id!=id); if(!chats.length) newChat(); else loadChat(chats[0].id); save(); renderH(); } }
 </script>
 </body>
