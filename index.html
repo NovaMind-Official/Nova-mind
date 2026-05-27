@@ -29,8 +29,13 @@
         body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: 0.8s var(--apple-ease); overflow: hidden; }
         .bg-glow { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 50% 50%, var(--glow) 0%, transparent 85%); filter: blur(100px); transition: 0.8s; }
 
-        #sidebar { position: fixed; left: -285px; width: 280px; height: 100%; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(50px); border-right: 1px solid var(--brd); z-index: 4000; transition: transform 0.6s var(--apple-ease); }
-        #sidebar.active { transform: translateX(285px); }
+        /* Sidebar Push Layout Updates */
+        #sidebar { position: fixed; left: -280px; width: 280px; height: 100%; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(50px); border-right: 1px solid var(--brd); z-index: 4000; transition: transform 0.6s var(--apple-ease); }
+        #sidebar.active { transform: translateX(280px); }
+        
+        main { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; transition: transform 0.6s var(--apple-ease); }
+        body.sidebar-active main { transform: translateX(280px); width: calc(100% - 280px); }
+
         .btn-new { width: 90%; margin: 20px auto; padding: 16px; background: #fff; border: none; color: #000; border-radius: 18px; font-weight: 700; cursor: pointer; display: block; letter-spacing: -0.5px; }
 
         #h-list { flex: 1; overflow-y: auto; padding: 15px; }
@@ -38,9 +43,19 @@
         .h-item.active-chat { border-color: var(--p); background: rgba(255,255,255,0.1); }
         .h-item.pinned { border-left: 3px solid var(--p); }
 
-        main { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; }
-        header { height: 65px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); }
+        header { height: 65px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); gap: 15px; }
         .logo { font-size: 14px; letter-spacing: 5px; font-weight: 900; color: var(--p); text-transform: uppercase; }
+
+        /* Material You Floating Palette */
+        .palette-container { display: flex; gap: 8px; background: rgba(255,255,255,0.03); padding: 6px 12px; border-radius: 30px; border: 1px solid var(--brd); align-items: center; transition: 0.3s; }
+        .palette-container:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.2); }
+        .palette-dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; transition: transform 0.3s var(--apple-ease), box-shadow 0.3s; border: 1px solid rgba(0,0,0,0.3); }
+        .palette-dot:hover { transform: scale(1.25); }
+        .palette-dot.mono { background: #ffffff; box-shadow: 0 0 8px rgba(255,255,255,0.2); }
+        .palette-dot.neon { background: #76b900; box-shadow: 0 0 8px rgba(118,185,0,0.2); }
+        .palette-dot.cyber { background: #00f2ff; box-shadow: 0 0 8px rgba(0,242,255,0.2); }
+        .palette-dot.sunset { background: #ff9500; box-shadow: 0 0 8px rgba(255,149,0,0.2); }
+        .palette-dot.berry { background: #af52de; box-shadow: 0 0 8px rgba(175,82,222,0.2); }
 
         /* Account Hub Styles */
         .account-hub { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; }
@@ -70,7 +85,9 @@
         
         .msg { padding: 18px 24px; border-radius: 24px; font-size: 16px; line-height: 1.7; position: relative; white-space: pre-wrap; word-wrap: break-word; }
         .user { background: var(--p); color: #000; border-bottom-right-radius: 4px; font-weight: 500; }
-        .ai { background: rgba(255,255,255,0.03); color: #fff; border: 1px solid var(--brd); border-bottom-left-radius: 4px; }
+        
+        /* Borderless Dynamic AI Chat Style Update */
+        .ai { background: transparent; color: #fff; border: none; border-bottom-left-radius: 0; padding: 10px 0px; }
 
         table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 15px; border-radius: 14px; overflow: hidden; border: 1px solid var(--brd); background: rgba(255, 255, 255, 0.02); }
         th, td { padding: 14px 18px; text-align: left; border: 1px solid var(--brd); color: #ffffff; }
@@ -84,7 +101,7 @@
 
         #scroll-btn { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); background: var(--p); color: #000; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 20px; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.4); z-index: 2000; transition: 0.3s; }
         pre { background: #0b0b0b !important; border: 1px solid var(--brd); border-radius: 20px; padding: 20px; position: relative; margin: 20px 0; overflow-x: auto; }
-        .msg-ops { display: flex; gap: 18px; margin-top: 12px; opacity: 0.4; transition: 0.3s; }
+        .msg-ops { display: flex; gap: 18px; margin-top: 4px; opacity: 0.4; transition: 0.3s; }
         .msg-ops:hover { opacity: 1; }
         .op-btn { cursor: pointer; font-size: 11px; font-weight: 700; color: var(--p); text-transform: uppercase; }
 
@@ -104,7 +121,8 @@
         .btn-icon:hover { transform: scale(1.1); }
         .file-badge { display: none; margin-left: 20px; margin-bottom: 10px; background: rgba(255,255,255,0.1); padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; color: var(--p); border: 1px solid var(--p); width: fit-content; animation: fadeIn 0.3s; }
 
-        #overlay, #widget-modal-overlay, #premium-overlay, #stats-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 3000; backdrop-filter: blur(15px); }
+        /* Overlay updates -> Removed standard sidebar overlay */
+        #widget-modal-overlay, #premium-overlay, #stats-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 3000; backdrop-filter: blur(15px); }
         
         /* Modal General */
         .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 90%; max-width: 800px; max-height: 85vh; background: #111; border: 1px solid var(--p); border-radius: 24px; z-index: 6000; display: none; flex-direction: column; overflow: hidden; transition: 0.3s var(--apple-ease); opacity: 0; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
@@ -141,7 +159,7 @@
         .end-call-btn { z-index: 2; background: #ff3b30; color: #fff; border: none; padding: 18px 50px; border-radius: 35px; font-weight: 800; font-size: 15px; letter-spacing: 1px; cursor: pointer; box-shadow: 0 10px 30px rgba(255,59,48,0.4); transition: 0.3s;}
         .end-call-btn:hover { transform: scale(1.05); box-shadow: 0 15px 40px rgba(255,59,48,0.6); }
 
-        /* Premium Plans Overlay (App Store Style) */
+        /* Premium Plans Overlay */
         .plans-container { padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; align-items: center; }
         .plan-card { width: 100%; max-width: 500px; background: rgba(20,20,20,0.8); border: 1px solid var(--brd); border-radius: 20px; padding: 25px; position: relative; transition: 0.3s; }
         .plan-card:hover { transform: scale(1.02); background: rgba(30,30,30,0.9); box-shadow: 0 15px 35px var(--glow); border-color: var(--p); }
@@ -176,7 +194,6 @@
 <body onclick="closeAll()">
 
 <div class="bg-glow"></div>
-<div id="overlay" onclick="toggleS()"></div>
 <div id="widget-modal-overlay" onclick="closeModal('widget-modal')"></div>
 <div id="premium-overlay" onclick="closeModal('premium-modal')"></div>
 <div id="stats-overlay" onclick="closeModal('stats-modal')"></div>
@@ -249,14 +266,13 @@
         <span>NEURAL STATS & MEMORY</span>
         <button class="modal-close" onclick="closeModal('stats-modal')">✕</button>
     </div>
-    <div class="stats-container" id="stats-content">
-        </div>
+    <div class="stats-container" id="stats-content"></div>
 </div>
 
 <div id="sidebar" onclick="event.stopPropagation()">
     <div style="padding: 30px 25px; display: flex; justify-content: space-between;">
         <span style="font-weight: 900; color: var(--p);">SESSIONS</span>
-        <button class="btn-icon" style="font-size: 20px;" onclick="toggleS()">❮</button>
+        <button class="btn-icon" style="font-size: 20px;" onclick="toggleS(event)">❮</button>
     </div>
     <button onclick="newChat()" class="btn-new">NEW CONVERSATION</button>
     <div id="h-list"></div>
@@ -266,6 +282,14 @@
     <header>
         <button class="btn-icon" onclick="toggleS(event)">☰</button>
         <div class="logo">Aethel AI</div>
+        
+        <div class="palette-container" onclick="event.stopPropagation()">
+            <div class="palette-dot mono" title="Stealth Monochrome" onclick="setPalette('#ffffff')"></div>
+            <div class="palette-dot neon" title="Aethel Green" onclick="setPalette('#76b900')"></div>
+            <div class="palette-dot cyber" title="Cyber Cyan" onclick="setPalette('#00f2ff')"></div>
+            <div class="palette-dot sunset" title="Sunset Amber" onclick="setPalette('#ff9500')"></div>
+            <div class="palette-dot berry" title="Velvet Orchid" onclick="setPalette('#af52de')"></div>
+        </div>
         
         <div class="account-hub" onclick="toggleAccount(event)">
             <div class="account-avatar" id="user-avatar">ME</div>
@@ -334,6 +358,10 @@
     window.onload = () => {
         if (!chats.length) newChat(); else loadChat(curId);
         
+        // Restore custom theme preference if any
+        const savedColor = localStorage.getItem("nv_v70_custom_p");
+        if(savedColor) setPalette(savedColor);
+
         const ui = document.getElementById("ui");
         ui.addEventListener("input", function() {
             this.style.height = '50px';
@@ -347,6 +375,22 @@
         });
     };
     
+    // Live Color Generation System (Material You)
+    function setPalette(hex) {
+        document.body.className = ""; // clear temporary mood behavior to prioritize manual color selection
+        document.documentElement.style.setProperty('--p', hex);
+        
+        // Auto-generate deep matching translucent shadows and glow values based on hex math
+        let c = hex.replace('#', '');
+        if(c.length === 3) c = c.split('').map(x => x+x).join('');
+        let r = parseInt(c.substring(0,2), 16);
+        let g = parseInt(c.substring(2,4), 16);
+        let b = parseInt(c.substring(4,6), 16);
+        
+        document.documentElement.style.setProperty('--glow', `rgba(${r}, ${g}, ${b}, 0.15)`);
+        localStorage.setItem("nv_v70_custom_p", hex);
+    }
+
     function handleEnter(e) {
         if (e.key === 'Enter' && e.ctrlKey) { 
             e.preventDefault(); 
@@ -394,7 +438,10 @@
     function scrollToBottom() { chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' }); }
 
     function analyzeMood(t) {
-        const ex = /wow|awesome|amazing|omg|incredible|fire| عالی|محشر/i;
+        // Only run if user hasn't locked a custom color scheme
+        if(localStorage.getItem("nv_v70_custom_p")) return;
+
+        const ex = /wow|awesome|amazing|omg|incredible|fire|عالی|محشر/i;
         const ca = /relax|calm|peace|chill|quiet|آرام/i;
         const an = /hate|angry|mad|damn|stupid|بد|احمق|عصبانی/i;
         const p = /good|great|happy|yes|perfect|love|خوب|بله/i;
@@ -411,9 +458,19 @@
         document.body.className = m;
     }
 
-    function toggleS(e) { if(e) e.stopPropagation(); const a = document.getElementById("sidebar").classList.toggle("active"); document.getElementById("overlay").style.display = a ? "block" : "none"; }
+    // Modern Soft-Push Menu Logic (No Overlay Blocks)
+    function toggleS(e) { 
+        if(e) e.stopPropagation(); 
+        const isAct = document.getElementById("sidebar").classList.toggle("active"); 
+        if(isAct) {
+            document.body.classList.add("sidebar-active");
+        } else {
+            document.body.classList.remove("sidebar-active");
+        }
+    }
+    
     function toggleAccount(e) { e.stopPropagation(); document.getElementById("account-menu").classList.toggle("show"); }
-    function closeAll() { document.getElementById("sidebar").classList.remove("active"); document.getElementById("gear-menu").classList.remove("show"); document.getElementById("account-menu").classList.remove("show"); document.getElementById("overlay").style.display = "none"; }
+    function closeAll() { document.getElementById("gear-menu").classList.remove("show"); document.getElementById("account-menu").classList.remove("show"); }
     function toggleGear(e) { e.stopPropagation(); document.getElementById("gear-menu").classList.toggle("show"); }
     
     function toggleDeep() {
@@ -448,7 +505,6 @@
     function openStats() {
         document.getElementById("account-menu").classList.remove("show");
         
-        // Calculate fake/real stats based on global text length
         let textPool = chats.flatMap(c => c.msgs.map(m => m.uText || "")).join(" ").toLowerCase();
         let cL = Math.min(100, Math.floor(Math.random() * 30 + 50)); 
         let eL = Math.min(100, Math.floor(Math.random() * 20 + 20));
@@ -524,11 +580,9 @@
         setTimeout(() => { callOverlay.classList.add("show"); }, 10);
         document.getElementById("caller-name").innerText = name.toUpperCase();
         
-        // Prepare Mic Infrastructure for OpenRouter Audio Stream
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
                 activeAudioStream = stream;
-                // Ready to pipe into OpenRouter real-time API
             }).catch(e => console.log("Mic access delayed/denied."));
         }
     }
@@ -550,7 +604,6 @@
         if ((t.includes("کد") || t.includes("برنامه نویس")) && !userTraits.includes("Developer")) { userTraits.push("Developer"); learned = true; }
         if (learned) localStorage.setItem("nv_v70_traits", JSON.stringify(userTraits));
 
-        // Global Memory Core Logic (Silent extraction)
         if (text.length > 10 && text.length < 100 && (t.includes("my name is") || t.includes("i like") || t.includes("من ") || t.includes("پروژه"))) {
             if(!globalMemoryCore.includes(text) && globalMemoryCore.length < 15) {
                 globalMemoryCore.push(text);
@@ -618,7 +671,6 @@
         sysContent += " CRITICAL: If the user asks for comparisons or schedules, YOU MUST output it using a Markdown Table format.";
         if (userTraits.length > 0) sysContent += ` User traits: ${userTraits.join(", ")}.`;
         
-        // Injecting Global Memory silently
         if (globalMemoryCore.length > 0) {
             sysContent += ` Keep these facts about the user in mind: ${globalMemoryCore.join(" | ")}.`;
         }
@@ -733,7 +785,6 @@
 
     function save() { localStorage.setItem("nv_v70_chats", JSON.stringify(chats)); localStorage.setItem("nv_v70_id", curId); }
     
-    // Upgraded Render: Pinned Sessions First
     function renderH() {
         const sortedChats = [...chats].sort((a, b) => {
             if (a.isPinned === b.isPinned) return b.id - a.id;
