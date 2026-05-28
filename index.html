@@ -10,186 +10,218 @@
     <style>
         :root { 
             --p: #76b900; --bg: #000; --txt: #ffffff; 
+            --grad1: #1a1a2e; --grad2: #16213e;
             --brd: rgba(255,255,255,0.1); 
             --apple-ease: cubic-bezier(0.25, 1, 0.5, 1);
             --glow: rgba(118, 185, 0, 0.15);
-            --premium-color: #dfb257;
-            --premium-glow: rgba(223, 178, 87, 0.25);
-            --glass-bg: rgba(20, 20, 20, 0.45);
+            --premium-color: #dfb257; --premium-glow: rgba(223, 178, 87, 0.25);
+            --plat-color: #e5e4e2; --plat-glow: rgba(229, 228, 226, 0.25);
         }
         
-        /* Dynamic Emotion Colors - Background & Accents Only */
-        body.mood-pos { --p: #00f2ff; --glow: rgba(0, 242, 255, 0.3); }
-        body.mood-neg { --p: #ff3b30; --glow: rgba(255, 59, 48, 0.3); }
-        body.mood-neu { --p: #af52de; --glow: rgba(175, 82, 222, 0.3); }
-        body.mood-excited { --p: #ff9500; --glow: rgba(255, 149, 0, 0.3); } 
-        body.mood-calm { --p: #5ac8fa; --glow: rgba(90, 200, 250, 0.3); } 
-        body.mood-angry { --p: #ff2d55; --glow: rgba(255, 45, 85, 0.3); } 
+        /* Dynamic Emotion Colors - Soft Glassy Gradients */
+        body.mood-pos { --grad1: #113a20; --grad2: #0b2218; --p: #00ff88; }
+        body.mood-neg { --grad1: #3a1111; --grad2: #220b0b; --p: #ff3b30; }
+        body.mood-neu { --grad1: #2a113a; --grad2: #180b22; --p: #af52de; }
+        body.mood-excited { --grad1: #3a2511; --grad2: #22150b; --p: #ff9500; } 
+        body.mood-calm { --grad1: #112a3a; --grad2: #0b1822; --p: #5ac8fa; } 
+        body.mood-angry { --grad1: #3a1122; --grad2: #220b15; --p: #ff2d55; } 
 
-        * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; outline: none; }
-        body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: background 0.8s var(--apple-ease); overflow: hidden; }
+        * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: background 0.8s var(--apple-ease); overflow: hidden; user-select: none; }
         
-        /* Advanced Mesh Gradient Glow */
-        .bg-glow { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 30% 30%, var(--glow) 0%, transparent 60%), radial-gradient(circle at 80% 80%, var(--glow) 0%, transparent 60%); filter: blur(80px); transition: 1s var(--apple-ease); opacity: 0.8; }
+        /* Mesh Gradient Glow */
+        .bg-glow { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 20% 30%, var(--grad1) 0%, transparent 70%), radial-gradient(circle at 80% 80%, var(--grad2) 0%, transparent 70%); filter: blur(60px); transition: 1s var(--apple-ease); opacity: 0.9; }
 
-        /* Apple Style Glassmorphism Sidebar */
-        #sidebar { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border-right: 1px solid var(--brd); z-index: 4000; transition: transform 0.5s var(--apple-ease); box-shadow: 20px 0 50px rgba(0,0,0,0.5); }
+        /* Sidebar */
+        #sidebar { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border-right: 1px solid var(--brd); z-index: 4000; transition: transform 0.5s var(--apple-ease); box-shadow: 20px 0 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
         #sidebar.active { transform: translateX(300px); }
         
-        /* Sidebar Overlay for Main Content Blur */
-        #sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 3999; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--apple-ease); }
+        #sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); z-index: 3999; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--apple-ease); }
         #sidebar-overlay.show { opacity: 1; pointer-events: all; }
 
         main { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; transition: 0.5s var(--apple-ease); }
 
-        .btn-new { width: 90%; margin: 20px auto; padding: 16px; background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); border: 1px solid var(--brd); color: #fff; border-radius: 20px; font-weight: 700; cursor: pointer; display: block; letter-spacing: -0.5px; transition: 0.3s; }
-        .btn-new:hover { background: rgba(255,255,255,0.2); transform: scale(1.02); border-color: var(--p); }
+        .btn-new { width: 90%; margin: 20px auto; padding: 16px; background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid var(--brd); color: #fff; border-radius: 20px; font-weight: 700; cursor: pointer; display: block; letter-spacing: -0.5px; transition: 0.3s; }
+        .btn-new:hover { background: rgba(255,255,255,0.1); transform: scale(1.02); }
 
         #h-list { flex: 1; overflow-y: auto; padding: 15px; }
-        .h-item { padding: 14px; border-radius: 16px; margin-bottom: 10px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: space-between; font-size: 13px; border: 1px solid transparent; transition: 0.3s var(--apple-ease); cursor: pointer; }
-        .h-item:hover { background: rgba(255,255,255,0.08); }
-        .h-item.active-chat { border-color: var(--p); background: rgba(255,255,255,0.1); box-shadow: 0 5px 15px var(--glow); }
+        .h-item { padding: 14px; border-radius: 16px; margin-bottom: 10px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: space-between; font-size: 13px; border: 1px solid transparent; transition: 0.3s var(--apple-ease); cursor: pointer; position: relative; }
+        .h-item.active-chat { border-color: var(--p); background: rgba(255,255,255,0.08); box-shadow: 0 5px 15px var(--glow); }
 
-        header { height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); gap: 15px; background: rgba(0,0,0,0.2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 100; }
+        header { height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); background: rgba(0,0,0,0.2); backdrop-filter: blur(20px); z-index: 100; }
         .logo { font-size: 16px; letter-spacing: 4px; font-weight: 900; color: var(--p); text-transform: uppercase; text-shadow: 0 0 15px var(--glow); transition: 0.5s; }
 
-        .palette-container { display: flex; gap: 8px; background: rgba(255,255,255,0.05); padding: 8px 14px; border-radius: 30px; border: 1px solid var(--brd); align-items: center; transition: 0.3s; backdrop-filter: blur(15px); }
-        .palette-dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; transition: 0.3s var(--apple-ease); border: 1px solid rgba(255,255,255,0.3); }
-        .palette-dot:hover { transform: scale(1.3); }
-        .palette-dot.mono { background: #ffffff; } .palette-dot.neon { background: #76b900; }
-        .palette-dot.cyber { background: #00f2ff; } .palette-dot.sunset { background: #ff9500; }
-        .palette-dot.berry { background: #af52de; }
-
+        /* Account & Emotion Telemetry */
         .account-hub { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .account-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--p), #222); border: 2px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; color: #fff; transition: 0.4s var(--apple-ease); box-shadow: 0 0 10px var(--glow); }
-        .account-hub:hover .account-avatar { transform: scale(1.1); }
-        .account-menu { position: absolute; top: 55px; right: 0; width: 230px; background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 1px solid var(--brd); border-radius: 24px; padding: 12px; display: none; flex-direction: column; z-index: 5000; box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
+        .account-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--p), #222); border: 2px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; color: #fff; transition: 0.4s; }
+        
+        .account-menu { position: absolute; top: 55px; right: 0; width: 260px; background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(40px); border: 1px solid var(--brd); border-radius: 24px; padding: 15px; display: none; flex-direction: column; z-index: 5000; box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
         .account-menu.show { display: flex; animation: glassPop 0.4s var(--apple-ease); }
         @keyframes glassPop { from { opacity: 0; transform: translateY(-10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        .telemetry-box { background: rgba(0,0,0,0.4); border-radius: 16px; padding: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .telemetry-title { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 800; }
+        .t-bar-wrap { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 11px; }
+        .t-bg { width: 60%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+        .t-fill { height: 100%; border-radius: 4px; transition: width 0.8s var(--apple-ease); }
+        .c-calm { background: #5ac8fa; } .c-focus { background: #af52de; } .c-creative { background: #ff9500; }
         
-        .account-item { padding: 12px 15px; font-size: 13px; color: #eee; border-radius: 14px; cursor: pointer; transition: 0.3s var(--apple-ease); font-weight: 500; }
-        .account-item:hover { background: rgba(255,255,255,0.1); color: #fff; transform: translateX(4px); }
+        .account-item { padding: 12px 15px; font-size: 13px; color: #eee; border-radius: 14px; cursor: pointer; transition: 0.3s; font-weight: 500; }
+        .account-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .account-item.premium-btn { color: var(--premium-color); border: 1px solid rgba(223, 178, 87, 0.3); background: rgba(223, 178, 87, 0.08); font-weight: 800; text-align: center; margin-bottom: 10px; }
 
-        .account-item.premium-btn { color: var(--premium-color); border: 1px solid rgba(223, 178, 87, 0.3); background: rgba(223, 178, 87, 0.08); font-weight: 800; margin-bottom: 5px; }
-        .account-item.premium-btn:hover { background: rgba(223, 178, 87, 0.2); box-shadow: 0 0 20px var(--premium-glow); }
-
-        #chat-box { flex: 1; overflow-y: auto; padding: 30px 8% 180px; display: flex; flex-direction: column; gap: 35px; scroll-behavior: smooth; }
-        .welcome-wrap { text-align: center; margin: auto 0; animation: fadeIn 1s ease; }
-        .welcome-wrap h1 { font-size: 38px; font-weight: 900; margin-bottom: 10px; color: var(--p); letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 25px var(--glow); }
-        .welcome-wrap p { color: rgba(255,255,255,0.6); font-size: 16px; font-weight: 500; }
-
-        .msg-wrap { display: flex; flex-direction: column; max-width: 85%; animation: slideUp 0.5s var(--apple-ease); }
+        #chat-box { flex: 1; overflow-y: auto; padding: 30px 8% 180px; display: flex; flex-direction: column; gap: 35px; scroll-behavior: smooth; user-select: text; }
+        
+        .msg-wrap { display: flex; flex-direction: column; max-width: 85%; animation: slideUp 0.5s var(--apple-ease); position: relative; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .user-wrap { align-self: flex-end; }
         .ai-wrap { align-self: flex-start; width: 100%; }
         
-        .msg { padding: 18px 26px; border-radius: 28px; font-size: 16px; line-height: 1.7; position: relative; white-space: pre-wrap; word-wrap: break-word; }
+        .msg { padding: 18px 26px; border-radius: 28px; font-size: 16px; line-height: 1.7; position: relative; white-space: pre-wrap; word-wrap: break-word; cursor: pointer; }
         
-        /* Apple Glass User Bubbles */
-        .user { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-bottom-right-radius: 6px; font-weight: 500; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+        .user { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-bottom-right-radius: 6px; font-weight: 500; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+        .ai { background: transparent; color: #fff; border: none; padding: 10px 0; font-weight: 400; cursor: default; }
+
+        /* Rich Text Styling (Tables & Code) */
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 16px; overflow: hidden; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { background: rgba(255,255,255,0.1); color: var(--p); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+        tr:hover { background: rgba(255,255,255,0.05); }
+
+        pre { background: rgba(10,10,10,0.8) !important; backdrop-filter: blur(20px); border: 1px solid var(--brd); border-radius: 20px; padding: 25px 20px 20px; margin: 20px 0; overflow-x: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; }
         
-        /* Clean AI Bubbles */
-        .ai { background: transparent; color: #fff; border: none; padding: 10px 0; font-weight: 400; }
+        .listen-ops { display: flex; gap: 12px; margin-top: 8px; padding-left: 5px; opacity: 0.5; transition: 0.3s; }
+        .listen-ops:hover { opacity: 1; }
+        .l-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
+        .l-btn:hover { color: var(--p); }
 
-        pre { background: rgba(10,10,10,0.6) !important; backdrop-filter: blur(20px); border: 1px solid var(--brd); border-radius: 20px; padding: 20px; margin: 20px 0; overflow-x: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
-        
-        /* Glassy Scroll Button */
-        #scroll-btn { position: fixed; bottom: 130px; left: 50%; transform: translateX(-50%); background: rgba(30, 30, 30, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #fff; border: 1px solid rgba(255,255,255,0.15); border-radius: 50%; width: 50px; height: 50px; font-size: 20px; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 2000; transition: 0.4s var(--apple-ease); }
-        #scroll-btn:hover { background: rgba(50, 50, 50, 0.8); transform: translateX(-50%) translateY(-5px); border-color: var(--p); color: var(--p); }
-
-        .msg-ops { display: flex; gap: 18px; margin-top: 8px; opacity: 0; transition: 0.3s; padding: 0 10px; }
-        .msg-wrap:hover .msg-ops { opacity: 0.7; }
-        .op-btn { cursor: pointer; font-size: 11px; font-weight: 700; color: var(--p); text-transform: uppercase; letter-spacing: 0.5px; }
-
-        /* Glass Footer & Input */
-        footer { position: absolute; bottom: 0; width: 100%; padding: 20px 8% 40px; background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, transparent); pointer-events: none; }
-        .input-bar { background: rgba(25, 25, 25, 0.55); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 35px; display: flex; align-items: center; padding: 10px 25px; gap: 15px; pointer-events: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: 0.3s var(--apple-ease); }
+        /* Input Bar */
+        footer { position: absolute; bottom: 0; width: 100%; padding: 20px 8% 40px; background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, transparent); pointer-events: none; z-index: 1000;}
+        .input-bar { background: rgba(25, 25, 25, 0.55); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 35px; display: flex; align-items: center; padding: 10px 25px; gap: 15px; pointer-events: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: 0.3s; }
         .input-bar:focus-within { border-color: var(--p); background: rgba(35, 35, 35, 0.65); box-shadow: 0 20px 60px var(--glow); }
         
         #ui { flex: 1; background: transparent; border: none; color: #fff; padding: 12px 0; font-size: 16px; resize: none; height: 45px; max-height: 150px; overflow-y: auto; line-height: 1.5; }
-        #ui::placeholder { color: rgba(255,255,255,0.4); }
-
-        .btn-icon { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 24px; cursor: pointer; transition: 0.3s var(--apple-ease); display: flex; align-items: center; }
+        
+        .btn-icon { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 24px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; }
         .btn-icon:hover { color: var(--p); transform: scale(1.15); }
-        #send-btn { color: var(--p); }
 
-        /* Dynamic Loading Animation Styles */
+        /* Gear Menu / Models */
+        .drop-menu { position: absolute; bottom: 85px; left: 8%; width: 300px; background: rgba(25, 25, 25, 0.85); backdrop-filter: blur(40px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.7); overflow: hidden; padding: 15px; }
+        .drop-menu.show { display: flex; animation: glassPop 0.3s var(--apple-ease); }
+        .model-item { padding: 12px 15px; border-radius: 16px; cursor: pointer; margin-bottom: 5px; transition: 0.3s; border: 1px solid transparent; display: flex; flex-direction: column; gap: 4px; }
+        .model-item:hover { background: rgba(255,255,255,0.05); }
+        .model-item.active { background: rgba(255,255,255,0.08); border-color: var(--p); }
+        .m-title { font-size: 14px; font-weight: 800; color: #fff; }
+        .model-item.active .m-title { color: var(--p); }
+        .m-desc { font-size: 11px; color: #888; }
+        
+        .aura-btn { background: linear-gradient(45deg, #af52de, #00f2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; text-align: center; padding: 12px; cursor: pointer; font-size: 14px; letter-spacing: 1px; }
+
+        /* Apple Context Menu */
+        #context-menu { position: fixed; background: rgba(30, 30, 30, 0.7); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 6px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); z-index: 9999; display: none; flex-direction: column; min-width: 140px; transform-origin: top left; animation: popIn 0.2s var(--apple-ease); }
+        @keyframes popIn { from{ opacity:0; transform:scale(0.9); } to{ opacity:1; transform:scale(1); } }
+        .ctx-item { padding: 12px 16px; font-size: 14px; color: #fff; cursor: pointer; border-radius: 10px; transition: 0.2s; display: flex; align-items: center; justify-content: space-between; }
+        .ctx-item:hover { background: rgba(255,255,255,0.1); }
+        .ctx-item.danger { color: #ff3b30; }
+
+        /* VIP Premium Modal */
+        #premium-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 6000; backdrop-filter: blur(20px); }
+        .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 95%; max-width: 1000px; height: 85vh; background: rgba(15,15,15,0.85); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; z-index: 7000; display: none; flex-direction: column; opacity: 0; box-shadow: 0 40px 80px rgba(0,0,0,0.8); transition: 0.4s var(--apple-ease); }
+        .modal-box.show { display: flex; transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        
+        .plans-container { padding: 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .plan-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 25px; display: flex; flex-direction: column; position: relative; transition: 0.4s; }
+        .plan-card:hover { background: rgba(255,255,255,0.06); transform: translateY(-5px); border-color: rgba(255,255,255,0.3); }
+        
+        .plan-card.gold { border-color: var(--premium-color); background: rgba(223, 178, 87, 0.05); }
+        .plan-card.gold:hover { box-shadow: 0 20px 50px var(--premium-glow); transform: scale(1.02); }
+        
+        .plan-card.plat { border-color: var(--plat-color); background: rgba(229, 228, 226, 0.05); }
+        .plan-card.plat:hover { box-shadow: 0 20px 50px var(--plat-glow); transform: scale(1.02); }
+
+        .plan-title { font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
+        .plan-price { font-size: 24px; color: var(--p); font-weight: 800; margin-bottom: 20px; }
+        .plan-card.gold .plan-price { color: var(--premium-color); }
+        .plan-card.plat .plan-price { color: var(--plat-color); }
+        
+        .plan-features { list-style: none; padding: 0; margin: 0 0 25px 0; flex: 1; }
+        .plan-features li { color: rgba(255,255,255,0.7); line-height: 1.8; font-size: 13px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;}
+        .plan-features li:last-child { border: none; }
+        .plan-features li b { color: #fff; }
+
+        .btn-buy { background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 16px; border-radius: 16px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; font-size: 14px; position: relative; overflow: hidden; }
+        .plan-card.gold .btn-buy { background: linear-gradient(135deg, var(--premium-color), #b88a38); color: #000; }
+        .plan-card.plat .btn-buy { background: linear-gradient(135deg, #ffffff, #a0a0a0); color: #000; }
+        .btn-buy:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* Payment Simulator Modal */
+        #payment-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: rgba(20,20,20,0.85); backdrop-filter: blur(50px); padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.15); z-index: 8000; display: none; flex-direction: column; align-items: center; text-align: center; width: 320px; opacity: 0; transition: 0.4s; }
+        #payment-modal.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .pay-spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--p); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Loader */
         .dynamic-loader { display: flex; align-items: center; gap: 15px; padding: 15px 0; color: var(--p); font-weight: 600; font-size: 14px; letter-spacing: 1px; animation: fadeIn 0.5s ease; }
-        .dot-matrix { display: flex; gap: 5px; }
-        .dot-matrix span { display: block; width: 6px; height: 6px; background: var(--p); border-radius: 50%; box-shadow: 0 0 10px var(--glow); animation: pulseDot 1.2s infinite ease-in-out; }
+        .dot-matrix span { display: inline-block; width: 6px; height: 6px; background: var(--p); border-radius: 50%; margin: 0 2px; animation: pulseDot 1.2s infinite ease-in-out; }
         .dot-matrix span:nth-child(2) { animation-delay: 0.2s; }
         .dot-matrix span:nth-child(3) { animation-delay: 0.4s; }
         @keyframes pulseDot { 0%, 100% { transform: scale(0.5); opacity: 0.3; } 50% { transform: scale(1.2); opacity: 1; } }
-
-        /* Icon specific animations */
-        .load-icon { font-size: 20px; animation: float 2s infinite ease-in-out; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); text-shadow: 0 5px 15px var(--glow); } }
-
-        /* Overlays & Modals */
-        #premium-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 6000; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-        .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 90%; max-width: 850px; max-height: 85vh; background: rgba(15,15,15,0.8); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; z-index: 7000; display: none; flex-direction: column; overflow: hidden; transition: 0.4s var(--apple-ease); opacity: 0; box-shadow: 0 40px 80px rgba(0,0,0,0.8); }
-        .modal-box.show { display: flex; transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        
-        .plans-container { padding: 35px; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; align-items: center; }
-        .plan-card { width: 100%; max-width: 550px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 30px; position: relative; transition: 0.4s var(--apple-ease); }
-        .plan-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.06); box-shadow: 0 20px 40px rgba(0,0,0,0.4); border-color: var(--p); }
-        
-        /* Updated Gold Plan Styles */
-        .plan-card.gold { border-color: var(--premium-color); background: rgba(223, 178, 87, 0.05); }
-        .plan-card.gold:hover { box-shadow: 0 20px 50px var(--premium-glow); transform: scale(1.03); }
-        .gold-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, #dfb257, #ffdf8c); color: #000; font-size: 11px; font-weight: 900; padding: 6px 18px; border-radius: 12px; letter-spacing: 1.5px; box-shadow: 0 5px 15px var(--premium-glow); }
-        
-        .plan-title { font-size: 24px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;}
-        .plan-price { font-size: 20px; color: var(--p); font-weight: 800; margin-bottom: 25px; }
-        .plan-card.gold .plan-price { color: var(--premium-color); font-size: 24px; }
-        .plan-features li { color: rgba(255,255,255,0.8); line-height: 2; font-size: 15px; }
-        .plan-features li::before { content: '✦'; color: var(--p); margin-right: 10px; }
-        .plan-card.gold .plan-features li::before { color: var(--premium-color); }
-        
-        .btn-pro { background: linear-gradient(135deg, var(--premium-color), #b88a38); color: #000; border: none; padding: 18px; border-radius: 16px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; font-size: 15px; }
-        .btn-pro:hover { box-shadow: 0 10px 30px var(--premium-glow); transform: translateY(-2px); }
-
-        .drop-menu { position: absolute; bottom: 85px; left: 8%; width: 280px; background: rgba(25, 25, 25, 0.75); backdrop-filter: blur(40px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.7); overflow: hidden; padding: 10px 0; }
-        .drop-menu.show { display: flex; animation: glassPop 0.4s var(--apple-ease); }
-        .menu-item { padding: 16px 25px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.3s; color: #fff; text-transform: uppercase; font-weight: 700;}
-        .menu-item:hover { color: var(--p); background: rgba(255,255,255,0.05); }
     </style>
 </head>
-<body onclick="closeAll()">
+<body onclick="closeMenus()">
 
 <div class="bg-glow"></div>
 <div id="sidebar-overlay" onclick="toggleS(event)"></div>
 
+<div id="context-menu" onclick="event.stopPropagation()"></div>
+
+<div id="payment-modal">
+    <div class="pay-spinner" id="pay-spinner"></div>
+    <h3 id="pay-title" style="margin: 0 0 10px 0; font-size: 18px;">Connecting...</h3>
+    <p id="pay-desc" style="font-size: 13px; color: #aaa; margin: 0 0 20px 0;">Establishing secure gateway connection.</p>
+    <button id="pay-close" style="display:none; background: rgba(255,255,255,0.1); border:none; padding: 10px 20px; border-radius: 12px; color:#fff; cursor:pointer;" onclick="closePayment()">Close</button>
+</div>
+
 <div id="premium-overlay" onclick="closeModal('premium-modal')"></div>
-<div id="premium-modal" class="modal-box">
-    <div style="padding: 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
-        <span style="color: var(--premium-color); font-weight: 900; letter-spacing: 2px;">PHRAORTES INTELLIGENCE</span>
+<div id="premium-modal" class="modal-box" onclick="event.stopPropagation()">
+    <div style="padding: 25px 35px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: 900; letter-spacing: 2px; font-size: 20px;">PHRAORTES <span style="color:var(--premium-color)">VIP</span></span>
         <button onclick="closeModal('premium-modal')" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">✕</button>
     </div>
     <div class="plans-container">
         <div class="plan-card">
             <div class="plan-title">Silver Core</div>
-            <div class="plan-price">$14.99 / Month</div>
-            <ul class="plan-features" style="list-style: none; padding:0; margin: 0 0 25px 0;">
-                <li>Advanced Global Memory integration.</li>
-                <li>Deep emotional tracking.</li>
-                <li>Standard Text & Image generation limits.</li>
+            <div class="plan-price">$6.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <ul class="plan-features">
+                <li><b>Unlimited Core:</b> Endless access to PHRAORTES 2.6.</li>
+                <li><b>Extended Logic:</b> Deep Thinking (2.7) up to 30 times/day.</li>
+                <li><b>Media Access:</b> Model 2.8 up to 5 times/day.</li>
+                <li>Advanced Global Memory.</li>
             </ul>
-            <button style="width:100%; padding:15px; border-radius:14px; background:rgba(255,255,255,0.1); color:#fff; border:none; font-weight:700; cursor:pointer;">GET SILVER</button>
+            <button class="btn-buy" onclick="purchasePlan(this, 'Silver Core')">PURCHASE SILVER</button>
         </div>
-
         <div class="plan-card gold">
-            <div class="gold-badge">VIP DEVELOPER</div>
-            <div class="plan-title">Gold Cosmic</div>
-            <div class="plan-price">$49.99 / Month</div>
-            <ul class="plan-features" style="list-style: none; padding:0; margin: 0 0 25px 0;">
-                <li><strong>Dedicated Code Interpreter:</strong> Zero-bug executable outputs.</li>
-                <li><strong>Live Debugger Pro:</strong> Advanced logical bug fixing & analysis.</li>
-                <li><strong>Multi-language Translator:</strong> Convert code across languages instantly.</li>
-                <li><strong>Deep Memory Core:</strong> Remembers your coding style & projects.</li>
-                <li>Full UI customization & Premium Node access.</li>
+            <div class="plan-title" style="color:var(--premium-color)">Gold Cosmic</div>
+            <div class="plan-price">$29.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <ul class="plan-features">
+                <li><b>Infinite Logic:</b> Unlimited Deep Thinking (2.7).</li>
+                <li><b>Code Interpreter:</b> Live executable environment.</li>
+                <li><b>Live Debugger Pro:</b> Automated bug fixing.</li>
+                <li><b>High Media Core:</b> Model 2.8 up to 50 times/day.</li>
             </ul>
-            <button class="btn-pro">ACTIVATE GOLD</button>
+            <button class="btn-buy" onclick="purchasePlan(this, 'Gold Cosmic')">UPGRADE TO GOLD</button>
+        </div>
+        <div class="plan-card plat">
+            <div class="plan-title" style="color:var(--plat-color)">Platinum Singularity</div>
+            <div class="plan-price">$79.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <ul class="plan-features">
+                <li><b>Absolute Uncapped:</b> 100% unlimited access to all models (incl. 2.8).</li>
+                <li><b>Beta Priority:</b> Early access to new tools & UI updates.</li>
+                <li><b>Hyper-Personalization:</b> Custom UI overrides.</li>
+                <li><b>VIP Infrastructure:</b> Quantum nodes & Call Aura access.</li>
+            </ul>
+            <button class="btn-buy" onclick="purchasePlan(this, 'Platinum')">ACTIVATE PLATINUM</button>
         </div>
     </div>
 </div>
@@ -208,36 +240,44 @@
         <button class="btn-icon" onclick="toggleS(event)">☰</button>
         <div class="logo">PHRAORTES</div>
         
-        <div class="palette-container" onclick="event.stopPropagation()">
-            <div class="palette-dot mono" onclick="setPalette('#ffffff')"></div>
-            <div class="palette-dot neon" onclick="setPalette('#76b900')"></div>
-            <div class="palette-dot cyber" onclick="setPalette('#00f2ff')"></div>
-            <div class="palette-dot sunset" onclick="setPalette('#ff9500')"></div>
-            <div class="palette-dot berry" onclick="setPalette('#af52de')"></div>
-        </div>
-        
         <div class="account-hub" onclick="toggleAccount(event)">
             <div class="account-avatar">ME</div>
             <div class="account-menu" id="account-menu" onclick="event.stopPropagation()">
-                <div style="padding: 10px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px;">
-                    <strong style="color:var(--p); font-size:14px;">Creator</strong><br>
-                    <span style="font-size:11px; color:#888;">Standard User</span>
+                <div class="telemetry-box">
+                    <div class="telemetry-title">Mindset Telemetry</div>
+                    <div class="t-bar-wrap"><span>Focus</span><span id="p-foc">45%</span></div>
+                    <div class="t-bg"><div class="t-fill c-calm" id="b-foc" style="width:45%"></div></div>
+                    <div style="height:8px"></div>
+                    <div class="t-bar-wrap"><span>Analytical</span><span id="p-ana">35%</span></div>
+                    <div class="t-bg"><div class="t-fill c-focus" id="b-ana" style="width:35%"></div></div>
+                    <div style="height:8px"></div>
+                    <div class="t-bar-wrap"><span>Creative</span><span id="p-cre">20%</span></div>
+                    <div class="t-bg"><div class="t-fill c-creative" id="b-cre" style="width:20%"></div></div>
                 </div>
-                <div class="account-item premium-btn" onclick="openPremium()">💎 Upgrade to Gold</div>
-                <div class="account-item">⚙️ Settings</div>
+                <div class="account-item premium-btn" onclick="openPremium()">💎 View VIP Plans</div>
                 <div class="account-item" style="color: #ff3b30;">🚪 Logout</div>
             </div>
         </div>
     </header>
 
     <div id="chat-box"></div>
-    <button id="scroll-btn" onclick="scrollToBottom()">↓</button>
 
     <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
-        <div class="menu-item" onclick="toggleDeep()">Deep Thinking <span id="deep-status" style="opacity:0.5;">OFF</span></div>
-        <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 5px 20px;"></div>
-        <div class="menu-item" onclick="tool('image')">Image Generator</div>
-        <div class="menu-item" onclick="tool('code')">Code Architecture</div>
+        <span style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:10px; font-weight:800;">Neural Models</span>
+        <div class="model-item active" id="m-26" onclick="selectModel('2.6')">
+            <span class="m-title">PHRAORTES 2.6</span>
+            <span class="m-desc">Fast response, everyday tasks (5/day)</span>
+        </div>
+        <div class="model-item" id="m-27" onclick="selectModel('2.7')">
+            <span class="m-title">PHRAORTES 2.7</span>
+            <span class="m-desc">Deep Thinking & Logic (2/day)</span>
+        </div>
+        <div class="model-item" id="m-28" onclick="selectModel('2.8')">
+            <span class="m-title">PHRAORTES 2.8</span>
+            <span class="m-desc">Premium Core: Code & Media (1/day)</span>
+        </div>
+        <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
+        <div class="aura-btn" onclick="callAura()">✨ CALL AURA ✨</div>
     </div>
 
     <footer>
@@ -252,48 +292,34 @@
 </main>
 
 <script>
-    // New API Key Implementation
     const _PART_A = "gsk_mIKxutVxzOYZdnFoMRbI";
     const _PART_B = "WGdyb3FYuI7ZQoU2sZPIDQ0rmUc4GDhv";
 
     let chats = JSON.parse(localStorage.getItem("phraortes_chats")) || [];
     let curId = localStorage.getItem("phraortes_id");
-    
-    let deepThinking = false; 
+    let activeModel = '2.6';
     let attachedFileType = ""; let attachedFileName = ""; let attachedFileDataURL = "";
 
-    marked.setOptions({ highlight: (c) => hljs.highlightAuto(c).value, breaks: true, gfm: true });
+    // Markdown config
+    marked.setOptions({ 
+        highlight: (c) => hljs.highlightAuto(c).value, 
+        breaks: true, 
+        gfm: true 
+    });
 
     const chatBox = document.getElementById("chat-box");
-    const scrollBtn = document.getElementById("scroll-btn");
+    const ctxMenu = document.getElementById("context-menu");
 
     window.onload = () => {
         if (!chats.length) newChat(); else loadChat(curId);
-        const savedColor = localStorage.getItem("phraortes_custom_p");
-        if(savedColor) setPalette(savedColor);
-
+        
         const ui = document.getElementById("ui");
         ui.addEventListener("input", function() {
             this.style.height = '45px';
             this.style.height = Math.min(this.scrollHeight, 150) + 'px';
             analyzeMood(this.value);
         });
-
-        chatBox.addEventListener("scroll", () => {
-            const diff = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight;
-            scrollBtn.style.display = diff > 200 ? "flex" : "none";
-        });
     };
-    
-    function setPalette(hex) {
-        document.body.className = ""; 
-        document.documentElement.style.setProperty('--p', hex);
-        let c = hex.replace('#', '');
-        if(c.length === 3) c = c.split('').map(x => x+x).join('');
-        let r = parseInt(c.substring(0,2), 16), g = parseInt(c.substring(2,4), 16), b = parseInt(c.substring(4,6), 16);
-        document.documentElement.style.setProperty('--glow', `rgba(${r}, ${g}, ${b}, 0.2)`);
-        localStorage.setItem("phraortes_custom_p", hex);
-    }
 
     function handleEnter(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
 
@@ -301,7 +327,6 @@
         const file = e.target.files[0];
         if(!file) return;
         attachedFileName = file.name;
-        
         if (file.type.startsWith("image/")) {
             attachedFileType = "image";
             const reader = new FileReader();
@@ -312,44 +337,56 @@
 
     function scrollToBottom() { chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' }); }
 
+    // Dynamic Emotion Analytics
     function analyzeMood(t) {
-        if(localStorage.getItem("phraortes_custom_p")) return;
-        const m = t.match(/عالی|محشر|wow|amazing/i) ? "mood-excited" :
-                  t.match(/عصبانی|بد|احمق|hate|angry/i) ? "mood-angry" :
-                  t.match(/آرام|relax|calm/i) ? "mood-calm" :
-                  t.match(/خوب|بله|good|yes/i) ? "mood-pos" :
-                  t.match(/نه|اشتباه|bad|no/i) ? "mood-neg" :
-                  t.match(/\?|چرا|چگونه/) ? "mood-neu" : "";
+        let m = "";
+        let f = 45, a = 35, c = 20; // Default telemetry
+        if(t.match(/عالی|محشر|wow|amazing|happy|خوشحال/i)) { m = "mood-excited"; f=30; a=20; c=80; }
+        else if(t.match(/عصبانی|بد|احمق|hate|angry|کلافه/i)) { m = "mood-angry"; f=20; a=10; c=10; }
+        else if(t.match(/آرام|relax|calm|ساده/i)) { m = "mood-calm"; f=80; a=20; c=20; }
+        else if(t.match(/خوب|بله|good|yes|ok/i)) { m = "mood-pos"; f=50; a=30; c=40; }
+        else if(t.match(/نه|اشتباه|bad|no/i)) { m = "mood-neg"; f=40; a=40; c=20; }
+        else if(t.match(/\?|چرا|چگونه|کد|تحلیل|code/i)) { m = "mood-neu"; f=70; a=90; c=30; }
+        
         document.body.className = m;
+        
+        // Update Telemetry visually
+        document.getElementById("p-foc").innerText = f+"%"; document.getElementById("b-foc").style.width = f+"%";
+        document.getElementById("p-ana").innerText = a+"%"; document.getElementById("b-ana").style.width = a+"%";
+        document.getElementById("p-cre").innerText = c+"%"; document.getElementById("b-cre").style.width = c+"%";
     }
 
     function toggleS(e) { 
         if(e) e.stopPropagation(); 
-        const sb = document.getElementById("sidebar");
-        const ov = document.getElementById("sidebar-overlay");
-        sb.classList.toggle("active"); 
-        ov.classList.toggle("show");
+        document.getElementById("sidebar").classList.toggle("active"); 
+        document.getElementById("sidebar-overlay").classList.toggle("show");
+        closeMenus();
     }
     
-    function toggleAccount(e) { e.stopPropagation(); document.getElementById("account-menu").classList.toggle("show"); }
-    function toggleGear(e) { e.stopPropagation(); document.getElementById("gear-menu").classList.toggle("show"); }
-    function closeAll() { document.getElementById("gear-menu").classList.remove("show"); document.getElementById("account-menu").classList.remove("show"); }
-    
-    function toggleDeep() {
-        deepThinking = !deepThinking;
-        const s = document.getElementById("deep-status");
-        s.innerText = deepThinking ? "ON" : "OFF";
-        s.style.opacity = deepThinking ? "1" : "0.5";
+    function toggleAccount(e) { e.stopPropagation(); closeMenus(); document.getElementById("account-menu").classList.toggle("show"); }
+    function toggleGear(e) { e.stopPropagation(); closeMenus(); document.getElementById("gear-menu").classList.toggle("show"); }
+    function closeMenus() { 
+        document.getElementById("gear-menu").classList.remove("show"); 
+        document.getElementById("account-menu").classList.remove("show"); 
+        ctxMenu.style.display = "none";
     }
 
-    function tool(type) {
-        document.getElementById("ui").value = `Generate ${type}... `;
-        document.getElementById("ui").focus();
-        document.getElementById("gear-menu").classList.remove("show");
+    // Models & Aura
+    function selectModel(m) {
+        activeModel = m;
+        document.querySelectorAll('.model-item').forEach(el => el.classList.remove('active'));
+        document.getElementById('m-'+m.replace('.','')).classList.add('active');
+        toggleGear(event);
     }
 
+    function callAura() {
+        toggleGear(event);
+        alert("✨ Aura Real-Time Audio Engine is currently in Sandbox mode.\nFull release coming in the next ecosystem update.");
+    }
+
+    // VIP Overlay & Payments
     function openPremium() {
-        document.getElementById("account-menu").classList.remove("show");
+        closeMenus();
         document.getElementById("premium-overlay").style.display = "block";
         document.getElementById("premium-modal").classList.add("show");
     }
@@ -359,6 +396,82 @@
         setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
     }
 
+    function purchasePlan(btn, plan) {
+        const originalText = btn.innerText;
+        btn.innerHTML = `<span class="pay-spinner" style="width:20px;height:20px;display:inline-block;margin:0;"></span>`;
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            document.getElementById("premium-modal").classList.remove("show");
+            
+            const pm = document.getElementById("payment-modal");
+            document.getElementById("pay-title").innerText = "Connecting...";
+            document.getElementById("pay-desc").innerText = `Establishing secure gateway to billing node.`;
+            document.getElementById("pay-spinner").style.display = "block";
+            document.getElementById("pay-close").style.display = "none";
+            pm.classList.add("show");
+            
+            setTimeout(() => {
+                document.getElementById("pay-spinner").style.display = "none";
+                document.getElementById("pay-title").innerText = "Sandbox Mode Active";
+                document.getElementById("pay-desc").innerText = "The payment infrastructure is currently in simulation mode. This feature will be fully production-ready in the upcoming update.";
+                document.getElementById("pay-close").style.display = "block";
+            }, 3000);
+            
+        }, 1500);
+    }
+    
+    function closePayment() {
+        document.getElementById("payment-modal").classList.remove("show");
+        setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
+    }
+
+    // Context Menu Logic (Apple Long Press)
+    let pressTimer;
+    function startPress(e, type, id, text) {
+        if(e.button !== 0 && e.type !== 'touchstart') return; // only left click or touch
+        pressTimer = setTimeout(() => {
+            showContext(e, type, id, text);
+        }, 400);
+    }
+    function cancelPress() { clearTimeout(pressTimer); }
+    
+    function showContext(e, type, id, textData) {
+        closeMenus();
+        const touch = e.touches ? e.touches[0] : e;
+        let html = '';
+        
+        if(type === 'user') {
+            html = `<div class="ctx-item" onclick="navigator.clipboard.writeText(\`${textData}\`); closeMenus()">Copy Text</div>
+                    <div class="ctx-item" onclick="document.getElementById('ui').value=\`${textData}\`; closeMenus()">Edit</div>`;
+        } else if(type === 'ai') {
+            html = `<div class="ctx-item" onclick="navigator.clipboard.writeText(\`${textData}\`); closeMenus()">Copy Response</div>`;
+        } else if(type === 'session') {
+            html = `<div class="ctx-item" onclick="renameSession(${id}); closeMenus()">Rename</div>
+                    <div class="ctx-item" onclick="closeMenus()">Pin to Top</div>
+                    <div class="ctx-item danger" onclick="delH(${id}); closeMenus()">Delete</div>`;
+        }
+        
+        ctxMenu.innerHTML = html;
+        ctxMenu.style.display = "flex";
+        
+        // Position logic
+        let x = touch.clientX; let y = touch.clientY;
+        if(x + 150 > window.innerWidth) x = window.innerWidth - 160;
+        if(y + 120 > window.innerHeight) y = window.innerHeight - 130;
+        
+        ctxMenu.style.left = x + 'px';
+        ctxMenu.style.top = y + 'px';
+        if(navigator.vibrate) navigator.vibrate(50); // Haptic feedback
+    }
+
+    function renameSession(id) {
+        let chat = chats.find(c => c.id == id);
+        let n = prompt("Rename Session:", chat.name);
+        if(n) { chat.name = n; save(); renderH(); }
+    }
+
+    // Chat Core
     function newChat() {
         const id = Date.now();
         chats.unshift({ id, name: "New Discovery", msgs: [] });
@@ -367,23 +480,21 @@
     }
 
     function getDynamicLoader(txt) {
-        const t = txt.toLowerCase();
         let icon = "🧠";
-        let text = "Phraortes Core Processing...";
-        
-        if (t.includes("کد") || t.includes("code") || t.includes("script")) {
-            icon = "⟨/⟩"; text = "Compiling Code Architecture...";
-        } else if (t.includes("عکس") || t.includes("image") || attachedFileType === "image") {
-            icon = "📷"; text = "Rendering Visuals...";
-        }
+        if (txt.toLowerCase().includes("کد") || activeModel === '2.8') icon = "⟨/⟩"; 
+        else if (attachedFileType === "image") icon = "📷"; 
 
-        return `
-            <div class="dynamic-loader">
-                <div class="load-icon">${icon}</div>
-                <div class="dot-matrix"><span></span><span></span><span></span></div>
-            </div>
-        `;
+        return `<div class="dynamic-loader"><div style="font-size:18px;">${icon}</div><div class="dot-matrix"><span></span><span></span><span></span></div></div>`;
     }
+
+    // TTS Functions
+    function speakText(id) {
+        speechSynthesis.cancel();
+        let txt = document.getElementById(id).innerText;
+        let u = new SpeechSynthesisUtterance(txt);
+        speechSynthesis.speak(u);
+    }
+    function stopSpeak() { speechSynthesis.cancel(); }
 
     async function send() {
         const inp = document.getElementById("ui"), txt = inp.value.trim();
@@ -391,11 +502,11 @@
         if(!txt && !attachedFileName) return;
 
         let displayHtml = txt;
-        let modelToUse = "llama-3.3-70b-versatile";
+        let apiModel = "llama-3.3-70b-versatile"; // Default backend model
 
         if(attachedFileName && attachedFileType === "image") {
             displayHtml = `<img src="${attachedFileDataURL}" style="max-width:300px; border-radius:12px; margin-bottom:10px;"><br>${txt}`;
-            modelToUse = "llama-3.2-11b-vision-preview";
+            apiModel = "llama-3.2-11b-vision-preview";
             document.getElementById("file-upload").value = "";
             attachedFileName = ""; 
         }
@@ -403,16 +514,17 @@
         const chat = chats.find(c => c.id == curId);
         inp.value = ""; inp.style.height = "45px";
         
-        addUI(displayHtml || "[Media Uploaded]", "user", "u-"+Date.now());
+        const uId = "u-"+Date.now();
+        addUI(displayHtml || "[Media Uploaded]", "user", uId, txt);
         
         const aiId = "ai-"+Date.now();
-        addUI(getDynamicLoader(txt), "ai", aiId);
+        addUI(getDynamicLoader(txt), "ai", aiId, "");
 
-        let sysContent = "You are Phraortes, an elite intelligence entity. Answer precisely and professionally.";
-        if(deepThinking) {
-            sysContent += "\nCRITICAL: Deep Thinking is ON. You MUST think step-by-step. Analyze all edge cases, break the problem into fundamental parts, and provide an exceptionally detailed, accurate, and definitive solution.";
-        } else {
-            sysContent += "\nProvide a standard, highly concise and direct response.";
+        let sysContent = "You are Phraortes. Answer professionally.";
+        if(activeModel === '2.7') {
+            sysContent += " Deep Thinking enabled: Think step-by-step, provide extreme logical detail.";
+        } else if(activeModel === '2.8') {
+            sysContent += " Premium Core enabled: Output robust code architectures, markdown tables, or advanced visual interpretations.";
         }
 
         let apiMessages = [{role: "system", content: sysContent}];
@@ -422,13 +534,7 @@
         });
 
         if (attachedFileDataURL) {
-            apiMessages.push({
-                role: "user", 
-                content: [
-                    { type: "text", text: txt || "Analyze this." },
-                    { type: "image_url", image_url: { url: attachedFileDataURL } }
-                ]
-            });
+            apiMessages.push({ role: "user", content: [{ type: "text", text: txt || "Analyze." }, { type: "image_url", image_url: { url: attachedFileDataURL } }] });
             attachedFileDataURL = "";
         } else {
             apiMessages.push({ role: "user", content: txt });
@@ -436,9 +542,8 @@
 
         try {
             const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                method: "POST",
-                headers: {"Authorization": `Bearer ${fullKey}`, "Content-Type": "application/json"},
-                body: JSON.stringify({ model: modelToUse, messages: apiMessages })
+                method: "POST", headers: {"Authorization": `Bearer ${fullKey}`, "Content-Type": "application/json"},
+                body: JSON.stringify({ model: apiModel, messages: apiMessages })
             });
             const data = await res.json();
             if(data.error) throw new Error(data.error.message);
@@ -446,36 +551,57 @@
             const full = data.choices[0].message.content;
             let renderedHtml = marked.parse(full);
             
-            document.getElementById(aiId).innerHTML = renderedHtml;
-            if(chat.msgs.length === 0) chat.name = (txt || "Media Analysis").substring(0, 20);
+            // Re-render AI msg wrapper completely to attach correct Listen/Stop buttons and Long Press
+            const w = document.getElementById(aiId).parentElement;
+            w.innerHTML = `
+                <div class="msg ai" id="${aiId}" onpointerdown="startPress(event, 'ai', null, \`${full.replace(/`/g, "'")}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${renderedHtml}</div>
+                <div class="listen-ops">
+                    <button class="l-btn" onclick="speakText('${aiId}')">▶ Listen</button>
+                    <button class="l-btn" onclick="stopSpeak()">■ Stop</button>
+                </div>
+            `;
             
+            if(chat.msgs.length === 0) chat.name = (txt || "Media Analysis").substring(0, 20);
             chat.msgs.push({u: displayHtml, uText: txt, a: renderedHtml, aRaw: full}); 
             save(); renderH(); addCopyLogic();
             scrollToBottom();
         } catch(e) { 
-            document.getElementById(aiId).innerHTML = "Critical Error: " + e.message;
+            document.getElementById(aiId).innerHTML = "System Error: " + e.message;
         }
     }
 
-    function addUI(t, r, id) {
+    function addUI(t, r, id, rawText) {
         const w = document.createElement("div");
         w.className = `msg-wrap ${r}-wrap`;
+        let safeTxt = (rawText || "").replace(/`/g, "'"); // Prevent template string breaks
+        
         if(id === 'welcome') {
-            w.innerHTML = `<div class="welcome-wrap"><h1>PHRAORTES</h1><p>Intelligence Core Active.</p></div>`;
+            w.innerHTML = `<div style="text-align:center; margin:auto 0;"><h1 style="color:var(--p);font-weight:900;letter-spacing:2px;font-size:35px;">PHRAORTES</h1><p style="color:rgba(255,255,255,0.5)">System Active. Model ${activeModel}</p></div>`;
         } else {
-            w.innerHTML = `<div class="msg ${r}" id="${id}">${t}</div>`;
+            if(r === 'user') {
+                w.innerHTML = `<div class="msg user" id="${id}" onpointerdown="startPress(event, 'user', null, \`${safeTxt}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${t}</div>`;
+            } else {
+                w.innerHTML = `<div class="msg ai" id="${id}">${t}</div>`; // Buttons attached after fetch
+            }
         }
         chatBox.appendChild(w);
         scrollToBottom();
     }
 
+    // Code Block Copy Button Logic
     function addCopyLogic() {
         document.querySelectorAll('pre').forEach(pre => {
             if(pre.querySelector('.copy-btn')) return;
             const b = document.createElement('button'); b.innerText = 'COPY';
-            b.style = "position:absolute; top:15px; right:15px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:6px 12px; border-radius:10px; font-size:10px; font-weight:800; cursor:pointer; color:#fff; backdrop-filter:blur(10px); transition:0.3s;";
-            b.onmouseover = () => b.style.background = 'var(--p)'; b.onmouseout = () => b.style.background = 'rgba(255,255,255,0.1)';
-            b.onclick = () => { navigator.clipboard.writeText(pre.innerText); b.innerText = 'DONE'; setTimeout(()=>b.innerText='COPY', 2000); };
+            b.className = 'copy-btn';
+            b.style = "position:absolute; top:12px; right:12px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:5px 10px; border-radius:8px; font-size:10px; font-weight:800; cursor:pointer; color:#fff; transition:0.3s;";
+            b.onmouseover = () => b.style.background = 'var(--p)'; 
+            b.onmouseout = () => b.style.background = 'rgba(255,255,255,0.1)';
+            b.onclick = () => { 
+                let codeText = pre.innerText.replace('COPY', '').trim();
+                navigator.clipboard.writeText(codeText); 
+                b.innerText = 'DONE'; setTimeout(()=>b.innerText='COPY', 2000); 
+            };
             pre.appendChild(b);
         });
     }
@@ -485,21 +611,37 @@
         const chat = chats.find(c => c.id == id);
         chatBox.innerHTML = "";
         addUI("", "ai", "welcome");
-        if(chat && chat.msgs.length) chat.msgs.forEach((m, i) => { addUI(m.u, "user", "u-"+i); addUI(m.a, "ai", "a-"+i); });
-        renderH(); addCopyLogic();
+        if(chat && chat.msgs.length) {
+            chat.msgs.forEach((m, i) => { 
+                addUI(m.u, "user", "u-"+i, m.uText); 
+                const aId = "a-"+i;
+                const w = document.createElement("div"); w.className = "msg-wrap ai-wrap";
+                w.innerHTML = `
+                    <div class="msg ai" id="${aId}" onpointerdown="startPress(event, 'ai', null, \`${(m.aRaw||"").replace(/`/g, "'")}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${m.a}</div>
+                    <div class="listen-ops">
+                        <button class="l-btn" onclick="speakText('${aId}')">▶ Listen</button>
+                        <button class="l-btn" onclick="stopSpeak()">■ Stop</button>
+                    </div>`;
+                chatBox.appendChild(w);
+            });
+        }
+        renderH(); addCopyLogic(); scrollToBottom();
     }
 
     function save() { localStorage.setItem("phraortes_chats", JSON.stringify(chats)); localStorage.setItem("phraortes_id", curId); }
     
     function renderH() {
         document.getElementById("h-list").innerHTML = chats.map(c => `
-            <div class="h-item ${c.id == curId ? 'active-chat' : ''}" onclick="loadChat(${c.id})">
-                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:150px;"># ${c.name}</span>
-                <button onclick="delH(event, ${c.id})" style="background:none; border:none; color:#fff; opacity:0.3; font-size:14px; cursor:pointer;" title="Delete">✕</button>
+            <div class="h-item ${c.id == curId ? 'active-chat' : ''}" onclick="loadChat(${c.id})" onpointerdown="startPress(event, 'session', ${c.id}, null)" onpointerup="cancelPress()" onpointerleave="cancelPress()">
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:200px;"># ${c.name}</span>
             </div>`).join("");
     }
 
-    function delH(e, id) { e.stopPropagation(); if(confirm("Delete session?")) { chats = chats.filter(c=>c.id!=id); if(!chats.length) newChat(); else loadChat(chats[0].id); save(); renderH(); } }
+    function delH(id) { 
+        chats = chats.filter(c=>c.id!=id); 
+        if(!chats.length) newChat(); else loadChat(chats[0].id); 
+        save(); renderH(); 
+    }
 </script>
 </body>
 </html>
