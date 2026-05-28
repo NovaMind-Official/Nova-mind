@@ -18,7 +18,6 @@
             --plat-color: #e5e4e2; --plat-glow: rgba(229, 228, 226, 0.25);
         }
         
-        /* Dynamic Emotion Colors - Soft Glassy Gradients */
         body.mood-pos { --grad1: #113a20; --grad2: #0b2218; --p: #00ff88; }
         body.mood-neg { --grad1: #3a1111; --grad2: #220b0b; --p: #ff3b30; }
         body.mood-neu { --grad1: #2a113a; --grad2: #180b22; --p: #af52de; }
@@ -27,13 +26,12 @@
         body.mood-angry { --grad1: #3a1122; --grad2: #220b15; --p: #ff2d55; } 
 
         * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: background 0.8s var(--apple-ease); overflow: hidden; user-select: none; }
+        body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: background 0.8s var(--apple-ease); overflow: hidden; }
         
-        /* Mesh Gradient Glow */
         .bg-glow { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 20% 30%, var(--grad1) 0%, transparent 70%), radial-gradient(circle at 80% 80%, var(--grad2) 0%, transparent 70%); filter: blur(60px); transition: 1s var(--apple-ease); opacity: 0.9; }
 
         /* Sidebar */
-        #sidebar { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border-right: 1px solid var(--brd); z-index: 4000; transition: transform 0.5s var(--apple-ease); box-shadow: 20px 0 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+        #sidebar { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(35px); border-right: 1px solid var(--brd); z-index: 4000; transition: transform 0.5s var(--apple-ease); box-shadow: 20px 0 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
         #sidebar.active { transform: translateX(300px); }
         
         #sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); z-index: 3999; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--apple-ease); }
@@ -41,132 +39,101 @@
 
         main { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; transition: 0.5s var(--apple-ease); }
 
-        .btn-new { width: 90%; margin: 20px auto; padding: 16px; background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid var(--brd); color: #fff; border-radius: 20px; font-weight: 700; cursor: pointer; display: block; letter-spacing: -0.5px; transition: 0.3s; }
+        .btn-new { width: 90%; margin: 20px auto; padding: 16px; background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid var(--brd); color: #fff; border-radius: 20px; font-weight: 700; cursor: pointer; transition: 0.3s; }
         .btn-new:hover { background: rgba(255,255,255,0.1); transform: scale(1.02); }
 
         #h-list { flex: 1; overflow-y: auto; padding: 15px; }
-        .h-item { padding: 14px; border-radius: 16px; margin-bottom: 10px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: space-between; font-size: 13px; border: 1px solid transparent; transition: 0.3s var(--apple-ease); cursor: pointer; position: relative; }
+        .h-item { padding: 14px; border-radius: 16px; margin-bottom: 10px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: space-between; font-size: 13px; border: 1px solid transparent; transition: 0.3s var(--apple-ease); cursor: pointer; -webkit-user-select: none; user-select: none; }
         .h-item.active-chat { border-color: var(--p); background: rgba(255,255,255,0.08); box-shadow: 0 5px 15px var(--glow); }
 
         header { height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); background: rgba(0,0,0,0.2); backdrop-filter: blur(20px); z-index: 100; }
         .logo { font-size: 16px; letter-spacing: 4px; font-weight: 900; color: var(--p); text-transform: uppercase; text-shadow: 0 0 15px var(--glow); transition: 0.5s; }
 
-        /* Account & Emotion Telemetry */
         .account-hub { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .account-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--p), #222); border: 2px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; color: #fff; transition: 0.4s; }
-        
+        .account-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--p), #222); border: 2px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; color: #fff; }
         .account-menu { position: absolute; top: 55px; right: 0; width: 260px; background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(40px); border: 1px solid var(--brd); border-radius: 24px; padding: 15px; display: none; flex-direction: column; z-index: 5000; box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
         .account-menu.show { display: flex; animation: glassPop 0.4s var(--apple-ease); }
         @keyframes glassPop { from { opacity: 0; transform: translateY(-10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        .telemetry-box { background: rgba(0,0,0,0.4); border-radius: 16px; padding: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .telemetry-title { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 800; }
-        .t-bar-wrap { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 11px; }
-        .t-bg { width: 60%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
-        .t-fill { height: 100%; border-radius: 4px; transition: width 0.8s var(--apple-ease); }
-        .c-calm { background: #5ac8fa; } .c-focus { background: #af52de; } .c-creative { background: #ff9500; }
-        
-        .account-item { padding: 12px 15px; font-size: 13px; color: #eee; border-radius: 14px; cursor: pointer; transition: 0.3s; font-weight: 500; }
-        .account-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
-        .account-item.premium-btn { color: var(--premium-color); border: 1px solid rgba(223, 178, 87, 0.3); background: rgba(223, 178, 87, 0.08); font-weight: 800; text-align: center; margin-bottom: 10px; }
-
-        #chat-box { flex: 1; overflow-y: auto; padding: 30px 8% 180px; display: flex; flex-direction: column; gap: 35px; scroll-behavior: smooth; user-select: text; }
+        #chat-box { flex: 1; overflow-y: auto; padding: 30px 8% 180px; display: flex; flex-direction: column; gap: 35px; scroll-behavior: smooth; }
         
         .msg-wrap { display: flex; flex-direction: column; max-width: 85%; animation: slideUp 0.5s var(--apple-ease); position: relative; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .user-wrap { align-self: flex-end; }
+        .user-wrap { align-self: flex-end; align-items: flex-end; }
         .ai-wrap { align-self: flex-start; width: 100%; }
         
-        .msg { padding: 18px 26px; border-radius: 28px; font-size: 16px; line-height: 1.7; position: relative; white-space: pre-wrap; word-wrap: break-word; cursor: pointer; }
+        /* Prevent Blue Highlight & Browser Context Menu */
+        .msg { padding: 18px 26px; border-radius: 28px; font-size: 16px; line-height: 1.7; position: relative; white-space: pre-wrap; word-wrap: break-word; cursor: pointer; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
         
         .user { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-bottom-right-radius: 6px; font-weight: 500; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
         .ai { background: transparent; color: #fff; border: none; padding: 10px 0; font-weight: 400; cursor: default; }
 
-        /* Rich Text Styling (Tables & Code) */
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 16px; overflow: hidden; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        th { background: rgba(255,255,255,0.1); color: var(--p); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        tr:nth-child(even) { background: rgba(255,255,255,0.02); }
-        tr:hover { background: rgba(255,255,255,0.05); }
+        /* Expand/Collapse System */
+        .msg.collapsed { max-height: 140px; overflow: hidden; mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%); }
+        .expand-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; margin-top: -15px; z-index: 10; cursor: pointer; backdrop-filter: blur(10px); transition: 0.3s; color: #fff; font-size: 12px; align-self: center; }
+        .expand-btn:hover { background: var(--p); color: #000; }
 
-        pre { background: rgba(10,10,10,0.8) !important; backdrop-filter: blur(20px); border: 1px solid var(--brd); border-radius: 20px; padding: 25px 20px 20px; margin: 20px 0; overflow-x: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; }
+        /* Edit Box */
+        .edit-area { width: 100%; min-width: 250px; background: rgba(0,0,0,0.5); border: 1px solid var(--p); border-radius: 16px; padding: 15px; color: #fff; font-family: inherit; font-size: 15px; resize: vertical; line-height: 1.5; outline: none; }
+        .edit-actions { display: flex; gap: 10px; margin-top: 10px; justify-content: flex-end; }
+        .btn-edit { padding: 8px 16px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 13px; }
+        .btn-cancel { background: rgba(255, 59, 48, 0.2); color: #ff3b30; } .btn-cancel:hover { background: rgba(255, 59, 48, 0.4); }
+        .btn-save { background: var(--p); color: #000; } .btn-save:hover { transform: scale(1.05); }
+
+        pre { background: rgba(10,10,10,0.8) !important; backdrop-filter: blur(20px); border: 1px solid var(--brd); border-radius: 20px; padding: 25px 20px 20px; margin: 20px 0; overflow-x: auto; -webkit-user-select: text; user-select: text; }
         
-        .listen-ops { display: flex; gap: 12px; margin-top: 8px; padding-left: 5px; opacity: 0.5; transition: 0.3s; }
+        .listen-ops { display: flex; gap: 15px; margin-top: 8px; padding-left: 5px; opacity: 0.6; transition: 0.3s; align-items: center; }
         .listen-ops:hover { opacity: 1; }
-        .l-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
-        .l-btn:hover { color: var(--p); }
+        .l-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; transition: 0.2s; padding: 5px; border-radius: 8px; }
+        .l-btn:hover { background: rgba(255,255,255,0.1); color: var(--p); }
 
         /* Input Bar */
         footer { position: absolute; bottom: 0; width: 100%; padding: 20px 8% 40px; background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, transparent); pointer-events: none; z-index: 1000;}
         .input-bar { background: rgba(25, 25, 25, 0.55); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 35px; display: flex; align-items: center; padding: 10px 25px; gap: 15px; pointer-events: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: 0.3s; }
         .input-bar:focus-within { border-color: var(--p); background: rgba(35, 35, 35, 0.65); box-shadow: 0 20px 60px var(--glow); }
         
-        #ui { flex: 1; background: transparent; border: none; color: #fff; padding: 12px 0; font-size: 16px; resize: none; height: 45px; max-height: 150px; overflow-y: auto; line-height: 1.5; }
+        #ui { flex: 1; background: transparent; border: none; color: #fff; padding: 12px 0; font-size: 16px; resize: none; height: 45px; max-height: 150px; overflow-y: auto; line-height: 1.5; font-family: inherit; }
         
         .btn-icon { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 24px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; }
         .btn-icon:hover { color: var(--p); transform: scale(1.15); }
 
-        /* Gear Menu / Models */
-        .drop-menu { position: absolute; bottom: 85px; left: 8%; width: 300px; background: rgba(25, 25, 25, 0.85); backdrop-filter: blur(40px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.7); overflow: hidden; padding: 15px; }
+        .drop-menu { position: absolute; bottom: 85px; left: 8%; width: 300px; background: rgba(25, 25, 25, 0.85); backdrop-filter: blur(40px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); display: none; flex-direction: column; z-index: 5000; padding: 15px; }
         .drop-menu.show { display: flex; animation: glassPop 0.3s var(--apple-ease); }
         .model-item { padding: 12px 15px; border-radius: 16px; cursor: pointer; margin-bottom: 5px; transition: 0.3s; border: 1px solid transparent; display: flex; flex-direction: column; gap: 4px; }
-        .model-item:hover { background: rgba(255,255,255,0.05); }
         .model-item.active { background: rgba(255,255,255,0.08); border-color: var(--p); }
         .m-title { font-size: 14px; font-weight: 800; color: #fff; }
         .model-item.active .m-title { color: var(--p); }
         .m-desc { font-size: 11px; color: #888; }
-        
         .aura-btn { background: linear-gradient(45deg, #af52de, #00f2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; text-align: center; padding: 12px; cursor: pointer; font-size: 14px; letter-spacing: 1px; }
 
         /* Apple Context Menu */
-        #context-menu { position: fixed; background: rgba(30, 30, 30, 0.7); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 6px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); z-index: 9999; display: none; flex-direction: column; min-width: 140px; transform-origin: top left; animation: popIn 0.2s var(--apple-ease); }
+        #context-menu { position: fixed; background: rgba(30, 30, 30, 0.7); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 6px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); z-index: 9999; display: none; flex-direction: column; min-width: 150px; transform-origin: top left; animation: popIn 0.2s var(--apple-ease); }
         @keyframes popIn { from{ opacity:0; transform:scale(0.9); } to{ opacity:1; transform:scale(1); } }
-        .ctx-item { padding: 12px 16px; font-size: 14px; color: #fff; cursor: pointer; border-radius: 10px; transition: 0.2s; display: flex; align-items: center; justify-content: space-between; }
-        .ctx-item:hover { background: rgba(255,255,255,0.1); }
+        .ctx-item { padding: 12px 16px; font-size: 14px; color: #fff; cursor: pointer; border-radius: 10px; transition: 0.2s; display: flex; align-items: center; justify-content: space-between; font-weight: 500; }
+        .ctx-item:hover { background: rgba(255,255,255,0.15); }
         .ctx-item.danger { color: #ff3b30; }
 
         /* VIP Premium Modal */
         #premium-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 6000; backdrop-filter: blur(20px); }
-        .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 95%; max-width: 1000px; height: 85vh; background: rgba(15,15,15,0.85); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; z-index: 7000; display: none; flex-direction: column; opacity: 0; box-shadow: 0 40px 80px rgba(0,0,0,0.8); transition: 0.4s var(--apple-ease); }
+        .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 95%; max-width: 1000px; height: 85vh; background: rgba(15,15,15,0.85); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; z-index: 7000; display: none; flex-direction: column; opacity: 0; transition: 0.4s var(--apple-ease); }
         .modal-box.show { display: flex; transform: translate(-50%, -50%) scale(1); opacity: 1; }
         
         .plans-container { padding: 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .plan-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 25px; display: flex; flex-direction: column; position: relative; transition: 0.4s; }
-        .plan-card:hover { background: rgba(255,255,255,0.06); transform: translateY(-5px); border-color: rgba(255,255,255,0.3); }
-        
-        .plan-card.gold { border-color: var(--premium-color); background: rgba(223, 178, 87, 0.05); }
-        .plan-card.gold:hover { box-shadow: 0 20px 50px var(--premium-glow); transform: scale(1.02); }
-        
-        .plan-card.plat { border-color: var(--plat-color); background: rgba(229, 228, 226, 0.05); }
-        .plan-card.plat:hover { box-shadow: 0 20px 50px var(--plat-glow); transform: scale(1.02); }
-
+        .plan-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 25px; display: flex; flex-direction: column; }
         .plan-title { font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
         .plan-price { font-size: 24px; color: var(--p); font-weight: 800; margin-bottom: 20px; }
-        .plan-card.gold .plan-price { color: var(--premium-color); }
-        .plan-card.plat .plan-price { color: var(--plat-color); }
-        
         .plan-features { list-style: none; padding: 0; margin: 0 0 25px 0; flex: 1; }
         .plan-features li { color: rgba(255,255,255,0.7); line-height: 1.8; font-size: 13px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;}
-        .plan-features li:last-child { border: none; }
-        .plan-features li b { color: #fff; }
+        .btn-buy { background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 16px; border-radius: 16px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; font-size: 14px; }
+        .btn-buy.active-plan { background: rgba(118, 185, 0, 0.15); color: var(--p); border: 1px solid var(--p); cursor: default; }
+        .btn-buy:not(.active-plan):hover { background: var(--p); color: #000; }
 
-        .btn-buy { background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 16px; border-radius: 16px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; font-size: 14px; position: relative; overflow: hidden; }
-        .plan-card.gold .btn-buy { background: linear-gradient(135deg, var(--premium-color), #b88a38); color: #000; }
-        .plan-card.plat .btn-buy { background: linear-gradient(135deg, #ffffff, #a0a0a0); color: #000; }
-        .btn-buy:hover { opacity: 0.9; transform: scale(1.02); }
-
-        /* Payment Simulator Modal */
-        #payment-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: rgba(20,20,20,0.85); backdrop-filter: blur(50px); padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.15); z-index: 8000; display: none; flex-direction: column; align-items: center; text-align: center; width: 320px; opacity: 0; transition: 0.4s; }
-        #payment-modal.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .pay-spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--p); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Loader */
-        .dynamic-loader { display: flex; align-items: center; gap: 15px; padding: 15px 0; color: var(--p); font-weight: 600; font-size: 14px; letter-spacing: 1px; animation: fadeIn 0.5s ease; }
-        .dot-matrix span { display: inline-block; width: 6px; height: 6px; background: var(--p); border-radius: 50%; margin: 0 2px; animation: pulseDot 1.2s infinite ease-in-out; }
-        .dot-matrix span:nth-child(2) { animation-delay: 0.2s; }
-        .dot-matrix span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes pulseDot { 0%, 100% { transform: scale(0.5); opacity: 0.3; } 50% { transform: scale(1.2); opacity: 1; } }
+        /* Full Screen AURA Modal */
+        #aura-screen { position: fixed; inset: 0; background: rgba(5,5,10,0.95); backdrop-filter: blur(50px); z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: 0.5s; }
+        #aura-screen.show { display: flex; opacity: 1; }
+        .aura-orb { width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(circle, #af52de, #00f2ff); filter: blur(20px); animation: pulseOrb 2s infinite alternate ease-in-out; margin-bottom: 40px; }
+        @keyframes pulseOrb { from { transform: scale(0.8); opacity: 0.6; } to { transform: scale(1.2); opacity: 1; } }
+        .aura-close { position: absolute; bottom: 50px; background: rgba(255,59,48,0.2); color: #ff3b30; border: 1px solid #ff3b30; padding: 15px 40px; border-radius: 30px; font-weight: 800; font-size: 16px; cursor: pointer; }
     </style>
 </head>
 <body onclick="closeMenus()">
@@ -176,11 +143,12 @@
 
 <div id="context-menu" onclick="event.stopPropagation()"></div>
 
-<div id="payment-modal">
-    <div class="pay-spinner" id="pay-spinner"></div>
-    <h3 id="pay-title" style="margin: 0 0 10px 0; font-size: 18px;">Connecting...</h3>
-    <p id="pay-desc" style="font-size: 13px; color: #aaa; margin: 0 0 20px 0;">Establishing secure gateway connection.</p>
-    <button id="pay-close" style="display:none; background: rgba(255,255,255,0.1); border:none; padding: 10px 20px; border-radius: 12px; color:#fff; cursor:pointer;" onclick="closePayment()">Close</button>
+<div id="aura-screen">
+    <h2 style="color:#fff; letter-spacing:4px; font-weight:900; margin-bottom:10px;">AURA VOICE ENGINE</h2>
+    <p style="color:#888; margin-bottom:50px; font-size:14px;">Sandbox Environment Active</p>
+    <div class="aura-orb"></div>
+    <p style="color:#fff; font-size:18px;">Connecting to Live Node...</p>
+    <button class="aura-close" onclick="closeAura()">END CALL</button>
 </div>
 
 <div id="premium-overlay" onclick="closeModal('premium-modal')"></div>
@@ -193,35 +161,14 @@
         <div class="plan-card">
             <div class="plan-title">Silver Core</div>
             <div class="plan-price">$6.99 <span style="font-size:14px; color:#888;">/mo</span></div>
-            <ul class="plan-features">
-                <li><b>Unlimited Core:</b> Endless access to PHRAORTES 2.6.</li>
-                <li><b>Extended Logic:</b> Deep Thinking (2.7) up to 30 times/day.</li>
-                <li><b>Media Access:</b> Model 2.8 up to 5 times/day.</li>
-                <li>Advanced Global Memory.</li>
-            </ul>
-            <button class="btn-buy" onclick="purchasePlan(this, 'Silver Core')">PURCHASE SILVER</button>
+            <ul class="plan-features"><li>Unlimited Model 2.6</li><li>Deep Thinking (2.7) - 30/day</li></ul>
+            <button class="btn-buy" id="btn-silver" onclick="purchasePlan(this, 'Silver')">PURCHASE</button>
         </div>
-        <div class="plan-card gold">
+        <div class="plan-card" style="border-color:var(--premium-color)">
             <div class="plan-title" style="color:var(--premium-color)">Gold Cosmic</div>
             <div class="plan-price">$29.99 <span style="font-size:14px; color:#888;">/mo</span></div>
-            <ul class="plan-features">
-                <li><b>Infinite Logic:</b> Unlimited Deep Thinking (2.7).</li>
-                <li><b>Code Interpreter:</b> Live executable environment.</li>
-                <li><b>Live Debugger Pro:</b> Automated bug fixing.</li>
-                <li><b>High Media Core:</b> Model 2.8 up to 50 times/day.</li>
-            </ul>
-            <button class="btn-buy" onclick="purchasePlan(this, 'Gold Cosmic')">UPGRADE TO GOLD</button>
-        </div>
-        <div class="plan-card plat">
-            <div class="plan-title" style="color:var(--plat-color)">Platinum Singularity</div>
-            <div class="plan-price">$79.99 <span style="font-size:14px; color:#888;">/mo</span></div>
-            <ul class="plan-features">
-                <li><b>Absolute Uncapped:</b> 100% unlimited access to all models (incl. 2.8).</li>
-                <li><b>Beta Priority:</b> Early access to new tools & UI updates.</li>
-                <li><b>Hyper-Personalization:</b> Custom UI overrides.</li>
-                <li><b>VIP Infrastructure:</b> Quantum nodes & Call Aura access.</li>
-            </ul>
-            <button class="btn-buy" onclick="purchasePlan(this, 'Platinum')">ACTIVATE PLATINUM</button>
+            <ul class="plan-features"><li>Unlimited Model 2.7</li><li>Code Interpreter & Debugger</li></ul>
+            <button class="btn-buy" id="btn-gold" style="background:linear-gradient(135deg, #dfb257, #b88a38); color:#000;" onclick="purchasePlan(this, 'Gold')">UPGRADE</button>
         </div>
     </div>
 </div>
@@ -239,23 +186,11 @@
     <header>
         <button class="btn-icon" onclick="toggleS(event)">☰</button>
         <div class="logo">PHRAORTES</div>
-        
         <div class="account-hub" onclick="toggleAccount(event)">
             <div class="account-avatar">ME</div>
             <div class="account-menu" id="account-menu" onclick="event.stopPropagation()">
-                <div class="telemetry-box">
-                    <div class="telemetry-title">Mindset Telemetry</div>
-                    <div class="t-bar-wrap"><span>Focus</span><span id="p-foc">45%</span></div>
-                    <div class="t-bg"><div class="t-fill c-calm" id="b-foc" style="width:45%"></div></div>
-                    <div style="height:8px"></div>
-                    <div class="t-bar-wrap"><span>Analytical</span><span id="p-ana">35%</span></div>
-                    <div class="t-bg"><div class="t-fill c-focus" id="b-ana" style="width:35%"></div></div>
-                    <div style="height:8px"></div>
-                    <div class="t-bar-wrap"><span>Creative</span><span id="p-cre">20%</span></div>
-                    <div class="t-bg"><div class="t-fill c-creative" id="b-cre" style="width:20%"></div></div>
-                </div>
-                <div class="account-item premium-btn" onclick="openPremium()">💎 View VIP Plans</div>
-                <div class="account-item" style="color: #ff3b30;">🚪 Logout</div>
+                <div style="padding:15px; color:#fff; font-weight:bold; text-align:center;" id="current-plan-display">Free Plan</div>
+                <div style="padding:10px; cursor:pointer; color:var(--premium-color); text-align:center; font-weight:800; border:1px solid var(--premium-color); border-radius:12px; margin-bottom:10px;" onclick="openPremium()">💎 Upgrade VIP</div>
             </div>
         </div>
     </header>
@@ -264,28 +199,17 @@
 
     <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
         <span style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:10px; font-weight:800;">Neural Models</span>
-        <div class="model-item active" id="m-26" onclick="selectModel('2.6')">
-            <span class="m-title">PHRAORTES 2.6</span>
-            <span class="m-desc">Fast response, everyday tasks (5/day)</span>
-        </div>
-        <div class="model-item" id="m-27" onclick="selectModel('2.7')">
-            <span class="m-title">PHRAORTES 2.7</span>
-            <span class="m-desc">Deep Thinking & Logic (2/day)</span>
-        </div>
-        <div class="model-item" id="m-28" onclick="selectModel('2.8')">
-            <span class="m-title">PHRAORTES 2.8</span>
-            <span class="m-desc">Premium Core: Code & Media (1/day)</span>
-        </div>
+        <div class="model-item active" id="m-26" onclick="selectModel('2.6')"><span class="m-title">PHRAORTES 2.6</span><span class="m-desc">Fast response, brief (Unlimited)</span></div>
+        <div class="model-item" id="m-27" onclick="selectModel('2.7')"><span class="m-title">PHRAORTES 2.7</span><span class="m-desc">Deep Thinking & Logic</span></div>
+        <div class="model-item" id="m-28" onclick="selectModel('2.8')"><span class="m-title">PHRAORTES 2.8</span><span class="m-desc">Premium Core: Code & Tables</span></div>
         <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
-        <div class="aura-btn" onclick="callAura()">✨ CALL AURA ✨</div>
+        <div class="aura-btn" onclick="openAura()">✨ CALL AURA ✨</div>
     </div>
 
     <footer>
         <div class="input-bar" onclick="event.stopPropagation()">
-            <input type="file" id="file-upload" style="display:none;" onchange="handleFile(event)">
-            <button class="btn-icon" onclick="document.getElementById('file-upload').click()">📎</button>
             <button class="btn-icon" onclick="toggleGear(event)">⚙️</button>
-            <textarea id="ui" placeholder="Message Phraortes..." spellcheck="false" onkeydown="handleEnter(event)"></textarea>
+            <textarea id="ui" placeholder="Message Phraortes..." spellcheck="false"></textarea>
             <button id="send-btn" class="btn-icon" onclick="send()">🚀</button>
         </div>
     </footer>
@@ -297,21 +221,17 @@
 
     let chats = JSON.parse(localStorage.getItem("phraortes_chats")) || [];
     let curId = localStorage.getItem("phraortes_id");
+    let userPlan = localStorage.getItem("phraortes_plan") || "Free";
     let activeModel = '2.6';
-    let attachedFileType = ""; let attachedFileName = ""; let attachedFileDataURL = "";
 
-    // Markdown config
-    marked.setOptions({ 
-        highlight: (c) => hljs.highlightAuto(c).value, 
-        breaks: true, 
-        gfm: true 
-    });
+    marked.setOptions({ highlight: (c) => hljs.highlightAuto(c).value, breaks: true, gfm: true });
 
     const chatBox = document.getElementById("chat-box");
     const ctxMenu = document.getElementById("context-menu");
 
     window.onload = () => {
         if (!chats.length) newChat(); else loadChat(curId);
+        updatePlanUI();
         
         const ui = document.getElementById("ui");
         ui.addEventListener("input", function() {
@@ -321,39 +241,15 @@
         });
     };
 
-    function handleEnter(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
-
-    function handleFile(e) {
-        const file = e.target.files[0];
-        if(!file) return;
-        attachedFileName = file.name;
-        if (file.type.startsWith("image/")) {
-            attachedFileType = "image";
-            const reader = new FileReader();
-            reader.onload = (evt) => { attachedFileDataURL = evt.target.result; };
-            reader.readAsDataURL(file);
-        }
-    }
-
     function scrollToBottom() { chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' }); }
 
-    // Dynamic Emotion Analytics
     function analyzeMood(t) {
         let m = "";
-        let f = 45, a = 35, c = 20; // Default telemetry
-        if(t.match(/عالی|محشر|wow|amazing|happy|خوشحال/i)) { m = "mood-excited"; f=30; a=20; c=80; }
-        else if(t.match(/عصبانی|بد|احمق|hate|angry|کلافه/i)) { m = "mood-angry"; f=20; a=10; c=10; }
-        else if(t.match(/آرام|relax|calm|ساده/i)) { m = "mood-calm"; f=80; a=20; c=20; }
-        else if(t.match(/خوب|بله|good|yes|ok/i)) { m = "mood-pos"; f=50; a=30; c=40; }
-        else if(t.match(/نه|اشتباه|bad|no/i)) { m = "mood-neg"; f=40; a=40; c=20; }
-        else if(t.match(/\?|چرا|چگونه|کد|تحلیل|code/i)) { m = "mood-neu"; f=70; a=90; c=30; }
-        
+        if(t.match(/عالی|wow|amazing|happy/i)) m = "mood-excited";
+        else if(t.match(/عصبانی|بد|angry/i)) m = "mood-angry";
+        else if(t.match(/خوب|بله|good|yes/i)) m = "mood-pos";
+        else if(t.match(/نه|bad|no/i)) m = "mood-neg";
         document.body.className = m;
-        
-        // Update Telemetry visually
-        document.getElementById("p-foc").innerText = f+"%"; document.getElementById("b-foc").style.width = f+"%";
-        document.getElementById("p-ana").innerText = a+"%"; document.getElementById("b-ana").style.width = a+"%";
-        document.getElementById("p-cre").innerText = c+"%"; document.getElementById("b-cre").style.width = c+"%";
     }
 
     function toggleS(e) { 
@@ -365,13 +261,8 @@
     
     function toggleAccount(e) { e.stopPropagation(); closeMenus(); document.getElementById("account-menu").classList.toggle("show"); }
     function toggleGear(e) { e.stopPropagation(); closeMenus(); document.getElementById("gear-menu").classList.toggle("show"); }
-    function closeMenus() { 
-        document.getElementById("gear-menu").classList.remove("show"); 
-        document.getElementById("account-menu").classList.remove("show"); 
-        ctxMenu.style.display = "none";
-    }
+    function closeMenus() { document.getElementById("gear-menu").classList.remove("show"); document.getElementById("account-menu").classList.remove("show"); ctxMenu.style.display = "none"; }
 
-    // Models & Aura
     function selectModel(m) {
         activeModel = m;
         document.querySelectorAll('.model-item').forEach(el => el.classList.remove('active'));
@@ -379,231 +270,192 @@
         toggleGear(event);
     }
 
-    function callAura() {
-        toggleGear(event);
-        alert("✨ Aura Real-Time Audio Engine is currently in Sandbox mode.\nFull release coming in the next ecosystem update.");
-    }
+    /* Aura Screen */
+    function openAura() { toggleGear(event); document.getElementById('aura-screen').classList.add('show'); }
+    function closeAura() { document.getElementById('aura-screen').classList.remove('show'); }
 
-    // VIP Overlay & Payments
-    function openPremium() {
-        closeMenus();
-        document.getElementById("premium-overlay").style.display = "block";
-        document.getElementById("premium-modal").classList.add("show");
-    }
-
-    function closeModal(id) {
-        document.getElementById(id).classList.remove("show");
-        setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
-    }
+    /* VIP Overlay */
+    function openPremium() { closeMenus(); document.getElementById("premium-overlay").style.display = "block"; document.getElementById("premium-modal").classList.add("show"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("show"); setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400); }
 
     function purchasePlan(btn, plan) {
-        const originalText = btn.innerText;
-        btn.innerHTML = `<span class="pay-spinner" style="width:20px;height:20px;display:inline-block;margin:0;"></span>`;
-        
+        btn.innerHTML = "Activating...";
         setTimeout(() => {
-            btn.innerHTML = originalText;
-            document.getElementById("premium-modal").classList.remove("show");
-            
-            const pm = document.getElementById("payment-modal");
-            document.getElementById("pay-title").innerText = "Connecting...";
-            document.getElementById("pay-desc").innerText = `Establishing secure gateway to billing node.`;
-            document.getElementById("pay-spinner").style.display = "block";
-            document.getElementById("pay-close").style.display = "none";
-            pm.classList.add("show");
-            
-            setTimeout(() => {
-                document.getElementById("pay-spinner").style.display = "none";
-                document.getElementById("pay-title").innerText = "Sandbox Mode Active";
-                document.getElementById("pay-desc").innerText = "The payment infrastructure is currently in simulation mode. This feature will be fully production-ready in the upcoming update.";
-                document.getElementById("pay-close").style.display = "block";
-            }, 3000);
-            
+            userPlan = plan;
+            localStorage.setItem("phraortes_plan", plan);
+            updatePlanUI();
+            closeModal('premium-modal');
         }, 1500);
     }
-    
-    function closePayment() {
-        document.getElementById("payment-modal").classList.remove("show");
-        setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
+
+    function updatePlanUI() {
+        document.getElementById('current-plan-display').innerText = userPlan.toUpperCase() + " PLAN";
+        document.querySelectorAll('.btn-buy').forEach(b => { b.innerText = "PURCHASE"; b.classList.remove("active-plan"); });
+        if(userPlan === "Silver") { let b = document.getElementById('btn-silver'); b.innerText = "ACTIVATED"; b.classList.add("active-plan"); }
+        if(userPlan === "Gold") { let b = document.getElementById('btn-gold'); b.innerText = "ACTIVATED"; b.classList.add("active-plan"); b.style.background = ""; }
     }
 
-    // Context Menu Logic (Apple Long Press)
+    /* Apple Context Menu with Touch Fixes */
     let pressTimer;
-    function startPress(e, type, id, text) {
-        if(e.button !== 0 && e.type !== 'touchstart') return; // only left click or touch
-        pressTimer = setTimeout(() => {
-            showContext(e, type, id, text);
-        }, 400);
+    function startPress(e, type, msgIndex, id) {
+        if(e.button !== 0 && e.type !== 'touchstart') return;
+        pressTimer = setTimeout(() => { showContext(e, type, msgIndex, id); }, 400);
     }
     function cancelPress() { clearTimeout(pressTimer); }
     
-    function showContext(e, type, id, textData) {
+    function showContext(e, type, msgIndex, id) {
         closeMenus();
+        e.preventDefault(); // Prevent default browser context
         const touch = e.touches ? e.touches[0] : e;
         let html = '';
         
         if(type === 'user') {
-            html = `<div class="ctx-item" onclick="navigator.clipboard.writeText(\`${textData}\`); closeMenus()">Copy Text</div>
-                    <div class="ctx-item" onclick="document.getElementById('ui').value=\`${textData}\`; closeMenus()">Edit</div>`;
+            html = `<div class="ctx-item" onclick="navigator.clipboard.writeText(chats.find(c=>c.id==curId).msgs[${msgIndex}].uText); closeMenus()">📋 Copy</div>
+                    <div class="ctx-item" onclick="enableEdit(${msgIndex}, '${id}'); closeMenus()">✏️ Edit</div>`;
         } else if(type === 'ai') {
-            html = `<div class="ctx-item" onclick="navigator.clipboard.writeText(\`${textData}\`); closeMenus()">Copy Response</div>`;
+            html = `<div class="ctx-item" onclick="navigator.clipboard.writeText(chats.find(c=>c.id==curId).msgs[${msgIndex}].aRaw); closeMenus()">📋 Copy Text</div>`;
         } else if(type === 'session') {
-            html = `<div class="ctx-item" onclick="renameSession(${id}); closeMenus()">Rename</div>
-                    <div class="ctx-item" onclick="closeMenus()">Pin to Top</div>
-                    <div class="ctx-item danger" onclick="delH(${id}); closeMenus()">Delete</div>`;
+            const isPinned = chats.find(c=>c.id==id).pinned;
+            html = `<div class="ctx-item" onclick="togglePin(${id}); closeMenus()">📌 ${isPinned ? 'Unpin' : 'Pin to Top'}</div>
+                    <div class="ctx-item danger" onclick="delH(${id}); closeMenus()">🗑 Delete</div>`;
         }
         
         ctxMenu.innerHTML = html;
         ctxMenu.style.display = "flex";
-        
-        // Position logic
-        let x = touch.clientX; let y = touch.clientY;
+        let x = touch.clientX, y = touch.clientY;
         if(x + 150 > window.innerWidth) x = window.innerWidth - 160;
         if(y + 120 > window.innerHeight) y = window.innerHeight - 130;
+        ctxMenu.style.left = x + 'px'; ctxMenu.style.top = y + 'px';
+        if(navigator.vibrate) navigator.vibrate(50);
+    }
+
+    /* In-Place Editing */
+    function enableEdit(msgIndex, domId) {
+        const chat = chats.find(c => c.id == curId);
+        const text = chat.msgs[msgIndex].uText;
+        const wrap = document.getElementById(domId).parentElement;
         
-        ctxMenu.style.left = x + 'px';
-        ctxMenu.style.top = y + 'px';
-        if(navigator.vibrate) navigator.vibrate(50); // Haptic feedback
+        wrap.innerHTML = `
+            <textarea id="edit-in-${msgIndex}" class="edit-area">${text}</textarea>
+            <div class="edit-actions">
+                <button class="btn-edit btn-cancel" onclick="loadChat(curId)">Cancel</button>
+                <button class="btn-edit btn-save" onclick="saveEdit(${msgIndex})">Save & Resend</button>
+            </div>
+        `;
     }
 
-    function renameSession(id) {
-        let chat = chats.find(c => c.id == id);
-        let n = prompt("Rename Session:", chat.name);
-        if(n) { chat.name = n; save(); renderH(); }
+    function saveEdit(msgIndex) {
+        const newText = document.getElementById(`edit-in-${msgIndex}`).value.trim();
+        if(!newText) return loadChat(curId);
+        
+        const chat = chats.find(c => c.id == curId);
+        chat.msgs[msgIndex].uText = newText;
+        chat.msgs[msgIndex].u = newText; 
+        // We only edit the user text, and re-render. If we want AI to respond again, 
+        // we'd truncate the array here. Since user asked "just edit that text without deleting others", we do exactly that:
+        save();
+        loadChat(curId);
     }
 
-    // Chat Core
+    /* Pinning Logic */
+    function togglePin(id) {
+        let c = chats.find(x => x.id == id);
+        if(c) c.pinned = !c.pinned;
+        save(); renderH();
+    }
+
+    /* Chat Core */
     function newChat() {
         const id = Date.now();
-        chats.unshift({ id, name: "New Discovery", msgs: [] });
+        chats.unshift({ id, name: "New Discovery", msgs: [], pinned: false });
         curId = id; save(); loadChat(id);
         if(document.getElementById("sidebar").classList.contains("active")) toggleS();
     }
 
-    function getDynamicLoader(txt) {
-        let icon = "🧠";
-        if (txt.toLowerCase().includes("کد") || activeModel === '2.8') icon = "⟨/⟩"; 
-        else if (attachedFileType === "image") icon = "📷"; 
-
-        return `<div class="dynamic-loader"><div style="font-size:18px;">${icon}</div><div class="dot-matrix"><span></span><span></span><span></span></div></div>`;
-    }
-
-    // TTS Functions
-    function speakText(id) {
-        speechSynthesis.cancel();
-        let txt = document.getElementById(id).innerText;
-        let u = new SpeechSynthesisUtterance(txt);
-        speechSynthesis.speak(u);
-    }
-    function stopSpeak() { speechSynthesis.cancel(); }
+    function speakText(txt) { window.speechSynthesis.cancel(); window.speechSynthesis.speak(new SpeechSynthesisUtterance(txt)); }
+    function stopSpeak() { window.speechSynthesis.cancel(); }
+    function btnReact(btn) { btn.style.color = "var(--p)"; btn.style.background = "rgba(255,255,255,0.1)"; }
 
     async function send() {
         const inp = document.getElementById("ui"), txt = inp.value.trim();
         const fullKey = _PART_A + _PART_B;
-        if(!txt && !attachedFileName) return;
-
-        let displayHtml = txt;
-        let apiModel = "llama-3.3-70b-versatile"; // Default backend model
-
-        if(attachedFileName && attachedFileType === "image") {
-            displayHtml = `<img src="${attachedFileDataURL}" style="max-width:300px; border-radius:12px; margin-bottom:10px;"><br>${txt}`;
-            apiModel = "llama-3.2-11b-vision-preview";
-            document.getElementById("file-upload").value = "";
-            attachedFileName = ""; 
-        }
+        if(!txt) return;
 
         const chat = chats.find(c => c.id == curId);
         inp.value = ""; inp.style.height = "45px";
         
+        const msgIndex = chat.msgs.length;
         const uId = "u-"+Date.now();
-        addUI(displayHtml || "[Media Uploaded]", "user", uId, txt);
+        addUI(txt, "user", uId, msgIndex, txt);
         
         const aiId = "ai-"+Date.now();
-        addUI(getDynamicLoader(txt), "ai", aiId, "");
+        addUI(`<div style="color:var(--p); font-size:14px; font-weight:bold;">Processing...</div>`, "ai", aiId, msgIndex, "");
 
-        let sysContent = "You are Phraortes. Answer professionally.";
-        if(activeModel === '2.7') {
-            sysContent += " Deep Thinking enabled: Think step-by-step, provide extreme logical detail.";
-        } else if(activeModel === '2.8') {
-            sysContent += " Premium Core enabled: Output robust code architectures, markdown tables, or advanced visual interpretations.";
-        }
+        // Smart System Prompts based on Model
+        let sysContent = "You are Phraortes. ";
+        if(activeModel === '2.6') sysContent += "You must provide extremely brief, direct, and conversational answers. Do not use complex formatting unless asked. Be friendly but short.";
+        else if(activeModel === '2.7') sysContent += "Deep Thinking Mode: You MUST analyze the prompt logically. Break your answer into clear bullet points. Think step-by-step before concluding.";
+        else if(activeModel === '2.8') sysContent += "Premium Core: You are an elite expert. Provide exhaustive, highly detailed answers. Use markdown tables, code blocks, and professional structural formatting always.";
 
         let apiMessages = [{role: "system", content: sysContent}];
         chat.msgs.forEach(m => {
-            apiMessages.push({role: "user", content: m.uText || m.u});
-            apiMessages.push({role: "assistant", content: m.aRaw || m.a});
+            apiMessages.push({role: "user", content: m.uText});
+            apiMessages.push({role: "assistant", content: m.aRaw});
         });
-
-        if (attachedFileDataURL) {
-            apiMessages.push({ role: "user", content: [{ type: "text", text: txt || "Analyze." }, { type: "image_url", image_url: { url: attachedFileDataURL } }] });
-            attachedFileDataURL = "";
-        } else {
-            apiMessages.push({ role: "user", content: txt });
-        }
+        apiMessages.push({ role: "user", content: txt });
 
         try {
             const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST", headers: {"Authorization": `Bearer ${fullKey}`, "Content-Type": "application/json"},
-                body: JSON.stringify({ model: apiModel, messages: apiMessages })
+                body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: apiMessages })
             });
             const data = await res.json();
-            if(data.error) throw new Error(data.error.message);
-            
             const full = data.choices[0].message.content;
             let renderedHtml = marked.parse(full);
             
-            // Re-render AI msg wrapper completely to attach correct Listen/Stop buttons and Long Press
-            const w = document.getElementById(aiId).parentElement;
-            w.innerHTML = `
-                <div class="msg ai" id="${aiId}" onpointerdown="startPress(event, 'ai', null, \`${full.replace(/`/g, "'")}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${renderedHtml}</div>
-                <div class="listen-ops">
-                    <button class="l-btn" onclick="speakText('${aiId}')">▶ Listen</button>
-                    <button class="l-btn" onclick="stopSpeak()">■ Stop</button>
-                </div>
-            `;
-            
-            if(chat.msgs.length === 0) chat.name = (txt || "Media Analysis").substring(0, 20);
-            chat.msgs.push({u: displayHtml, uText: txt, a: renderedHtml, aRaw: full}); 
-            save(); renderH(); addCopyLogic();
-            scrollToBottom();
-        } catch(e) { 
-            document.getElementById(aiId).innerHTML = "System Error: " + e.message;
-        }
+            chat.msgs.push({u: txt, uText: txt, a: renderedHtml, aRaw: full}); 
+            if(chat.msgs.length === 1) chat.name = txt.substring(0, 20);
+            save(); loadChat(curId); // Reload to attach all buttons and events cleanly
+        } catch(e) { document.getElementById(aiId).innerHTML = "Error: " + e.message; }
     }
 
-    function addUI(t, r, id, rawText) {
-        const w = document.createElement("div");
-        w.className = `msg-wrap ${r}-wrap`;
-        let safeTxt = (rawText || "").replace(/`/g, "'"); // Prevent template string breaks
-        
+    function addUI(t, r, id, msgIndex, rawText) {
+        const w = document.createElement("div"); w.className = `msg-wrap ${r}-wrap`;
         if(id === 'welcome') {
             w.innerHTML = `<div style="text-align:center; margin:auto 0;"><h1 style="color:var(--p);font-weight:900;letter-spacing:2px;font-size:35px;">PHRAORTES</h1><p style="color:rgba(255,255,255,0.5)">System Active. Model ${activeModel}</p></div>`;
+            chatBox.appendChild(w); return;
+        }
+
+        let safeTxt = (rawText || "").replace(/`/g, "'").replace(/\\/g, '\\\\');
+        
+        if(r === 'user') {
+            w.innerHTML = `<div class="msg user" id="${id}" oncontextmenu="return false;" onpointerdown="startPress(event, 'user', ${msgIndex}, '${id}')" onpointerup="cancelPress()" onpointerleave="cancelPress()">${t}</div>`;
         } else {
-            if(r === 'user') {
-                w.innerHTML = `<div class="msg user" id="${id}" onpointerdown="startPress(event, 'user', null, \`${safeTxt}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${t}</div>`;
-            } else {
-                w.innerHTML = `<div class="msg ai" id="${id}">${t}</div>`; // Buttons attached after fetch
-            }
+            w.innerHTML = `<div class="msg ai" id="${id}" oncontextmenu="return false;" onpointerdown="startPress(event, 'ai', ${msgIndex}, '${id}')" onpointerup="cancelPress()" onpointerleave="cancelPress()">${t}</div>
+                <div class="listen-ops">
+                    <button class="l-btn" onclick="speakText(chats.find(c=>c.id==curId).msgs[${msgIndex}].aRaw)">▶ Listen</button>
+                    <button class="l-btn" onclick="stopSpeak()">■ Stop</button>
+                    <div style="flex:1"></div>
+                    <button class="l-btn" onclick="btnReact(this)">👍</button>
+                    <button class="l-btn" onclick="btnReact(this)">👎</button>
+                </div>`;
         }
         chatBox.appendChild(w);
+        checkTruncation(id);
         scrollToBottom();
     }
 
-    // Code Block Copy Button Logic
-    function addCopyLogic() {
-        document.querySelectorAll('pre').forEach(pre => {
-            if(pre.querySelector('.copy-btn')) return;
-            const b = document.createElement('button'); b.innerText = 'COPY';
-            b.className = 'copy-btn';
-            b.style = "position:absolute; top:12px; right:12px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:5px 10px; border-radius:8px; font-size:10px; font-weight:800; cursor:pointer; color:#fff; transition:0.3s;";
-            b.onmouseover = () => b.style.background = 'var(--p)'; 
-            b.onmouseout = () => b.style.background = 'rgba(255,255,255,0.1)';
-            b.onclick = () => { 
-                let codeText = pre.innerText.replace('COPY', '').trim();
-                navigator.clipboard.writeText(codeText); 
-                b.innerText = 'DONE'; setTimeout(()=>b.innerText='COPY', 2000); 
-            };
-            pre.appendChild(b);
-        });
+    // Expand/Collapse logic
+    function checkTruncation(id) {
+        setTimeout(() => {
+            const el = document.getElementById(id);
+            if(el && el.scrollHeight > 160 && el.classList.contains('user')) {
+                el.classList.add('collapsed');
+                const btn = document.createElement('div'); btn.className = 'expand-btn'; btn.innerHTML = '▼';
+                btn.onclick = (e) => { e.stopPropagation(); el.classList.toggle('collapsed'); btn.innerHTML = el.classList.contains('collapsed') ? '▼' : '▲'; };
+                el.parentElement.appendChild(btn);
+            }
+        }, 50);
     }
 
     function loadChat(id) {
@@ -613,35 +465,30 @@
         addUI("", "ai", "welcome");
         if(chat && chat.msgs.length) {
             chat.msgs.forEach((m, i) => { 
-                addUI(m.u, "user", "u-"+i, m.uText); 
-                const aId = "a-"+i;
-                const w = document.createElement("div"); w.className = "msg-wrap ai-wrap";
-                w.innerHTML = `
-                    <div class="msg ai" id="${aId}" onpointerdown="startPress(event, 'ai', null, \`${(m.aRaw||"").replace(/`/g, "'")}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${m.a}</div>
-                    <div class="listen-ops">
-                        <button class="l-btn" onclick="speakText('${aId}')">▶ Listen</button>
-                        <button class="l-btn" onclick="stopSpeak()">■ Stop</button>
-                    </div>`;
-                chatBox.appendChild(w);
+                addUI(m.u, "user", "u-"+Date.now()+"-"+i, i, m.uText); 
+                addUI(m.a, "ai", "a-"+Date.now()+"-"+i, i, m.aRaw);
             });
         }
-        renderH(); addCopyLogic(); scrollToBottom();
+        renderH(); scrollToBottom();
     }
 
     function save() { localStorage.setItem("phraortes_chats", JSON.stringify(chats)); localStorage.setItem("phraortes_id", curId); }
     
     function renderH() {
-        document.getElementById("h-list").innerHTML = chats.map(c => `
-            <div class="h-item ${c.id == curId ? 'active-chat' : ''}" onclick="loadChat(${c.id})" onpointerdown="startPress(event, 'session', ${c.id}, null)" onpointerup="cancelPress()" onpointerleave="cancelPress()">
-                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:200px;"># ${c.name}</span>
+        let sorted = chats.slice().sort((a,b) => {
+            if(a.pinned && !b.pinned) return -1;
+            if(!a.pinned && b.pinned) return 1;
+            return b.id - a.id;
+        });
+        document.getElementById("h-list").innerHTML = sorted.map(c => `
+            <div class="h-item ${c.id == curId ? 'active-chat' : ''}" onclick="loadChat(${c.id})" oncontextmenu="return false;" onpointerdown="startPress(event, 'session', null, ${c.id})" onpointerup="cancelPress()" onpointerleave="cancelPress()">
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:200px;">
+                    ${c.pinned ? '📌 ' : '# '} ${c.name}
+                </span>
             </div>`).join("");
     }
 
-    function delH(id) { 
-        chats = chats.filter(c=>c.id!=id); 
-        if(!chats.length) newChat(); else loadChat(chats[0].id); 
-        save(); renderH(); 
-    }
+    function delH(id) { chats = chats.filter(c=>c.id!=id); if(!chats.length) newChat(); else loadChat(chats[0].id); save(); renderH(); }
 </script>
 </body>
 </html>
