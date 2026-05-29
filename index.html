@@ -108,29 +108,107 @@
         .react-btn { font-size: 14px; cursor: pointer; opacity: 0.6; transition: 0.2s; display: inline-flex; align-items: center; }
         .react-btn:hover { opacity: 1; transform: scale(1.15); }
 
-        /* Scroll To Bottom Button */
+        /* Apple-inspired Fluid Scroll Button (Bottom Center) */
         #scroll-down-btn {
             position: absolute;
-            bottom: 110px;
-            right: 25px;
-            width: 45px;
-            height: 45px;
+            bottom: 115px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.8);
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: var(--p);
-            font-size: 18px;
-            display: none;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            opacity: 0;
+            pointer-events: none;
+            display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             z-index: 999;
-            transition: 0.3s;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            transition: transform 0.4s var(--apple-ease), opacity 0.4s var(--apple-ease), background 0.3s;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
         }
-        #scroll-down-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
-        #scroll-down-btn.show { display: flex; animation: glassPop 0.3s var(--apple-ease); }
+        #scroll-down-btn:hover { background: rgba(255,255,255,0.25); transform: translateX(-50%) scale(1.08); }
+        #scroll-down-btn.show { opacity: 1; transform: translateX(-50%) scale(1); pointer-events: auto; }
+
+        /* Media Capsules & Rounded Elements */
+        .media-capsule {
+            display: inline-block;
+            width: 90px;
+            height: 90px;
+            border-radius: 22px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.15);
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: transform 0.3s var(--apple-ease), box-shadow 0.3s;
+            position: relative;
+            background: rgba(255,255,255,0.05);
+        }
+        .media-capsule:hover {
+            transform: scale(1.04);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .media-capsule img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Apple Immersive Media Lightbox Overlay */
+        #media-lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s var(--apple-ease);
+        }
+        #media-lightbox.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #media-lightbox img {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 24px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            transform: scale(0.9);
+            transition: transform 0.4s var(--apple-ease);
+        }
+        #media-lightbox.show img {
+            transform: scale(1);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.1);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s;
+        }
+        .lightbox-close:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
 
         footer { position: absolute; bottom: 0; width: 100%; padding: 20px 8% 40px; background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, transparent); pointer-events: none; z-index: 1000;}
         .input-bar { background: rgba(25, 25, 25, 0.55); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 35px; display: flex; align-items: center; padding: 10px 25px; gap: 15px; pointer-events: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: 0.3s; }
@@ -214,6 +292,11 @@
 <div id="sidebar-overlay" onclick="toggleS(event)"></div>
 
 <div id="context-menu" onclick="event.stopPropagation()"></div>
+
+<div id="media-lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close">✕</span>
+    <img id="lightbox-img" src="" alt="Media Preview" onclick="event.stopPropagation()">
+</div>
 
 <div id="aura-screen">
     <button class="aura-close" onclick="closeAura()">✕</button>
@@ -309,7 +392,10 @@
     </header>
 
     <div id="chat-box"></div>
-    <button id="scroll-down-btn" onclick="scrollToBottom()">⬇️</button>
+    
+    <button id="scroll-down-btn" onclick="scrollToBottom()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+    </button>
 
     <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
         <span style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:10px; font-weight:800;">Neural Models</span>
@@ -343,7 +429,6 @@
 <script>
     const _PART_A = "gsk_mIKxutVxzOYZdnFoMRbI";
     const _PART_B = "WGdyb3FYuI7ZQoU2sZPIDQ0rmUc4GDhv";
-    // کلید OpenRouter خودت رو اینجا بذار. اگر خالی باشه یا ارور بده، خودکار میره روی Groq
     const OPENROUTER_API_KEY = ""; 
 
     let chats = JSON.parse(localStorage.getItem("phraortes_chats")) || [];
@@ -373,7 +458,7 @@
             analyzeMood(this.value);
         });
 
-        // Scroll listener for floating button
+        // Scroll listener for centered floating button
         chatBox.addEventListener("scroll", () => {
             const btn = document.getElementById("scroll-down-btn");
             if (chatBox.scrollHeight - chatBox.scrollTop > chatBox.clientHeight + 80) {
@@ -392,7 +477,7 @@
 
     function handleEnter(e) { 
         if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault(); // Send on Enter without shift
+            e.preventDefault(); 
             send();
         } 
     }
@@ -406,7 +491,19 @@
             const reader = new FileReader();
             reader.onload = (evt) => { attachedFileDataURL = evt.target.result; };
             reader.readAsDataURL(file);
+        } else {
+            attachedFileType = "file";
         }
+    }
+
+    // Lightbox Control Nodes
+    function openLightbox(src) {
+        document.getElementById("lightbox-img").src = src;
+        document.getElementById("media-lightbox").classList.add("show");
+    }
+    
+    function closeLightbox() {
+        document.getElementById("media-lightbox").classList.remove("show");
     }
 
     function scrollToBottom() { 
@@ -667,7 +764,6 @@
         let openRouterModel = useVision ? "meta-llama/llama-3.2-11b-vision-instruct:free" : "meta-llama/llama-3.3-70b-instruct:free";
         let groqModel = useVision ? "llama-3.2-11b-vision-preview" : "llama-3.3-70b-versatile";
 
-        // Step 1: Try OpenRouter if Key is provided
         if (OPENROUTER_API_KEY && OPENROUTER_API_KEY.trim() !== "") {
             try {
                 const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -680,7 +776,6 @@
             } catch (e) { console.warn("OpenRouter Failed, shifting to Groq Fallback..."); }
         }
 
-        // Step 2: Fallback to Groq API
         const fullKey = _PART_A + _PART_B;
         const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST", 
@@ -699,8 +794,9 @@
         let displayHtml = txt;
         let useVision = false;
 
+        // Upgraded Upload Layout - Renders a sleek Apple-style capsule structure
         if(attachedFileName && attachedFileType === "image") {
-            displayHtml = `<img src="${attachedFileDataURL}" style="max-width:300px; border-radius:12px; margin-bottom:10px;"><br>${txt}`;
+            displayHtml = `<div class="media-capsule" onclick="openLightbox('${attachedFileDataURL}')"><img src="${attachedFileDataURL}"></div>${txt ? '<br>'+txt : ''}`;
             useVision = true;
             document.getElementById("file-upload").value = "";
             attachedFileName = ""; 
@@ -716,7 +812,6 @@
         const aiId = "ai-"+timestampUnique;
         addUI(getDynamicLoader(txt), "ai", aiId, "");
 
-        // Multi-Media Command Parsers
         let isMediaCommand = false;
         let finalHtmlResponse = "";
         let finalRawResponse = "";
@@ -725,7 +820,8 @@
             isMediaCommand = true;
             const promptStr = txt.substring(9);
             const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptStr)}?width=800&height=800&nologo=true`;
-            finalHtmlResponse = `<div style="text-align:center"><img src="${imgUrl}" style="width:100%; border-radius:15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"><br><br><span style="color:#aaa; font-size:13px;">✨ تولید تصویر بر اساس: ${promptStr}</span></div>`;
+            // Redesigned Imagine Command to utilize the fluid Lightbox and Media Capsules
+            finalHtmlResponse = `<div style="text-align:left;"><div class="media-capsule" style="width:130px; height:130px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ تولید تصویر بر اساس: ${promptStr}</span></div>`;
             finalRawResponse = "Image generated successfully via Pollinations.";
         } 
         else if(txt.toLowerCase().startsWith("/video ")) {
