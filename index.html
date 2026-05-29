@@ -39,7 +39,7 @@
         #sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); z-index: 3999; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--apple-ease); }
         #sidebar-overlay.show { opacity: 1; pointer-events: all; }
 
-        main { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; transition: 0.5s var(--apple-ease); }
+        main { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; transition: 0.5s var(--apple-ease); overflow-x: hidden;}
 
         .btn-new { width: 90%; margin: 20px auto; padding: 16px; background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid var(--brd); color: #fff; border-radius: 20px; font-weight: 700; cursor: pointer; display: block; letter-spacing: -0.5px; transition: 0.3s; }
         .btn-new:hover { background: rgba(255,255,255,0.1); transform: scale(1.02); }
@@ -49,7 +49,10 @@
         .h-item.active-chat { border-color: var(--p); background: rgba(255,255,255,0.08); box-shadow: 0 5px 15px var(--glow); }
 
         header { height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); background: rgba(0,0,0,0.2); backdrop-filter: blur(20px); z-index: 100; }
-        .logo { font-size: 16px; letter-spacing: 4px; font-weight: 900; color: var(--p); text-transform: uppercase; text-shadow: 0 0 15px var(--glow); transition: 0.5s; }
+        
+        /* Logo Styles */
+        .logo { height: 40px; display: flex; align-items: center; justify-content: center; }
+        .logo img { height: 100%; width: auto; object-fit: contain; filter: drop-shadow(0 0 10px var(--glow)); mix-blend-mode: screen; }
 
         /* Account & Emotion Telemetry */
         .account-hub { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; }
@@ -70,14 +73,17 @@
         .account-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
         .account-item.premium-btn { color: var(--premium-color); border: 1px solid rgba(223, 178, 87, 0.3); background: rgba(223, 178, 87, 0.08); font-weight: 800; text-align: center; margin-bottom: 10px; }
 
-        #chat-box { flex: 1; overflow-y: auto; padding: 30px 8% 180px; display: flex; flex-direction: column; gap: 35px; scroll-behavior: smooth; user-select: none; }
+        #chat-box { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 30px 8% 180px; display: flex; flex-direction: column; gap: 35px; scroll-behavior: smooth; user-select: none; }
         
         .msg-wrap { display: flex; flex-direction: column; max-width: 85%; animation: slideUp 0.5s var(--apple-ease); position: relative; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .user-wrap { align-self: flex-end; }
-        .ai-wrap { align-self: flex-start; width: 100%; }
+        .ai-wrap { align-self: flex-start; width: 100%; position: relative; }
         
-        .msg { padding: 18px 26px; border-radius: 28px; font-size: 16px; line-height: 1.7; position: relative; white-space: pre-wrap; word-wrap: break-word; cursor: pointer; border: 1px solid transparent; transition: max-height 0.4s ease, padding 0.3s ease; }
+        /* Mobile Responsive Fixes for Messages */
+        .msg { padding: 18px 26px; border-radius: 28px; font-size: 16px; line-height: 1.7; position: relative; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word; cursor: pointer; border: 1px solid transparent; transition: max-height 0.4s ease, padding 0.3s ease; max-width: 100%; overflow-x: auto;}
+        .msg img { max-width: 100%; height: auto; border-radius: 12px; }
+        .msg table { display: block; overflow-x: auto; white-space: nowrap; width: 100%; border-collapse: collapse; }
         
         .user { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-bottom-right-radius: 6px; font-weight: 500; box-shadow: 0 8px 32px rgba(0,0,0,0.2); user-select: none; -webkit-user-select: none; }
         .ai { background: transparent; color: #fff; border: none; padding: 10px 0; font-weight: 400; cursor: default; user-select: none; -webkit-user-select: none; }
@@ -85,6 +91,11 @@
         .msg.collapsed { max-height: 160px; overflow: hidden; position: relative; padding-bottom: 40px; mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%); }
         .read-more-trigger { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; backdrop-filter: blur(10px); border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; transition: 0.3s var(--apple-ease); z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
         .read-more-trigger:hover { background: rgba(255,255,255,0.2); transform: translateX(-50%) scale(1.1); }
+
+        /* Hover Copy Button */
+        .hover-copy-btn { position: absolute; top: -10px; right: 10px; background: rgba(255,255,255,0.15); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.25); border-radius: 10px; color: #fff; padding: 6px 12px; font-size: 11px; font-weight: 800; cursor: pointer; opacity: 0; transform: translateY(5px); transition: 0.3s var(--apple-ease); z-index: 50; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .msg-wrap.ai-wrap:hover .hover-copy-btn { opacity: 1; transform: translateY(0); }
+        .hover-copy-btn:hover { background: var(--p); color: #000; border-color: var(--p); }
 
         .edit-area-container { display: flex; flex-direction: column; gap: 10px; width: 100%; min-width: 280px; }
         .edit-textarea { background: rgba(0,0,0,0.5); border: 1px solid var(--p); color: #fff; font-size: 16px; padding: 12px; border-radius: 16px; resize: vertical; line-height: 1.5; font-family: inherit; }
@@ -108,110 +119,32 @@
         .react-btn { font-size: 14px; cursor: pointer; opacity: 0.6; transition: 0.2s; display: inline-flex; align-items: center; }
         .react-btn:hover { opacity: 1; transform: scale(1.15); }
 
-        /* Apple-inspired Fluid Scroll Button (Bottom Center) */
-        #scroll-down-btn {
-            position: absolute;
-            bottom: 115px;
-            left: 50%;
-            transform: translateX(-50%) scale(0.8);
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            opacity: 0;
-            pointer-events: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            z-index: 999;
-            transition: transform 0.4s var(--apple-ease), opacity 0.4s var(--apple-ease), background 0.3s;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-        }
+        /* Apple-inspired Fluid Scroll Button */
+        #scroll-down-btn { position: absolute; bottom: 115px; left: 50%; transform: translateX(-50%) scale(0.8); width: 42px; height: 42px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; opacity: 0; pointer-events: none; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 999; transition: transform 0.4s var(--apple-ease), opacity 0.4s var(--apple-ease), background 0.3s; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
         #scroll-down-btn:hover { background: rgba(255,255,255,0.25); transform: translateX(-50%) scale(1.08); }
         #scroll-down-btn.show { opacity: 1; transform: translateX(-50%) scale(1); pointer-events: auto; }
 
         /* Media Capsules & Rounded Elements */
-        .media-capsule {
-            display: inline-block;
-            width: 90px;
-            height: 90px;
-            border-radius: 22px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.15);
-            cursor: pointer;
-            margin-bottom: 8px;
-            transition: transform 0.3s var(--apple-ease), box-shadow 0.3s;
-            position: relative;
-            background: rgba(255,255,255,0.05);
-        }
-        .media-capsule:hover {
-            transform: scale(1.04);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-        .media-capsule img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .media-capsule { display: inline-block; width: 90px; height: 90px; border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; margin-bottom: 8px; transition: transform 0.3s var(--apple-ease), box-shadow 0.3s; position: relative; background: rgba(255,255,255,0.05); }
+        .media-capsule:hover { transform: scale(1.04); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        .media-capsule img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Input Preview Container */
+        #input-preview-container { display: none; position: absolute; bottom: 80px; left: 8%; background: rgba(25,25,25,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); padding: 8px; border-radius: 18px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #input-preview-img { width: 60px; height: 60px; object-fit: cover; border-radius: 12px; }
+        .remove-preview { position: absolute; top: -8px; right: -8px; background: #ff3b30; color: #fff; width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 12px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: 0.3s; }
+        .remove-preview:hover { transform: scale(1.1); }
 
         /* Apple Immersive Media Lightbox Overlay */
-        #media-lightbox {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s var(--apple-ease);
-        }
-        #media-lightbox.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        #media-lightbox img {
-            max-width: 90%;
-            max-height: 85vh;
-            border-radius: 24px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
-            transform: scale(0.9);
-            transition: transform 0.4s var(--apple-ease);
-        }
-        #media-lightbox.show img {
-            transform: scale(1);
-        }
-        .lightbox-close {
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            color: #fff;
-            font-size: 24px;
-            cursor: pointer;
-            background: rgba(255,255,255,0.1);
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: 0.3s;
-        }
-        .lightbox-close:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.1);
-        }
+        #media-lightbox { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s var(--apple-ease); }
+        #media-lightbox.show { opacity: 1; pointer-events: auto; }
+        #media-lightbox img { max-width: 90%; max-height: 85vh; border-radius: 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.4s var(--apple-ease); }
+        #media-lightbox.show img { transform: scale(1); }
+        .lightbox-close { position: absolute; top: 30px; right: 30px; color: #fff; font-size: 24px; cursor: pointer; background: rgba(255,255,255,0.1); width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
+        .lightbox-close:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
 
         footer { position: absolute; bottom: 0; width: 100%; padding: 20px 8% 40px; background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, transparent); pointer-events: none; z-index: 1000;}
-        .input-bar { background: rgba(25, 25, 25, 0.55); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 35px; display: flex; align-items: center; padding: 10px 25px; gap: 15px; pointer-events: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: 0.3s; }
+        .input-bar { background: rgba(25, 25, 25, 0.55); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 35px; display: flex; align-items: center; padding: 10px 25px; gap: 15px; pointer-events: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: 0.3s; position: relative; }
         .input-bar:focus-within { border-color: var(--p); background: rgba(35, 35, 35, 0.65); box-shadow: 0 20px 60px var(--glow); }
         
         #ui { flex: 1; background: transparent; border: none; color: #fff; padding: 12px 0; font-size: 16px; resize: none; height: 45px; max-height: 150px; overflow-y: auto; line-height: 1.5; }
@@ -237,7 +170,7 @@
         .ctx-item.danger { color: #ff3b30; }
 
         #premium-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 6000; backdrop-filter: blur(20px); }
-        .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 95%; max-width: 1000px; height: 85vh; background: rgba(15,15,15,0.85); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; z-index: 7000; display: none; flex-direction: column; opacity: 0; box-shadow: 0 40px 80px rgba(0,0,0,0.8); transition: 0.4s var(--apple-ease); }
+        .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 95%; max-width: 1000px; max-height: 85vh; background: rgba(15,15,15,0.85); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; z-index: 7000; display: none; flex-direction: column; opacity: 0; box-shadow: 0 40px 80px rgba(0,0,0,0.8); transition: 0.4s var(--apple-ease); }
         .modal-box.show { display: flex; transform: translate(-50%, -50%) scale(1); opacity: 1; }
         
         .plans-container { padding: 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
@@ -266,10 +199,9 @@
         .btn-buy:hover { opacity: 0.9; transform: scale(1.02); }
         .btn-buy.activated { background: #00ff88 !important; color: #000 !important; border: 1px solid #00ff88; box-shadow: 0 0 15px rgba(0,255,136,0.4); cursor: default; }
 
-        #payment-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: rgba(20,20,20,0.85); backdrop-filter: blur(50px); padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.15); z-index: 8000; display: none; flex-direction: column; align-items: center; text-align: center; width: 320px; opacity: 0; transition: 0.4s; }
-        #payment-modal.show { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .pay-spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--p); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* Crypto Payment Modal specifics */
+        .crypto-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 14px; border-radius: 12px; font-size: 14px; width: 100%; transition: 0.3s; }
+        .crypto-input:focus { border-color: var(--p); outline: none; }
 
         .dynamic-loader { display: flex; align-items: center; gap: 15px; padding: 15px 0; color: var(--p); font-weight: 600; font-size: 14px; letter-spacing: 1px; animation: fadeIn 0.5s ease; }
         .dot-matrix span { display: inline-block; width: 6px; height: 6px; background: var(--p); border-radius: 50%; margin: 0 2px; animation: pulseDot 1.2s infinite ease-in-out; }
@@ -307,14 +239,44 @@
     <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 10px; font-weight: 500;">Sandbox Environment Engine v1.0.2</p>
 </div>
 
-<div id="payment-modal">
-    <div class="pay-spinner" id="pay-spinner"></div>
-    <h3 id="pay-title" style="margin: 0 0 10px 0; font-size: 18px;">Connecting...</h3>
-    <p id="pay-desc" style="font-size: 13px; color: #aaa; margin: 0 0 20px 0;">Establishing secure gateway connection.</p>
-    <button id="pay-close" style="display:none; background: rgba(255,255,255,0.1); border:none; padding: 10px 20px; border-radius: 12px; color:#fff; cursor:pointer;" onclick="closePayment()">Close</button>
+<div id="crypto-modal" class="modal-box" style="max-width: 450px; padding-bottom: 20px;" onclick="event.stopPropagation()">
+    <div style="padding: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin:0; font-weight:800; color:var(--p); letter-spacing: 1px;">VIP DEPOSIT <span style="color:#aaa; font-size: 12px;">(CRYPTO)</span></h3>
+        <button onclick="closeCryptoModal()" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">✕</button>
+    </div>
+    <div style="padding: 25px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto;">
+        
+        <div style="text-align: center; margin-bottom: 5px;">
+            <div style="color: #fff; font-size: 20px; font-weight: 900;" id="crypto-plan-name">Plan Name</div>
+            <div style="color: var(--p); font-size: 16px; font-weight: 800;" id="crypto-plan-price">$0.00</div>
+        </div>
+
+        <label style="font-size:12px; color:#aaa; margin-bottom: -5px;">1. Select Transfer Network:</label>
+        <select id="crypto-net" onchange="updateCryptoNet()" class="crypto-input" style="border-color: var(--p);">
+            <option value="trc20">USDT - TRC20 (Tron Network)</option>
+            <option value="polygon">USDT - Polygon (Matic Network)</option>
+        </select>
+
+        <div style="text-align:center; padding: 15px 0;">
+            <div style="width:160px; height:160px; background:#fff; margin:0 auto; border-radius:15px; display:flex; justify-content:center; align-items:center; color:#000; font-size:12px; font-weight: 800; border: 4px solid var(--p);">
+                [QR CODE]
+            </div>
+            <p style="font-size: 11px; color: #888; margin-top: 10px;">Scan or copy address below to send exact amount</p>
+        </div>
+
+        <label style="font-size:12px; color:#aaa; margin-bottom: -5px;">2. Nobitex Wallet Address:</label>
+        <div style="display:flex; gap:10px;">
+            <input type="text" id="crypto-address" readonly value="TXYZ... (Your TRC20 Address Here)" class="crypto-input" style="flex:1; font-family: monospace; font-size: 12px; cursor:copy;" onclick="this.select(); navigator.clipboard.writeText(this.value); alert('Wallet Address Copied!');">
+        </div>
+
+        <label style="font-size:12px; color:#aaa; margin-top: 10px; margin-bottom: -5px;">3. Enter Transaction ID (TXID / Hash):</label>
+        <input type="text" id="txid-val" placeholder="Paste TXID hash here after transfer..." class="crypto-input">
+
+        <button onclick="submitCrypto()" class="btn-buy" style="background: var(--p); color: #000; margin-top: 15px; box-shadow: 0 10px 30px var(--glow);">SUBMIT PAYMENT VERIFICATION</button>
+    </div>
 </div>
 
-<div id="premium-overlay" onclick="closeModal('premium-modal')"></div>
+<div id="premium-overlay" onclick="closeModal('premium-modal'); closeCryptoModal()"></div>
 <div id="premium-modal" class="modal-box" onclick="event.stopPropagation()">
     <div style="padding: 25px 35px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
         <span style="font-weight: 900; letter-spacing: 2px; font-size: 20px;">PHRAORTES <span style="color:var(--premium-color)">VIP</span></span>
@@ -330,7 +292,7 @@
                 <li><b>Media Access:</b> Model 2.8 up to 5 times/day.</li>
                 <li>Advanced Global Memory.</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-silver" onclick="purchasePlan(this, 'Silver Core')">PURCHASE SILVER</button>
+            <button class="btn-buy" id="btn-purchase-silver" onclick="purchasePlan(this, 'Silver Core', '6.99')">PURCHASE SILVER</button>
         </div>
         <div class="plan-card gold" id="plan-gold">
             <div class="plan-title" style="color:var(--premium-color)">Gold Cosmic</div>
@@ -341,7 +303,7 @@
                 <li><b>Live Debugger Pro:</b> Automated bug fixing.</li>
                 <li><b>High Media Core:</b> Model 2.8 up to 50 times/day.</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-gold" onclick="purchasePlan(this, 'Gold Cosmic')">UPGRADE TO GOLD</button>
+            <button class="btn-buy" id="btn-purchase-gold" onclick="purchasePlan(this, 'Gold Cosmic', '29.99')">UPGRADE TO GOLD</button>
         </div>
         <div class="plan-card plat" id="plan-plat">
             <div class="plan-title" style="color:var(--plat-color)">Platinum Singularity</div>
@@ -352,7 +314,7 @@
                 <li><b>Hyper-Personalization:</b> Custom UI overrides.</li>
                 <li><b>VIP Infrastructure:</b> Quantum nodes & Call Aura access.</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-plat" onclick="purchasePlan(this, 'Platinum')">ACTIVATE PLATINUM</button>
+            <button class="btn-buy" id="btn-purchase-plat" onclick="purchasePlan(this, 'Platinum', '79.99')">ACTIVATE PLATINUM</button>
         </div>
     </div>
 </div>
@@ -369,7 +331,7 @@
 <main>
     <header>
         <button class="btn-icon" onclick="toggleS(event)">☰</button>
-        <div class="logo">PHRAORTES</div>
+        <div class="logo"><img src="image.png" alt="PHRAORTES"></div>
         
         <div class="account-hub" onclick="toggleAccount(event)">
             <div class="account-avatar">ME</div>
@@ -416,6 +378,10 @@
     </div>
 
     <footer>
+        <div id="input-preview-container">
+            <img id="input-preview-img" src="">
+            <div class="remove-preview" onclick="clearPreview()">✕</div>
+        </div>
         <div class="input-bar" onclick="event.stopPropagation()">
             <input type="file" id="file-upload" style="display:none;" onchange="handleFile(event)">
             <button class="btn-icon" onclick="document.getElementById('file-upload').click()">📎</button>
@@ -436,6 +402,7 @@
     let activeModel = '2.6';
     let activePlan = localStorage.getItem("phraortes_active_plan") || null;
     let attachedFileType = ""; let attachedFileName = ""; let attachedFileDataURL = "";
+    let pendingCryptoPlan = "";
 
     // Markdown config
     marked.setOptions({ 
@@ -446,6 +413,12 @@
 
     const chatBox = document.getElementById("chat-box");
     const ctxMenu = document.getElementById("context-menu");
+
+    const personas = [
+        "Hello. I'm your logical partner. Ready to debug code, analyze data, or solve complex problems. What's the challenge today?",
+        "Hi there. I'm here not just to process text, but to listen and support you. How are you feeling today? Let's talk.",
+        "Welcome! Let's think outside the box. Ready for wild ideas, creative writing, or deep philosophical chats. What shall we imagine?"
+    ];
 
     window.onload = () => {
         if (!chats.length) newChat(); else loadChat(curId);
@@ -458,7 +431,6 @@
             analyzeMood(this.value);
         });
 
-        // Scroll listener for centered floating button
         chatBox.addEventListener("scroll", () => {
             const btn = document.getElementById("scroll-down-btn");
             if (chatBox.scrollHeight - chatBox.scrollTop > chatBox.clientHeight + 80) {
@@ -476,9 +448,12 @@
     };
 
     function handleEnter(e) { 
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault(); 
-            send();
+        if (e.key === 'Enter') {
+            if (e.shiftKey || e.ctrlKey) {
+                e.preventDefault(); 
+                send();
+            }
+            // else: standard Enter behavior creates a newline
         } 
     }
 
@@ -489,14 +464,24 @@
         if (file.type.startsWith("image/")) {
             attachedFileType = "image";
             const reader = new FileReader();
-            reader.onload = (evt) => { attachedFileDataURL = evt.target.result; };
+            reader.onload = (evt) => { 
+                attachedFileDataURL = evt.target.result; 
+                document.getElementById("input-preview-img").src = attachedFileDataURL;
+                document.getElementById("input-preview-container").style.display = "block";
+            };
             reader.readAsDataURL(file);
         } else {
             attachedFileType = "file";
+            // For simple files we don't preview an image right now
         }
     }
 
-    // Lightbox Control Nodes
+    function clearPreview() {
+        document.getElementById("file-upload").value = "";
+        attachedFileName = ""; attachedFileType = ""; attachedFileDataURL = "";
+        document.getElementById("input-preview-container").style.display = "none";
+    }
+
     function openLightbox(src) {
         document.getElementById("lightbox-img").src = src;
         document.getElementById("media-lightbox").classList.add("show");
@@ -511,10 +496,8 @@
         document.getElementById("scroll-down-btn").classList.remove("show");
     }
 
-    // Dynamic Emotion Analytics
     function analyzeMood(t) {
-        let m = "";
-        let f = 45, a = 35, c = 20; 
+        let m = ""; let f = 45, a = 35, c = 20; 
         if(t.match(/عالی|محشر|wow|amazing|happy|خوشحال/i)) { m = "mood-excited"; f=30; a=20; c=80; }
         else if(t.match(/عصبانی|بد|احمق|hate|angry|کلافه/i)) { m = "mood-angry"; f=20; a=10; c=10; }
         else if(t.match(/آرام|relax|calm|ساده/i)) { m = "mood-calm"; f=80; a=20; c=20; }
@@ -550,10 +533,7 @@
         toggleGear(event);
     }
 
-    function callAura() {
-        toggleGear(event);
-        document.getElementById("aura-screen").style.display = "flex";
-    }
+    function callAura() { toggleGear(event); document.getElementById("aura-screen").style.display = "flex"; }
     function closeAura() { document.getElementById("aura-screen").style.display = "none"; }
 
     function openPremium() {
@@ -576,8 +556,7 @@
             const btn = document.getElementById(id);
             if(btn) {
                 if(activePlan === plans[index]) {
-                    btn.innerText = "[ ACTIVATED ]";
-                    btn.classList.add("activated");
+                    btn.innerText = "[ ACTIVATED ]"; btn.classList.add("activated");
                 } else {
                     btn.classList.remove("activated");
                     if(index===0) btn.innerText = "PURCHASE SILVER";
@@ -588,39 +567,51 @@
         });
     }
 
-    function purchasePlan(btn, plan) {
+    // Modern Crypto Modal Flow
+    function purchasePlan(btn, plan, price) {
         if(btn.classList.contains("activated")) return;
-        const originalText = btn.innerText;
-        btn.innerHTML = `<span class="pay-spinner" style="width:20px;height:20px;display:inline-block;margin:0;"></span>`;
+        document.getElementById("premium-modal").classList.remove("show");
         
-        setTimeout(() => {
-            btn.innerHTML = originalText;
-            document.getElementById("premium-modal").classList.remove("show");
-            
-            const pm = document.getElementById("payment-modal");
-            document.getElementById("pay-title").innerText = "Connecting...";
-            document.getElementById("pay-desc").innerText = `Establishing secure gateway to billing node.`;
-            document.getElementById("pay-spinner").style.display = "block";
-            document.getElementById("pay-close").style.display = "none";
-            pm.classList.add("show");
-            
-            setTimeout(() => {
-                document.getElementById("pay-spinner").style.display = "none";
-                document.getElementById("pay-title").innerText = "Success Activation";
-                document.getElementById("pay-desc").innerText = `${plan} sandbox subscription parameters successfully assigned to ecosystem core.`;
-                document.getElementById("pay-close").style.display = "block";
-                
-                activePlan = plan;
-                localStorage.setItem("phraortes_active_plan", plan);
-                updatePlanButtonsUI();
-            }, 2500);
-            
-        }, 1200);
+        pendingCryptoPlan = plan;
+        document.getElementById("crypto-plan-name").innerText = plan;
+        document.getElementById("crypto-plan-price").innerText = "$" + price;
+        updateCryptoNet();
+        
+        document.getElementById("crypto-modal").classList.add("show");
     }
-    
-    function closePayment() {
-        document.getElementById("payment-modal").classList.remove("show");
+
+    function closeCryptoModal() {
+        document.getElementById("crypto-modal").classList.remove("show");
         setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
+    }
+
+    function updateCryptoNet() {
+        const net = document.getElementById("crypto-net").value;
+        const addressEl = document.getElementById("crypto-address");
+        if(net === 'trc20') addressEl.value = "TXYourNobitexTRC20AddressHere9999";
+        else addressEl.value = "0xYourNobitexPolygonAddressHere8888";
+    }
+
+    function submitCrypto() {
+        const txid = document.getElementById("txid-val").value.trim();
+        if(!txid) { alert("Please enter the Transaction ID (TXID / Hash) to verify payment."); return; }
+        
+        document.getElementById("txid-val").value = "";
+        document.getElementById("crypto-modal").classList.remove("show");
+        
+        // Finalize transaction
+        activePlan = pendingCryptoPlan;
+        localStorage.setItem("phraortes_active_plan", activePlan);
+        updatePlanButtonsUI();
+        
+        alert(`Payment Verification Submitted!\n\nTXID: ${txid}\nPlan: ${activePlan}\n\nYour sandbox environment will be updated after network confirmation.`);
+        setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
+    }
+
+    function copyDecodedText(encTxt, btn) {
+        navigator.clipboard.writeText(decodeURIComponent(encTxt));
+        btn.innerText = 'COPIED!';
+        setTimeout(() => btn.innerText = 'COPY', 2000);
     }
 
     let pressTimer;
@@ -656,8 +647,7 @@
         if(x + 150 > window.innerWidth) x = window.innerWidth - 160;
         if(y + 120 > window.innerHeight) y = window.innerHeight - 130;
         
-        ctxMenu.style.left = x + 'px';
-        ctxMenu.style.top = y + 'px';
+        ctxMenu.style.left = x + 'px'; ctxMenu.style.top = y + 'px';
         if(navigator.vibrate) navigator.vibrate(50); 
     }
 
@@ -665,10 +655,8 @@
         const msgNode = document.getElementById(msgId);
         if(!msgNode) return;
         
-        const container = document.createElement("div");
-        container.className = "edit-area-container";
-        const textarea = document.createElement("textarea");
-        textarea.className = "edit-textarea"; textarea.value = currentText;
+        const container = document.createElement("div"); container.className = "edit-area-container";
+        const textarea = document.createElement("textarea"); textarea.className = "edit-textarea"; textarea.value = currentText;
         const actions = document.createElement("div"); actions.className = "edit-actions";
         const saveBtn = document.createElement("button"); saveBtn.className = "edit-btn edit-save"; saveBtn.innerText = "Save";
         const cancelBtn = document.createElement("button"); cancelBtn.className = "edit-btn edit-cancel"; cancelBtn.innerText = "Cancel";
@@ -734,8 +722,7 @@
         if(!el) return;
         if(el.innerText.length > 250 && !el.querySelector('img') && !el.querySelector('audio')) {
             el.classList.add("collapsed");
-            const trigger = document.createElement("div");
-            trigger.className = "read-more-trigger"; trigger.innerHTML = "▼";
+            const trigger = document.createElement("div"); trigger.className = "read-more-trigger"; trigger.innerHTML = "▼";
             trigger.onclick = (e) => {
                 e.stopPropagation();
                 if(el.classList.contains("collapsed")) {
@@ -759,7 +746,6 @@
         if(navigator.vibrate) navigator.vibrate(20);
     }
 
-    // Core Dual API Fetcher
     async function fetchWithFallback(messages, useVision) {
         let openRouterModel = useVision ? "meta-llama/llama-3.2-11b-vision-instruct:free" : "meta-llama/llama-3.3-70b-instruct:free";
         let groqModel = useVision ? "llama-3.2-11b-vision-preview" : "llama-3.3-70b-versatile";
@@ -794,12 +780,10 @@
         let displayHtml = txt;
         let useVision = false;
 
-        // Upgraded Upload Layout - Renders a sleek Apple-style capsule structure
         if(attachedFileName && attachedFileType === "image") {
             displayHtml = `<div class="media-capsule" onclick="openLightbox('${attachedFileDataURL}')"><img src="${attachedFileDataURL}"></div>${txt ? '<br>'+txt : ''}`;
             useVision = true;
-            document.getElementById("file-upload").value = "";
-            attachedFileName = ""; 
+            clearPreview(); 
         }
 
         const chat = chats.find(c => c.id == curId);
@@ -813,25 +797,23 @@
         addUI(getDynamicLoader(txt), "ai", aiId, "");
 
         let isMediaCommand = false;
-        let finalHtmlResponse = "";
-        let finalRawResponse = "";
+        let finalHtmlResponse = ""; let finalRawResponse = "";
 
         if(txt.toLowerCase().startsWith("/imagine ")) {
             isMediaCommand = true;
             const promptStr = txt.substring(9);
             const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptStr)}?width=800&height=800&nologo=true`;
-            // Redesigned Imagine Command to utilize the fluid Lightbox and Media Capsules
             finalHtmlResponse = `<div style="text-align:left;"><div class="media-capsule" style="width:130px; height:130px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ تولید تصویر بر اساس: ${promptStr}</span></div>`;
             finalRawResponse = "Image generated successfully via Pollinations.";
         } 
         else if(txt.toLowerCase().startsWith("/video ")) {
             isMediaCommand = true;
-            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎥</span><br><br><b>شبیه‌ساز ساخت ویدیو</b><br><span style="color:#aaa; font-size:12px;">درخواست شما (${txt.substring(7)}) در صف پردازش مدل ویدیویی قرار گرفت. (آماده برای اتصال به API هایی مثل Runway/Luma)</span></div>`;
+            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎥</span><br><br><b>شبیه‌ساز ساخت ویدیو</b><br><span style="color:#aaa; font-size:12px;">درخواست شما در صف پردازش مدل ویدیویی قرار گرفت.</span></div>`;
             finalRawResponse = "Video engine mock response.";
         }
         else if(txt.toLowerCase().startsWith("/music ")) {
             isMediaCommand = true;
-            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎵</span><br><br><b>شبیه‌ساز ساخت موزیک</b><br><span style="color:#aaa; font-size:12px;">تولید قطعه موسیقی با پرامپت (${txt.substring(7)}). آماده اتصال به API های صوتی.</span><br><br><audio controls style="width:100%; filter: invert(1);"><source src="" type="audio/mpeg"></audio></div>`;
+            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎵</span><br><br><b>شبیه‌ساز ساخت موزیک</b><br><span style="color:#aaa; font-size:12px;">تولید قطعه موسیقی با پرامپت شما.</span><br><br><audio controls style="width:100%; filter: invert(1);"><source src="" type="audio/mpeg"></audio></div>`;
             finalRawResponse = "Music engine mock response.";
         }
 
@@ -867,10 +849,28 @@
         }
     }
 
+    async function streamMarkdown(aiId, rawContent) {
+        const el = document.getElementById(aiId);
+        let currentStr = "";
+        let chunkSize = 4; // Super Fast Streaming (4 characters per frame)
+        for(let i=0; i<rawContent.length; i+=chunkSize) {
+            currentStr += rawContent.substring(i, Math.min(i+chunkSize, rawContent.length));
+            el.innerHTML = marked.parse(currentStr);
+            chatBox.scrollTo({ top: chatBox.scrollHeight });
+            await new Promise(r => setTimeout(r, 10)); // ~10ms delay per chunk
+        }
+        el.innerHTML = marked.parse(rawContent);
+        addCopyLogic();
+        applySmartReadMore(aiId);
+    }
+
     function finishAITurn(aiId, htmlContent, rawContent, chat, userHtml, userTxt) {
         const w = document.getElementById(aiId).parentElement;
+        const copyRaw = encodeURIComponent(rawContent);
+        
         w.innerHTML = `
-            <div class="msg ai" id="${aiId}" onpointerdown="startPress(event, 'ai', null, \`${rawContent.replace(/`/g, "'")}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${htmlContent}</div>
+            <button class="hover-copy-btn" onclick="copyDecodedText('${copyRaw}', this)">COPY</button>
+            <div class="msg ai" id="${aiId}" onpointerdown="startPress(event, 'ai', null, \`${rawContent.replace(/`/g, "'")}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()"></div>
             <div class="listen-ops">
                 <button class="l-btn" onclick="speakText('${aiId}')">▶ Listen</button>
                 <button class="l-btn" onclick="stopSpeak()">■ Stop</button>
@@ -882,9 +882,10 @@
         
         if(chat.msgs.length === 0) chat.name = (userTxt || "Media Analysis").substring(0, 20);
         chat.msgs.push({u: userHtml, uText: userTxt, a: htmlContent, aRaw: rawContent}); 
-        save(); renderH(); addCopyLogic();
-        applySmartReadMore(aiId);
-        scrollToBottom();
+        save(); renderH(); 
+        
+        // Initiate the super fast streaming effect visually
+        streamMarkdown(aiId, rawContent);
     }
 
     function addUI(t, r, id, rawText) {
@@ -893,7 +894,13 @@
         let safeTxt = (rawText || "").replace(/`/g, "'"); 
         
         if(id === 'welcome') {
-            w.innerHTML = `<div style="text-align:center; margin:auto 0;"><h1 style="color:var(--p);font-weight:900;letter-spacing:2px;font-size:35px;">PHRAORTES</h1><p style="color:rgba(255,255,255,0.5)">System Active. Model ${activeModel}</p></div>`;
+            w.innerHTML = `<div style="text-align:center; margin:auto 0;"><h1 style="color:var(--p);font-weight:900;letter-spacing:2px;font-size:35px;"><img src="image.png" style="height:40px; margin-bottom:-5px;"> PHRAORTES</h1><p style="color:rgba(255,255,255,0.5)">System Active. Model ${activeModel}</p></div>`;
+        } else if (id === 'welcome-persona') {
+            const copyRaw = encodeURIComponent(rawText);
+            w.innerHTML = `
+                <button class="hover-copy-btn" onclick="copyDecodedText('${copyRaw}', this)">COPY</button>
+                <div class="msg ai" id="${id}" onpointerdown="startPress(event, 'ai', null, \`${safeTxt}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${t}</div>
+            `;
         } else {
             if(r === 'user') {
                 w.innerHTML = `<div class="msg user" id="${id}" onpointerdown="startPress(event, 'user', '${id}', \`${safeTxt}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${t}</div>`;
@@ -926,14 +933,19 @@
         curId = id; save();
         const chat = chats.find(c => c.id == id);
         chatBox.innerHTML = "";
+        
         addUI("", "ai", "welcome");
+
         if(chat && chat.msgs.length) {
             chat.msgs.forEach((m, i) => { 
                 const uMsgId = "u-"+i;
                 addUI(m.u, "user", uMsgId, m.uText); 
+                
                 const aId = "a-"+i;
                 const w = document.createElement("div"); w.className = "msg-wrap ai-wrap";
+                const copyRaw = encodeURIComponent(m.aRaw || "");
                 w.innerHTML = `
+                    <button class="hover-copy-btn" onclick="copyDecodedText('${copyRaw}', this)">COPY</button>
                     <div class="msg ai" id="${aId}" onpointerdown="startPress(event, 'ai', null, \`${(m.aRaw||"").replace(/`/g, "'")}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${m.a}</div>
                     <div class="listen-ops">
                         <button class="l-btn" onclick="speakText('${aId}')">▶ Listen</button>
@@ -945,7 +957,11 @@
                 chatBox.appendChild(w);
                 applySmartReadMore(aId);
             });
+        } else if (chat) {
+            if(!chat.persona) { chat.persona = personas[Math.floor(Math.random() * personas.length)]; save(); }
+            addUI(chat.persona, "ai", "welcome-persona", chat.persona);
         }
+        
         renderH(); addCopyLogic(); scrollToBottom();
     }
 
