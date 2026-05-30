@@ -41,7 +41,6 @@
         body.light-theme .btn-buy { background: rgba(0,0,0,0.05); color: #1d1d1f; }
         body.light-theme .h-item { background: rgba(0,0,0,0.02); }
         body.light-theme .h-item.active-chat { background: rgba(0,0,0,0.05); }
-        body.light-theme .hover-copy-btn { background: rgba(0,0,0,0.08); color: #1d1d1f; border: 1px solid rgba(0,0,0,0.12); }
         body.light-theme .ctx-item { color: #1d1d1f; }
         body.light-theme .ctx-item:hover { background: rgba(0,0,0,0.05); }
         body.light-theme .crypto-input { background: rgba(255,255,255,0.8); color: #1d1d1f; border: 1px solid rgba(0,0,0,0.15); }
@@ -54,26 +53,42 @@
         body.mood-calm { --grad1: #112a3a; --grad2: #0b1822; --p: #5ac8fa; } 
         body.mood-angry { --grad1: #3a1122; --grad2: #220b15; --p: #ff2d55; } 
 
+        /* Workspace Mode (Darker & Serious for 2.6) */
+        body.workspace-mode { --bg: #050505; --grad1: #0a0f0a; --grad2: #000000; --p: #00ff88; }
+        body.workspace-mode .bg-glow { opacity: 0.4; } /* Less distracting background */
+
         * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: background 0.8s var(--apple-ease); overflow: hidden; user-select: none; }
         
         /* Mesh Gradient Glow */
         .bg-glow { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 20% 30%, var(--grad1) 0%, transparent 70%), radial-gradient(circle at 80% 80%, var(--grad2) 0%, transparent 70%); filter: blur(60px); transition: 1s var(--apple-ease); opacity: 0.9; }
 
-        /* Sidebar */
+        /* Toast Notification */
+        #toast-container { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { background: rgba(20,20,20,0.85); backdrop-filter: blur(20px); border: 1px solid var(--p); color: #fff; padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0; transform: translateY(-20px); transition: 0.4s var(--apple-ease); display: flex; align-items: center; gap: 10px;}
+        body.light-theme .toast { background: rgba(255,255,255,0.9); color: #000; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        /* Sidebar & Filters */
         #sidebar { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border-right: 1px solid var(--brd); z-index: 4000; transition: transform 0.5s var(--apple-ease); box-shadow: 20px 0 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
         #sidebar.active { transform: translateX(300px); }
         
         #sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); z-index: 3999; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--apple-ease); }
         #sidebar-overlay.show { opacity: 1; pointer-events: all; }
 
+        .history-filters { display: flex; gap: 6px; padding: 0 20px 10px; overflow-x: auto; scrollbar-width: none; }
+        .history-filters::-webkit-scrollbar { display: none; }
+        .hf-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--brd); color: #aaa; padding: 6px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+        body.light-theme .hf-btn { background: rgba(0,0,0,0.05); color: #555; }
+        .hf-btn.active, .hf-btn:hover { background: var(--p); color: #000; border-color: var(--p); }
+
         main { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; transition: 0.5s var(--apple-ease); overflow-x: hidden;}
 
-        .btn-new { width: 90%; margin: 20px auto; padding: 16px; background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid var(--brd); color: #fff; border-radius: 20px; font-weight: 700; cursor: pointer; display: block; letter-spacing: -0.5px; transition: 0.3s; }
+        .btn-new { width: 90%; margin: 10px auto 15px; padding: 16px; background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid var(--brd); color: #fff; border-radius: 20px; font-weight: 700; cursor: pointer; display: block; letter-spacing: -0.5px; transition: 0.3s; }
         body.light-theme .btn-new { background: rgba(0,0,0,0.05); color: #1d1d1f; }
         .btn-new:hover { background: rgba(255,255,255,0.1); transform: scale(1.02); }
 
-        #h-list { flex: 1; overflow-y: auto; padding: 15px; }
+        #h-list { flex: 1; overflow-y: auto; padding: 0 15px 15px; }
         .h-item { padding: 14px; border-radius: 16px; margin-bottom: 10px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: space-between; font-size: 13px; border: 1px solid transparent; transition: 0.3s var(--apple-ease); cursor: pointer; position: relative; }
         .h-item.active-chat { border-color: var(--p); background: rgba(255,255,255,0.08); box-shadow: 0 5px 15px var(--glow); }
 
@@ -126,23 +141,17 @@
         .user-wrap { align-self: flex-end; }
         .ai-wrap { align-self: flex-start; width: 100%; position: relative; }
         
-        /* Mobile Responsive Fixes for Messages */
         .msg { padding: 18px 26px; border-radius: 28px; font-size: 16px; line-height: 1.7; position: relative; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word; cursor: pointer; border: 1px solid transparent; transition: max-height 0.4s ease, padding 0.3s ease; max-width: 100%; overflow-x: auto;}
         .msg img { max-width: 100%; height: auto; border-radius: 12px; }
         .msg table { display: block; overflow-x: auto; white-space: nowrap; width: 100%; border-collapse: collapse; }
         
         .user { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-bottom-right-radius: 6px; font-weight: 500; box-shadow: 0 8px 32px rgba(0,0,0,0.2); user-select: none; -webkit-user-select: none; }
-        .ai { background: transparent; color: #fff; border: none; padding: 10px 0; font-weight: 400; cursor: default; user-select: none; -webkit-user-select: none; }
+        .ai { background: transparent; color: #fff; border: none; padding: 10px 0; font-weight: 400; cursor: default; user-select: text; -webkit-user-select: text; } /* Made AI text selectable now */
 
         .msg.collapsed { max-height: 160px; overflow: hidden; position: relative; padding-bottom: 40px; mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%); }
         .read-more-trigger { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; backdrop-filter: blur(10px); border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; transition: 0.3s var(--apple-ease); z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
         body.light-theme .read-more-trigger { background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1); color: #1d1d1f; }
         .read-more-trigger:hover { background: rgba(255,255,255,0.2); transform: translateX(-50%) scale(1.1); }
-
-        /* Hover Copy Button */
-        .hover-copy-btn { position: absolute; top: -10px; right: 10px; background: rgba(255,255,255,0.15); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.25); border-radius: 10px; color: #fff; padding: 6px 12px; font-size: 11px; font-weight: 800; cursor: pointer; opacity: 0; transform: translateY(5px); transition: 0.3s var(--apple-ease); z-index: 50; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .msg-wrap.ai-wrap:hover .hover-copy-btn { opacity: 1; transform: translateY(0); }
-        .hover-copy-btn:hover { background: var(--p); color: #000; border-color: var(--p); }
 
         .edit-area-container { display: flex; flex-direction: column; gap: 10px; width: 100%; min-width: 280px; }
         .edit-textarea { background: rgba(0,0,0,0.25); border: 1px solid var(--p); color: inherit; font-size: 16px; padding: 12px; border-radius: 16px; resize: vertical; line-height: 1.5; font-family: inherit; }
@@ -158,13 +167,18 @@
         tr:nth-child(even) { background: rgba(255,255,255,0.02); }
         tr:hover { background: rgba(255,255,255,0.05); }
 
-        pre { background: rgba(10,10,10,0.8) !important; backdrop-filter: blur(20px); border: 1px solid var(--brd); border-radius: 20px; padding: 25px 20px 20px; margin: 20px 0; overflow-x: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; }
+        pre { background: rgba(10,10,10,0.8) !important; backdrop-filter: blur(20px); border: 1px solid var(--brd); border-radius: 20px; padding: 40px 20px 20px; margin: 20px 0; overflow-x: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; }
         
         .listen-ops { display: flex; gap: 12px; margin-top: 8px; padding-left: 5px; opacity: 0.5; transition: 0.3s; align-items: center; }
         .listen-ops:hover { opacity: 1; }
-        .l-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
+        .l-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; transition: 0.2s; font-weight: 600; }
         body.light-theme .l-btn { color: #555; }
         .l-btn:hover { color: var(--p); }
+        
+        .l-btn.copy-btn-new { position: relative; }
+        .l-btn.copy-btn-new.success { color: #00ff88; }
+        .l-btn.copy-btn-new.success::after { content: '✔'; margin-left: 4px; animation: popIn 0.3s ease; }
+
         .react-btn { font-size: 14px; cursor: pointer; opacity: 0.6; transition: 0.2s; display: inline-flex; align-items: center; }
         .react-btn:hover { opacity: 1; transform: scale(1.15); }
 
@@ -227,20 +241,22 @@
         .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 95%; max-width: 1000px; max-height: 85vh; background: rgba(15,15,15,0.85); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; z-index: 7000; display: none; flex-direction: column; opacity: 0; box-shadow: 0 40px 80px rgba(0,0,0,0.8); transition: 0.4s var(--apple-ease); }
         .modal-box.show { display: flex; transform: translate(-50%, -50%) scale(1); opacity: 1; }
         
-        .plans-container { padding: 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .plans-container { padding: 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
         .plan-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 25px; display: flex; flex-direction: column; position: relative; transition: 0.4s; }
         body.light-theme .plan-card { background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); }
         .plan-card:hover { background: rgba(255,255,255,0.06); transform: translateY(-5px); border-color: rgba(255,255,255,0.3); }
         body.light-theme .plan-card:hover { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.25); }
         
+        .plan-card.free { border-color: rgba(255,255,255,0.1); }
         .plan-card.gold { border-color: var(--premium-color); background: rgba(223, 178, 87, 0.05); }
         .plan-card.gold:hover { box-shadow: 0 20px 50px var(--premium-glow); transform: scale(1.02); }
         
         .plan-card.plat { border-color: var(--plat-color); background: rgba(229, 228, 226, 0.05); }
         .plan-card.plat:hover { box-shadow: 0 20px 50px var(--plat-glow); transform: scale(1.02); }
 
-        .plan-title { font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
+        .plan-title { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
         .plan-price { font-size: 24px; color: var(--p); font-weight: 800; margin-bottom: 20px; }
+        .plan-card.free .plan-price { color: #fff; }
         .plan-card.gold .plan-price { color: var(--premium-color); }
         .plan-card.plat .plan-price { color: var(--plat-color); }
         
@@ -256,6 +272,19 @@
         .plan-card.plat .btn-buy { background: linear-gradient(135deg, #ffffff, #a0a0a0); color: #000; }
         .btn-buy:hover { opacity: 0.9; transform: scale(1.02); }
         .btn-buy.activated { background: #00ff88 !important; color: #000 !important; border: 1px solid #00ff88; box-shadow: 0 0 15px rgba(0,255,136,0.4); cursor: default; }
+
+        /* Add-ons Button & Bottom Sheet */
+        .btn-addons { width: 100%; padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: -10px; }
+        .btn-addons:hover { background: rgba(255,255,255,0.08); border-color: var(--p); color: var(--p); }
+
+        .bottom-sheet { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(20,20,20,0.95); backdrop-filter: blur(40px); border-top: 1px solid rgba(255,255,255,0.15); border-radius: 30px 30px 0 0; transform: translateY(100%); transition: 0.4s var(--apple-ease); z-index: 7100; padding: 25px 30px 40px; box-shadow: 0 -20px 50px rgba(0,0,0,0.6); display: flex; flex-direction: column; }
+        .bottom-sheet.show { transform: translateY(0); }
+        .bs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .addon-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .addon-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 15px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; gap: 5px; }
+        .addon-item:hover { background: rgba(255,255,255,0.1); border-color: var(--p); }
+        .addon-title { font-size: 14px; font-weight: 800; color: #fff; }
+        .addon-price { font-size: 13px; color: var(--p); font-weight: 700; }
 
         /* Crypto Payment Modal specifics */
         .crypto-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 14px; border-radius: 12px; font-size: 14px; width: 100%; transition: 0.3s; }
@@ -295,6 +324,8 @@
 
 <div class="bg-glow"></div>
 <div id="sidebar-overlay" onclick="toggleS(event)"></div>
+
+<div id="toast-container"></div>
 
 <div id="context-menu" onclick="event.stopPropagation()"></div>
 
@@ -352,63 +383,114 @@
     </div>
 </div>
 
-<div id="premium-overlay" onclick="closeModal('premium-modal'); closeCryptoModal()"></div>
-<div id="premium-modal" class="modal-box" onclick="event.stopPropagation()">
+<div id="premium-overlay" onclick="closeModal('premium-modal'); closeCryptoModal(); closeAddonsSheet()"></div>
+<div id="premium-modal" class="modal-box" onclick="event.stopPropagation()" style="position: relative; overflow: hidden;">
     <div style="padding: 25px 35px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
         <span style="font-weight: 900; letter-spacing: 2px; font-size: 20px;">PHRAORTES <span style="color:var(--premium-color)">VIP</span></span>
         <button onclick="closeModal('premium-modal')" style="background:none; border:none; color:inherit; font-size:24px; cursor:pointer;">✕</button>
     </div>
+    
     <div class="plans-container">
+        <div class="plan-card free" id="plan-free">
+            <div class="plan-title">Free</div>
+            <div class="plan-price">$0.00 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <ul class="plan-features">
+                <li><b>Text Requests:</b> 15 daily (Standard Model)</li>
+                <li><b>Photo Studio:</b> 2 HD photos daily</li>
+                <li><b>Video Studio:</b> 3 standard videos monthly (Watermarked)</li>
+                <li><b>Music & Calls:</b> No access</li>
+            </ul>
+            <button class="btn-buy activated" id="btn-purchase-free">CURRENT PLAN</button>
+        </div>
         <div class="plan-card" id="plan-silver">
             <div class="plan-title">Bronze Pro</div>
-            <div class="plan-price">$2.6 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <div class="plan-price">$14.99 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
-                <li><b>Daily Message Cap:</b> 100 requests per day across models.</li>
-                <li><b>Audio Production:</b> Up to 3 track generations per month (Standard).</li>
-                <li><b>Video Studio:</b> Up to 2 cinematic video generations.</li>
-                <li><b>Cloud Allocation:</b> 2 GB Secure Sandbox storage.</li>
-                <li><b>AI Live Calls:</b> Up to 15 minutes of streaming interactions.</li>
-                <li><b>Engineering Logic:</b> Standard multi-file interpretation.</li>
+                <li><b>Text Requests:</b> Unlimited Standard + 100 Advanced (2.6)</li>
+                <li><b>Photo Studio:</b> 30 HD photos</li>
+                <li><b>Video Studio:</b> 5 Cinematic Videos (4s)</li>
+                <li><b>Audio Production:</b> 5 HQ tracks</li>
+                <li><b>AI Live Calls:</b> 60 minutes allocation</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-silver" onclick="purchasePlan(this, 'Bronze Pro', '2.6')">PURCHASE BRONZE</button>
+            <button class="btn-buy" id="btn-purchase-silver" onclick="purchasePlan(this, 'Bronze Pro', '14.99')">PURCHASE BRONZE</button>
         </div>
         <div class="plan-card gold" id="plan-gold">
             <div class="plan-title" style="color:var(--premium-color)">Silver Cosmic</div>
-            <div class="plan-price">$2.7 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <div class="plan-price">$39.99 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
-                <li><b>Daily Message Cap:</b> 350 high-priority requests per day.</li>
-                <li><b>Audio Production:</b> Up to 7 HQ tracks with customized lyrics.</li>
-                <li><b>Video Studio:</b> Up to 10 cinematic creations (720p).</li>
-                <li><b>Cloud Allocation:</b> 15 GB Enterprise Secure Sandbox storage.</li>
-                <li><b>AI Live Calls:</b> 2 hours/mo Ultra-Low Latency Video Nodes.</li>
-                <li><b>Engineering Logic:</b> Enhanced debugging and architecture synthesis.</li>
-                <li><b>System Updates:</b> Early Access to updates 3 days prior.</li>
+                <li><b>Text Requests:</b> Unlimited + 350 Advanced (2.6/2.7)</li>
+                <li><b>Photo Studio:</b> 120 Ultra HD photos</li>
+                <li><b>Video Studio:</b> 15 Advanced Videos (8s)</li>
+                <li><b>Audio Production:</b> 20 HQ tracks</li>
+                <li><b>AI Live Calls:</b> 300 minutes Pro Calls</li>
+                <li><b>Early Access:</b> Get updates 1-2 weeks early</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-gold" onclick="purchasePlan(this, 'Silver Cosmic', '2.7')">UPGRADE TO SILVER</button>
+            <button class="btn-buy" id="btn-purchase-gold" onclick="purchasePlan(this, 'Silver Cosmic', '39.99')">UPGRADE TO SILVER</button>
         </div>
         <div class="plan-card plat" id="plan-plat">
             <div class="plan-title" style="color:var(--plat-color)">Gold Singularity</div>
-            <div class="plan-price">$2.8 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <div class="plan-price">$89.99 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
-                <li><b>Daily Message Cap:</b> 100% Uncapped (Infinite requests).</li>
-                <li><b>Audio Production:</b> 15 Studio-grade full arrangements (Commercial Rights).</li>
-                <li><b>Video Studio:</b> Extensive high-resolution 4K video rendering.</li>
-                <li><b>Cloud Allocation:</b> 100 GB Massive isolated processing storage.</li>
-                <li><b>AI Live Calls:</b> Fully Uncapped Streaming Calls.</li>
-                <li><b>Engineering Logic:</b> Multi-file systems & complex architecture generation.</li>
-                <li><b>System Updates:</b> First priority instant feature integration.</li>
+                <li><b>Text Requests:</b> Truly Unlimited (Top Server Priority)</li>
+                <li><b>Photo Studio:</b> Unlimited Commercial Quality</li>
+                <li><b>Video Studio:</b> Unlimited Renderings</li>
+                <li><b>Audio Production:</b> Unlimited Studio-grade tracks</li>
+                <li><b>AI Live Calls:</b> Unlimited High-Fidelity Calls</li>
+                <li><b>Day 1 Access & VIP:</b> Instant tools + VIP Support</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-plat" onclick="purchasePlan(this, 'Gold Singularity', '2.8')">ACTIVATE GOLD</button>
+            <button class="btn-buy" id="btn-purchase-plat" onclick="purchasePlan(this, 'Gold Singularity', '89.99')">ACTIVATE GOLD</button>
+        </div>
+    </div>
+    
+    <div style="padding: 0 30px 30px;">
+        <button class="btn-addons" onclick="openAddonsSheet()">⚡ شارژ سریع و بسته‌های کمکی (Add-ons)</button>
+    </div>
+
+    <div id="addons-sheet" class="bottom-sheet" onclick="event.stopPropagation()">
+        <div class="bs-header">
+            <span style="font-weight: 800; font-size: 16px;">بسته‌های افزودنی (Add-ons)</span>
+            <button onclick="closeAddonsSheet()" style="background:rgba(255,255,255,0.1); border:none; color:inherit; font-size:18px; width:30px; height:30px; border-radius:50%; cursor:pointer;">✕</button>
+        </div>
+        <p style="font-size: 12px; color: #888; margin-top: -10px; margin-bottom: 20px;">فقط به حجم اضافه نیاز دارید؟ بسته‌های زیر فوراً به حساب شما اضافه می‌شوند.</p>
+        <div class="addon-grid">
+            <div class="addon-item" onclick="purchaseAddon('Photo Pack', '2.99')">
+                <span style="font-size: 20px;">📸</span>
+                <span class="addon-title">بسته عکس HD</span>
+                <span class="addon-price">شروع از $2.99</span>
+            </div>
+            <div class="addon-item" onclick="purchaseAddon('Video Pack', '3.99')">
+                <span style="font-size: 20px;">🎬</span>
+                <span class="addon-title">بسته ویدیویی</span>
+                <span class="addon-price">شروع از $3.99</span>
+            </div>
+            <div class="addon-item" onclick="purchaseAddon('Music Pack', '1.99')">
+                <span style="font-size: 20px;">🎵</span>
+                <span class="addon-title">بسته موزیک</span>
+                <span class="addon-price">شروع از $1.99</span>
+            </div>
+            <div class="addon-item" onclick="purchaseAddon('Chat/Call Pack', '2.49')">
+                <span style="font-size: 20px;">💬</span>
+                <span class="addon-title">بسته چت و تماس</span>
+                <span class="addon-price">شروع از $2.49</span>
+            </div>
         </div>
     </div>
 </div>
 
 <div id="sidebar" onclick="event.stopPropagation()">
-    <div style="padding: 30px 25px; display: flex; justify-content: space-between; align-items: center;">
+    <div style="padding: 30px 25px 15px; display: flex; justify-content: space-between; align-items: center;">
         <span style="font-weight: 900; color: var(--p); letter-spacing: 2px;">SESSIONS</span>
         <button class="btn-icon" style="font-size: 20px; color: inherit;" onclick="toggleS(event)">✕</button>
     </div>
     <button onclick="newChat()" class="btn-new">NEW CONVERSATION</button>
+    
+    <div class="history-filters">
+        <button class="hf-btn active" onclick="filterHistory('all', this)">همه</button>
+        <button class="hf-btn" onclick="filterHistory('code', this)">کدها</button>
+        <button class="hf-btn" onclick="filterHistory('image', this)">تصاویر</button>
+        <button class="hf-btn" onclick="filterHistory('music', this)">موزیک</button>
+    </div>
+
     <div id="h-list"></div>
 </div>
 
@@ -471,7 +553,7 @@
     <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
         <span style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:10px; font-weight:800;">Neural Models</span>
         <div class="model-item active" id="m-26" onclick="selectModel('2.6')">
-            <span class="m-title">PHRAORTES 2.6</span>
+            <span class="m-title">PHRAORTES 2.6 (Workspace)</span>
             <span class="m-desc">Text & Conversational Optimization</span>
         </div>
         <div class="model-item" id="m-27" onclick="selectModel('2.7')">
@@ -512,6 +594,7 @@
     let activePlan = localStorage.getItem("phraortes_active_plan") || null;
     let attachedFileType = ""; let attachedFileName = ""; let attachedFileDataURL = "";
     let pendingCryptoPlan = "";
+    let currentHistoryFilter = 'all';
 
     // Markdown config
     marked.setOptions({ 
@@ -564,6 +647,23 @@
             }
         });
     };
+
+    function showToast(message) {
+        const tContainer = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.innerHTML = `<span>⚡</span> ${message}`;
+        tContainer.appendChild(toast);
+        
+        // Trigger reflow
+        void toast.offsetWidth;
+        toast.classList.add("show");
+
+        setTimeout(() => {
+            toast.classList.remove("show");
+            setTimeout(() => toast.remove(), 400);
+        }, 3000);
+    }
 
     function handleEnter(e) { 
         if (e.key === 'Enter') {
@@ -622,7 +722,10 @@
         else if(t.match(/\?|چرا|چگونه|کد|تحلیل|code/i)) { m = "mood-neu"; f=70; a=90; c=30; }
         
         document.body.className = m;
+        // Re-apply workspace mode if active
+        if (activeModel === '2.6') document.body.classList.add("workspace-mode");
         if(document.getElementById("theme-toggle").checked) document.body.classList.add("light-theme");
+        
         document.getElementById("p-foc").innerText = f+"%"; document.getElementById("b-foc").style.width = f+"%";
         document.getElementById("p-ana").innerText = a+"%"; document.getElementById("b-ana").style.width = a+"%";
         document.getElementById("p-cre").innerText = c+"%"; document.getElementById("b-cre").style.width = c+"%";
@@ -666,12 +769,24 @@
         localStorage.setItem("phraortes_active_model", m);
         updateModelUIState(m);
         toggleGear(event);
+        
+        if(m === '2.6') {
+            document.body.classList.add("workspace-mode");
+            showToast("Switched to Phraortes 2.6 (Workspace Mode Active)");
+        } else {
+            document.body.classList.remove("workspace-mode");
+            showToast(`Switched to Phraortes ${m}`);
+        }
     }
 
     function updateModelUIState(m) {
         document.querySelectorAll('.model-item').forEach(el => el.classList.remove('active'));
         const targetElement = document.getElementById('m-'+m.replace('.',''));
         if(targetElement) targetElement.classList.add('active');
+        
+        // Ensure workspace styling persists on load
+        if(m === '2.6') document.body.classList.add("workspace-mode");
+        else document.body.classList.remove("workspace-mode");
     }
 
     function callAura() { toggleGear(event); document.getElementById("aura-screen").style.display = "flex"; }
@@ -683,26 +798,36 @@
         document.getElementById("premium-modal").classList.add("show");
         updatePlanButtonsUI();
     }
+    
+    function openAddonsSheet() {
+        document.getElementById("addons-sheet").classList.add("show");
+    }
+    
+    function closeAddonsSheet() {
+        document.getElementById("addons-sheet").classList.remove("show");
+    }
 
     function closeModal(id) {
         document.getElementById(id).classList.remove("show");
+        closeAddonsSheet();
         setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
     }
 
     function updatePlanButtonsUI() {
-        const plans = ['Bronze Pro', 'Silver Cosmic', 'Gold Singularity'];
-        const ids = ['btn-purchase-silver', 'btn-purchase-gold', 'btn-purchase-plat'];
+        const plans = ['Free', 'Bronze Pro', 'Silver Cosmic', 'Gold Singularity'];
+        const ids = ['btn-purchase-free', 'btn-purchase-silver', 'btn-purchase-gold', 'btn-purchase-plat'];
         
         ids.forEach((id, index) => {
             const btn = document.getElementById(id);
             if(btn) {
-                if(activePlan === plans[index]) {
-                    btn.innerText = "[ ACTIVATED ]"; btn.classList.add("activated");
+                if(activePlan === plans[index] || (index===0 && !activePlan)) {
+                    btn.innerText = "CURRENT PLAN"; btn.classList.add("activated");
                 } else {
                     btn.classList.remove("activated");
-                    if(index===0) btn.innerText = "PURCHASE BRONZE";
-                    if(index===1) btn.innerText = "UPGRADE TO SILVER";
-                    if(index===2) btn.innerText = "ACTIVATE GOLD";
+                    if(index===0) btn.innerText = "DOWNGRADE TO FREE";
+                    if(index===1) btn.innerText = "PURCHASE BRONZE";
+                    if(index===2) btn.innerText = "UPGRADE TO SILVER";
+                    if(index===3) btn.innerText = "ACTIVATE GOLD";
                 }
             }
         });
@@ -714,6 +839,18 @@
         
         pendingCryptoPlan = plan;
         document.getElementById("crypto-plan-name").innerText = plan;
+        document.getElementById("crypto-plan-price").innerText = "$" + price;
+        updateCryptoNet();
+        
+        document.getElementById("crypto-modal").classList.add("show");
+    }
+
+    function purchaseAddon(packName, price) {
+        closeAddonsSheet();
+        document.getElementById("premium-modal").classList.remove("show");
+        
+        pendingCryptoPlan = packName + " (Add-on)";
+        document.getElementById("crypto-plan-name").innerText = pendingCryptoPlan;
         document.getElementById("crypto-plan-price").innerText = "$" + price;
         updateCryptoNet();
         
@@ -744,22 +881,34 @@
         document.getElementById("txid-val").value = "";
         document.getElementById("crypto-modal").classList.remove("show");
         
-        activePlan = pendingCryptoPlan;
-        localStorage.setItem("phraortes_active_plan", activePlan);
-        updatePlanButtonsUI();
+        // If it's an addon, we don't change the main plan. Just show success.
+        if(!pendingCryptoPlan.includes("Add-on")) {
+            activePlan = pendingCryptoPlan;
+            localStorage.setItem("phraortes_active_plan", activePlan);
+            updatePlanButtonsUI();
+        }
         
-        alert(`Payment Verification Submitted!\n\nTXID: ${txid}\nPlan: ${activePlan}\n\nYour sandbox environment will be updated after network confirmation.`);
+        alert(`Payment Verification Submitted!\n\nTXID: ${txid}\nItem: ${pendingCryptoPlan}\n\nYour sandbox environment will be updated after network confirmation.`);
         setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
     }
 
-    function copyDecodedText(encTxt, btn) {
+    // Modern Copy for AI Messages
+    function copyResponseModern(btn, encTxt) {
         navigator.clipboard.writeText(decodeURIComponent(encTxt));
-        btn.innerText = 'COPIED!';
-        setTimeout(() => btn.innerText = 'COPY', 2000);
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = 'Copied';
+        btn.classList.add('success');
+        setTimeout(() => { 
+            btn.innerHTML = originalHTML; 
+            btn.classList.remove('success'); 
+        }, 2000);
     }
 
     let pressTimer;
     function startPress(e, type, id, text) {
+        // Removed long press for AI, keeping it for User and Session items
+        if(type === 'ai') return;
+        
         if(e.button !== 0 && e.type !== 'touchstart') return; 
         pressTimer = setTimeout(() => { showContext(e, type, id, text); }, 400);
     }
@@ -774,8 +923,6 @@
         if(type === 'user') {
             html = `<div class="ctx-item" onclick="navigator.clipboard.writeText(\`${cleanText}\`); closeMenus()">Copy Text</div>
                     <div class="ctx-item" onclick="initInPlaceEdit('${id}', \`${cleanText}\`); closeMenus()">Edit</div>`;
-        } else if(type === 'ai') {
-            html = `<div class="ctx-item" onclick="navigator.clipboard.writeText(\`${cleanText}\`); closeMenus()">Copy Response</div>`;
         } else if(type === 'session') {
             const chat = chats.find(c => c.id == id);
             const isPinned = chat && chat.pinned;
@@ -849,6 +996,16 @@
         chats.unshift({ id, name: "New Discovery", msgs: [], pinned: false });
         curId = id; save(); loadChat(id);
         if(document.getElementById("sidebar").classList.contains("active")) toggleS();
+    }
+    
+    // Smart History Filter Logic
+    function filterHistory(type, btnElement) {
+        currentHistoryFilter = type;
+        
+        document.querySelectorAll('.hf-btn').forEach(btn => btn.classList.remove('active'));
+        if(btnElement) btnElement.classList.add('active');
+        
+        renderH();
     }
 
     function getDynamicLoader(txt) {
@@ -1023,10 +1180,11 @@
         const w = document.getElementById(aiId).parentElement;
         const copyRaw = encodeURIComponent(rawContent);
         
+        // Removed long press attributes (onpointerdown, etc.) and top hover copy button for AI
         w.innerHTML = `
-            <button class="hover-copy-btn" onclick="copyDecodedText('${copyRaw}', this)">COPY</button>
-            <div class="msg ai" id="${aiId}" onpointerdown="startPress(event, 'ai', null, \`${rawContent.replace(/`/g, "'")}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()"></div>
+            <div class="msg ai" id="${aiId}"></div>
             <div class="listen-ops">
+                <button class="l-btn copy-btn-new" onclick="copyResponseModern(this, '${copyRaw}')">📋 Copy</button>
                 <button class="l-btn" onclick="speakText('${aiId}')">▶ Listen</button>
                 <button class="l-btn" onclick="stopSpeak()">■ Stop</button>
                 <span style="color:rgba(255,255,255,0.15)">|</span>
@@ -1051,9 +1209,12 @@
             w.innerHTML = `<div style="text-align:center; margin:auto 0;"><h1 style="color:var(--p);font-weight:900;letter-spacing:2px;font-size:35px;">PHRAORTES</h1><p style="color:rgba(255,255,255,0.5)">System Active. Interconnected Sandbox Nodes online.</p></div>`;
         } else if (id === 'welcome-persona') {
             const copyRaw = encodeURIComponent(rawText);
+            // Replaced long press with modern copy structure
             w.innerHTML = `
-                <button class="hover-copy-btn" onclick="copyDecodedText('${copyRaw}', this)">COPY</button>
-                <div class="msg ai" id="${id}" onpointerdown="startPress(event, 'ai', null, \`${safeTxt}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${t}</div>
+                <div class="msg ai" id="${id}">${t}</div>
+                <div class="listen-ops">
+                    <button class="l-btn copy-btn-new" onclick="copyResponseModern(this, '${copyRaw}')">📋 Copy</button>
+                </div>
             `;
         } else {
             if(r === 'user') {
@@ -1069,15 +1230,17 @@
     function addCopyLogic() {
         document.querySelectorAll('pre').forEach(pre => {
             if(pre.querySelector('.copy-btn')) return;
-            const b = document.createElement('button'); b.innerText = 'COPY';
+            const b = document.createElement('button'); b.innerText = 'Copy Code'; // Updated title
             b.className = 'copy-btn';
-            b.style = "position:absolute; top:12px; right:12px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:5px 10px; border-radius:8px; font-size:10px; font-weight:800; cursor:pointer; color:#fff; transition:0.3s;";
+            b.style = "position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:6px 12px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer; color:#fff; transition:0.3s; display:flex; align-items:center; gap:5px;";
+            b.innerHTML = `<span>📋</span> Copy Code`;
             b.onmouseover = () => b.style.background = 'var(--p)'; 
             b.onmouseout = () => b.style.background = 'rgba(255,255,255,0.1)';
             b.onclick = () => { 
-                let codeText = pre.innerText.replace('COPY', '').trim();
+                let codeText = pre.innerText.replace('📋 Copy Code', '').trim();
                 navigator.clipboard.writeText(codeText); 
-                b.innerText = 'DONE'; setTimeout(()=>b.innerText='COPY', 2000); 
+                b.innerHTML = `<span>✅</span> Copied!`; 
+                setTimeout(() => b.innerHTML = `<span>📋</span> Copy Code`, 2000); 
             };
             pre.appendChild(b);
         });
@@ -1098,10 +1261,11 @@
                 const aId = "a-"+i;
                 const w = document.createElement("div"); w.className = "msg-wrap ai-wrap";
                 const copyRaw = encodeURIComponent(m.aRaw || "");
+                // Removed long press, added modern copy
                 w.innerHTML = `
-                    <button class="hover-copy-btn" onclick="copyDecodedText('${copyRaw}', this)">COPY</button>
-                    <div class="msg ai" id="${aId}" onpointerdown="startPress(event, 'ai', null, \`${(m.aRaw||"").replace(/`/g, "'")}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${m.a}</div>
+                    <div class="msg ai" id="${aId}">${m.a}</div>
                     <div class="listen-ops">
+                        <button class="l-btn copy-btn-new" onclick="copyResponseModern(this, '${copyRaw}')">📋 Copy</button>
                         <button class="l-btn" onclick="speakText('${aId}')">▶ Listen</button>
                         <button class="l-btn" onclick="stopSpeak()">■ Stop</button>
                         <span style="color:rgba(255,255,255,0.15)">|</span>
@@ -1122,7 +1286,19 @@
     function save() { localStorage.setItem("phraortes_chats", JSON.stringify(chats)); localStorage.setItem("phraortes_id", curId); }
     
     function renderH() {
-        const sortedChats = [...chats].sort((x, y) => { return (y.pinned ? 1 : 0) - (x.pinned ? 1 : 0); });
+        let sortedChats = [...chats].sort((x, y) => { return (y.pinned ? 1 : 0) - (x.pinned ? 1 : 0); });
+        
+        // Simple mock filtering logic based on string presence
+        if(currentHistoryFilter !== 'all') {
+            sortedChats = sortedChats.filter(c => {
+                let allText = JSON.stringify(c).toLowerCase();
+                if(currentHistoryFilter === 'code') return allText.includes('```') || allText.includes('code');
+                if(currentHistoryFilter === 'image') return allText.includes('img') || allText.includes('/imagine');
+                if(currentHistoryFilter === 'music') return allText.includes('audio') || allText.includes('/music');
+                return true;
+            });
+        }
+
         document.getElementById("h-list").innerHTML = sortedChats.map(c => `
             <div class="h-item ${c.id == curId ? 'active-chat' : ''}" onclick="loadChat(${c.id})" onpointerdown="startPress(event, 'session', ${c.id}, null)" onpointerup="cancelPress()" onpointerleave="cancelPress()">
                 <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:200px;">
