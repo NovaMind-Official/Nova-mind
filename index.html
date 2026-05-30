@@ -17,6 +17,34 @@
             --premium-color: #dfb257; --premium-glow: rgba(223, 178, 87, 0.25);
             --plat-color: #e5e4e2; --plat-glow: rgba(229, 228, 226, 0.25);
         }
+
+        /* Light Theme Styles */
+        body.light-theme {
+            --bg: #f5f5f7; --txt: #1d1d1f;
+            --grad1: #e2e2e7; --grad2: #d1d1d6;
+            --brd: rgba(0,0,0,0.1);
+            --glow: rgba(118, 185, 0, 0.08);
+        }
+        body.light-theme #sidebar { background: rgba(245, 245, 247, 0.75); border-right: 1px solid rgba(0,0,0,0.1); }
+        body.light-theme header { background: rgba(255,255,255,0.4); border-bottom: 1px solid rgba(0,0,0,0.1); }
+        body.light-theme .account-menu, body.light-theme .drop-menu { background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(0,0,0,0.1); }
+        body.light-theme .account-item, body.light-theme .m-title { color: #1d1d1f; }
+        body.light-theme .user { background: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0,0,0,0.08); color: #1d1d1f; }
+        body.light-theme .ai { color: #1d1d1f; }
+        body.light-theme .input-bar { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(0,0,0,0.15); }
+        body.light-theme .input-bar:focus-within { background: rgba(255, 255, 255, 0.9); }
+        body.light-theme #ui { color: #1d1d1f; }
+        body.light-theme .btn-icon { color: rgba(0,0,0,0.6); }
+        body.light-theme h1, body.light-theme .h-item, body.light-theme .modal-box { color: #1d1d1f; }
+        body.light-theme .modal-box { background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.15); }
+        body.light-theme .plan-title { color: #1d1d1f; }
+        body.light-theme .btn-buy { background: rgba(0,0,0,0.05); color: #1d1d1f; }
+        body.light-theme .h-item { background: rgba(0,0,0,0.02); }
+        body.light-theme .h-item.active-chat { background: rgba(0,0,0,0.05); }
+        body.light-theme .hover-copy-btn { background: rgba(0,0,0,0.08); color: #1d1d1f; border: 1px solid rgba(0,0,0,0.12); }
+        body.light-theme .ctx-item { color: #1d1d1f; }
+        body.light-theme .ctx-item:hover { background: rgba(0,0,0,0.05); }
+        body.light-theme .crypto-input { background: rgba(255,255,255,0.8); color: #1d1d1f; border: 1px solid rgba(0,0,0,0.15); }
         
         /* Dynamic Emotion Colors - Soft Glassy Gradients */
         body.mood-pos { --grad1: #113a20; --grad2: #0b2218; --p: #00ff88; }
@@ -42,6 +70,7 @@
         main { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; transition: 0.5s var(--apple-ease); overflow-x: hidden;}
 
         .btn-new { width: 90%; margin: 20px auto; padding: 16px; background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid var(--brd); color: #fff; border-radius: 20px; font-weight: 700; cursor: pointer; display: block; letter-spacing: -0.5px; transition: 0.3s; }
+        body.light-theme .btn-new { background: rgba(0,0,0,0.05); color: #1d1d1f; }
         .btn-new:hover { background: rgba(255,255,255,0.1); transform: scale(1.02); }
 
         #h-list { flex: 1; overflow-y: auto; padding: 15px; }
@@ -51,27 +80,44 @@
         header { height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); background: rgba(0,0,0,0.2); backdrop-filter: blur(20px); z-index: 100; }
         
         /* Logo Styles */
-        .logo { height: 40px; display: flex; align-items: center; justify-content: center; }
-        .logo img { height: 100%; width: auto; object-fit: contain; filter: drop-shadow(0 0 10px var(--glow)); mix-blend-mode: screen; }
+        .logo { height: 40px; display: flex; align-items: center; justify-content: center; font-weight: 900; letter-spacing: 1px; font-size: 18px; color: var(--p); }
+        .logo img { height: 100%; width: auto; object-fit: contain; filter: drop-shadow(0 0 10px var(--glow)); mix-blend-mode: screen; display: block; }
+        .logo span.logo-fallback { display: none; }
 
         /* Account & Emotion Telemetry */
         .account-hub { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .account-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--p), #222); border: 2px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; color: #fff; transition: 0.4s; }
         
-        .account-menu { position: absolute; top: 55px; right: 0; width: 260px; background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(40px); border: 1px solid var(--brd); border-radius: 24px; padding: 15px; display: none; flex-direction: column; z-index: 5000; box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
+        .account-menu { position: absolute; top: 55px; right: 0; width: 280px; background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(40px); border: 1px solid var(--brd); border-radius: 24px; padding: 15px; display: none; flex-direction: column; z-index: 5000; box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
         .account-menu.show { display: flex; animation: glassPop 0.4s var(--apple-ease); }
         @keyframes glassPop { from { opacity: 0; transform: translateY(-10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
         .telemetry-box { background: rgba(0,0,0,0.4); border-radius: 16px; padding: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        body.light-theme .telemetry-box { background: rgba(0,0,0,0.03); }
         .telemetry-title { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 800; }
         .t-bar-wrap { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 11px; }
         .t-bg { width: 60%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+        body.light-theme .t-bg { background: rgba(0,0,0,0.1); }
         .t-fill { height: 100%; border-radius: 4px; transition: width 0.8s var(--apple-ease); }
         .c-calm { background: #5ac8fa; } .c-focus { background: #af52de; } .c-creative { background: #ff9500; }
         
+        .account-tabs { display: flex; border-bottom: 1px solid var(--brd); margin-bottom: 10px; }
+        .tab-btn { flex: 1; padding: 8px; background: none; border: none; color: #888; font-size: 11px; font-weight: 700; cursor: pointer; text-align: center; text-transform: uppercase; }
+        .tab-btn.active { color: var(--p); border-bottom: 2px solid var(--p); }
+
         .account-item { padding: 12px 15px; font-size: 13px; color: #eee; border-radius: 14px; cursor: pointer; transition: 0.3s; font-weight: 500; }
         .account-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        body.light-theme .account-item:hover { background: rgba(0,0,0,0.05); color: #000; }
         .account-item.premium-btn { color: var(--premium-color); border: 1px solid rgba(223, 178, 87, 0.3); background: rgba(223, 178, 87, 0.08); font-weight: 800; text-align: center; margin-bottom: 10px; }
+        
+        /* Toggle Switch Custom */
+        .toggle-container { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #3a3a3c; transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--p); }
+        input:checked + .slider:before { transform: translateX(20px); }
 
         #chat-box { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 30px 8% 180px; display: flex; flex-direction: column; gap: 35px; scroll-behavior: smooth; user-select: none; }
         
@@ -90,6 +136,7 @@
 
         .msg.collapsed { max-height: 160px; overflow: hidden; position: relative; padding-bottom: 40px; mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%); }
         .read-more-trigger { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; backdrop-filter: blur(10px); border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; transition: 0.3s var(--apple-ease); z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        body.light-theme .read-more-trigger { background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1); color: #1d1d1f; }
         .read-more-trigger:hover { background: rgba(255,255,255,0.2); transform: translateX(-50%) scale(1.1); }
 
         /* Hover Copy Button */
@@ -98,11 +145,12 @@
         .hover-copy-btn:hover { background: var(--p); color: #000; border-color: var(--p); }
 
         .edit-area-container { display: flex; flex-direction: column; gap: 10px; width: 100%; min-width: 280px; }
-        .edit-textarea { background: rgba(0,0,0,0.5); border: 1px solid var(--p); color: #fff; font-size: 16px; padding: 12px; border-radius: 16px; resize: vertical; line-height: 1.5; font-family: inherit; }
+        .edit-textarea { background: rgba(0,0,0,0.25); border: 1px solid var(--p); color: inherit; font-size: 16px; padding: 12px; border-radius: 16px; resize: vertical; line-height: 1.5; font-family: inherit; }
         .edit-actions { display: flex; gap: 10px; justify-content: flex-end; }
         .edit-btn { padding: 6px 14px; border-radius: 10px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; }
         .edit-save { background: var(--p); color: #000; }
-        .edit-cancel { background: rgba(255,255,255,0.1); color: #fff; }
+        .edit-cancel { background: rgba(255,255,255,0.1); color: inherit; }
+        body.light-theme .edit-cancel { background: rgba(0,0,0,0.05); }
 
         table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 16px; overflow: hidden; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -115,12 +163,14 @@
         .listen-ops { display: flex; gap: 12px; margin-top: 8px; padding-left: 5px; opacity: 0.5; transition: 0.3s; align-items: center; }
         .listen-ops:hover { opacity: 1; }
         .l-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
+        body.light-theme .l-btn { color: #555; }
         .l-btn:hover { color: var(--p); }
         .react-btn { font-size: 14px; cursor: pointer; opacity: 0.6; transition: 0.2s; display: inline-flex; align-items: center; }
         .react-btn:hover { opacity: 1; transform: scale(1.15); }
 
         /* Apple-inspired Fluid Scroll Button */
         #scroll-down-btn { position: absolute; bottom: 115px; left: 50%; transform: translateX(-50%) scale(0.8); width: 42px; height: 42px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; opacity: 0; pointer-events: none; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 999; transition: transform 0.4s var(--apple-ease), opacity 0.4s var(--apple-ease), background 0.3s; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        body.light-theme #scroll-down-btn { background: rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.1); color: #1d1d1f; }
         #scroll-down-btn:hover { background: rgba(255,255,255,0.25); transform: translateX(-50%) scale(1.08); }
         #scroll-down-btn.show { opacity: 1; transform: translateX(-50%) scale(1); pointer-events: auto; }
 
@@ -144,6 +194,7 @@
         .lightbox-close:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
 
         footer { position: absolute; bottom: 0; width: 100%; padding: 20px 8% 40px; background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, transparent); pointer-events: none; z-index: 1000;}
+        body.light-theme footer { background: linear-gradient(to top, rgba(245,245,247,0.9) 20%, transparent); }
         .input-bar { background: rgba(25, 25, 25, 0.55); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 35px; display: flex; align-items: center; padding: 10px 25px; gap: 15px; pointer-events: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: 0.3s; position: relative; }
         .input-bar:focus-within { border-color: var(--p); background: rgba(35, 35, 35, 0.65); box-shadow: 0 20px 60px var(--glow); }
         
@@ -156,7 +207,9 @@
         .drop-menu.show { display: flex; animation: glassPop 0.3s var(--apple-ease); }
         .model-item { padding: 12px 15px; border-radius: 16px; cursor: pointer; margin-bottom: 5px; transition: 0.3s; border: 1px solid transparent; display: flex; flex-direction: column; gap: 4px; }
         .model-item:hover { background: rgba(255,255,255,0.05); }
+        body.light-theme .model-item:hover { background: rgba(0,0,0,0.03); }
         .model-item.active { background: rgba(255,255,255,0.08); border-color: var(--p); }
+        body.light-theme .model-item.active { background: rgba(0,0,0,0.05); }
         .m-title { font-size: 14px; font-weight: 800; color: #fff; }
         .model-item.active .m-title { color: var(--p); }
         .m-desc { font-size: 11px; color: #888; }
@@ -164,6 +217,7 @@
         .aura-btn { background: linear-gradient(45deg, #af52de, #00f2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; text-align: center; padding: 12px; cursor: pointer; font-size: 14px; letter-spacing: 1px; }
 
         #context-menu { position: fixed; background: rgba(30, 30, 30, 0.7); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 6px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); z-index: 9999; display: none; flex-direction: column; min-width: 140px; transform-origin: top left; animation: popIn 0.2s var(--apple-ease); }
+        body.light-theme #context-menu { background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.15); }
         @keyframes popIn { from{ opacity:0; transform:scale(0.9); } to{ opacity:1; transform:scale(1); } }
         .ctx-item { padding: 12px 16px; font-size: 14px; color: #fff; cursor: pointer; border-radius: 10px; transition: 0.2s; display: flex; align-items: center; justify-content: space-between; }
         .ctx-item:hover { background: rgba(255,255,255,0.1); }
@@ -175,7 +229,9 @@
         
         .plans-container { padding: 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .plan-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 25px; display: flex; flex-direction: column; position: relative; transition: 0.4s; }
+        body.light-theme .plan-card { background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); }
         .plan-card:hover { background: rgba(255,255,255,0.06); transform: translateY(-5px); border-color: rgba(255,255,255,0.3); }
+        body.light-theme .plan-card:hover { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.25); }
         
         .plan-card.gold { border-color: var(--premium-color); background: rgba(223, 178, 87, 0.05); }
         .plan-card.gold:hover { box-shadow: 0 20px 50px var(--premium-glow); transform: scale(1.02); }
@@ -190,8 +246,10 @@
         
         .plan-features { list-style: none; padding: 0; margin: 0 0 25px 0; flex: 1; }
         .plan-features li { color: rgba(255,255,255,0.7); line-height: 1.8; font-size: 13px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;}
+        body.light-theme .plan-features li { color: rgba(0,0,0,0.7); border-bottom: 1px solid rgba(0,0,0,0.05); }
         .plan-features li:last-child { border: none; }
         .plan-features li b { color: #fff; }
+        body.light-theme .plan-features li b { color: #000; }
 
         .btn-buy { background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 16px; border-radius: 16px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; font-size: 14px; position: relative; overflow: hidden; }
         .plan-card.gold .btn-buy { background: linear-gradient(135deg, var(--premium-color), #b88a38); color: #000; }
@@ -203,11 +261,26 @@
         .crypto-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 14px; border-radius: 12px; font-size: 14px; width: 100%; transition: 0.3s; }
         .crypto-input:focus { border-color: var(--p); outline: none; }
 
-        .dynamic-loader { display: flex; align-items: center; gap: 15px; padding: 15px 0; color: var(--p); font-weight: 600; font-size: 14px; letter-spacing: 1px; animation: fadeIn 0.5s ease; }
-        .dot-matrix span { display: inline-block; width: 6px; height: 6px; background: var(--p); border-radius: 50%; margin: 0 2px; animation: pulseDot 1.2s infinite ease-in-out; }
-        .dot-matrix span:nth-child(2) { animation-delay: 0.2s; }
-        .dot-matrix span:nth-child(3) { animation-delay: 0.4s; }
+        .dynamic-loader { display: flex; align-items: center; gap: 12px; padding: 15px 0; color: var(--p); font-weight: 600; font-size: 14px; animation: fadeIn 0.5s ease; }
+        .dot-matrix { display: flex; align-items: center; gap: 4px; width: 40px; height: 20px; justify-content: center; }
+        .dot-matrix span { display: inline-block; width: 6px; height: 6px; background: var(--p); border-radius: 50%; transition: transform 0.2s, border-radius 0.2s; }
+        
+        /* Loading Custom Shapes - Dots Only */
+        .dot-matrix.loading-standard span { animation: pulseDot 1.2s infinite ease-in-out; }
+        .dot-matrix.loading-standard span:nth-child(2) { animation-delay: 0.2s; }
+        .dot-matrix.loading-standard span:nth-child(3) { animation-delay: 0.4s; }
+        
+        .dot-matrix.loading-camera { width: 30px; height: 24px; display: grid; grid-template-columns: repeat(3, 6px); gap: 3px; animation: cameraFlash 1s infinite alternate; }
+        .dot-matrix.loading-camera span { transform: scale(1); }
+        
+        .dot-matrix.loading-code { display: flex; flex-direction: column; gap: 4px; height: auto; width: 15px; }
+        .dot-matrix.loading-code span { animation: codeLine 0.9s infinite alternate; width: 8px; height: 4px; border-radius: 2px; }
+        .dot-matrix.loading-code span:nth-child(2) { animation-delay: 0.3s; }
+        .dot-matrix.loading-code span:nth-child(3) { animation-delay: 0.6s; }
+
         @keyframes pulseDot { 0%, 100% { transform: scale(0.5); opacity: 0.3; } 50% { transform: scale(1.2); opacity: 1; } }
+        @keyframes cameraFlash { 0%, 40% { opacity: 0.4; } 50%, 100% { opacity: 1; } }
+        @keyframes codeLine { from { width: 4px; opacity: 0.3; } to { width: 12px; opacity: 1; } }
 
         #aura-screen { position: fixed; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(26, 17, 58, 0.95), #000); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(30px); animation: fadeIn 0.5s var(--apple-ease); }
         .aura-pulse-orb { width: 160px; height: 160px; border-radius: 50%; background: linear-gradient(45deg, #af52de, #00f2ff); box-shadow: 0 0 60px rgba(175,82,222,0.6); animation: auraPulse 2s infinite ease-in-out; position: relative; display: flex; align-items: center; justify-content: center; }
@@ -241,13 +314,16 @@
 
 <div id="crypto-modal" class="modal-box" style="max-width: 450px; padding-bottom: 20px;" onclick="event.stopPropagation()">
     <div style="padding: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
-        <h3 style="margin:0; font-weight:800; color:var(--p); letter-spacing: 1px;">VIP DEPOSIT <span style="color:#aaa; font-size: 12px;">(CRYPTO)</span></h3>
-        <button onclick="closeCryptoModal()" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">✕</button>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <button onclick="backToPlans()" style="background:none; border:none; color:inherit; font-size:22px; cursor:pointer; display:flex; align-items:center;">←</button>
+            <h3 style="margin:0; font-weight:800; color:var(--p); letter-spacing: 1px;">VIP DEPOSIT <span style="color:#aaa; font-size: 12px;">(CRYPTO)</span></h3>
+        </div>
+        <button onclick="closeCryptoModal()" style="background:none; border:none; color:inherit; font-size:24px; cursor:pointer;">✕</button>
     </div>
     <div style="padding: 25px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto;">
         
         <div style="text-align: center; margin-bottom: 5px;">
-            <div style="color: #fff; font-size: 20px; font-weight: 900;" id="crypto-plan-name">Plan Name</div>
+            <div style="color: inherit; font-size: 20px; font-weight: 900;" id="crypto-plan-name">Plan Name</div>
             <div style="color: var(--p); font-size: 16px; font-weight: 800;" id="crypto-plan-price">$0.00</div>
         </div>
 
@@ -280,41 +356,49 @@
 <div id="premium-modal" class="modal-box" onclick="event.stopPropagation()">
     <div style="padding: 25px 35px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
         <span style="font-weight: 900; letter-spacing: 2px; font-size: 20px;">PHRAORTES <span style="color:var(--premium-color)">VIP</span></span>
-        <button onclick="closeModal('premium-modal')" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">✕</button>
+        <button onclick="closeModal('premium-modal')" style="background:none; border:none; color:inherit; font-size:24px; cursor:pointer;">✕</button>
     </div>
     <div class="plans-container">
         <div class="plan-card" id="plan-silver">
-            <div class="plan-title">Silver Core</div>
-            <div class="plan-price">$6.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <div class="plan-title">Bronze Pro</div>
+            <div class="plan-price">$2.6 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
-                <li><b>Unlimited Core:</b> Endless access to PHRAORTES 2.6.</li>
-                <li><b>Extended Logic:</b> Deep Thinking (2.7) up to 30 times/day.</li>
-                <li><b>Media Access:</b> Model 2.8 up to 5 times/day.</li>
-                <li>Advanced Global Memory.</li>
+                <li><b>Daily Message Cap:</b> 100 requests per day across models.</li>
+                <li><b>Audio Production:</b> Up to 3 track generations per month (Standard).</li>
+                <li><b>Video Studio:</b> Up to 2 cinematic video generations.</li>
+                <li><b>Cloud Allocation:</b> 2 GB Secure Sandbox storage.</li>
+                <li><b>AI Live Calls:</b> Up to 15 minutes of streaming interactions.</li>
+                <li><b>Engineering Logic:</b> Standard multi-file interpretation.</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-silver" onclick="purchasePlan(this, 'Silver Core', '6.99')">PURCHASE SILVER</button>
+            <button class="btn-buy" id="btn-purchase-silver" onclick="purchasePlan(this, 'Bronze Pro', '2.6')">PURCHASE BRONZE</button>
         </div>
         <div class="plan-card gold" id="plan-gold">
-            <div class="plan-title" style="color:var(--premium-color)">Gold Cosmic</div>
-            <div class="plan-price">$29.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <div class="plan-title" style="color:var(--premium-color)">Silver Cosmic</div>
+            <div class="plan-price">$2.7 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
-                <li><b>Infinite Logic:</b> Unlimited Deep Thinking (2.7).</li>
-                <li><b>Code Interpreter:</b> Live executable environment.</li>
-                <li><b>Live Debugger Pro:</b> Automated bug fixing.</li>
-                <li><b>High Media Core:</b> Model 2.8 up to 50 times/day.</li>
+                <li><b>Daily Message Cap:</b> 350 high-priority requests per day.</li>
+                <li><b>Audio Production:</b> Up to 7 HQ tracks with customized lyrics.</li>
+                <li><b>Video Studio:</b> Up to 10 cinematic creations (720p).</li>
+                <li><b>Cloud Allocation:</b> 15 GB Enterprise Secure Sandbox storage.</li>
+                <li><b>AI Live Calls:</b> 2 hours/mo Ultra-Low Latency Video Nodes.</li>
+                <li><b>Engineering Logic:</b> Enhanced debugging and architecture synthesis.</li>
+                <li><b>System Updates:</b> Early Access to updates 3 days prior.</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-gold" onclick="purchasePlan(this, 'Gold Cosmic', '29.99')">UPGRADE TO GOLD</button>
+            <button class="btn-buy" id="btn-purchase-gold" onclick="purchasePlan(this, 'Silver Cosmic', '2.7')">UPGRADE TO SILVER</button>
         </div>
         <div class="plan-card plat" id="plan-plat">
-            <div class="plan-title" style="color:var(--plat-color)">Platinum Singularity</div>
-            <div class="plan-price">$79.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <div class="plan-title" style="color:var(--plat-color)">Gold Singularity</div>
+            <div class="plan-price">$2.8 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
-                <li><b>Absolute Uncapped:</b> 100% unlimited access to all models (incl. 2.8).</li>
-                <li><b>Beta Priority:</b> Early access to new tools & UI updates.</li>
-                <li><b>Hyper-Personalization:</b> Custom UI overrides.</li>
-                <li><b>VIP Infrastructure:</b> Quantum nodes & Call Aura access.</li>
+                <li><b>Daily Message Cap:</b> 100% Uncapped (Infinite requests).</li>
+                <li><b>Audio Production:</b> 15 Studio-grade full arrangements (Commercial Rights).</li>
+                <li><b>Video Studio:</b> Extensive high-resolution 4K video rendering.</li>
+                <li><b>Cloud Allocation:</b> 100 GB Massive isolated processing storage.</li>
+                <li><b>AI Live Calls:</b> Fully Uncapped Streaming Calls.</li>
+                <li><b>Engineering Logic:</b> Multi-file systems & complex architecture generation.</li>
+                <li><b>System Updates:</b> First priority instant feature integration.</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-plat" onclick="purchasePlan(this, 'Platinum', '79.99')">ACTIVATE PLATINUM</button>
+            <button class="btn-buy" id="btn-purchase-plat" onclick="purchasePlan(this, 'Gold Singularity', '2.8')">ACTIVATE GOLD</button>
         </div>
     </div>
 </div>
@@ -322,7 +406,7 @@
 <div id="sidebar" onclick="event.stopPropagation()">
     <div style="padding: 30px 25px; display: flex; justify-content: space-between; align-items: center;">
         <span style="font-weight: 900; color: var(--p); letter-spacing: 2px;">SESSIONS</span>
-        <button class="btn-icon" style="font-size: 20px; color: #fff;" onclick="toggleS(event)">✕</button>
+        <button class="btn-icon" style="font-size: 20px; color: inherit;" onclick="toggleS(event)">✕</button>
     </div>
     <button onclick="newChat()" class="btn-new">NEW CONVERSATION</button>
     <div id="h-list"></div>
@@ -331,24 +415,49 @@
 <main>
     <header>
         <button class="btn-icon" onclick="toggleS(event)">☰</button>
-        <div class="logo"><img src="image.png" alt="PHRAORTES"></div>
+        <div class="logo">
+            <img src="image.png" alt="PHRAORTES" onerror="this.style.display='none'; document.getElementById('logo-text').style.display='block';">
+            <span id="logo-text" class="logo-fallback">PHRAORTES</span>
+        </div>
         
         <div class="account-hub" onclick="toggleAccount(event)">
             <div class="account-avatar">ME</div>
             <div class="account-menu" id="account-menu" onclick="event.stopPropagation()">
-                <div class="telemetry-box">
-                    <div class="telemetry-title">Mindset Telemetry</div>
-                    <div class="t-bar-wrap"><span>Focus</span><span id="p-foc">45%</span></div>
-                    <div class="t-bg"><div class="t-fill c-calm" id="b-foc" style="width:45%"></div></div>
-                    <div style="height:8px"></div>
-                    <div class="t-bar-wrap"><span>Analytical</span><span id="p-ana">35%</span></div>
-                    <div class="t-bg"><div class="t-fill c-focus" id="b-ana" style="width:35%"></div></div>
-                    <div style="height:8px"></div>
-                    <div class="t-bar-wrap"><span>Creative</span><span id="p-cre">20%</span></div>
-                    <div class="t-bg"><div class="t-fill c-creative" id="b-cre" style="width:20%"></div></div>
+                <div class="account-tabs">
+                    <button class="tab-btn active" id="tab-profile-btn" onclick="switchAccountTab('profile')">Profile</button>
+                    <button class="tab-btn" id="tab-settings-btn" onclick="switchAccountTab('settings')">Settings</button>
                 </div>
-                <div class="account-item premium-btn" onclick="openPremium()">💎 View VIP Plans</div>
-                <div class="account-item" style="color: #ff3b30;">🚪 Logout</div>
+                
+                <div id="account-tab-profile">
+                    <div class="telemetry-box">
+                        <div class="telemetry-title">Mindset Telemetry</div>
+                        <div class="t-bar-wrap"><span>Focus</span><span id="p-foc">45%</span></div>
+                        <div class="t-bg"><div class="t-fill c-calm" id="b-foc" style="width:45%"></div></div>
+                        <div style="height:8px"></div>
+                        <div class="t-bar-wrap"><span>Analytical</span><span id="p-ana">35%</span></div>
+                        <div class="t-bg"><div class="t-fill c-focus" id="b-ana" style="width:35%"></div></div>
+                        <div style="height:8px"></div>
+                        <div class="t-bar-wrap"><span>Creative</span><span id="p-cre">20%</span></div>
+                        <div class="t-bg"><div class="t-fill c-creative" id="b-cre" style="width:20%"></div></div>
+                    </div>
+                    <div class="account-item premium-btn" onclick="openPremium()">💎 View VIP Plans</div>
+                    <div class="account-item" style="color: #ff3b30;">🚪 Logout</div>
+                </div>
+
+                <div id="account-tab-settings" style="display:none;">
+                    <div class="telemetry-box" style="padding: 5px 0;">
+                        <div class="toggle-container">
+                            <span style="font-size:13px; font-weight:600; color:inherit;">Dark / Light Theme</span>
+                            <label class="switch">
+                                <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div style="padding: 5px 15px; font-size:11px; color:#888;">
+                        User Identity Verified. Personalized responses set based on interface parameters.
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -363,15 +472,15 @@
         <span style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:10px; font-weight:800;">Neural Models</span>
         <div class="model-item active" id="m-26" onclick="selectModel('2.6')">
             <span class="m-title">PHRAORTES 2.6</span>
-            <span class="m-desc">Fast response, everyday tasks (5/day)</span>
+            <span class="m-desc">Text & Conversational Optimization</span>
         </div>
         <div class="model-item" id="m-27" onclick="selectModel('2.7')">
             <span class="m-title">PHRAORTES 2.7</span>
-            <span class="m-desc">Deep Thinking & Logic (2/day)</span>
+            <span class="m-desc">Deep Analytics & Logical Code Synthesis</span>
         </div>
         <div class="model-item" id="m-28" onclick="selectModel('2.8')">
             <span class="m-title">PHRAORTES 2.8</span>
-            <span class="m-desc">Premium Core: Code & Media (1/day)</span>
+            <span class="m-desc">Multimedia Orchestration & Creativity Core</span>
         </div>
         <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
         <div class="aura-btn" onclick="callAura()">✨ CALL AURA ✨</div>
@@ -399,7 +508,7 @@
 
     let chats = JSON.parse(localStorage.getItem("phraortes_chats")) || [];
     let curId = localStorage.getItem("phraortes_id");
-    let activeModel = '2.6';
+    let activeModel = localStorage.getItem("phraortes_active_model") || '2.6';
     let activePlan = localStorage.getItem("phraortes_active_plan") || null;
     let attachedFileType = ""; let attachedFileName = ""; let attachedFileDataURL = "";
     let pendingCryptoPlan = "";
@@ -424,6 +533,15 @@
         if (!chats.length) newChat(); else loadChat(curId);
         updatePlanButtonsUI();
         
+        // Initialize active model visual state instantly
+        updateModelUIState(activeModel);
+
+        // Load Theme Preference Instantly
+        if(localStorage.getItem("phraortes_theme") === "light") {
+            document.body.classList.add("light-theme");
+            document.getElementById("theme-toggle").checked = true;
+        }
+
         const ui = document.getElementById("ui");
         ui.addEventListener("input", function() {
             this.style.height = '45px';
@@ -453,7 +571,6 @@
                 e.preventDefault(); 
                 send();
             }
-            // else: standard Enter behavior creates a newline
         } 
     }
 
@@ -472,7 +589,6 @@
             reader.readAsDataURL(file);
         } else {
             attachedFileType = "file";
-            // For simple files we don't preview an image right now
         }
     }
 
@@ -506,6 +622,7 @@
         else if(t.match(/\?|چرا|چگونه|کد|تحلیل|code/i)) { m = "mood-neu"; f=70; a=90; c=30; }
         
         document.body.className = m;
+        if(document.getElementById("theme-toggle").checked) document.body.classList.add("light-theme");
         document.getElementById("p-foc").innerText = f+"%"; document.getElementById("b-foc").style.width = f+"%";
         document.getElementById("p-ana").innerText = a+"%"; document.getElementById("b-ana").style.width = a+"%";
         document.getElementById("p-cre").innerText = c+"%"; document.getElementById("b-cre").style.width = c+"%";
@@ -526,11 +643,35 @@
         ctxMenu.style.display = "none";
     }
 
+    function switchAccountTab(tab) {
+        document.getElementById("tab-profile-btn").classList.toggle("active", tab === 'profile');
+        document.getElementById("tab-settings-btn").classList.toggle("active", tab === 'settings');
+        document.getElementById("account-tab-profile").style.display = tab === 'profile' ? 'block' : 'none';
+        document.getElementById("account-tab-settings").style.display = tab === 'settings' ? 'block' : 'none';
+    }
+
+    function toggleTheme() {
+        const isLight = document.getElementById("theme-toggle").checked;
+        if(isLight) {
+            document.body.classList.add("light-theme");
+            localStorage.setItem("phraortes_theme", "light");
+        } else {
+            document.body.classList.remove("light-theme");
+            localStorage.setItem("phraortes_theme", "dark");
+        }
+    }
+
     function selectModel(m) {
         activeModel = m;
-        document.querySelectorAll('.model-item').forEach(el => el.classList.remove('active'));
-        document.getElementById('m-'+m.replace('.','')).classList.add('active');
+        localStorage.setItem("phraortes_active_model", m);
+        updateModelUIState(m);
         toggleGear(event);
+    }
+
+    function updateModelUIState(m) {
+        document.querySelectorAll('.model-item').forEach(el => el.classList.remove('active'));
+        const targetElement = document.getElementById('m-'+m.replace('.',''));
+        if(targetElement) targetElement.classList.add('active');
     }
 
     function callAura() { toggleGear(event); document.getElementById("aura-screen").style.display = "flex"; }
@@ -549,7 +690,7 @@
     }
 
     function updatePlanButtonsUI() {
-        const plans = ['Silver Core', 'Gold Cosmic', 'Platinum'];
+        const plans = ['Bronze Pro', 'Silver Cosmic', 'Gold Singularity'];
         const ids = ['btn-purchase-silver', 'btn-purchase-gold', 'btn-purchase-plat'];
         
         ids.forEach((id, index) => {
@@ -559,15 +700,14 @@
                     btn.innerText = "[ ACTIVATED ]"; btn.classList.add("activated");
                 } else {
                     btn.classList.remove("activated");
-                    if(index===0) btn.innerText = "PURCHASE SILVER";
-                    if(index===1) btn.innerText = "UPGRADE TO GOLD";
-                    if(index===2) btn.innerText = "ACTIVATE PLATINUM";
+                    if(index===0) btn.innerText = "PURCHASE BRONZE";
+                    if(index===1) btn.innerText = "UPGRADE TO SILVER";
+                    if(index===2) btn.innerText = "ACTIVATE GOLD";
                 }
             }
         });
     }
 
-    // Modern Crypto Modal Flow
     function purchasePlan(btn, plan, price) {
         if(btn.classList.contains("activated")) return;
         document.getElementById("premium-modal").classList.remove("show");
@@ -578,6 +718,11 @@
         updateCryptoNet();
         
         document.getElementById("crypto-modal").classList.add("show");
+    }
+
+    function backToPlans() {
+        document.getElementById("crypto-modal").classList.remove("show");
+        document.getElementById("premium-modal").classList.add("show");
     }
 
     function closeCryptoModal() {
@@ -599,7 +744,6 @@
         document.getElementById("txid-val").value = "";
         document.getElementById("crypto-modal").classList.remove("show");
         
-        // Finalize transaction
         activePlan = pendingCryptoPlan;
         localStorage.setItem("phraortes_active_plan", activePlan);
         updatePlanButtonsUI();
@@ -676,7 +820,15 @@
             const chat = chats.find(c => c.id == curId);
             if(chat && chat.msgs[index]) {
                 chat.msgs[index].uText = updatedText; chat.msgs[index].u = updatedText;
-                save(); loadChat(curId);
+                
+                // Clear old system response from storage array to re-trigger generation flow cleanly
+                chat.msgs.splice(index);
+                save();
+                
+                // Reload UI layout and re-send the newly edited text block natively
+                loadChat(curId);
+                document.getElementById("ui").value = updatedText;
+                send();
             }
         };
     }
@@ -700,13 +852,16 @@
     }
 
     function getDynamicLoader(txt) {
-        let icon = "🧠";
-        if (txt.toLowerCase().includes("کد") || activeModel === '2.8') icon = "⟨/⟩"; 
-        else if (attachedFileType === "image" || txt.startsWith("/imagine")) icon = "📷"; 
-        else if (txt.startsWith("/music")) icon = "🎵";
-        else if (txt.startsWith("/video")) icon = "🎥";
+        let textCheck = txt.toLowerCase();
+        let shapeClass = "loading-standard"; 
+        
+        if (textCheck.includes("عکس") || textCheck.includes("تصویر") || textCheck.includes("camera") || textCheck.startsWith("/imagine")) {
+            shapeClass = "loading-camera";
+        } else if (textCheck.includes("کد") || textCheck.includes("برنامه") || textCheck.includes("code") || textCheck.includes("function") || activeModel === '2.7') {
+            shapeClass = "loading-code";
+        }
 
-        return `<div class="dynamic-loader"><div style="font-size:18px;">${icon}</div><div class="dot-matrix"><span></span><span></span><span></span></div></div>`;
+        return `<div class="dynamic-loader"><div class="dot-matrix ${shapeClass}"><span></span><span></span><span></span></div></div>`;
     }
 
     function speakText(id) {
@@ -803,7 +958,7 @@
             isMediaCommand = true;
             const promptStr = txt.substring(9);
             const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptStr)}?width=800&height=800&nologo=true`;
-            finalHtmlResponse = `<div style="text-align:left;"><div class="media-capsule" style="width:130px; height:130px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ تولید تصویر بر اساس: ${promptStr}</span></div>`;
+            finalHtmlResponse = `<div style="text-align:left;"><div class="media-capsule" style="width:130px; height:130px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ تصویر بر اساس: ${promptStr}</span></div>`;
             finalRawResponse = "Image generated successfully via Pollinations.";
         } 
         else if(txt.toLowerCase().startsWith("/video ")) {
@@ -852,12 +1007,12 @@
     async function streamMarkdown(aiId, rawContent) {
         const el = document.getElementById(aiId);
         let currentStr = "";
-        let chunkSize = 4; // Super Fast Streaming (4 characters per frame)
+        let chunkSize = 4; 
         for(let i=0; i<rawContent.length; i+=chunkSize) {
             currentStr += rawContent.substring(i, Math.min(i+chunkSize, rawContent.length));
             el.innerHTML = marked.parse(currentStr);
             chatBox.scrollTo({ top: chatBox.scrollHeight });
-            await new Promise(r => setTimeout(r, 10)); // ~10ms delay per chunk
+            await new Promise(r => setTimeout(r, 10)); 
         }
         el.innerHTML = marked.parse(rawContent);
         addCopyLogic();
@@ -884,7 +1039,6 @@
         chat.msgs.push({u: userHtml, uText: userTxt, a: htmlContent, aRaw: rawContent}); 
         save(); renderH(); 
         
-        // Initiate the super fast streaming effect visually
         streamMarkdown(aiId, rawContent);
     }
 
@@ -894,7 +1048,7 @@
         let safeTxt = (rawText || "").replace(/`/g, "'"); 
         
         if(id === 'welcome') {
-            w.innerHTML = `<div style="text-align:center; margin:auto 0;"><h1 style="color:var(--p);font-weight:900;letter-spacing:2px;font-size:35px;"><img src="image.png" style="height:40px; margin-bottom:-5px;"> PHRAORTES</h1><p style="color:rgba(255,255,255,0.5)">System Active. Model ${activeModel}</p></div>`;
+            w.innerHTML = `<div style="text-align:center; margin:auto 0;"><h1 style="color:var(--p);font-weight:900;letter-spacing:2px;font-size:35px;">PHRAORTES</h1><p style="color:rgba(255,255,255,0.5)">System Active. Interconnected Sandbox Nodes online.</p></div>`;
         } else if (id === 'welcome-persona') {
             const copyRaw = encodeURIComponent(rawText);
             w.innerHTML = `
