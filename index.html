@@ -200,14 +200,22 @@
         
         .chat-gallery { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
 
-        /* Multiple File Input Preview Container */
-        #input-preview-container { display: none; position: absolute; bottom: 80px; left: 8%; background: rgba(25,25,25,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); padding: 12px; border-radius: 18px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-width: 80%; flex-direction: row; gap: 12px; overflow-x: auto; scrollbar-width: thin; }
-        .preview-wrapper { position: relative; transition: opacity 0.3s ease, transform 0.3s ease; }
-        .preview-wrapper.fade-out { opacity: 0; transform: scale(0.8); }
-        .input-preview-img { width: 65px; height: 65px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
-        .file-icon-preview { width: 65px; height: 65px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 24px; border: 1px solid rgba(255,255,255,0.2); }
-        .remove-preview { position: absolute; top: -6px; right: -6px; background: #ff3b30; color: #fff; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 11px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.4); transition: 0.3s; z-index: 10; border: 2px solid #222; }
-        .remove-preview:hover { transform: scale(1.15); }
+        /* Multiple File Input Preview Container (Animated Carousel Upgrade) */
+        #input-preview-container { display: none; position: absolute; bottom: 80px; left: 8%; background: rgba(20,20,20,0.85); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.15); padding: 12px 16px; border-radius: 24px; z-index: 1000; box-shadow: 0 15px 45px rgba(0,0,0,0.6), 0 0 20px rgba(118,185,0,0.1); max-width: 84%; flex-direction: row; gap: 14px; overflow-x: auto; scrollbar-width: none; transition: all 0.4s var(--apple-ease); align-items: center; }
+        #input-preview-container::-webkit-scrollbar { display: none; }
+        body.light-theme #input-preview-container { background: rgba(255,255,255,0.85); border-color: rgba(0,0,0,0.1); }
+        
+        .preview-wrapper { position: relative; transition: opacity 0.35s var(--apple-ease), transform 0.35s var(--apple-ease); transform: scale(1); animation: cardPopIn 0.4s var(--apple-ease) forwards; flex-shrink: 0; }
+        @keyframes cardPopIn { from { opacity: 0; transform: scale(0.7) translateY(15px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .preview-wrapper.fade-out { opacity: 0; transform: scale(0.7) translateY(-10px); }
+        
+        .input-preview-img { width: 75px; height: 75px; object-fit: cover; border-radius: 16px; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.2s; }
+        .input-preview-img:hover { transform: scale(1.03); }
+        .file-icon-preview { width: 75px; height: 75px; background: rgba(255,255,255,0.07); border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 28px; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        
+        .remove-preview { position: absolute; top: -5px; right: -5px; background: #ff3b30; color: #fff; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 11px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.4); transition: transform 0.2s, background 0.2s; z-index: 10; border: 2px solid #141414; }
+        body.light-theme .remove-preview { border-color: #fff; }
+        .remove-preview:hover { transform: scale(1.2); background: #ff453a; }
 
         /* Apple Immersive Media Lightbox Overlay */
         #media-lightbox { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s var(--apple-ease); }
@@ -290,11 +298,21 @@
         .bottom-sheet { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(20,20,20,0.95); backdrop-filter: blur(40px); border-top: 1px solid rgba(255,255,255,0.15); border-radius: 30px 30px 0 0; transform: translateY(100%); transition: 0.4s var(--apple-ease); z-index: 7100; padding: 25px 30px 40px; box-shadow: 0 -20px 50px rgba(0,0,0,0.6); display: flex; flex-direction: column; }
         .bottom-sheet.show { transform: translateY(0); }
         .bs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        
+        /* Add-on Pack Styles (Upgraded Marketing UI Cards) */
         .addon-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .addon-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 15px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; gap: 5px; }
-        .addon-item:hover { background: rgba(255,255,255,0.1); border-color: var(--p); }
-        .addon-title { font-size: 14px; font-weight: 800; color: #fff; }
-        .addon-price { font-size: 13px; color: var(--p); font-weight: 700; }
+        .addon-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 18px; cursor: pointer; transition: all 0.3s var(--apple-ease); display: flex; flex-direction: column; gap: 6px; position: relative; overflow: hidden; }
+        body.light-theme .addon-item { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.08); }
+        .addon-item:hover { background: rgba(255,255,255,0.08); border-color: var(--p); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        body.light-theme .addon-item:hover { background: rgba(0,0,0,0.04); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+        .addon-title { font-size: 15px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+        body.light-theme .addon-title { color: #1d1d1f; }
+        .addon-desc { font-size: 12px; color: #aaa; line-height: 1.4; margin-bottom: 4px; }
+        body.light-theme .addon-desc { color: #515154; }
+        .addon-features-list { font-size: 11px; color: var(--p); font-weight: 600; margin: 2px 0 6px 0; padding: 0; list-style: none; }
+        .addon-price { font-size: 14px; color: var(--p); font-weight: 800; margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
+        .addon-status-badge { font-size: 10px; background: rgba(255,255,255,0.08); color: #fff; padding: 3px 8px; border-radius: 20px; font-weight: bold; border: 1px solid rgba(255,255,255,0.05); }
+        body.light-theme .addon-status-badge { background: rgba(0,0,0,0.05); color: #1d1d1f; }
 
         /* Crypto Payment Modal specifics */
         .crypto-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 14px; border-radius: 12px; font-size: 14px; width: 100%; transition: 0.3s; }
@@ -409,7 +427,7 @@
             <div class="plan-title">Starter</div>
             <div class="plan-price">$14.99 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
-                <li><b>Text Requests:</b> Unlimited Standard + 100 Advanced (2.6)</li>
+                <li><b>Text Requests:</b> Unlimited Standard + 100 Advanced (o1/Sonnet)</li>
                 <li><b>Photo Studio:</b> 30 HD photos</li>
                 <li><b>Video Studio:</b> 5 Cinematic Videos (4s)</li>
                 <li><b>Audio Production:</b> 5 HQ tracks</li>
@@ -421,7 +439,7 @@
             <div class="plan-title" style="color:var(--premium-color)">Pro</div>
             <div class="plan-price">$49.99 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
-                <li><b>Text Requests:</b> Unlimited + 350 Advanced (2.6/2.7)</li>
+                <li><b>Text Requests:</b> Unlimited + 350 Advanced (o1/Sonnet/DeepSeek)</li>
                 <li><b>Photo Studio:</b> 120 Ultra HD photos</li>
                 <li><b>Video Studio:</b> 15 Advanced Videos (8s)</li>
                 <li><b>Audio Production:</b> 20 HQ tracks</li>
@@ -457,24 +475,44 @@
         <p style="font-size: 12px; color: #888; margin-top: -10px; margin-bottom: 20px;">Need extra limits? Instantly add resources to your active workspace.</p>
         <div class="addon-grid">
             <div class="addon-item" onclick="purchaseAddon('Extra Image Generation', '4.99')">
-                <span style="font-size: 20px;">📸</span>
-                <span class="addon-title">Extra Image Generation</span>
-                <span class="addon-price">$4.99</span>
+                <span style="font-size: 22px;">📸</span>
+                <span class="addon-title">Flux Photo Pack Extra</span>
+                <span class="addon-desc">High-fidelity photo boost package for professional rendering pipelines.</span>
+                <ul class="addon-features-list">
+                    <li>• 50 High-Res Renders with Flux Ultra HD</li>
+                    <li>• Commercial Usage Rights Included</li>
+                </ul>
+                <span class="addon-price">$4.99 <span class="addon-status-badge">Available</span></span>
             </div>
             <div class="addon-item" onclick="purchaseAddon('Premium AI Model', '9.99')">
-                <span style="font-size: 20px;">🧠</span>
-                <span class="addon-title">Premium AI Model</span>
-                <span class="addon-price">$9.99</span>
+                <span style="font-size: 22px;">🧠</span>
+                <span class="addon-title">Advanced Reasoning Tier</span>
+                <span class="addon-desc">Unlocks ultra-deep logical compute slots for advanced math & architectures.</span>
+                <ul class="addon-features-list">
+                    <li>• 200 Extra Tokens for OpenAI o1 Core</li>
+                    <li>• Bypass Global Network Throttle</li>
+                </ul>
+                <span class="addon-price">$9.99 <span class="addon-status-badge">Available</span></span>
             </div>
             <div class="addon-item" onclick="purchaseAddon('Extended Context Window', '3.99')">
-                <span style="font-size: 20px;">📝</span>
-                <span class="addon-title">Extended Context Window</span>
-                <span class="addon-price">$3.99</span>
+                <span style="font-size: 22px;">📝</span>
+                <span class="addon-title">Mega Workspace Storage</span>
+                <span class="addon-desc">Expands maximum parsing bounds for handling giant codebase directories.</span>
+                <ul class="addon-features-list">
+                    <li>• Up to 200k Extended Context Window</li>
+                    <li>• 500MB Additional File Upload Limit</li>
+                </ul>
+                <span class="addon-price">$3.99 <span class="addon-status-badge">Available</span></span>
             </div>
             <div class="addon-item" onclick="purchaseAddon('Priority Support', '2.00')">
-                <span style="font-size: 20px;">⭐</span>
-                <span class="addon-title">Priority Support</span>
-                <span class="addon-price">$2.00</span>
+                <span style="font-size: 22px;">⭐</span>
+                <span class="addon-title">Enterprise Node Priority</span>
+                <span class="addon-desc">Routing your sessions into premium fast-track server lanes instantly.</span>
+                <ul class="addon-features-list">
+                    <li>• Dedicated SLA Pipeline Routing</li>
+                    <li>• Under 2-second Response Guarantee</li>
+                </ul>
+                <span class="addon-price">$2.00 <span class="addon-status-badge">Available</span></span>
             </div>
         </div>
     </div>
@@ -548,7 +586,7 @@
                 <div id="account-tab-billing" style="display:none;">
                     <div class="telemetry-title" style="margin-top:5px;">Recent Invoices</div>
                     <div class="billing-list" id="billing-history-list">
-                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -563,27 +601,26 @@
     <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
         <span style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:10px; font-weight:800;">Neural Models</span>
         <div class="model-item active" id="m-26" onclick="selectModel('2.6')">
-            <span class="m-title">PHRAORTES 2.6 (Workspace)</span>
-            <span class="m-desc">Text & Conversational Optimization</span>
+            <span class="m-title">OpenAI o1 (Workspace)</span>
+            <span class="m-desc">Ultimate Reasoning & Complex Multi-step Logic Optimization</span>
         </div>
         <div class="model-item" id="m-27" onclick="selectModel('2.7')">
-            <span class="m-title">PHRAORTES 2.7</span>
-            <span class="m-desc">Deep Analytics & Logical Code Synthesis</span>
+            <span class="m-title">Claude 3.5 Sonnet</span>
+            <span class="m-desc">Deep Software Engineering Synthesis & Perfect Analytical Writing</span>
         </div>
         <div class="model-item" id="m-28" onclick="selectModel('2.8')">
-            <span class="m-title">PHRAORTES 2.8</span>
-            <span class="m-desc">Multimedia Orchestration & Creativity Core</span>
+            <span class="m-title">DeepSeek V3 (Creativity Core)</span>
+            <span class="m-desc">Rapid Multimedia Orchestration, Fluid Adaptability & General Agentic Compute</span>
         </div>
         <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
         <div class="aura-btn" onclick="callAura()">✨ CALL AURA ✨</div>
     </div>
 
     <footer>
-        <div id="input-preview-container">
-            </div>
+        <div id="input-preview-container"></div>
         <div class="input-bar" onclick="event.stopPropagation()">
             <input type="file" id="file-upload" style="display:none;" multiple onchange="handleMultipleFiles(event)">
-            <button class="btn-icon" onclick="document.getElementById('file-upload').click()">📎</button>
+            <button class="btn-icon" onclick="document.getElementById('file-upload').click()">+</button>
             <button class="btn-icon" onclick="toggleGear(event)">⚙️</button>
             <textarea id="ui" placeholder="Message Phraortes..." spellcheck="false" onkeydown="handleEnter(event)"></textarea>
             <button id="send-btn" class="btn-icon" onclick="send()">🚀</button>
@@ -594,7 +631,7 @@
 <script>
     const _PART_A = "gsk_mIKxutVxzOYZdnFoMRbI";
     const _PART_B = "WGdyb3FYuI7ZQoU2sZPIDQ0rmUc4GDhv";
-    const OPENROUTER_API_KEY = ""; 
+    const OPENROUTER_API_KEY = "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"; 
 
     let chats = JSON.parse(localStorage.getItem("phraortes_chats")) || [];
     let curId = localStorage.getItem("phraortes_id");
@@ -603,9 +640,13 @@
     let trialMessageCount = parseInt(localStorage.getItem("phraortes_trial_count") || "0");
     let billingHistory = JSON.parse(localStorage.getItem("phraortes_billing")) || [];
     
-    let attachedFiles = []; // Holds multiple file objects { file, type, name, dataURL }
+    let attachedFiles = []; 
     let pendingCryptoPlan = "";
     let currentHistoryFilter = 'all';
+    
+    // Audio Node Tracking State Variables
+    let currentlyPlayingSpeech = null;
+    let currentSpeechButtonId = null;
 
     // Markdown config
     marked.setOptions({ 
@@ -725,11 +766,15 @@
         });
     }
 
+    // Rewritten Temporary Memory Garbage Collection Logic for Removal Button Click
     function removePreview(index, btnElement) {
         const wrapper = btnElement.parentElement;
         wrapper.classList.add("fade-out");
+        
+        // Immediate Splice Isolation & State Sync Engine
+        attachedFiles.splice(index, 1);
+        
         setTimeout(() => {
-            attachedFiles.splice(index, 1);
             renderPreviews();
         }, 300);
     }
@@ -810,10 +855,13 @@
         
         if(m === '2.6') {
             document.body.classList.add("workspace-mode");
-            showToast("Switched to Phraortes 2.6 (Workspace Mode Active)");
+            showToast("Switched to OpenAI o1 (Workspace Mode Active)");
+        } else if (m === '2.7') {
+            document.body.classList.remove("workspace-mode");
+            showToast("Switched to Claude 3.5 Sonnet");
         } else {
             document.body.classList.remove("workspace-mode");
-            showToast(`Switched to Phraortes ${m}`);
+            showToast("Switched to DeepSeek V3");
         }
     }
 
@@ -1066,20 +1114,67 @@
         return `<div class="dynamic-loader"><div class="dot-matrix ${shapeClass}"><span></span><span></span><span></span></div></div>`;
     }
 
-    function speakText(id) {
-        speechSynthesis.cancel();
+    // Upgraded Bi-directional Audio Telemetry (Listen / Stop State Machine Implementation)
+    function toggleSpeechPlayback(id, buttonElId) {
+        // Condition A: If audio is currently playing, click command requests instant cancellation
+        if (currentlyPlayingSpeech && currentSpeechButtonId === buttonElId) {
+            stopSpeak();
+            return;
+        }
+
+        // Global Reset Phase: If an active audio channel exists elsewhere, cancel it first safely
+        if (currentlyPlayingSpeech) {
+            stopSpeak();
+        }
+
         let txt = document.getElementById(id).innerText;
-        let u = new SpeechSynthesisUtterance(txt);
-        speechSynthesis.speak(u);
+        
+        // Remove option string components from final speech extraction bounds
+        txt = txt.replace(/📋 Copy|▶ Listen|🛑 Stop|🔄 Regenerate|👍|👎/g, "").trim();
+        
+        let utterance = new SpeechSynthesisUtterance(txt);
+        
+        currentlyPlayingSpeech = utterance;
+        currentSpeechButtonId = buttonElId;
+        
+        const targetBtn = document.getElementById(buttonElId);
+        if(targetBtn) {
+            targetBtn.innerHTML = "🛑 Stop";
+        }
+
+        utterance.onend = () => {
+            resetSpeechButtonState(buttonElId);
+        };
+
+        utterance.onerror = () => {
+            resetSpeechButtonState(buttonElId);
+        };
+
+        speechSynthesis.speak(utterance);
     }
-    function stopSpeak() { speechSynthesis.cancel(); }
+
+    function stopSpeak() { 
+        speechSynthesis.cancel(); 
+        if (currentSpeechButtonId) {
+            resetSpeechButtonState(currentSpeechButtonId);
+        }
+    }
+
+    function resetSpeechButtonState(btnId) {
+        const targetBtn = document.getElementById(btnId);
+        if(targetBtn) {
+            targetBtn.innerHTML = "▶ Listen";
+        }
+        currentlyPlayingSpeech = null;
+        currentSpeechButtonId = null;
+    }
     
     function regenerateResponseMsg(msgIndex) {
         const chat = chats.find(c => c.id == curId);
         if(!chat || !chat.msgs[msgIndex]) return;
         
         const userText = chat.msgs[msgIndex].uText;
-        chat.msgs.splice(msgIndex); // Remove this AI response and anything after it
+        chat.msgs.splice(msgIndex); 
         save();
         loadChat(curId);
         document.getElementById("ui").value = userText;
@@ -1116,6 +1211,7 @@
     }
 
     async function fetchWithFallback(messages, useVision) {
+        // OpenRouter and Groq fallbacks calibrated to match advanced logic structures
         let openRouterModel = useVision ? "meta-llama/llama-3.2-11b-vision-instruct:free" : "meta-llama/llama-3.3-70b-instruct:free";
         let groqModel = useVision ? "llama-3.2-11b-vision-preview" : "llama-3.3-70b-versatile";
 
@@ -1146,7 +1242,7 @@
         const inp = document.getElementById("ui"), txt = inp.value.trim();
         if(!txt && attachedFiles.length === 0) return;
 
-        // Trial System Check (No free plan)
+        // Trial System Check
         if (!activePlan) {
             if (trialMessageCount >= 5) {
                 openPremium();
@@ -1168,7 +1264,7 @@
                 if(f.type === 'image') {
                     galleryHtml += `<div class="media-capsule" onclick="openLightbox('${f.dataURL}')"><img src="${f.dataURL}"></div>`;
                     useVision = true;
-                    if(!localAttachedData) localAttachedData = f.dataURL; // Pass first image to Vision API if multiple
+                    if(!localAttachedData) localAttachedData = f.dataURL; 
                 }
             });
             galleryHtml += '</div>';
@@ -1215,9 +1311,9 @@
         }
 
         let sysContent = "You are Phraortes. ";
-        if(activeModel === '2.6') sysContent += "You are version 2.6. Respond concisely, rapidly, and directly.";
-        else if(activeModel === '2.7') sysContent += "You are version 2.7. Deep Thinking Mode Enabled. Analyze step-by-step, explain your internal logic, be highly structural.";
-        else if(activeModel === '2.8') sysContent += "You are version 2.8 Premium Core. Answer with professional engineering architecture, extensive Markdown Tables, specialized charts, and syntax-perfect code blocks.";
+        if(activeModel === '2.6') sysContent += "You are connected via OpenAI o1 engine slot. Provide precise architectures, multi-layered responses and explicit steps.";
+        else if(activeModel === '2.7') sysContent += "You are connected via Claude 3.5 Sonnet pipeline. Maintain extreme clarity, brilliant code structures and analytical context frameworks.";
+        else if(activeModel === '2.8') sysContent += "You are powered by DeepSeek V3 engine core. Deliver rich data metrics, complete lists, charts and rapid answers.";
 
         let apiMessages = [{role: "system", content: sysContent}];
         chat.msgs.forEach(m => {
@@ -1258,12 +1354,13 @@
     function finishAITurn(aiId, htmlContent, rawContent, chat, userHtml, userTxt, msgIndex) {
         const w = document.getElementById(aiId).parentElement;
         const copyRaw = encodeURIComponent(rawContent);
+        const dynamicSpeechButtonId = `speech-trigger-btn-${msgIndex}-${Date.now()}`;
         
         w.innerHTML = `
             <div class="msg ai" id="${aiId}"></div>
             <div class="listen-ops">
                 <button class="l-btn copy-btn-new" onclick="copyResponseModern(this, '${copyRaw}')">📋 Copy</button>
-                <button class="l-btn" onclick="speakText('${aiId}')">▶ Listen</button>
+                <button class="l-btn" id="${dynamicSpeechButtonId}" onclick="toggleSpeechPlayback('${aiId}', '${dynamicSpeechButtonId}')">▶ Listen</button>
                 <button class="l-btn" onclick="regenerateResponseMsg(${msgIndex})">🔄 Regenerate</button>
                 <span style="color:rgba(255,255,255,0.15)">|</span>
                 <span class="react-btn" onclick="registerReaction(this, 'like')">👍</span>
@@ -1338,11 +1435,13 @@
                 const aId = "a-"+i;
                 const w = document.createElement("div"); w.className = "msg-wrap ai-wrap";
                 const copyRaw = encodeURIComponent(m.aRaw || "");
+                const dynamicSpeechButtonId = `speech-trigger-btn-${i}-${Date.now()}`;
+                
                 w.innerHTML = `
                     <div class="msg ai" id="${aId}">${m.a}</div>
                     <div class="listen-ops">
                         <button class="l-btn copy-btn-new" onclick="copyResponseModern(this, '${copyRaw}')">📋 Copy</button>
-                        <button class="l-btn" onclick="speakText('${aId}')">▶ Listen</button>
+                        <button class="l-btn" id="${dynamicSpeechButtonId}" onclick="toggleSpeechPlayback('${aId}', '${dynamicSpeechButtonId}')">▶ Listen</button>
                         <button class="l-btn" onclick="regenerateResponseMsg(${i})">🔄 Regenerate</button>
                         <span style="color:rgba(255,255,255,0.15)">|</span>
                         <span class="react-btn" onclick="registerReaction(this, 'like')">👍</span>
