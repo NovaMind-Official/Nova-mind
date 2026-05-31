@@ -55,7 +55,7 @@
 
         /* Workspace Mode (Darker & Serious for 2.6) */
         body.workspace-mode { --bg: #050505; --grad1: #0a0f0a; --grad2: #000000; --p: #00ff88; }
-        body.workspace-mode .bg-glow { opacity: 0.4; } /* Less distracting background */
+        body.workspace-mode .bg-glow { opacity: 0.4; }
 
         * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: background 0.8s var(--apple-ease); overflow: hidden; user-select: none; }
@@ -103,7 +103,7 @@
         .account-hub { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .account-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--p), #222); border: 2px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; color: #fff; transition: 0.4s; }
         
-        .account-menu { position: absolute; top: 55px; right: 0; width: 280px; background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(40px); border: 1px solid var(--brd); border-radius: 24px; padding: 15px; display: none; flex-direction: column; z-index: 5000; box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
+        .account-menu { position: absolute; top: 55px; right: 0; width: 300px; background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(40px); border: 1px solid var(--brd); border-radius: 24px; padding: 15px; display: none; flex-direction: column; z-index: 5000; box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
         .account-menu.show { display: flex; animation: glassPop 0.4s var(--apple-ease); }
         @keyframes glassPop { from { opacity: 0; transform: translateY(-10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
@@ -124,6 +124,11 @@
         .account-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
         body.light-theme .account-item:hover { background: rgba(0,0,0,0.05); color: #000; }
         .account-item.premium-btn { color: var(--premium-color); border: 1px solid rgba(223, 178, 87, 0.3); background: rgba(223, 178, 87, 0.08); font-weight: 800; text-align: center; margin-bottom: 10px; }
+        
+        /* Billing History Table */
+        .billing-list { max-height: 200px; overflow-y: auto; padding: 5px; margin-top: 10px; font-size: 12px; }
+        .billing-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .billing-item:last-child { border: none; }
         
         /* Toggle Switch Custom */
         .toggle-container { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; }
@@ -146,7 +151,7 @@
         .msg table { display: block; overflow-x: auto; white-space: nowrap; width: 100%; border-collapse: collapse; }
         
         .user { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-bottom-right-radius: 6px; font-weight: 500; box-shadow: 0 8px 32px rgba(0,0,0,0.2); user-select: none; -webkit-user-select: none; }
-        .ai { background: transparent; color: #fff; border: none; padding: 10px 0; font-weight: 400; cursor: default; user-select: text; -webkit-user-select: text; } /* Made AI text selectable now */
+        .ai { background: transparent; color: #fff; border: none; padding: 10px 0; font-weight: 400; cursor: default; user-select: text; -webkit-user-select: text; } 
 
         .msg.collapsed { max-height: 160px; overflow: hidden; position: relative; padding-bottom: 40px; mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%); }
         .read-more-trigger { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; backdrop-filter: blur(10px); border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; transition: 0.3s var(--apple-ease); z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
@@ -169,7 +174,7 @@
 
         pre { background: rgba(10,10,10,0.8) !important; backdrop-filter: blur(20px); border: 1px solid var(--brd); border-radius: 20px; padding: 40px 20px 20px; margin: 20px 0; overflow-x: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; }
         
-        .listen-ops { display: flex; gap: 12px; margin-top: 8px; padding-left: 5px; opacity: 0.5; transition: 0.3s; align-items: center; }
+        .listen-ops { display: flex; gap: 12px; margin-top: 8px; padding-left: 5px; opacity: 0.5; transition: 0.3s; align-items: center; flex-wrap: wrap; }
         .listen-ops:hover { opacity: 1; }
         .l-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; transition: 0.2s; font-weight: 600; }
         body.light-theme .l-btn { color: #555; }
@@ -192,12 +197,17 @@
         .media-capsule { display: inline-block; width: 90px; height: 90px; border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; margin-bottom: 8px; transition: transform 0.3s var(--apple-ease), box-shadow 0.3s; position: relative; background: rgba(255,255,255,0.05); }
         .media-capsule:hover { transform: scale(1.04); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
         .media-capsule img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .chat-gallery { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
 
-        /* Input Preview Container */
-        #input-preview-container { display: none; position: absolute; bottom: 80px; left: 8%; background: rgba(25,25,25,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); padding: 8px; border-radius: 18px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        #input-preview-img { width: 60px; height: 60px; object-fit: cover; border-radius: 12px; }
-        .remove-preview { position: absolute; top: -8px; right: -8px; background: #ff3b30; color: #fff; width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 12px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: 0.3s; }
-        .remove-preview:hover { transform: scale(1.1); }
+        /* Multiple File Input Preview Container */
+        #input-preview-container { display: none; position: absolute; bottom: 80px; left: 8%; background: rgba(25,25,25,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); padding: 12px; border-radius: 18px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-width: 80%; flex-direction: row; gap: 12px; overflow-x: auto; scrollbar-width: thin; }
+        .preview-wrapper { position: relative; transition: opacity 0.3s ease, transform 0.3s ease; }
+        .preview-wrapper.fade-out { opacity: 0; transform: scale(0.8); }
+        .input-preview-img { width: 65px; height: 65px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
+        .file-icon-preview { width: 65px; height: 65px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 24px; border: 1px solid rgba(255,255,255,0.2); }
+        .remove-preview { position: absolute; top: -6px; right: -6px; background: #ff3b30; color: #fff; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 11px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.4); transition: 0.3s; z-index: 10; border: 2px solid #222; }
+        .remove-preview:hover { transform: scale(1.15); }
 
         /* Apple Immersive Media Lightbox Overlay */
         #media-lightbox { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s var(--apple-ease); }
@@ -241,13 +251,14 @@
         .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 95%; max-width: 1000px; max-height: 85vh; background: rgba(15,15,15,0.85); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; z-index: 7000; display: none; flex-direction: column; opacity: 0; box-shadow: 0 40px 80px rgba(0,0,0,0.8); transition: 0.4s var(--apple-ease); }
         .modal-box.show { display: flex; transform: translate(-50%, -50%) scale(1); opacity: 1; }
         
-        .plans-container { padding: 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .loyalty-banner { background: linear-gradient(90deg, #af52de, #00f2ff); color: #fff; padding: 10px 20px; font-size: 13px; font-weight: 800; text-align: center; border-radius: 15px; margin: 0 30px 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+
+        .plans-container { padding: 20px 30px 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .plan-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 25px; display: flex; flex-direction: column; position: relative; transition: 0.4s; }
         body.light-theme .plan-card { background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); }
         .plan-card:hover { background: rgba(255,255,255,0.06); transform: translateY(-5px); border-color: rgba(255,255,255,0.3); }
         body.light-theme .plan-card:hover { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.25); }
         
-        .plan-card.free { border-color: rgba(255,255,255,0.1); }
         .plan-card.gold { border-color: var(--premium-color); background: rgba(223, 178, 87, 0.05); }
         .plan-card.gold:hover { box-shadow: 0 20px 50px var(--premium-glow); transform: scale(1.02); }
         
@@ -256,7 +267,6 @@
 
         .plan-title { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
         .plan-price { font-size: 24px; color: var(--p); font-weight: 800; margin-bottom: 20px; }
-        .plan-card.free .plan-price { color: #fff; }
         .plan-card.gold .plan-price { color: var(--premium-color); }
         .plan-card.plat .plan-price { color: var(--plat-color); }
         
@@ -390,20 +400,13 @@
         <button onclick="closeModal('premium-modal')" style="background:none; border:none; color:inherit; font-size:24px; cursor:pointer;">✕</button>
     </div>
     
+    <div class="loyalty-banner">
+        <span>🎉 Loyalty Offer: Secure your plan today and get priority access!</span>
+    </div>
+
     <div class="plans-container">
-        <div class="plan-card free" id="plan-free">
-            <div class="plan-title">Free</div>
-            <div class="plan-price">$0.00 <span style="font-size:14px; color:#888;">/mo</span></div>
-            <ul class="plan-features">
-                <li><b>Text Requests:</b> 15 daily (Standard Model)</li>
-                <li><b>Photo Studio:</b> 2 HD photos daily</li>
-                <li><b>Video Studio:</b> 3 standard videos monthly (Watermarked)</li>
-                <li><b>Music & Calls:</b> No access</li>
-            </ul>
-            <button class="btn-buy activated" id="btn-purchase-free">CURRENT PLAN</button>
-        </div>
-        <div class="plan-card" id="plan-silver">
-            <div class="plan-title">Bronze Pro</div>
+        <div class="plan-card" id="plan-starter">
+            <div class="plan-title">Starter</div>
             <div class="plan-price">$14.99 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
                 <li><b>Text Requests:</b> Unlimited Standard + 100 Advanced (2.6)</li>
@@ -412,11 +415,11 @@
                 <li><b>Audio Production:</b> 5 HQ tracks</li>
                 <li><b>AI Live Calls:</b> 60 minutes allocation</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-silver" onclick="purchasePlan(this, 'Bronze Pro', '14.99')">PURCHASE BRONZE</button>
+            <button class="btn-buy" id="btn-purchase-starter" onclick="purchasePlan(this, 'Starter', '14.99')">PURCHASE STARTER</button>
         </div>
-        <div class="plan-card gold" id="plan-gold">
-            <div class="plan-title" style="color:var(--premium-color)">Silver Cosmic</div>
-            <div class="plan-price">$39.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+        <div class="plan-card gold" id="plan-pro">
+            <div class="plan-title" style="color:var(--premium-color)">Pro</div>
+            <div class="plan-price">$49.99 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
                 <li><b>Text Requests:</b> Unlimited + 350 Advanced (2.6/2.7)</li>
                 <li><b>Photo Studio:</b> 120 Ultra HD photos</li>
@@ -425,11 +428,11 @@
                 <li><b>AI Live Calls:</b> 300 minutes Pro Calls</li>
                 <li><b>Early Access:</b> Get updates 1-2 weeks early</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-gold" onclick="purchasePlan(this, 'Silver Cosmic', '39.99')">UPGRADE TO SILVER</button>
+            <button class="btn-buy" id="btn-purchase-pro" onclick="purchasePlan(this, 'Pro', '49.99')">UPGRADE TO PRO</button>
         </div>
-        <div class="plan-card plat" id="plan-plat">
-            <div class="plan-title" style="color:var(--plat-color)">Gold Singularity</div>
-            <div class="plan-price">$89.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+        <div class="plan-card plat" id="plan-ultimate">
+            <div class="plan-title" style="color:var(--plat-color)">Ultimate (Unlimited)</div>
+            <div class="plan-price">$119.99 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
                 <li><b>Text Requests:</b> Truly Unlimited (Top Server Priority)</li>
                 <li><b>Photo Studio:</b> Unlimited Commercial Quality</li>
@@ -438,40 +441,40 @@
                 <li><b>AI Live Calls:</b> Unlimited High-Fidelity Calls</li>
                 <li><b>Day 1 Access & VIP:</b> Instant tools + VIP Support</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-plat" onclick="purchasePlan(this, 'Gold Singularity', '89.99')">ACTIVATE GOLD</button>
+            <button class="btn-buy" id="btn-purchase-ultimate" onclick="purchasePlan(this, 'Ultimate', '119.99')">ACTIVATE ULTIMATE</button>
         </div>
     </div>
     
     <div style="padding: 0 30px 30px;">
-        <button class="btn-addons" onclick="openAddonsSheet()">⚡ شارژ سریع و بسته‌های کمکی (Add-ons)</button>
+        <button class="btn-addons" onclick="openAddonsSheet()">⚡ View Add-on Packages</button>
     </div>
 
     <div id="addons-sheet" class="bottom-sheet" onclick="event.stopPropagation()">
         <div class="bs-header">
-            <span style="font-weight: 800; font-size: 16px;">بسته‌های افزودنی (Add-ons)</span>
+            <span style="font-weight: 800; font-size: 16px;">Add-on Packages</span>
             <button onclick="closeAddonsSheet()" style="background:rgba(255,255,255,0.1); border:none; color:inherit; font-size:18px; width:30px; height:30px; border-radius:50%; cursor:pointer;">✕</button>
         </div>
-        <p style="font-size: 12px; color: #888; margin-top: -10px; margin-bottom: 20px;">فقط به حجم اضافه نیاز دارید؟ بسته‌های زیر فوراً به حساب شما اضافه می‌شوند.</p>
+        <p style="font-size: 12px; color: #888; margin-top: -10px; margin-bottom: 20px;">Need extra limits? Instantly add resources to your active workspace.</p>
         <div class="addon-grid">
-            <div class="addon-item" onclick="purchaseAddon('Photo Pack', '2.99')">
+            <div class="addon-item" onclick="purchaseAddon('Extra Image Generation', '4.99')">
                 <span style="font-size: 20px;">📸</span>
-                <span class="addon-title">بسته عکس HD</span>
-                <span class="addon-price">شروع از $2.99</span>
+                <span class="addon-title">Extra Image Generation</span>
+                <span class="addon-price">$4.99</span>
             </div>
-            <div class="addon-item" onclick="purchaseAddon('Video Pack', '3.99')">
-                <span style="font-size: 20px;">🎬</span>
-                <span class="addon-title">بسته ویدیویی</span>
-                <span class="addon-price">شروع از $3.99</span>
+            <div class="addon-item" onclick="purchaseAddon('Premium AI Model', '9.99')">
+                <span style="font-size: 20px;">🧠</span>
+                <span class="addon-title">Premium AI Model</span>
+                <span class="addon-price">$9.99</span>
             </div>
-            <div class="addon-item" onclick="purchaseAddon('Music Pack', '1.99')">
-                <span style="font-size: 20px;">🎵</span>
-                <span class="addon-title">بسته موزیک</span>
-                <span class="addon-price">شروع از $1.99</span>
+            <div class="addon-item" onclick="purchaseAddon('Extended Context Window', '3.99')">
+                <span style="font-size: 20px;">📝</span>
+                <span class="addon-title">Extended Context Window</span>
+                <span class="addon-price">$3.99</span>
             </div>
-            <div class="addon-item" onclick="purchaseAddon('Chat/Call Pack', '2.49')">
-                <span style="font-size: 20px;">💬</span>
-                <span class="addon-title">بسته چت و تماس</span>
-                <span class="addon-price">شروع از $2.49</span>
+            <div class="addon-item" onclick="purchaseAddon('Priority Support', '2.00')">
+                <span style="font-size: 20px;">⭐</span>
+                <span class="addon-title">Priority Support</span>
+                <span class="addon-price">$2.00</span>
             </div>
         </div>
     </div>
@@ -485,10 +488,10 @@
     <button onclick="newChat()" class="btn-new">NEW CONVERSATION</button>
     
     <div class="history-filters">
-        <button class="hf-btn active" onclick="filterHistory('all', this)">همه</button>
-        <button class="hf-btn" onclick="filterHistory('code', this)">کدها</button>
-        <button class="hf-btn" onclick="filterHistory('image', this)">تصاویر</button>
-        <button class="hf-btn" onclick="filterHistory('music', this)">موزیک</button>
+        <button class="hf-btn active" onclick="filterHistory('all', this)">All</button>
+        <button class="hf-btn" onclick="filterHistory('code', this)">Code</button>
+        <button class="hf-btn" onclick="filterHistory('image', this)">Images</button>
+        <button class="hf-btn" onclick="filterHistory('music', this)">Music</button>
     </div>
 
     <div id="h-list"></div>
@@ -508,6 +511,7 @@
                 <div class="account-tabs">
                     <button class="tab-btn active" id="tab-profile-btn" onclick="switchAccountTab('profile')">Profile</button>
                     <button class="tab-btn" id="tab-settings-btn" onclick="switchAccountTab('settings')">Settings</button>
+                    <button class="tab-btn" id="tab-billing-btn" onclick="switchAccountTab('billing')">Billing</button>
                 </div>
                 
                 <div id="account-tab-profile">
@@ -540,6 +544,12 @@
                         User Identity Verified. Personalized responses set based on interface parameters.
                     </div>
                 </div>
+
+                <div id="account-tab-billing" style="display:none;">
+                    <div class="telemetry-title" style="margin-top:5px;">Recent Invoices</div>
+                    <div class="billing-list" id="billing-history-list">
+                        </div>
+                </div>
             </div>
         </div>
     </header>
@@ -570,11 +580,9 @@
 
     <footer>
         <div id="input-preview-container">
-            <img id="input-preview-img" src="">
-            <div class="remove-preview" onclick="clearPreview()">✕</div>
-        </div>
+            </div>
         <div class="input-bar" onclick="event.stopPropagation()">
-            <input type="file" id="file-upload" style="display:none;" onchange="handleFile(event)">
+            <input type="file" id="file-upload" style="display:none;" multiple onchange="handleMultipleFiles(event)">
             <button class="btn-icon" onclick="document.getElementById('file-upload').click()">📎</button>
             <button class="btn-icon" onclick="toggleGear(event)">⚙️</button>
             <textarea id="ui" placeholder="Message Phraortes..." spellcheck="false" onkeydown="handleEnter(event)"></textarea>
@@ -592,7 +600,10 @@
     let curId = localStorage.getItem("phraortes_id");
     let activeModel = localStorage.getItem("phraortes_active_model") || '2.6';
     let activePlan = localStorage.getItem("phraortes_active_plan") || null;
-    let attachedFileType = ""; let attachedFileName = ""; let attachedFileDataURL = "";
+    let trialMessageCount = parseInt(localStorage.getItem("phraortes_trial_count") || "0");
+    let billingHistory = JSON.parse(localStorage.getItem("phraortes_billing")) || [];
+    
+    let attachedFiles = []; // Holds multiple file objects { file, type, name, dataURL }
     let pendingCryptoPlan = "";
     let currentHistoryFilter = 'all';
 
@@ -615,11 +626,10 @@
     window.onload = () => {
         if (!chats.length) newChat(); else loadChat(curId);
         updatePlanButtonsUI();
+        renderBillingHistory();
         
-        // Initialize active model visual state instantly
         updateModelUIState(activeModel);
 
-        // Load Theme Preference Instantly
         if(localStorage.getItem("phraortes_theme") === "light") {
             document.body.classList.add("light-theme");
             document.getElementById("theme-toggle").checked = true;
@@ -655,7 +665,6 @@
         toast.innerHTML = `<span>⚡</span> ${message}`;
         tContainer.appendChild(toast);
         
-        // Trigger reflow
         void toast.offsetWidth;
         toast.classList.add("show");
 
@@ -674,28 +683,55 @@
         } 
     }
 
-    function handleFile(e) {
-        const file = e.target.files[0];
-        if(!file) return;
-        attachedFileName = file.name;
-        if (file.type.startsWith("image/")) {
-            attachedFileType = "image";
-            const reader = new FileReader();
-            reader.onload = (evt) => { 
-                attachedFileDataURL = evt.target.result; 
-                document.getElementById("input-preview-img").src = attachedFileDataURL;
-                document.getElementById("input-preview-container").style.display = "block";
-            };
-            reader.readAsDataURL(file);
-        } else {
-            attachedFileType = "file";
-        }
+    // Multiple File Handling
+    function handleMultipleFiles(e) {
+        const files = Array.from(e.target.files);
+        if(!files.length) return;
+
+        files.forEach(file => {
+            if (file.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = (evt) => { 
+                    attachedFiles.push({ file, type: 'image', name: file.name, dataURL: evt.target.result });
+                    renderPreviews();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                attachedFiles.push({ file, type: 'file', name: file.name, dataURL: null });
+                renderPreviews();
+            }
+        });
+        document.getElementById("file-upload").value = ""; 
     }
 
-    function clearPreview() {
-        document.getElementById("file-upload").value = "";
-        attachedFileName = ""; attachedFileType = ""; attachedFileDataURL = "";
-        document.getElementById("input-preview-container").style.display = "none";
+    function renderPreviews() {
+        const container = document.getElementById("input-preview-container");
+        if(attachedFiles.length === 0) {
+            container.style.display = "none";
+            return;
+        }
+        container.style.display = "flex";
+        container.innerHTML = "";
+        
+        attachedFiles.forEach((f, index) => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "preview-wrapper";
+            if (f.type === 'image') {
+                wrapper.innerHTML = `<img src="${f.dataURL}" class="input-preview-img"><div class="remove-preview" onclick="removePreview(${index}, this)">✕</div>`;
+            } else {
+                wrapper.innerHTML = `<div class="file-icon-preview">📄</div><div class="remove-preview" onclick="removePreview(${index}, this)">✕</div>`;
+            }
+            container.appendChild(wrapper);
+        });
+    }
+
+    function removePreview(index, btnElement) {
+        const wrapper = btnElement.parentElement;
+        wrapper.classList.add("fade-out");
+        setTimeout(() => {
+            attachedFiles.splice(index, 1);
+            renderPreviews();
+        }, 300);
     }
 
     function openLightbox(src) {
@@ -722,7 +758,6 @@
         else if(t.match(/\?|چرا|چگونه|کد|تحلیل|code/i)) { m = "mood-neu"; f=70; a=90; c=30; }
         
         document.body.className = m;
-        // Re-apply workspace mode if active
         if (activeModel === '2.6') document.body.classList.add("workspace-mode");
         if(document.getElementById("theme-toggle").checked) document.body.classList.add("light-theme");
         
@@ -749,8 +784,11 @@
     function switchAccountTab(tab) {
         document.getElementById("tab-profile-btn").classList.toggle("active", tab === 'profile');
         document.getElementById("tab-settings-btn").classList.toggle("active", tab === 'settings');
+        document.getElementById("tab-billing-btn").classList.toggle("active", tab === 'billing');
+        
         document.getElementById("account-tab-profile").style.display = tab === 'profile' ? 'block' : 'none';
         document.getElementById("account-tab-settings").style.display = tab === 'settings' ? 'block' : 'none';
+        document.getElementById("account-tab-billing").style.display = tab === 'billing' ? 'block' : 'none';
     }
 
     function toggleTheme() {
@@ -784,7 +822,6 @@
         const targetElement = document.getElementById('m-'+m.replace('.',''));
         if(targetElement) targetElement.classList.add('active');
         
-        // Ensure workspace styling persists on load
         if(m === '2.6') document.body.classList.add("workspace-mode");
         else document.body.classList.remove("workspace-mode");
     }
@@ -814,20 +851,19 @@
     }
 
     function updatePlanButtonsUI() {
-        const plans = ['Free', 'Bronze Pro', 'Silver Cosmic', 'Gold Singularity'];
-        const ids = ['btn-purchase-free', 'btn-purchase-silver', 'btn-purchase-gold', 'btn-purchase-plat'];
+        const plans = ['Starter', 'Pro', 'Ultimate'];
+        const ids = ['btn-purchase-starter', 'btn-purchase-pro', 'btn-purchase-ultimate'];
         
         ids.forEach((id, index) => {
             const btn = document.getElementById(id);
             if(btn) {
-                if(activePlan === plans[index] || (index===0 && !activePlan)) {
+                if(activePlan === plans[index]) {
                     btn.innerText = "CURRENT PLAN"; btn.classList.add("activated");
                 } else {
                     btn.classList.remove("activated");
-                    if(index===0) btn.innerText = "DOWNGRADE TO FREE";
-                    if(index===1) btn.innerText = "PURCHASE BRONZE";
-                    if(index===2) btn.innerText = "UPGRADE TO SILVER";
-                    if(index===3) btn.innerText = "ACTIVATE GOLD";
+                    if(index===0) btn.innerText = "PURCHASE STARTER";
+                    if(index===1) btn.innerText = "UPGRADE TO PRO";
+                    if(index===2) btn.innerText = "ACTIVATE ULTIMATE";
                 }
             }
         });
@@ -838,7 +874,7 @@
         document.getElementById("premium-modal").classList.remove("show");
         
         pendingCryptoPlan = plan;
-        document.getElementById("crypto-plan-name").innerText = plan;
+        document.getElementById("crypto-plan-name").innerText = plan + " Plan";
         document.getElementById("crypto-plan-price").innerText = "$" + price;
         updateCryptoNet();
         
@@ -881,18 +917,36 @@
         document.getElementById("txid-val").value = "";
         document.getElementById("crypto-modal").classList.remove("show");
         
-        // If it's an addon, we don't change the main plan. Just show success.
+        const dateStr = new Date().toLocaleDateString('en-GB');
+        
         if(!pendingCryptoPlan.includes("Add-on")) {
             activePlan = pendingCryptoPlan;
             localStorage.setItem("phraortes_active_plan", activePlan);
             updatePlanButtonsUI();
         }
+
+        billingHistory.unshift({ date: dateStr, item: pendingCryptoPlan, txid: txid.substring(0,8) + "..." });
+        localStorage.setItem("phraortes_billing", JSON.stringify(billingHistory));
+        renderBillingHistory();
         
-        alert(`Payment Verification Submitted!\n\nTXID: ${txid}\nItem: ${pendingCryptoPlan}\n\nYour sandbox environment will be updated after network confirmation.`);
+        alert(`Payment Verification Submitted!\n\nTXID: ${txid}\nItem: ${pendingCryptoPlan}\n\nYour sandbox environment has been updated.`);
         setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
     }
+    
+    function renderBillingHistory() {
+        const list = document.getElementById("billing-history-list");
+        if(billingHistory.length === 0) {
+            list.innerHTML = `<div style="text-align:center; padding: 20px; color:#666;">No recent invoices</div>`;
+            return;
+        }
+        list.innerHTML = billingHistory.map(b => `
+            <div class="billing-item">
+                <div><span style="color:#fff;">${b.item}</span><br><span style="color:#666;">TX: ${b.txid}</span></div>
+                <div style="color:var(--p); font-weight:700;">${b.date}</div>
+            </div>
+        `).join("");
+    }
 
-    // Modern Copy for AI Messages
     function copyResponseModern(btn, encTxt) {
         navigator.clipboard.writeText(decodeURIComponent(encTxt));
         const originalHTML = btn.innerHTML;
@@ -906,9 +960,7 @@
 
     let pressTimer;
     function startPress(e, type, id, text) {
-        // Removed long press for AI, keeping it for User and Session items
         if(type === 'ai') return;
-        
         if(e.button !== 0 && e.type !== 'touchstart') return; 
         pressTimer = setTimeout(() => { showContext(e, type, id, text); }, 400);
     }
@@ -967,12 +1019,8 @@
             const chat = chats.find(c => c.id == curId);
             if(chat && chat.msgs[index]) {
                 chat.msgs[index].uText = updatedText; chat.msgs[index].u = updatedText;
-                
-                // Clear old system response from storage array to re-trigger generation flow cleanly
                 chat.msgs.splice(index);
                 save();
-                
-                // Reload UI layout and re-send the newly edited text block natively
                 loadChat(curId);
                 document.getElementById("ui").value = updatedText;
                 send();
@@ -998,13 +1046,10 @@
         if(document.getElementById("sidebar").classList.contains("active")) toggleS();
     }
     
-    // Smart History Filter Logic
     function filterHistory(type, btnElement) {
         currentHistoryFilter = type;
-        
         document.querySelectorAll('.hf-btn').forEach(btn => btn.classList.remove('active'));
         if(btnElement) btnElement.classList.add('active');
-        
         renderH();
     }
 
@@ -1028,6 +1073,18 @@
         speechSynthesis.speak(u);
     }
     function stopSpeak() { speechSynthesis.cancel(); }
+    
+    function regenerateResponseMsg(msgIndex) {
+        const chat = chats.find(c => c.id == curId);
+        if(!chat || !chat.msgs[msgIndex]) return;
+        
+        const userText = chat.msgs[msgIndex].uText;
+        chat.msgs.splice(msgIndex); // Remove this AI response and anything after it
+        save();
+        loadChat(curId);
+        document.getElementById("ui").value = userText;
+        send();
+    }
 
     function applySmartReadMore(msgId) {
         const el = document.getElementById(msgId);
@@ -1071,7 +1128,7 @@
                 });
                 const data = await res.json();
                 if(!data.error) return data.choices[0].message.content;
-            } catch (e) { console.warn("OpenRouter Failed, shifting to Groq Fallback..."); }
+            } catch (e) { console.warn("OpenRouter Failed, shifting to Groq..."); }
         }
 
         const fullKey = _PART_A + _PART_B;
@@ -1087,25 +1144,48 @@
 
     async function send() {
         const inp = document.getElementById("ui"), txt = inp.value.trim();
-        if(!txt && !attachedFileName) return;
+        if(!txt && attachedFiles.length === 0) return;
+
+        // Trial System Check (No free plan)
+        if (!activePlan) {
+            if (trialMessageCount >= 5) {
+                openPremium();
+                showToast("Trial Limit Reached. Please select a plan.");
+                return;
+            }
+            trialMessageCount++;
+            localStorage.setItem("phraortes_trial_count", trialMessageCount);
+            if(trialMessageCount === 4) showToast("Warning: 1 Trial Message Remaining");
+        }
 
         let displayHtml = txt;
         let useVision = false;
+        let localAttachedData = "";
 
-        if(attachedFileName && attachedFileType === "image") {
-            displayHtml = `<div class="media-capsule" onclick="openLightbox('${attachedFileDataURL}')"><img src="${attachedFileDataURL}"></div>${txt ? '<br>'+txt : ''}`;
-            useVision = true;
-            clearPreview(); 
+        if(attachedFiles.length > 0) {
+            let galleryHtml = '<div class="chat-gallery">';
+            attachedFiles.forEach(f => {
+                if(f.type === 'image') {
+                    galleryHtml += `<div class="media-capsule" onclick="openLightbox('${f.dataURL}')"><img src="${f.dataURL}"></div>`;
+                    useVision = true;
+                    if(!localAttachedData) localAttachedData = f.dataURL; // Pass first image to Vision API if multiple
+                }
+            });
+            galleryHtml += '</div>';
+            displayHtml = galleryHtml + (txt ? '<br>'+txt : '');
+            attachedFiles = []; 
+            renderPreviews();
         }
 
         const chat = chats.find(c => c.id == curId);
         inp.value = ""; inp.style.height = "45px";
         
+        const msgIndex = chat.msgs.length;
         const timestampUnique = Date.now();
-        const uId = "u-"+timestampUnique;
+        const uId = "u-"+msgIndex;
         addUI(displayHtml || "[Media Uploaded]", "user", uId, txt);
         
-        const aiId = "ai-"+timestampUnique;
+        const aiId = "a-"+msgIndex;
         addUI(getDynamicLoader(txt), "ai", aiId, "");
 
         let isMediaCommand = false;
@@ -1115,22 +1195,22 @@
             isMediaCommand = true;
             const promptStr = txt.substring(9);
             const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptStr)}?width=800&height=800&nologo=true`;
-            finalHtmlResponse = `<div style="text-align:left;"><div class="media-capsule" style="width:130px; height:130px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ تصویر بر اساس: ${promptStr}</span></div>`;
+            finalHtmlResponse = `<div style="text-align:left;"><div class="media-capsule" style="width:130px; height:130px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ Prompt: ${promptStr}</span></div>`;
             finalRawResponse = "Image generated successfully via Pollinations.";
         } 
         else if(txt.toLowerCase().startsWith("/video ")) {
             isMediaCommand = true;
-            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎥</span><br><br><b>شبیه‌ساز ساخت ویدیو</b><br><span style="color:#aaa; font-size:12px;">درخواست شما در صف پردازش مدل ویدیویی قرار گرفت.</span></div>`;
+            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎥</span><br><br><b>Video Synthesis Sandbox</b><br><span style="color:#aaa; font-size:12px;">Request queued in video rendering engine.</span></div>`;
             finalRawResponse = "Video engine mock response.";
         }
         else if(txt.toLowerCase().startsWith("/music ")) {
             isMediaCommand = true;
-            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎵</span><br><br><b>شبیه‌ساز ساخت موزیک</b><br><span style="color:#aaa; font-size:12px;">تولید قطعه موسیقی با پرامپت شما.</span><br><br><audio controls style="width:100%; filter: invert(1);"><source src="" type="audio/mpeg"></audio></div>`;
+            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎵</span><br><br><b>Audio Synthesis Sandbox</b><br><span style="color:#aaa; font-size:12px;">Generating audio track based on parameters.</span><br><br><audio controls style="width:100%; filter: invert(1);"><source src="" type="audio/mpeg"></audio></div>`;
             finalRawResponse = "Music engine mock response.";
         }
 
         if(isMediaCommand) {
-            setTimeout(() => { finishAITurn(aiId, finalHtmlResponse, finalRawResponse, chat, displayHtml, txt); }, 1500);
+            setTimeout(() => { finishAITurn(aiId, finalHtmlResponse, finalRawResponse, chat, displayHtml, txt, msgIndex); }, 1500);
             return;
         }
 
@@ -1145,9 +1225,8 @@
             apiMessages.push({role: "assistant", content: m.aRaw || m.a});
         });
 
-        if (attachedFileDataURL) {
-            apiMessages.push({ role: "user", content: [{ type: "text", text: txt || "Analyze." }, { type: "image_url", image_url: { url: attachedFileDataURL } }] });
-            attachedFileDataURL = "";
+        if (localAttachedData) {
+            apiMessages.push({ role: "user", content: [{ type: "text", text: txt || "Analyze." }, { type: "image_url", image_url: { url: localAttachedData } }] });
         } else {
             apiMessages.push({ role: "user", content: txt });
         }
@@ -1155,7 +1234,7 @@
         try {
             const full = await fetchWithFallback(apiMessages, useVision);
             let renderedHtml = marked.parse(full);
-            finishAITurn(aiId, renderedHtml, full, chat, displayHtml, txt);
+            finishAITurn(aiId, renderedHtml, full, chat, displayHtml, txt, msgIndex);
         } catch(e) { 
             document.getElementById(aiId).innerHTML = "System Error: " + e.message;
         }
@@ -1176,17 +1255,16 @@
         applySmartReadMore(aiId);
     }
 
-    function finishAITurn(aiId, htmlContent, rawContent, chat, userHtml, userTxt) {
+    function finishAITurn(aiId, htmlContent, rawContent, chat, userHtml, userTxt, msgIndex) {
         const w = document.getElementById(aiId).parentElement;
         const copyRaw = encodeURIComponent(rawContent);
         
-        // Removed long press attributes (onpointerdown, etc.) and top hover copy button for AI
         w.innerHTML = `
             <div class="msg ai" id="${aiId}"></div>
             <div class="listen-ops">
                 <button class="l-btn copy-btn-new" onclick="copyResponseModern(this, '${copyRaw}')">📋 Copy</button>
                 <button class="l-btn" onclick="speakText('${aiId}')">▶ Listen</button>
-                <button class="l-btn" onclick="stopSpeak()">■ Stop</button>
+                <button class="l-btn" onclick="regenerateResponseMsg(${msgIndex})">🔄 Regenerate</button>
                 <span style="color:rgba(255,255,255,0.15)">|</span>
                 <span class="react-btn" onclick="registerReaction(this, 'like')">👍</span>
                 <span class="react-btn" onclick="registerReaction(this, 'dislike')">👎</span>
@@ -1209,7 +1287,6 @@
             w.innerHTML = `<div style="text-align:center; margin:auto 0;"><h1 style="color:var(--p);font-weight:900;letter-spacing:2px;font-size:35px;">PHRAORTES</h1><p style="color:rgba(255,255,255,0.5)">System Active. Interconnected Sandbox Nodes online.</p></div>`;
         } else if (id === 'welcome-persona') {
             const copyRaw = encodeURIComponent(rawText);
-            // Replaced long press with modern copy structure
             w.innerHTML = `
                 <div class="msg ai" id="${id}">${t}</div>
                 <div class="listen-ops">
@@ -1230,7 +1307,7 @@
     function addCopyLogic() {
         document.querySelectorAll('pre').forEach(pre => {
             if(pre.querySelector('.copy-btn')) return;
-            const b = document.createElement('button'); b.innerText = 'Copy Code'; // Updated title
+            const b = document.createElement('button'); b.innerText = 'Copy Code'; 
             b.className = 'copy-btn';
             b.style = "position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:6px 12px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer; color:#fff; transition:0.3s; display:flex; align-items:center; gap:5px;";
             b.innerHTML = `<span>📋</span> Copy Code`;
@@ -1261,13 +1338,12 @@
                 const aId = "a-"+i;
                 const w = document.createElement("div"); w.className = "msg-wrap ai-wrap";
                 const copyRaw = encodeURIComponent(m.aRaw || "");
-                // Removed long press, added modern copy
                 w.innerHTML = `
                     <div class="msg ai" id="${aId}">${m.a}</div>
                     <div class="listen-ops">
                         <button class="l-btn copy-btn-new" onclick="copyResponseModern(this, '${copyRaw}')">📋 Copy</button>
                         <button class="l-btn" onclick="speakText('${aId}')">▶ Listen</button>
-                        <button class="l-btn" onclick="stopSpeak()">■ Stop</button>
+                        <button class="l-btn" onclick="regenerateResponseMsg(${i})">🔄 Regenerate</button>
                         <span style="color:rgba(255,255,255,0.15)">|</span>
                         <span class="react-btn" onclick="registerReaction(this, 'like')">👍</span>
                         <span class="react-btn" onclick="registerReaction(this, 'dislike')">👎</span>
@@ -1288,7 +1364,6 @@
     function renderH() {
         let sortedChats = [...chats].sort((x, y) => { return (y.pinned ? 1 : 0) - (x.pinned ? 1 : 0); });
         
-        // Simple mock filtering logic based on string presence
         if(currentHistoryFilter !== 'all') {
             sortedChats = sortedChats.filter(c => {
                 let allText = JSON.stringify(c).toLowerCase();
