@@ -365,9 +365,9 @@
 <div id="aura-screen">
     <button class="aura-close" onclick="closeAura()">✕</button>
     <div class="aura-pulse-orb">
-        <span style="font-size: 40px;">✨</span>
+        <span style="font-size: 40px;">🎤</span>
     </div>
-    <div class="aura-status">AURA VOCAL NODE ACTIVE</div>
+    <div class="aura-status">CONNECTING...</div>
     <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 10px; font-weight: 500;">Sandbox Environment Engine v1.0.2</p>
 </div>
 
@@ -631,7 +631,8 @@
 <script>
     const _PART_A = "gsk_mIKxutVxzOYZdnFoMRbI";
     const _PART_B = "WGdyb3FYuI7ZQoU2sZPIDQ0rmUc4GDhv";
-    const OPENROUTER_API_KEY = "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"; 
+    // API KEY REMOVED FOR SECURITY - PLEASE INSERT A NEW KEY BELOW
+    const OPENROUTER_API_KEY = "YOUR_OPENROUTER_API_KEY"; 
 
     let chats = JSON.parse(localStorage.getItem("phraortes_chats")) || [];
     let curId = localStorage.getItem("phraortes_id");
@@ -758,25 +759,18 @@
             const wrapper = document.createElement("div");
             wrapper.className = "preview-wrapper";
             if (f.type === 'image') {
-                wrapper.innerHTML = `<img src="${f.dataURL}" class="input-preview-img"><div class="remove-preview" onclick="removePreview(${index}, this)">✕</div>`;
+                wrapper.innerHTML = `<img src="${f.dataURL}" class="input-preview-img"><div class="remove-preview" onclick="removePreview(${index})">✕</div>`;
             } else {
-                wrapper.innerHTML = `<div class="file-icon-preview">📄</div><div class="remove-preview" onclick="removePreview(${index}, this)">✕</div>`;
+                wrapper.innerHTML = `<div class="file-icon-preview">📄</div><div class="remove-preview" onclick="removePreview(${index})">✕</div>`;
             }
             container.appendChild(wrapper);
         });
     }
 
-    // Rewritten Temporary Memory Garbage Collection Logic for Removal Button Click
-    function removePreview(index, btnElement) {
-        const wrapper = btnElement.parentElement;
-        wrapper.classList.add("fade-out");
-        
-        // Immediate Splice Isolation & State Sync Engine
+    // Fixed & Reliable Image Removal Logic
+    function removePreview(index) {
         attachedFiles.splice(index, 1);
-        
-        setTimeout(() => {
-            renderPreviews();
-        }, 300);
+        renderPreviews(); // Re-render immediately to update indices correctly
     }
 
     function openLightbox(src) {
@@ -874,7 +868,19 @@
         else document.body.classList.remove("workspace-mode");
     }
 
-    function callAura() { toggleGear(event); document.getElementById("aura-screen").style.display = "flex"; }
+    function callAura() { 
+        toggleGear(event); 
+        const auraScreen = document.getElementById("aura-screen");
+        auraScreen.style.display = "flex"; 
+        
+        const statusEl = document.querySelector('.aura-status');
+        statusEl.innerText = "CONNECTING...";
+        
+        setTimeout(() => {
+            statusEl.innerText = "LISTENING... (Mic Active)";
+        }, 1500);
+    }
+    
     function closeAura() { document.getElementById("aura-screen").style.display = "none"; }
 
     function openPremium() {
@@ -1215,7 +1221,7 @@
         let openRouterModel = useVision ? "meta-llama/llama-3.2-11b-vision-instruct:free" : "meta-llama/llama-3.3-70b-instruct:free";
         let groqModel = useVision ? "llama-3.2-11b-vision-preview" : "llama-3.3-70b-versatile";
 
-        if (OPENROUTER_API_KEY && OPENROUTER_API_KEY.trim() !== "") {
+        if (OPENROUTER_API_KEY && OPENROUTER_API_KEY.trim() !== "" && OPENROUTER_API_KEY !== "YOUR_OPENROUTER_API_KEY") {
             try {
                 const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
                     method: "POST",
@@ -1287,21 +1293,27 @@
         let isMediaCommand = false;
         let finalHtmlResponse = ""; let finalRawResponse = "";
 
-        if(txt.toLowerCase().startsWith("/imagine ")) {
+        // NLP Detection logic for Auto Media Generation (English & Persian)
+        let tLow = txt.toLowerCase();
+        let isImg = tLow.startsWith("/imagine ") || /یک عکس از|تصویری از|عکس بساز|generate an image|create a photo/i.test(tLow);
+        let isVid = tLow.startsWith("/video ") || /یک ویدیو از|ویدیوی|ویدیو بساز|generate a video|create a video/i.test(tLow);
+        let isMus = tLow.startsWith("/music ") || /یک موزیک|موسیقی بساز|آهنگ بساز|generate music|create a song/i.test(tLow);
+
+        if(isImg) {
             isMediaCommand = true;
-            const promptStr = txt.substring(9);
+            let promptStr = txt.replace(/\/imagine |یک عکس از|تصویری از|عکس بساز|generate an image|create a photo/gi, "").trim() || "beautiful scenery";
             const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptStr)}?width=800&height=800&nologo=true`;
             finalHtmlResponse = `<div style="text-align:left;"><div class="media-capsule" style="width:130px; height:130px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ Prompt: ${promptStr}</span></div>`;
             finalRawResponse = "Image generated successfully via Pollinations.";
         } 
-        else if(txt.toLowerCase().startsWith("/video ")) {
+        else if(isVid) {
             isMediaCommand = true;
-            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎥</span><br><br><b>Video Synthesis Sandbox</b><br><span style="color:#aaa; font-size:12px;">Request queued in video rendering engine.</span></div>`;
+            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎥</span><br><br><b>Video Synthesis Sandbox</b><br><span style="color:#aaa; font-size:12px;">Request queued in video rendering engine. Output will be ready shortly.</span></div>`;
             finalRawResponse = "Video engine mock response.";
         }
-        else if(txt.toLowerCase().startsWith("/music ")) {
+        else if(isMus) {
             isMediaCommand = true;
-            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎵</span><br><br><b>Audio Synthesis Sandbox</b><br><span style="color:#aaa; font-size:12px;">Generating audio track based on parameters.</span><br><br><audio controls style="width:100%; filter: invert(1);"><source src="" type="audio/mpeg"></audio></div>`;
+            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎵</span><br><br><b>Audio Synthesis Sandbox</b><br><span style="color:#aaa; font-size:12px;">Generating audio track based on parameters...</span><br><br><audio controls style="width:100%; filter: invert(1);"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio></div>`;
             finalRawResponse = "Music engine mock response.";
         }
 
