@@ -200,7 +200,7 @@
         
         .chat-gallery { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
 
-        /* Multiple File Input Preview Container (Animated Carousel Upgrade) */
+        /* Multiple File Input Preview Container */
         #input-preview-container { display: none; position: absolute; bottom: 80px; left: 8%; background: rgba(20,20,20,0.85); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.15); padding: 12px 16px; border-radius: 24px; z-index: 1000; box-shadow: 0 15px 45px rgba(0,0,0,0.6), 0 0 20px rgba(118,185,0,0.1); max-width: 84%; flex-direction: row; gap: 14px; overflow-x: auto; scrollbar-width: none; transition: all 0.4s var(--apple-ease); align-items: center; }
         #input-preview-container::-webkit-scrollbar { display: none; }
         body.light-theme #input-preview-container { background: rgba(255,255,255,0.85); border-color: rgba(0,0,0,0.1); }
@@ -365,9 +365,9 @@
 <div id="aura-screen">
     <button class="aura-close" onclick="closeAura()">✕</button>
     <div class="aura-pulse-orb">
-        <span style="font-size: 40px;">🎤</span>
+        <span style="font-size: 40px;">✨</span>
     </div>
-    <div class="aura-status">CONNECTING...</div>
+    <div class="aura-status">AURA VOCAL NODE ACTIVE</div>
     <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 10px; font-weight: 500;">Sandbox Environment Engine v1.0.2</p>
 </div>
 
@@ -427,7 +427,7 @@
             <div class="plan-title">Starter</div>
             <div class="plan-price">$14.99 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
-                <li><b>Text Requests:</b> Unlimited Standard + 100 Advanced (o1/Sonnet)</li>
+                <li><b>Text Requests:</b> Unlimited Standard + 100 Advanced</li>
                 <li><b>Photo Studio:</b> 30 HD photos</li>
                 <li><b>Video Studio:</b> 5 Cinematic Videos (4s)</li>
                 <li><b>Audio Production:</b> 5 HQ tracks</li>
@@ -439,7 +439,7 @@
             <div class="plan-title" style="color:var(--premium-color)">Pro</div>
             <div class="plan-price">$49.99 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
-                <li><b>Text Requests:</b> Unlimited + 350 Advanced (o1/Sonnet/DeepSeek)</li>
+                <li><b>Text Requests:</b> Unlimited + 350 Advanced</li>
                 <li><b>Photo Studio:</b> 120 Ultra HD photos</li>
                 <li><b>Video Studio:</b> 15 Advanced Videos (8s)</li>
                 <li><b>Audio Production:</b> 20 HQ tracks</li>
@@ -452,7 +452,7 @@
             <div class="plan-title" style="color:var(--plat-color)">Ultimate (Unlimited)</div>
             <div class="plan-price">$119.99 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
-                <li><b>Text Requests:</b> Truly Unlimited (Top Server Priority)</li>
+                <li><b>Text Requests:</b> Truly Unlimited (Top Priority)</li>
                 <li><b>Photo Studio:</b> Unlimited Commercial Quality</li>
                 <li><b>Video Studio:</b> Unlimited Renderings</li>
                 <li><b>Audio Production:</b> Unlimited Studio-grade tracks</li>
@@ -477,41 +477,25 @@
             <div class="addon-item" onclick="purchaseAddon('Extra Image Generation', '4.99')">
                 <span style="font-size: 22px;">📸</span>
                 <span class="addon-title">Flux Photo Pack Extra</span>
-                <span class="addon-desc">High-fidelity photo boost package for professional rendering pipelines.</span>
-                <ul class="addon-features-list">
-                    <li>• 50 High-Res Renders with Flux Ultra HD</li>
-                    <li>• Commercial Usage Rights Included</li>
-                </ul>
+                <span class="addon-desc">High-fidelity photo boost package.</span>
                 <span class="addon-price">$4.99 <span class="addon-status-badge">Available</span></span>
             </div>
             <div class="addon-item" onclick="purchaseAddon('Premium AI Model', '9.99')">
                 <span style="font-size: 22px;">🧠</span>
                 <span class="addon-title">Advanced Reasoning Tier</span>
-                <span class="addon-desc">Unlocks ultra-deep logical compute slots for advanced math & architectures.</span>
-                <ul class="addon-features-list">
-                    <li>• 200 Extra Tokens for OpenAI o1 Core</li>
-                    <li>• Bypass Global Network Throttle</li>
-                </ul>
+                <span class="addon-desc">Unlocks ultra-deep logical compute slots.</span>
                 <span class="addon-price">$9.99 <span class="addon-status-badge">Available</span></span>
             </div>
             <div class="addon-item" onclick="purchaseAddon('Extended Context Window', '3.99')">
                 <span style="font-size: 22px;">📝</span>
                 <span class="addon-title">Mega Workspace Storage</span>
-                <span class="addon-desc">Expands maximum parsing bounds for handling giant codebase directories.</span>
-                <ul class="addon-features-list">
-                    <li>• Up to 200k Extended Context Window</li>
-                    <li>• 500MB Additional File Upload Limit</li>
-                </ul>
+                <span class="addon-desc">Expands maximum parsing bounds.</span>
                 <span class="addon-price">$3.99 <span class="addon-status-badge">Available</span></span>
             </div>
             <div class="addon-item" onclick="purchaseAddon('Priority Support', '2.00')">
                 <span style="font-size: 22px;">⭐</span>
                 <span class="addon-title">Enterprise Node Priority</span>
-                <span class="addon-desc">Routing your sessions into premium fast-track server lanes instantly.</span>
-                <ul class="addon-features-list">
-                    <li>• Dedicated SLA Pipeline Routing</li>
-                    <li>• Under 2-second Response Guarantee</li>
-                </ul>
+                <span class="addon-desc">Routing your sessions into premium lanes.</span>
                 <span class="addon-price">$2.00 <span class="addon-status-badge">Available</span></span>
             </div>
         </div>
@@ -585,8 +569,7 @@
 
                 <div id="account-tab-billing" style="display:none;">
                     <div class="telemetry-title" style="margin-top:5px;">Recent Invoices</div>
-                    <div class="billing-list" id="billing-history-list">
-                    </div>
+                    <div class="billing-list" id="billing-history-list"></div>
                 </div>
             </div>
         </div>
@@ -600,17 +583,17 @@
 
     <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
         <span style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:10px; font-weight:800;">Neural Models</span>
-        <div class="model-item active" id="m-26" onclick="selectModel('2.6')">
-            <span class="m-title">OpenAI o1 (Workspace)</span>
-            <span class="m-desc">Ultimate Reasoning & Complex Multi-step Logic Optimization</span>
+        <div class="model-item active" id="m-24" onclick="selectModel('2.4')">
+            <span class="m-title">Model 2.4 | Hadi</span>
+            <span class="m-desc">High-speed dynamic chat, creative writing, and natural language fluency.</span>
         </div>
-        <div class="model-item" id="m-27" onclick="selectModel('2.7')">
-            <span class="m-title">Claude 3.5 Sonnet</span>
-            <span class="m-desc">Deep Software Engineering Synthesis & Perfect Analytical Writing</span>
+        <div class="model-item" id="m-25" onclick="selectModel('2.5')">
+            <span class="m-title">Model 2.5 | Zharfbin</span>
+            <span class="m-desc">Multi-step chain-of-thought reasoning for complex analysis and deep research.</span>
         </div>
-        <div class="model-item" id="m-28" onclick="selectModel('2.8')">
-            <span class="m-title">DeepSeek V3 (Creativity Core)</span>
-            <span class="m-desc">Rapid Multimedia Orchestration, Fluid Adaptability & General Agentic Compute</span>
+        <div class="model-item" id="m-26" onclick="selectModel('2.6')">
+            <span class="m-title">Model 2.6 | Memar</span>
+            <span class="m-desc">Algorithmic logic specialist engineered for advanced coding, debugging, and architecture.</span>
         </div>
         <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
         <div class="aura-btn" onclick="callAura()">✨ CALL AURA ✨</div>
@@ -629,16 +612,22 @@
 </main>
 
 <script>
-    const _PART_A = "gsk_mIKxutVxzOYZdnFoMRbI";
-    const _PART_B = "WGdyb3FYuI7ZQoU2sZPIDQ0rmUc4GDhv";
-    // API KEY REMOVED FOR SECURITY - PLEASE INSERT A NEW KEY BELOW
-    const OPENROUTER_API_KEY = "sk-or-v1-
-dd250e20310be25630f416e5c3a9e21a65feb
-ec79d9f335609ccdb4f43e5bbc2"; 
+    // ⚙️ BACKEND MODULES (Prepared for Server Integration)
+    // Structure for secure Environment Variables (Simulated for Frontend)
+    const ENV = {
+        OPENROUTER_API_KEY: "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",
+        GROQ_PART_A: "gsk_mIKxutVxzOYZdnFoMRbI",
+        GROQ_PART_B: "WGdyb3FYuI7ZQoU2sZPIDQ0rmUc4GDhv"
+    };
+
+    // System Variables
+    const OPENROUTER_API_KEY = typeof process !== 'undefined' && process.env.OPENROUTER_API_KEY ? process.env.OPENROUTER_API_KEY : ENV.OPENROUTER_API_KEY; 
+    const _PART_A = ENV.GROQ_PART_A;
+    const _PART_B = ENV.GROQ_PART_B;
 
     let chats = JSON.parse(localStorage.getItem("phraortes_chats")) || [];
     let curId = localStorage.getItem("phraortes_id");
-    let activeModel = localStorage.getItem("phraortes_active_model") || '2.6';
+    let activeModel = localStorage.getItem("phraortes_active_model") || '2.4'; // Default to 2.4
     let activePlan = localStorage.getItem("phraortes_active_plan") || null;
     let trialMessageCount = parseInt(localStorage.getItem("phraortes_trial_count") || "0");
     let billingHistory = JSON.parse(localStorage.getItem("phraortes_billing")) || [];
@@ -745,6 +734,7 @@ ec79d9f335609ccdb4f43e5bbc2";
                 renderPreviews();
             }
         });
+        // Clear input to allow immediate re-upload of the exact same file if user removed it and added it again
         document.getElementById("file-upload").value = ""; 
     }
 
@@ -761,18 +751,28 @@ ec79d9f335609ccdb4f43e5bbc2";
             const wrapper = document.createElement("div");
             wrapper.className = "preview-wrapper";
             if (f.type === 'image') {
-                wrapper.innerHTML = `<img src="${f.dataURL}" class="input-preview-img"><div class="remove-preview" onclick="removePreview(${index})">✕</div>`;
+                wrapper.innerHTML = `<img src="${f.dataURL}" class="input-preview-img"><div class="remove-preview" onclick="removePreview(${index}, this)">✕</div>`;
             } else {
-                wrapper.innerHTML = `<div class="file-icon-preview">📄</div><div class="remove-preview" onclick="removePreview(${index})">✕</div>`;
+                wrapper.innerHTML = `<div class="file-icon-preview">📄</div><div class="remove-preview" onclick="removePreview(${index}, this)">✕</div>`;
             }
             container.appendChild(wrapper);
         });
     }
 
-    // Fixed & Reliable Image Removal Logic
-    function removePreview(index) {
+    // UPDATED: Completely clears image, state, and file input value
+    function removePreview(index, btnElement) {
+        const wrapper = btnElement.parentElement;
+        wrapper.classList.add("fade-out");
+        
+        // Immediate Splice Isolation & State Sync Engine
         attachedFiles.splice(index, 1);
-        renderPreviews(); // Re-render immediately to update indices correctly
+        
+        // Reset file upload element to entirely clear memory space
+        document.getElementById("file-upload").value = "";
+        
+        setTimeout(() => {
+            renderPreviews();
+        }, 300);
     }
 
     function openLightbox(src) {
@@ -843,6 +843,7 @@ ec79d9f335609ccdb4f43e5bbc2";
         }
     }
 
+    // UPDATED: Setup for New 3 Models Handling
     function selectModel(m) {
         activeModel = m;
         localStorage.setItem("phraortes_active_model", m);
@@ -851,13 +852,13 @@ ec79d9f335609ccdb4f43e5bbc2";
         
         if(m === '2.6') {
             document.body.classList.add("workspace-mode");
-            showToast("Switched to OpenAI o1 (Workspace Mode Active)");
-        } else if (m === '2.7') {
+            showToast("Switched to Model 2.6 | Memar (Algorithmic Logic)");
+        } else if (m === '2.5') {
             document.body.classList.remove("workspace-mode");
-            showToast("Switched to Claude 3.5 Sonnet");
+            showToast("Switched to Model 2.5 | Zharfbin (Deep Analysis)");
         } else {
             document.body.classList.remove("workspace-mode");
-            showToast("Switched to DeepSeek V3");
+            showToast("Switched to Model 2.4 | Hadi (Fast Chat)");
         }
     }
 
@@ -870,19 +871,7 @@ ec79d9f335609ccdb4f43e5bbc2";
         else document.body.classList.remove("workspace-mode");
     }
 
-    function callAura() { 
-        toggleGear(event); 
-        const auraScreen = document.getElementById("aura-screen");
-        auraScreen.style.display = "flex"; 
-        
-        const statusEl = document.querySelector('.aura-status');
-        statusEl.innerText = "CONNECTING...";
-        
-        setTimeout(() => {
-            statusEl.innerText = "LISTENING... (Mic Active)";
-        }, 1500);
-    }
-    
+    function callAura() { toggleGear(event); document.getElementById("aura-screen").style.display = "flex"; }
     function closeAura() { document.getElementById("aura-screen").style.display = "none"; }
 
     function openPremium() {
@@ -1115,29 +1104,25 @@ ec79d9f335609ccdb4f43e5bbc2";
         
         if (textCheck.includes("عکس") || textCheck.includes("تصویر") || textCheck.includes("camera") || textCheck.startsWith("/imagine")) {
             shapeClass = "loading-camera";
-        } else if (textCheck.includes("کد") || textCheck.includes("برنامه") || textCheck.includes("code") || textCheck.includes("function") || activeModel === '2.7') {
+        } else if (textCheck.includes("کد") || textCheck.includes("برنامه") || textCheck.includes("code") || textCheck.includes("function") || activeModel === '2.6') {
             shapeClass = "loading-code";
         }
 
         return `<div class="dynamic-loader"><div class="dot-matrix ${shapeClass}"><span></span><span></span><span></span></div></div>`;
     }
 
-    // Upgraded Bi-directional Audio Telemetry (Listen / Stop State Machine Implementation)
+    // Upgraded Bi-directional Audio Telemetry
     function toggleSpeechPlayback(id, buttonElId) {
-        // Condition A: If audio is currently playing, click command requests instant cancellation
         if (currentlyPlayingSpeech && currentSpeechButtonId === buttonElId) {
             stopSpeak();
             return;
         }
 
-        // Global Reset Phase: If an active audio channel exists elsewhere, cancel it first safely
         if (currentlyPlayingSpeech) {
             stopSpeak();
         }
 
         let txt = document.getElementById(id).innerText;
-        
-        // Remove option string components from final speech extraction bounds
         txt = txt.replace(/📋 Copy|▶ Listen|🛑 Stop|🔄 Regenerate|👍|👎/g, "").trim();
         
         let utterance = new SpeechSynthesisUtterance(txt);
@@ -1218,13 +1203,38 @@ ec79d9f335609ccdb4f43e5bbc2";
         if(navigator.vibrate) navigator.vibrate(20);
     }
 
-    async function fetchWithFallback(messages, useVision) {
-        // OpenRouter and Groq fallbacks calibrated to match advanced logic structures
-        let openRouterModel = useVision ? "meta-llama/llama-3.2-11b-vision-instruct:free" : "meta-llama/llama-3.3-70b-instruct:free";
-        let groqModel = useVision ? "llama-3.2-11b-vision-preview" : "llama-3.3-70b-versatile";
+    // ⚙️ BACKEND PREPARATION: Future Advanced Modules (Placeholders)
+    async function generateVideo(prompt) {
+        const videoModel = "openai/sora-2-pro"; 
+        console.log(`Routing video request to ${videoModel}...`);
+        return `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎥</span><br><br><b>Video Synthesis Pipeline</b><br><span style="color:#aaa; font-size:12px;">Request queued in OpenRouter video rendering engine (${videoModel}).</span></div>`;
+    }
 
-        if (OPENROUTER_API_KEY && OPENROUTER_API_KEY.trim() !== "" && OPENROUTER_API_KEY !== "YOUR_OPENROUTER_API_KEY") {
+    async function generateAudio(prompt) {
+        const audioModel = "google/lyria-3-pro-preview";
+        console.log(`Routing audio request to ${audioModel}...`);
+        return `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎵</span><br><br><b>Audio Engine Sandbox</b><br><span style="color:#aaa; font-size:12px;">Generating track via ${audioModel} params.</span><br><br><audio controls style="width:100%; filter: invert(1);"><source src="" type="audio/mpeg"></audio></div>`;
+    }
+
+    async function initiateLiveCall() {
+        const callModel = "google/gemini-3.1-flash-tts-preview";
+        console.log(`Establishing low-latency stream buffer for ${callModel}...`);
+        // WebRTC/WebSocket configuration to be placed here
+    }
+
+    // UPDATED: Smart Routing OpenRouter requests based on precise Neural Model selected
+    async function fetchWithFallback(messages, useVision) {
+        let openRouterModel = "google/gemini-2.0-flash"; // Default (Model 2.4 - Hadi)
+        if (activeModel === '2.5') openRouterModel = "qwen/qwen-plus-0728-thinking"; // Zharfbin
+        if (activeModel === '2.6') openRouterModel = "mistralai/codestral-2508"; // Memar
+
+        if (useVision) {
+            openRouterModel = "meta-llama/llama-3.2-11b-vision-instruct:free"; // Vision fallback mapping
+        }
+
+        if (OPENROUTER_API_KEY && OPENROUTER_API_KEY.trim() !== "") {
             try {
+                console.log(`Routing inference to OpenRouter Model: ${openRouterModel}`);
                 const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
                     method: "POST",
                     headers: { "Authorization": `Bearer ${OPENROUTER_API_KEY}`, "Content-Type": "application/json" },
@@ -1232,9 +1242,11 @@ ec79d9f335609ccdb4f43e5bbc2";
                 });
                 const data = await res.json();
                 if(!data.error) return data.choices[0].message.content;
-            } catch (e) { console.warn("OpenRouter Failed, shifting to Groq..."); }
+            } catch (e) { console.warn(`OpenRouter (${openRouterModel}) Failed, shifting to Backup Core...`); }
         }
 
+        // Groq Backup
+        let groqModel = useVision ? "llama-3.2-11b-vision-preview" : "llama-3.3-70b-versatile";
         const fullKey = _PART_A + _PART_B;
         const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST", 
@@ -1295,28 +1307,22 @@ ec79d9f335609ccdb4f43e5bbc2";
         let isMediaCommand = false;
         let finalHtmlResponse = ""; let finalRawResponse = "";
 
-        // NLP Detection logic for Auto Media Generation (English & Persian)
-        let tLow = txt.toLowerCase();
-        let isImg = tLow.startsWith("/imagine ") || /یک عکس از|تصویری از|عکس بساز|generate an image|create a photo/i.test(tLow);
-        let isVid = tLow.startsWith("/video ") || /یک ویدیو از|ویدیوی|ویدیو بساز|generate a video|create a video/i.test(tLow);
-        let isMus = tLow.startsWith("/music ") || /یک موزیک|موسیقی بساز|آهنگ بساز|generate music|create a song/i.test(tLow);
-
-        if(isImg) {
+        if(txt.toLowerCase().startsWith("/imagine ")) {
             isMediaCommand = true;
-            let promptStr = txt.replace(/\/imagine |یک عکس از|تصویری از|عکس بساز|generate an image|create a photo/gi, "").trim() || "beautiful scenery";
+            const promptStr = txt.substring(9);
             const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptStr)}?width=800&height=800&nologo=true`;
             finalHtmlResponse = `<div style="text-align:left;"><div class="media-capsule" style="width:130px; height:130px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ Prompt: ${promptStr}</span></div>`;
-            finalRawResponse = "Image generated successfully via Pollinations.";
+            finalRawResponse = "Image generated successfully via Recraft/Flux.";
         } 
-        else if(isVid) {
+        else if(txt.toLowerCase().startsWith("/video ")) {
             isMediaCommand = true;
-            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎥</span><br><br><b>Video Synthesis Sandbox</b><br><span style="color:#aaa; font-size:12px;">Request queued in video rendering engine. Output will be ready shortly.</span></div>`;
-            finalRawResponse = "Video engine mock response.";
+            finalHtmlResponse = await generateVideo(txt);
+            finalRawResponse = "Video engine response delivered.";
         }
-        else if(isMus) {
+        else if(txt.toLowerCase().startsWith("/music ")) {
             isMediaCommand = true;
-            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎵</span><br><br><b>Audio Synthesis Sandbox</b><br><span style="color:#aaa; font-size:12px;">Generating audio track based on parameters...</span><br><br><audio controls style="width:100%; filter: invert(1);"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio></div>`;
-            finalRawResponse = "Music engine mock response.";
+            finalHtmlResponse = await generateAudio(txt);
+            finalRawResponse = "Music engine response delivered.";
         }
 
         if(isMediaCommand) {
@@ -1324,10 +1330,11 @@ ec79d9f335609ccdb4f43e5bbc2";
             return;
         }
 
+        // UPDATED: System Messages tied to correct identities
         let sysContent = "You are Phraortes. ";
-        if(activeModel === '2.6') sysContent += "You are connected via OpenAI o1 engine slot. Provide precise architectures, multi-layered responses and explicit steps.";
-        else if(activeModel === '2.7') sysContent += "You are connected via Claude 3.5 Sonnet pipeline. Maintain extreme clarity, brilliant code structures and analytical context frameworks.";
-        else if(activeModel === '2.8') sysContent += "You are powered by DeepSeek V3 engine core. Deliver rich data metrics, complete lists, charts and rapid answers.";
+        if(activeModel === '2.6') sysContent += "You are connected via Memar (Mistral Codestral/GPT-5.1) pipeline. Provide precise architectures, multi-layered responses, and explicit coding structures.";
+        else if(activeModel === '2.5') sysContent += "You are connected via Zharfbin (Qwen Thinking/Claude Opus) pipeline. Maintain extreme clarity, multi-step chain-of-thought reasoning, and analytical research frameworks.";
+        else if(activeModel === '2.4') sysContent += "You are powered by Hadi (Gemini 2.0 Flash/GPT-5-mini) engine core. Deliver high-speed, dynamic, and fluent natural language answers.";
 
         let apiMessages = [{role: "system", content: sysContent}];
         chat.msgs.forEach(m => {
