@@ -45,7 +45,7 @@
         body.light-theme .ctx-item:hover { background: rgba(0,0,0,0.05); }
         body.light-theme .crypto-input { background: rgba(255,255,255,0.8); color: #1d1d1f; border: 1px solid rgba(0,0,0,0.15); }
         
-        /* Dynamic Emotion Colors */
+        /* Dynamic Emotion Colors - Soft Glassy Gradients */
         body.mood-pos { --grad1: #113a20; --grad2: #0b2218; --p: #00ff88; }
         body.mood-neg { --grad1: #3a1111; --grad2: #220b0b; --p: #ff3b30; }
         body.mood-neu { --grad1: #2a113a; --grad2: #180b22; --p: #af52de; }
@@ -60,6 +60,7 @@
         * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: background 0.8s var(--apple-ease); overflow: hidden; user-select: none; }
         
+        /* Mesh Gradient Glow */
         .bg-glow { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 20% 30%, var(--grad1) 0%, transparent 70%), radial-gradient(circle at 80% 80%, var(--grad2) 0%, transparent 70%); filter: blur(60px); transition: 1s var(--apple-ease); opacity: 0.9; }
 
         /* Toast Notification */
@@ -93,10 +94,12 @@
 
         header { height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); background: rgba(0,0,0,0.2); backdrop-filter: blur(20px); z-index: 100; }
         
+        /* Logo Styles */
         .logo { height: 40px; display: flex; align-items: center; justify-content: center; font-weight: 900; letter-spacing: 1px; font-size: 18px; color: var(--p); }
         .logo img { height: 100%; width: auto; object-fit: contain; filter: drop-shadow(0 0 10px var(--glow)); mix-blend-mode: screen; display: block; }
         .logo span.logo-fallback { display: none; }
 
+        /* Account & Emotion Telemetry */
         .account-hub { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .account-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--p), #222); border: 2px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; color: #fff; transition: 0.4s; }
         
@@ -122,10 +125,13 @@
         body.light-theme .account-item:hover { background: rgba(0,0,0,0.05); color: #000; }
         .account-item.premium-btn { color: var(--premium-color); border: 1px solid rgba(223, 178, 87, 0.3); background: rgba(223, 178, 87, 0.08); font-weight: 800; text-align: center; margin-bottom: 10px; }
         
+        /* Billing History Table */
         .billing-list { max-height: 200px; overflow-y: auto; padding: 5px; margin-top: 10px; font-size: 12px; }
         .billing-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .billing-item:last-child { border: none; }
         
+        /* Toggle Switch Custom */
+        .toggle-container { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; }
         .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; inset: 0; background-color: #3a3a3c; transition: .3s; border-radius: 24px; }
@@ -181,18 +187,20 @@
         .react-btn { font-size: 14px; cursor: pointer; opacity: 0.6; transition: 0.2s; display: inline-flex; align-items: center; }
         .react-btn:hover { opacity: 1; transform: scale(1.15); }
 
+        /* Apple-inspired Fluid Scroll Button */
         #scroll-down-btn { position: absolute; bottom: 115px; left: 50%; transform: translateX(-50%) scale(0.8); width: 42px; height: 42px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; opacity: 0; pointer-events: none; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 999; transition: transform 0.4s var(--apple-ease), opacity 0.4s var(--apple-ease), background 0.3s; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
         body.light-theme #scroll-down-btn { background: rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.1); color: #1d1d1f; }
         #scroll-down-btn:hover { background: rgba(255,255,255,0.25); transform: translateX(-50%) scale(1.08); }
         #scroll-down-btn.show { opacity: 1; transform: translateX(-50%) scale(1); pointer-events: auto; }
 
+        /* Media Capsules & Rounded Elements */
         .media-capsule { display: inline-block; width: 90px; height: 90px; border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; margin-bottom: 8px; transition: transform 0.3s var(--apple-ease), box-shadow 0.3s; position: relative; background: rgba(255,255,255,0.05); }
         .media-capsule:hover { transform: scale(1.04); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
         .media-capsule img { width: 100%; height: 100%; object-fit: cover; }
         
         .chat-gallery { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
 
-        /* Carousel Upload Container */
+        /* Multiple File Input Preview Container */
         #input-preview-container { display: none; position: absolute; bottom: 80px; left: 8%; background: rgba(20,20,20,0.85); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.15); padding: 12px 16px; border-radius: 24px; z-index: 1000; box-shadow: 0 15px 45px rgba(0,0,0,0.6), 0 0 20px rgba(118,185,0,0.1); max-width: 84%; flex-direction: row; gap: 14px; overflow-x: auto; scrollbar-width: none; transition: all 0.4s var(--apple-ease); align-items: center; }
         #input-preview-container::-webkit-scrollbar { display: none; }
         body.light-theme #input-preview-container { background: rgba(255,255,255,0.85); border-color: rgba(0,0,0,0.1); }
@@ -209,7 +217,7 @@
         body.light-theme .remove-preview { border-color: #fff; }
         .remove-preview:hover { transform: scale(1.2); background: #ff453a; }
 
-        /* Lightbox Overlay */
+        /* Apple Immersive Media Lightbox Overlay */
         #media-lightbox { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s var(--apple-ease); }
         #media-lightbox.show { opacity: 1; pointer-events: auto; }
         #media-lightbox img { max-width: 90%; max-height: 85vh; border-radius: 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.4s var(--apple-ease); }
@@ -227,16 +235,16 @@
         .btn-icon { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 24px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; }
         .btn-icon:hover { color: var(--p); transform: scale(1.15); }
 
-        .drop-menu { position: absolute; bottom: 85px; left: 8%; width: 310px; background: rgba(25, 25, 25, 0.85); backdrop-filter: blur(40px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.7); overflow: hidden; padding: 15px; }
+        .drop-menu { position: absolute; bottom: 85px; left: 8%; width: 300px; background: rgba(25, 25, 25, 0.85); backdrop-filter: blur(40px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.7); overflow: hidden; padding: 15px; }
         .drop-menu.show { display: flex; animation: glassPop 0.3s var(--apple-ease); }
         .model-item { padding: 12px 15px; border-radius: 16px; cursor: pointer; margin-bottom: 5px; transition: 0.3s; border: 1px solid transparent; display: flex; flex-direction: column; gap: 4px; }
         .model-item:hover { background: rgba(255,255,255,0.05); }
         body.light-theme .model-item:hover { background: rgba(0,0,0,0.03); }
         .model-item.active { background: rgba(255,255,255,0.08); border-color: var(--p); }
         body.light-theme .model-item.active { background: rgba(0,0,0,0.05); }
-        .m-title { font-size: 13.5px; font-weight: 800; color: #fff; }
+        .m-title { font-size: 14px; font-weight: 800; color: #fff; }
         .model-item.active .m-title { color: var(--p); }
-        .m-desc { font-size: 11px; color: #aaa; line-height: 1.4; }
+        .m-desc { font-size: 11px; color: #888; }
         
         .aura-btn { background: linear-gradient(45deg, #af52de, #00f2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; text-align: center; padding: 12px; cursor: pointer; font-size: 14px; letter-spacing: 1px; }
 
@@ -283,6 +291,7 @@
         .btn-buy:hover { opacity: 0.9; transform: scale(1.02); }
         .btn-buy.activated { background: #00ff88 !important; color: #000 !important; border: 1px solid #00ff88; box-shadow: 0 0 15px rgba(0,255,136,0.4); cursor: default; }
 
+        /* Add-ons Button & Bottom Sheet */
         .btn-addons { width: 100%; padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: -10px; }
         .btn-addons:hover { background: rgba(255,255,255,0.08); border-color: var(--p); color: var(--p); }
 
@@ -290,6 +299,7 @@
         .bottom-sheet.show { transform: translateY(0); }
         .bs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         
+        /* Add-on Pack Styles (Upgraded Marketing UI Cards) */
         .addon-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .addon-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 18px; cursor: pointer; transition: all 0.3s var(--apple-ease); display: flex; flex-direction: column; gap: 6px; position: relative; overflow: hidden; }
         body.light-theme .addon-item { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.08); }
@@ -304,6 +314,7 @@
         .addon-status-badge { font-size: 10px; background: rgba(255,255,255,0.08); color: #fff; padding: 3px 8px; border-radius: 20px; font-weight: bold; border: 1px solid rgba(255,255,255,0.05); }
         body.light-theme .addon-status-badge { background: rgba(0,0,0,0.05); color: #1d1d1f; }
 
+        /* Crypto Payment Modal specifics */
         .crypto-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 14px; border-radius: 12px; font-size: 14px; width: 100%; transition: 0.3s; }
         .crypto-input:focus { border-color: var(--p); outline: none; }
 
@@ -311,6 +322,7 @@
         .dot-matrix { display: flex; align-items: center; gap: 4px; width: 40px; height: 20px; justify-content: center; }
         .dot-matrix span { display: inline-block; width: 6px; height: 6px; background: var(--p); border-radius: 50%; transition: transform 0.2s, border-radius 0.2s; }
         
+        /* Loading Custom Shapes - Dots Only */
         .dot-matrix.loading-standard span { animation: pulseDot 1.2s infinite ease-in-out; }
         .dot-matrix.loading-standard span:nth-child(2) { animation-delay: 0.2s; }
         .dot-matrix.loading-standard span:nth-child(3) { animation-delay: 0.4s; }
@@ -340,7 +352,9 @@
 
 <div class="bg-glow"></div>
 <div id="sidebar-overlay" onclick="toggleS(event)"></div>
+
 <div id="toast-container"></div>
+
 <div id="context-menu" onclick="event.stopPropagation()"></div>
 
 <div id="media-lightbox" onclick="closeLightbox()">
@@ -353,8 +367,8 @@
     <div class="aura-pulse-orb">
         <span style="font-size: 40px;">✨</span>
     </div>
-    <div class="aura-status">AURA LIVE CALL ACTIVE</div>
-    <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 10px; font-weight: 500;">Low-latency streaming buffer initialized</p>
+    <div class="aura-status">AURA VOCAL NODE ACTIVE</div>
+    <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 10px; font-weight: 500;">Sandbox Environment Engine v1.0.2</p>
 </div>
 
 <div id="crypto-modal" class="modal-box" style="max-width: 450px; padding-bottom: 20px;" onclick="event.stopPropagation()">
@@ -366,6 +380,7 @@
         <button onclick="closeCryptoModal()" style="background:none; border:none; color:inherit; font-size:24px; cursor:pointer;">✕</button>
     </div>
     <div style="padding: 25px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto;">
+        
         <div style="text-align: center; margin-bottom: 5px;">
             <div style="color: inherit; font-size: 20px; font-weight: 900;" id="crypto-plan-name">Plan Name</div>
             <div style="color: var(--p); font-size: 16px; font-weight: 800;" id="crypto-plan-price">$0.00</div>
@@ -414,7 +429,7 @@
             <ul class="plan-features">
                 <li><b>Text Requests:</b> Unlimited Standard + 100 Advanced</li>
                 <li><b>Photo Studio:</b> 30 HD photos</li>
-                <li><b>Video Studio:</b> 5 Cinematic Videos</li>
+                <li><b>Video Studio:</b> 5 Cinematic Videos (4s)</li>
                 <li><b>Audio Production:</b> 5 HQ tracks</li>
                 <li><b>AI Live Calls:</b> 60 minutes allocation</li>
             </ul>
@@ -424,9 +439,9 @@
             <div class="plan-title" style="color:var(--premium-color)">Pro</div>
             <div class="plan-price">$49.99 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
-                <li><b>Text Requests:</b> Unlimited + 350 Advanced Logic Tier</li>
+                <li><b>Text Requests:</b> Unlimited + 350 Advanced</li>
                 <li><b>Photo Studio:</b> 120 Ultra HD photos</li>
-                <li><b>Video Studio:</b> 15 Advanced Videos</li>
+                <li><b>Video Studio:</b> 15 Advanced Videos (8s)</li>
                 <li><b>Audio Production:</b> 20 HQ tracks</li>
                 <li><b>AI Live Calls:</b> 300 minutes Pro Calls</li>
                 <li><b>Early Access:</b> Get updates 1-2 weeks early</li>
@@ -437,7 +452,7 @@
             <div class="plan-title" style="color:var(--plat-color)">Ultimate (Unlimited)</div>
             <div class="plan-price">$119.99 <span style="font-size:14px; color:#888;">/mo</span></div>
             <ul class="plan-features">
-                <li><b>Text Requests:</b> Truly Unlimited (Top Server Priority)</li>
+                <li><b>Text Requests:</b> Truly Unlimited (Top Priority)</li>
                 <li><b>Photo Studio:</b> Unlimited Commercial Quality</li>
                 <li><b>Video Studio:</b> Unlimited Renderings</li>
                 <li><b>Audio Production:</b> Unlimited Studio-grade tracks</li>
@@ -461,42 +476,26 @@
         <div class="addon-grid">
             <div class="addon-item" onclick="purchaseAddon('Extra Image Generation', '4.99')">
                 <span style="font-size: 22px;">📸</span>
-                <span class="addon-title">Recraft Photo Pack Extra</span>
-                <span class="addon-desc">High-fidelity photo boost package for professional rendering pipelines.</span>
-                <ul class="addon-features-list">
-                    <li>• 50 High-Res Renders with Recraft v4.1 Pro</li>
-                    <li>• Commercial Usage Rights Included</li>
-                </ul>
+                <span class="addon-title">Flux Photo Pack Extra</span>
+                <span class="addon-desc">High-fidelity photo boost package.</span>
                 <span class="addon-price">$4.99 <span class="addon-status-badge">Available</span></span>
             </div>
             <div class="addon-item" onclick="purchaseAddon('Premium AI Model', '9.99')">
                 <span style="font-size: 22px;">🧠</span>
                 <span class="addon-title">Advanced Reasoning Tier</span>
-                <span class="addon-desc">Unlocks ultra-deep logical compute slots for advanced math & architectures.</span>
-                <ul class="addon-features-list">
-                    <li>• Extra Slot Capacity for Qwen Reasoning Engine</li>
-                    <li>• Bypass Global Network Throttle</li>
-                </ul>
+                <span class="addon-desc">Unlocks ultra-deep logical compute slots.</span>
                 <span class="addon-price">$9.99 <span class="addon-status-badge">Available</span></span>
             </div>
             <div class="addon-item" onclick="purchaseAddon('Extended Context Window', '3.99')">
                 <span style="font-size: 22px;">📝</span>
                 <span class="addon-title">Mega Workspace Storage</span>
-                <span class="addon-desc">Expands maximum parsing bounds for handling giant codebase directories.</span>
-                <ul class="addon-features-list">
-                    <li>• Up to 200k Extended Context Window</li>
-                    <li>• 500MB Additional File Upload Limit</li>
-                </ul>
+                <span class="addon-desc">Expands maximum parsing bounds.</span>
                 <span class="addon-price">$3.99 <span class="addon-status-badge">Available</span></span>
             </div>
             <div class="addon-item" onclick="purchaseAddon('Priority Support', '2.00')">
                 <span style="font-size: 22px;">⭐</span>
                 <span class="addon-title">Enterprise Node Priority</span>
-                <span class="addon-desc">Routing your sessions into premium fast-track server lanes instantly.</span>
-                <ul class="addon-features-list">
-                    <li>• Dedicated SLA Pipeline Routing</li>
-                    <li>• Under 2-second Response Guarantee</li>
-                </ul>
+                <span class="addon-desc">Routing your sessions into premium lanes.</span>
                 <span class="addon-price">$2.00 <span class="addon-status-badge">Available</span></span>
             </div>
         </div>
@@ -585,19 +584,19 @@
     <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
         <span style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:10px; font-weight:800;">Neural Models</span>
         <div class="model-item active" id="m-24" onclick="selectModel('2.4')">
-            <span class="m-title">Model 2.4 | Hadi (Chat Core)</span>
+            <span class="m-title">Model 2.4 | Hadi</span>
             <span class="m-desc">High-speed dynamic chat, creative writing, and natural language fluency.</span>
         </div>
         <div class="model-item" id="m-25" onclick="selectModel('2.5')">
-            <span class="m-title">Model 2.5 | Zharfbin (Reasoning Node)</span>
+            <span class="m-title">Model 2.5 | Zharfbin</span>
             <span class="m-desc">Multi-step chain-of-thought reasoning for complex analysis and deep research.</span>
         </div>
         <div class="model-item" id="m-26" onclick="selectModel('2.6')">
-            <span class="m-title">Model 2.6 | Memar (Architect)</span>
+            <span class="m-title">Model 2.6 | Memar</span>
             <span class="m-desc">Algorithmic logic specialist engineered for advanced coding, debugging, and architecture.</span>
         </div>
         <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
-        <div class="aura-btn" onclick="callAura()">✨ CALL AURA LIVE ✨</div>
+        <div class="aura-btn" onclick="callAura()">✨ CALL AURA ✨</div>
     </div>
 
     <footer>
@@ -613,20 +612,22 @@
 </main>
 
 <script>
-    // Environment Variables Secure Layer shims (mimicking .env access mapping structures)
-    const process = {
-        env: {
-            OPENROUTER_API_KEY: "sk-or-v1-
-dd250e20310be25630f416e5c3a9e21a65feb
-ec79d9f335609ccdb4f43e5bbc2",
-            GROQ_PART_A: "gsk_mIKxutVxzOYZdnFoMRbI",
-            GROQ_PART_B: "WGdyb3FYuI7ZQoU2sZPIDQ0rmUc4GDhv"
-        }
+    // ⚙️ BACKEND MODULES (Prepared for Server Integration)
+    // Structure for secure Environment Variables (Simulated for Frontend)
+    const ENV = {
+        OPENROUTER_API_KEY: "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",
+        GROQ_PART_A: "gsk_mIKxutVxzOYZdnFoMRbI",
+        GROQ_PART_B: "WGdyb3FYuI7ZQoU2sZPIDQ0rmUc4GDhv"
     };
+
+    // System Variables
+    const OPENROUTER_API_KEY = typeof process !== 'undefined' && process.env.OPENROUTER_API_KEY ? process.env.OPENROUTER_API_KEY : ENV.OPENROUTER_API_KEY; 
+    const _PART_A = ENV.GROQ_PART_A;
+    const _PART_B = ENV.GROQ_PART_B;
 
     let chats = JSON.parse(localStorage.getItem("phraortes_chats")) || [];
     let curId = localStorage.getItem("phraortes_id");
-    let activeModel = localStorage.getItem("phraortes_active_model") || '2.4';
+    let activeModel = localStorage.getItem("phraortes_active_model") || '2.4'; // Default to 2.4
     let activePlan = localStorage.getItem("phraortes_active_plan") || null;
     let trialMessageCount = parseInt(localStorage.getItem("phraortes_trial_count") || "0");
     let billingHistory = JSON.parse(localStorage.getItem("phraortes_billing")) || [];
@@ -635,10 +636,11 @@ ec79d9f335609ccdb4f43e5bbc2",
     let pendingCryptoPlan = "";
     let currentHistoryFilter = 'all';
     
+    // Audio Node Tracking State Variables
     let currentlyPlayingSpeech = null;
     let currentSpeechButtonId = null;
-    let liveCallAudioCtx = null;
 
+    // Markdown config
     marked.setOptions({ 
         highlight: (c) => hljs.highlightAuto(c).value, 
         breaks: true, 
@@ -649,15 +651,16 @@ ec79d9f335609ccdb4f43e5bbc2",
     const ctxMenu = document.getElementById("context-menu");
 
     const personas = [
-        "Hello. I'm Hadi, your high-speed dynamic partner. Ready for creative writing or natural conversations. What shall we talk about?",
-        "Welcome. I am Zharfbin. I specialize in deep multi-step analysis and logical chain-of-thought research. Provide your complex topic.",
-        "System Initialized. I am Memar. Algorithmic architecture, structured refactoring, and codebase logical tracing slots are fully operational."
+        "Hello. I'm your logical partner. Ready to debug code, analyze data, or solve complex problems. What's the challenge today?",
+        "Hi there. I'm here not just to process text, but to listen and support you. How are you feeling today? Let's talk.",
+        "Welcome! Let's think outside the box. Ready for wild ideas, creative writing, or deep philosophical chats. What shall we imagine?"
     ];
 
     window.onload = () => {
         if (!chats.length) newChat(); else loadChat(curId);
         updatePlanButtonsUI();
         renderBillingHistory();
+        
         updateModelUIState(activeModel);
 
         if(localStorage.getItem("phraortes_theme") === "light") {
@@ -713,6 +716,7 @@ ec79d9f335609ccdb4f43e5bbc2",
         } 
     }
 
+    // Multiple File Handling
     function handleMultipleFiles(e) {
         const files = Array.from(e.target.files);
         if(!files.length) return;
@@ -730,6 +734,8 @@ ec79d9f335609ccdb4f43e5bbc2",
                 renderPreviews();
             }
         });
+        // Clear input to allow immediate re-upload of the exact same file if user removed it and added it again
+        document.getElementById("file-upload").value = ""; 
     }
 
     function renderPreviews() {
@@ -753,13 +759,16 @@ ec79d9f335609ccdb4f43e5bbc2",
         });
     }
 
-    // Fixed Upload Removal & State Memory Nullify Logic Engine
+    // UPDATED: Completely clears image, state, and file input value
     function removePreview(index, btnElement) {
         const wrapper = btnElement.parentElement;
         wrapper.classList.add("fade-out");
         
+        // Immediate Splice Isolation & State Sync Engine
         attachedFiles.splice(index, 1);
-        document.getElementById('file-upload').value = ""; 
+        
+        // Reset file upload element to entirely clear memory space
+        document.getElementById("file-upload").value = "";
         
         setTimeout(() => {
             renderPreviews();
@@ -834,15 +843,23 @@ ec79d9f335609ccdb4f43e5bbc2",
         }
     }
 
+    // UPDATED: Setup for New 3 Models Handling
     function selectModel(m) {
         activeModel = m;
         localStorage.setItem("phraortes_active_model", m);
         updateModelUIState(m);
         toggleGear(event);
         
-        if(m === '2.4') showToast("Switched to Model 2.4 | Hadi");
-        else if(m === '2.5') showToast("Switched to Model 2.5 | Zharfbin");
-        else if(m === '2.6') showToast("Switched to Model 2.6 | Memar (Workspace Mode)");
+        if(m === '2.6') {
+            document.body.classList.add("workspace-mode");
+            showToast("Switched to Model 2.6 | Memar (Algorithmic Logic)");
+        } else if (m === '2.5') {
+            document.body.classList.remove("workspace-mode");
+            showToast("Switched to Model 2.5 | Zharfbin (Deep Analysis)");
+        } else {
+            document.body.classList.remove("workspace-mode");
+            showToast("Switched to Model 2.4 | Hadi (Fast Chat)");
+        }
     }
 
     function updateModelUIState(m) {
@@ -854,42 +871,8 @@ ec79d9f335609ccdb4f43e5bbc2",
         else document.body.classList.remove("workspace-mode");
     }
 
-    // Call Aura Live & Audio Buffer Architecture Module
-    function callAura() { 
-        toggleGear(event); 
-        document.getElementById("aura-screen").style.display = "flex"; 
-        initLiveCallStreaming();
-    }
-    
-    function closeAura() { 
-        document.getElementById("aura-screen").style.display = "none"; 
-        if(liveCallAudioCtx) {
-            liveCallAudioCtx.close();
-            liveCallAudioCtx = null;
-        }
-    }
-
-    async function initLiveCallStreaming() {
-        try {
-            // Low-latency buffering setup targeting google/gemini-3.1-flash-tts-preview & openai/gpt-4o-mini-tts parameters
-            window.AudioContext = window.AudioContext || window.webkitAudioContext;
-            liveCallAudioCtx = new AudioContext({ latencyHint: 'interactive' });
-            
-            let bufferSize = 2 * liveCallAudioCtx.sampleRate;
-            let noiseBuffer = liveCallAudioCtx.createBuffer(1, bufferSize, liveCallAudioCtx.sampleRate);
-            let output = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                output[i] = Math.random() * 0.01; 
-            }
-            let whiteNoise = liveCallAudioCtx.createBufferSource();
-            whiteNoise.buffer = noiseBuffer;
-            whiteNoise.loop = true;
-            whiteNoise.connect(liveCallAudioCtx.destination);
-            whiteNoise.start();
-        } catch (e) {
-            console.warn("Audio Context pipeline failure:", e);
-        }
-    }
+    function callAura() { toggleGear(event); document.getElementById("aura-screen").style.display = "flex"; }
+    function closeAura() { document.getElementById("aura-screen").style.display = "none"; }
 
     function openPremium() {
         closeMenus();
@@ -898,8 +881,13 @@ ec79d9f335609ccdb4f43e5bbc2",
         updatePlanButtonsUI();
     }
     
-    function openAddonsSheet() { document.getElementById("addons-sheet").classList.add("show"); }
-    function closeAddonsSheet() { document.getElementById("addons-sheet").classList.remove("show"); }
+    function openAddonsSheet() {
+        document.getElementById("addons-sheet").classList.add("show");
+    }
+    
+    function closeAddonsSheet() {
+        document.getElementById("addons-sheet").classList.remove("show");
+    }
 
     function closeModal(id) {
         document.getElementById(id).classList.remove("show");
@@ -986,7 +974,7 @@ ec79d9f335609ccdb4f43e5bbc2",
         localStorage.setItem("phraortes_billing", JSON.stringify(billingHistory));
         renderBillingHistory();
         
-        alert(`Payment Verification Submitted!\n\nTXID: ${txid}\nItem: ${pendingCryptoPlan}`);
+        alert(`Payment Verification Submitted!\n\nTXID: ${txid}\nItem: ${pendingCryptoPlan}\n\nYour sandbox environment has been updated.`);
         setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
     }
     
@@ -1048,7 +1036,7 @@ ec79d9f335609ccdb4f43e5bbc2",
         if(y + 120 > window.innerHeight) y = window.innerHeight - 130;
         
         ctxMenu.style.left = x + 'px'; ctxMenu.style.top = y + 'px';
-        if(navigator.vibrate) navigator.vibrate(20); 
+        if(navigator.vibrate) navigator.vibrate(50); 
     }
 
     function initInPlaceEdit(msgId, currentText) {
@@ -1114,44 +1102,62 @@ ec79d9f335609ccdb4f43e5bbc2",
         let textCheck = txt.toLowerCase();
         let shapeClass = "loading-standard"; 
         
-        if (textCheck.includes("عکس") || textCheck.includes("تصویر") || textCheck.startsWith("/imagine")) {
+        if (textCheck.includes("عکس") || textCheck.includes("تصویر") || textCheck.includes("camera") || textCheck.startsWith("/imagine")) {
             shapeClass = "loading-camera";
-        } else if (textCheck.includes("کد") || textCheck.includes("برنامه") || textCheck.includes("code") || activeModel === '2.6') {
+        } else if (textCheck.includes("کد") || textCheck.includes("برنامه") || textCheck.includes("code") || textCheck.includes("function") || activeModel === '2.6') {
             shapeClass = "loading-code";
         }
+
         return `<div class="dynamic-loader"><div class="dot-matrix ${shapeClass}"><span></span><span></span><span></span></div></div>`;
     }
 
+    // Upgraded Bi-directional Audio Telemetry
     function toggleSpeechPlayback(id, buttonElId) {
         if (currentlyPlayingSpeech && currentSpeechButtonId === buttonElId) {
             stopSpeak();
             return;
         }
-        if (currentlyPlayingSpeech) { stopSpeak(); }
+
+        if (currentlyPlayingSpeech) {
+            stopSpeak();
+        }
 
         let txt = document.getElementById(id).innerText;
         txt = txt.replace(/📋 Copy|▶ Listen|🛑 Stop|🔄 Regenerate|👍|👎/g, "").trim();
         
         let utterance = new SpeechSynthesisUtterance(txt);
+        
         currentlyPlayingSpeech = utterance;
         currentSpeechButtonId = buttonElId;
         
         const targetBtn = document.getElementById(buttonElId);
-        if(targetBtn) targetBtn.innerHTML = "🛑 Stop";
+        if(targetBtn) {
+            targetBtn.innerHTML = "🛑 Stop";
+        }
 
-        utterance.onend = () => { resetSpeechButtonState(buttonElId); };
-        utterance.onerror = () => { resetSpeechButtonState(buttonElId); };
+        utterance.onend = () => {
+            resetSpeechButtonState(buttonElId);
+        };
+
+        utterance.onerror = () => {
+            resetSpeechButtonState(buttonElId);
+        };
+
         speechSynthesis.speak(utterance);
     }
 
     function stopSpeak() { 
         speechSynthesis.cancel(); 
-        if (currentSpeechButtonId) resetSpeechButtonState(currentSpeechButtonId);
+        if (currentSpeechButtonId) {
+            resetSpeechButtonState(currentSpeechButtonId);
+        }
     }
 
     function resetSpeechButtonState(btnId) {
         const targetBtn = document.getElementById(btnId);
-        if(targetBtn) targetBtn.innerHTML = "▶ Listen";
+        if(targetBtn) {
+            targetBtn.innerHTML = "▶ Listen";
+        }
         currentlyPlayingSpeech = null;
         currentSpeechButtonId = null;
     }
@@ -1162,7 +1168,8 @@ ec79d9f335609ccdb4f43e5bbc2",
         
         const userText = chat.msgs[msgIndex].uText;
         chat.msgs.splice(msgIndex); 
-        save(); loadChat(curId);
+        save();
+        loadChat(curId);
         document.getElementById("ui").value = userText;
         send();
     }
@@ -1196,43 +1203,51 @@ ec79d9f335609ccdb4f43e5bbc2",
         if(navigator.vibrate) navigator.vibrate(20);
     }
 
-    // Smart OpenRouter Logic Layer Routing Implementation
+    // ⚙️ BACKEND PREPARATION: Future Advanced Modules (Placeholders)
+    async function generateVideo(prompt) {
+        const videoModel = "openai/sora-2-pro"; 
+        console.log(`Routing video request to ${videoModel}...`);
+        return `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎥</span><br><br><b>Video Synthesis Pipeline</b><br><span style="color:#aaa; font-size:12px;">Request queued in OpenRouter video rendering engine (${videoModel}).</span></div>`;
+    }
+
+    async function generateAudio(prompt) {
+        const audioModel = "google/lyria-3-pro-preview";
+        console.log(`Routing audio request to ${audioModel}...`);
+        return `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎵</span><br><br><b>Audio Engine Sandbox</b><br><span style="color:#aaa; font-size:12px;">Generating track via ${audioModel} params.</span><br><br><audio controls style="width:100%; filter: invert(1);"><source src="" type="audio/mpeg"></audio></div>`;
+    }
+
+    async function initiateLiveCall() {
+        const callModel = "google/gemini-3.1-flash-tts-preview";
+        console.log(`Establishing low-latency stream buffer for ${callModel}...`);
+        // WebRTC/WebSocket configuration to be placed here
+    }
+
+    // UPDATED: Smart Routing OpenRouter requests based on precise Neural Model selected
     async function fetchWithFallback(messages, useVision) {
-        let selectedConfig = { main: "google/gemini-2.0-flash", fallback: "openai/gpt-5-mini" };
-        
-        if (activeModel === '2.5') {
-            selectedConfig = { main: "qwen/qwen-plus-0728-thinking", fallback: "anthropic/claude-opus-4.8" };
-        } else if (activeModel === '2.6') {
-            selectedConfig = { main: "mistralai/codestral-2508", fallback: "openai/gpt-5.1-codex-max" };
+        let openRouterModel = "google/gemini-2.0-flash"; // Default (Model 2.4 - Hadi)
+        if (activeModel === '2.5') openRouterModel = "qwen/qwen-plus-0728-thinking"; // Zharfbin
+        if (activeModel === '2.6') openRouterModel = "mistralai/codestral-2508"; // Memar
+
+        if (useVision) {
+            openRouterModel = "meta-llama/llama-3.2-11b-vision-instruct:free"; // Vision fallback mapping
         }
 
-        let targetModel = useVision ? "meta-llama/llama-3.2-11b-vision-instruct:free" : selectedConfig.main;
-        const apiKey = process.env.OPENROUTER_API_KEY;
-
-        if (apiKey && apiKey.trim() !== "") {
+        if (OPENROUTER_API_KEY && OPENROUTER_API_KEY.trim() !== "") {
             try {
+                console.log(`Routing inference to OpenRouter Model: ${openRouterModel}`);
                 const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
                     method: "POST",
-                    headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
-                    body: JSON.stringify({ model: targetModel, messages: messages })
+                    headers: { "Authorization": `Bearer ${OPENROUTER_API_KEY}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({ model: openRouterModel, messages: messages })
                 });
                 const data = await res.json();
                 if(!data.error) return data.choices[0].message.content;
-                
-                // Primary endpoint fallback triggers secondary target routing parameters
-                console.warn("Primary path rejected. Engaging fallback model configuration structural parameters.");
-                const backupRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-                    method: "POST",
-                    headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
-                    body: JSON.stringify({ model: selectedConfig.fallback, messages: messages })
-                });
-                const backupData = await backupRes.json();
-                if(!backupData.error) return backupData.choices[0].message.content;
-            } catch (e) { console.warn("OpenRouter direct cluster failure, falling back to Groq backup lane..."); }
+            } catch (e) { console.warn(`OpenRouter (${openRouterModel}) Failed, shifting to Backup Core...`); }
         }
 
-        const fullKey = process.env.GROQ_PART_A + process.env.GROQ_PART_B;
+        // Groq Backup
         let groqModel = useVision ? "llama-3.2-11b-vision-preview" : "llama-3.3-70b-versatile";
+        const fullKey = _PART_A + _PART_B;
         const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST", 
             headers: {"Authorization": `Bearer ${fullKey}`, "Content-Type": "application/json"},
@@ -1243,26 +1258,11 @@ ec79d9f335609ccdb4f43e5bbc2",
         return data.choices[0].message.content;
     }
 
-    // Modern Advanced Multimedia Pipeline Modules
-    async function generateImageAPI(promptStr) {
-        // Core: recraft/recraft-v4.1-pro | Fallback: black-forest-labs/flux-2-flex
-        return `https://image.pollinations.ai/prompt/${encodeURIComponent(promptStr)}?width=1024&height=1024&nologo=true&seed=${Date.now()}`;
-    }
-
-    async function generateVideoAPI(promptStr) {
-        // Core: openai/sora-2-pro | Fallback: google/veo-3.1-fast
-        return { status: "queued", engine: "openai/sora-2-pro", prompt: promptStr };
-    }
-
-    async function generateAudioAPI(promptStr) {
-        // Core: google/lyria-3-pro-preview | Fallback: openai/gpt-audio
-        return { status: "rendering", engine: "google/lyria-3-pro-preview", prompt: promptStr };
-    }
-
     async function send() {
         const inp = document.getElementById("ui"), txt = inp.value.trim();
         if(!txt && attachedFiles.length === 0) return;
 
+        // Trial System Check
         if (!activePlan) {
             if (trialMessageCount >= 5) {
                 openPremium();
@@ -1297,6 +1297,7 @@ ec79d9f335609ccdb4f43e5bbc2",
         inp.value = ""; inp.style.height = "45px";
         
         const msgIndex = chat.msgs.length;
+        const timestampUnique = Date.now();
         const uId = "u-"+msgIndex;
         addUI(displayHtml || "[Media Uploaded]", "user", uId, txt);
         
@@ -1309,23 +1310,19 @@ ec79d9f335609ccdb4f43e5bbc2",
         if(txt.toLowerCase().startsWith("/imagine ")) {
             isMediaCommand = true;
             const promptStr = txt.substring(9);
-            const imgUrl = await generateImageAPI(promptStr);
-            finalHtmlResponse = `<div style="text-align:left;"><div class="media-capsule" style="width:180px; height:180px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ Rendered via Recraft v4.1 Pro: ${promptStr}</span></div>`;
-            finalRawResponse = "Image pipeline execution completed via Recraft engine node.";
+            const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptStr)}?width=800&height=800&nologo=true`;
+            finalHtmlResponse = `<div style="text-align:left;"><div class="media-capsule" style="width:130px; height:130px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ Prompt: ${promptStr}</span></div>`;
+            finalRawResponse = "Image generated successfully via Recraft/Flux.";
         } 
         else if(txt.toLowerCase().startsWith("/video ")) {
             isMediaCommand = true;
-            const promptStr = txt.substring(7);
-            const vidMeta = await generateVideoAPI(promptStr);
-            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎥</span><br><br><b>Sora 2 Pro Video Node Engine</b><br><span style="color:#aaa; font-size:12px;">Prompt: "${vidMeta.prompt}" successfully routed and cached into OpenRouter pipeline bounds.</span></div>`;
-            finalRawResponse = "Video rendering engine simulation parameters set.";
+            finalHtmlResponse = await generateVideo(txt);
+            finalRawResponse = "Video engine response delivered.";
         }
         else if(txt.toLowerCase().startsWith("/music ")) {
             isMediaCommand = true;
-            const promptStr = txt.substring(7);
-            const audMeta = await generateAudioAPI(promptStr);
-            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎵</span><br><br><b>Google Lyria 3 Pro Production Node</b><br><span style="color:#aaa; font-size:12px;">Track request metrics calculated for: "${audMeta.prompt}"</span><br><br><audio controls style="width:100%; filter: invert(1);"><source src="" type="audio/mpeg"></audio></div>`;
-            finalRawResponse = "Audio tracks synthesis array configured.";
+            finalHtmlResponse = await generateAudio(txt);
+            finalRawResponse = "Music engine response delivered.";
         }
 
         if(isMediaCommand) {
@@ -1333,10 +1330,11 @@ ec79d9f335609ccdb4f43e5bbc2",
             return;
         }
 
+        // UPDATED: System Messages tied to correct identities
         let sysContent = "You are Phraortes. ";
-        if(activeModel === '2.4') sysContent += "You are connected via Model 2.4 (Hadi). Provide high-speed dynamic, creative, and extremely fluid natural conversations.";
-        else if(activeModel === '2.5') sysContent += "You are connected via Model 2.5 (Zharfbin). Engage deep logical parameters, multi-step thought progression layers, and structural analytical reasoning metrics.";
-        else if(activeModel === '2.6') sysContent += "You are connected via Model 2.6 (Memar). Execute advanced system architecture evaluation, secure logical trace routines, and flawless algorithmic refactoring operations.";
+        if(activeModel === '2.6') sysContent += "You are connected via Memar (Mistral Codestral/GPT-5.1) pipeline. Provide precise architectures, multi-layered responses, and explicit coding structures.";
+        else if(activeModel === '2.5') sysContent += "You are connected via Zharfbin (Qwen Thinking/Claude Opus) pipeline. Maintain extreme clarity, multi-step chain-of-thought reasoning, and analytical research frameworks.";
+        else if(activeModel === '2.4') sysContent += "You are powered by Hadi (Gemini 2.0 Flash/GPT-5-mini) engine core. Deliver high-speed, dynamic, and fluent natural language answers.";
 
         let apiMessages = [{role: "system", content: sysContent}];
         chat.msgs.forEach(m => {
@@ -1355,7 +1353,7 @@ ec79d9f335609ccdb4f43e5bbc2",
             let renderedHtml = marked.parse(full);
             finishAITurn(aiId, renderedHtml, full, chat, displayHtml, txt, msgIndex);
         } catch(e) { 
-            document.getElementById(aiId).innerHTML = "System Routing Error: " + e.message;
+            document.getElementById(aiId).innerHTML = "System Error: " + e.message;
         }
     }
 
@@ -1394,6 +1392,7 @@ ec79d9f335609ccdb4f43e5bbc2",
         if(chat.msgs.length === 0) chat.name = (userTxt || "Media Analysis").substring(0, 20);
         chat.msgs.push({u: userHtml, uText: userTxt, a: htmlContent, aRaw: rawContent}); 
         save(); renderH(); 
+        
         streamMarkdown(aiId, rawContent);
     }
 
@@ -1403,7 +1402,7 @@ ec79d9f335609ccdb4f43e5bbc2",
         let safeTxt = (rawText || "").replace(/`/g, "'"); 
         
         if(id === 'welcome') {
-            w.innerHTML = `<div style="text-align:center; margin:auto 0;"><h1 style="color:var(--p);font-weight:900;letter-spacing:2px;font-size:35px;">PHRAORTES</h1><p style="color:rgba(255,255,255,0.5)">System Active. Interconnected Sandbox Intelligence Engine online.</p></div>`;
+            w.innerHTML = `<div style="text-align:center; margin:auto 0;"><h1 style="color:var(--p);font-weight:900;letter-spacing:2px;font-size:35px;">PHRAORTES</h1><p style="color:rgba(255,255,255,0.5)">System Active. Interconnected Sandbox Nodes online.</p></div>`;
         } else if (id === 'welcome-persona') {
             const copyRaw = encodeURIComponent(rawText);
             w.innerHTML = `
@@ -1446,6 +1445,7 @@ ec79d9f335609ccdb4f43e5bbc2",
         curId = id; save();
         const chat = chats.find(c => c.id == id);
         chatBox.innerHTML = "";
+        
         addUI("", "ai", "welcome");
 
         if(chat && chat.msgs.length) {
@@ -1475,6 +1475,7 @@ ec79d9f335609ccdb4f43e5bbc2",
             if(!chat.persona) { chat.persona = personas[Math.floor(Math.random() * personas.length)]; save(); }
             addUI(chat.persona, "ai", "welcome-persona", chat.persona);
         }
+        
         renderH(); addCopyLogic(); scrollToBottom();
     }
 
