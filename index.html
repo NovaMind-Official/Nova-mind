@@ -1041,6 +1041,7 @@
     let pressTimer;
     function startPress(e, type, id, text) {
         if(type === 'ai') return;
+        // Allows both long-touch and right-click parameters safely
         if(e.button !== 0 && e.type !== 'touchstart') return; 
         pressTimer = setTimeout(() => { showContext(e, type, id, text); }, 400);
     }
@@ -1054,7 +1055,7 @@
 
         if(type === 'user') {
             html = `<div class="ctx-item" onclick="navigator.clipboard.writeText(\`${cleanText}\`); closeMenus()">Copy Text</div>
-                    <div class="ctx-item" onclick="initInPlaceEdit('${id}', \`${cleanText}\`); closeMenus()">Edit</div>`;
+                    <div class="ctx-item" onclick="initInPlaceEdit('${id}', \`${cleanText}\\`); closeMenus()">Edit</div>`;
         } else if(type === 'session') {
             const chat = chats.find(c => c.id == id);
             const isPinned = chat && chat.pinned;
@@ -1256,7 +1257,6 @@
 
     // --- UPDATE 2.2: Live Web Search Implementation (Mock/Template) ---
     async function performWebSearch(query) {
-        // This is the framework for Tavily or Google Serper API
         const TAVILY_API_KEY = ""; // Enter Key Here
         if(!TAVILY_API_KEY) {
             return `**Live Web Search Results for "${query}"**\n\n*(Note: Tavily API Key is not set. This is a placeholder response showing the system intercepted the search correctly. The AI will proceed with its base knowledge.)*`;
@@ -1277,11 +1277,9 @@
 
     // --- UPDATE 1.3: Media API Hub (Fal.ai / Replicate) ---
     async function callMediaService(type, prompt) {
-        // Provide your Fal.ai or Replicate key here
         const FAL_KEY = ""; 
         
         if(!FAL_KEY) {
-            // Fallbacks for when API is missing
             if(type === 'image') {
                 const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=800&nologo=true`;
                 return { html: `<div style="text-align:left;"><div class="media-capsule" style="width:130px; height:130px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ Prompt: ${prompt}</span></div>`, raw: "Image generated successfully." };
@@ -1357,6 +1355,7 @@
 
         let isMediaCommand = false;
         let finalHtmlResponse = ""; let finalRawResponse = "";
+        let txtContextForSearch = undefined;
 
         // --- UPDATE 1.3 & 2.2: Media & Search Processing ---
         if(txt.toLowerCase().startsWith("/imagine ")) {
@@ -1375,10 +1374,7 @@
             finalHtmlResponse = res.html; finalRawResponse = res.raw;
         }
         else if(txt.toLowerCase().startsWith("/search ")) {
-            // Let the search happen, then feed results to the LLM normally instead of halting
             const searchData = await performWebSearch(txt.substring(8));
-            // We append the search data hidden from the user UI, but sent to the LLM
-            // This allows the LLM to read the search and answer.
             txtContextForSearch = `${txt}\n\n[System Context: Here are live web search results to help you answer: ${searchData}]`;
         }
 
@@ -1401,7 +1397,6 @@
             apiMessages.push({role: "assistant", content: m.aRaw || m.a});
         });
 
-        // Add search context if exists, else normal text
         let finalSendText = (typeof txtContextForSearch !== 'undefined') ? txtContextForSearch : txt;
 
         if (localAttachedData) {
@@ -1413,7 +1408,7 @@
         try {
             const full = await fetchWithFallback(apiMessages, useVision);
             let renderedHtml = marked.parse(full);
-            finishAITurn(aiId, renderedHtml, full, chat, displayHtml, txt, msgIndex); // Save original txt, not txtContextForSearch
+            finishAITurn(aiId, renderedHtml, full, chat, displayHtml, txt, msgIndex); 
         } catch(e) { 
             document.getElementById(aiId).innerHTML = "System Error: " + e.message;
         }
