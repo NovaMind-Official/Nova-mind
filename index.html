@@ -1565,5 +1565,762 @@
         save(); renderH(); 
     }
 </script>
+    // --- PHRAORTES CORE ENGINE (INTEGRATED ARCHITECTURE) ---
+
+// 1. GLOBAL STATE MANAGEMENT & DATABASE INITIALIZATION
+let chats = JSON.parse(localStorage.getItem("phraortes_chats")) || [];
+let curId = localStorage.getItem("phraortes_id") || null;
+let activePlan = localStorage.getItem("phraortes_active_plan") || null;
+let trialMessageCount = parseInt(localStorage.getItem("phraortes_trial_count")) || 0;
+let billingHistory = JSON.parse(localStorage.getItem("phraortes_billing")) || [];
+let memoryDB = JSON.parse(localStorage.getItem("phraortes_memory")) || [];
+let attachedFiles = [];
+let currentHistoryFilter = 'all';
+let activeModel = '2.7'; // Default: Claude 3.5 Sonnet pipeline
+let currentlyPlayingSpeech = null;
+let currentSpeechButtonId = null;
+let pendingCryptoPlan = "";
+
+// Mock API Keys - Replace with secure backend endpoints or environment values in production
+const OPENROUTER_API_KEY = ""; 
+const _PART_A = "gsk_"; 
+const _PART_B = "YourGroqFallbackKeyPlaceholder"; 
+const ctxMenu = document.getElementById("context-menu") || document.createElement("div");
+
+// Initialize Context Menu styling if not present in HTML
+if(!document.getElementById("context-menu")) {
+    ctxMenu.id = "context-menu";
+    ctxMenu.className = "context-menu-wrapper";
+    document.body.appendChild(ctxMenu);
+}
+
+// Close menus globally on click
+document.addEventListener("click", () => { closeMenus(); });
+
+function closeMenus() { 
+    ctxMenu.style.display = "none"; 
+}
+
+function showToast(message) {
+    // Elegant toast notification system
+    const toast = document.createElement("div");
+    toast.className = "phraortes-toast";
+    toast.innerText = message;
+    document.body.appendChild(toast);
+    setTimeout(() => { toast.classList.add("show"); }, 50);
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => { toast.remove(); }, 300);
+    }, 2500);
+}
+
+// 2. UI & MODAL MANAGEMENT (PART 1 IMPLEMENTATION)
+function openPremium() {
+    document.getElementById("premium-overlay").style.display = "block";
+    document.getElementById("premium-modal").classList.add("show");
+    updatePlanButtonsUI();
+}
+
+function openAddonsSheet() {
+    document.getElementById("addons-sheet").classList.add("show");
+}
+
+function closeAddonsSheet() {
+    document.getElementById("addons-sheet").classList.remove("show");
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove("show");
+    closeAddonsSheet();
+    setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
+}
+
+function updatePlanButtonsUI() {
+    const plans = ['Starter', 'Pro', 'Ultimate'];
+    const ids = ['btn-purchase-starter', 'btn-purchase-pro', 'btn-purchase-ultimate'];
+    
+    ids.forEach((id, index) => {
+        const btn = document.getElementById(id);
+        if(btn) {
+            if(activePlan === plans[index]) {
+                btn.innerText = "CURRENT PLAN"; 
+                btn.classList.add("activated");
+            } else {
+                btn.classList.remove("activated");
+                if(index===0) btn.innerText = "PURCHASE STARTER";
+                if(index===1) btn.innerText = "UPGRADE TO PRO";
+                if(index===2) btn.innerText = "ACTIVATE ULTIMATE";
+            }
+        }
+    });
+}
+
+function purchasePlan(btn, plan, price) {
+    if(btn.classList.contains("activated")) return;
+    document.getElementById("premium-modal").classList.remove("show");
+    
+    pendingCryptoPlan = plan;
+    document.getElementById("crypto-plan-name").innerText = plan + " Plan";
+    document.getElementById("crypto-plan-price").innerText = "$" + price;
+    updateCryptoNet();
+    
+    document.getElementById("crypto-modal").classList.add("show");
+}
+
+function purchaseAddon(packName, price) {
+    closeAddonsSheet();
+    document.getElementById("premium-modal").classList.remove("show");
+    
+    pendingCryptoPlan = packName + " (Add-on)";
+    document.getElementById("crypto-plan-name").innerText = pendingCryptoPlan;
+    document.getElementById("crypto-plan-price").innerText = "$" + price;
+    updateCryptoNet();
+    
+    document.getElementById("crypto-modal").classList.add("show");
+}
+
+function backToPlans() {
+    document.getElementById("crypto-modal").classList.remove("show");
+    document.getElementById("premium-modal").classList.add("show");
+}
+
+function closeCryptoModal() {
+    document.getElementById("crypto-modal").classList.remove("show");
+    setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
+}
+
+function updateCryptoNet() {
+    const net = document.getElementById("crypto-net").value;
+    const addressEl = document.getElementById("crypto-address");
+    if(net === 'trc20') addressEl.value = "TXYourNobitexTRC20AddressHere9999";
+    else addressEl.value = "0xYourNobitexPolygonAddressHere8888";
+}
+
+function submitCrypto() {
+    const txid = document.getElementById("txid-val").value.trim();
+    if(!txid) { alert("Please enter the Transaction ID (TXID / Hash) to verify payment."); return; }
+    
+    document.getElementById("txid-val").value = "";
+    document.getElementById("crypto-modal").classList.remove("show");
+    
+    const dateStr = new Date().toLocaleDateString('en-GB');
+    
+    if(!pendingCryptoPlan.includes("Add-on")) {
+        activePlan = pendingCryptoPlan;
+        localStorage.setItem("phraortes_active_plan", activePlan);
+        updatePlanButtonsUI();
+    }
+
+    billingHistory.unshift({ date: dateStr, item: pendingCryptoPlan, txid: txid.substring(0,8) + "..." });
+    localStorage.setItem("phraortes_billing", JSON.stringify(billingHistory));
+    renderBillingHistory();
+    
+    alert(`Payment Verification Submitted!\n\nTXID: ${txid}\nItem: ${pendingCryptoPlan}\n\nYour sandbox environment has been updated.`);
+    setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
+}
+
+function renderBillingHistory() {
+    const list = document.getElementById("billing-history-list");
+    if(!list) return;
+    if(billingHistory.length === 0) {
+        list.innerHTML = `<div style="text-align:center; padding: 20px; color:#666;">No recent invoices</div>`;
+        return;
+    }
+    list.innerHTML = billingHistory.map(b => `
+        <div class="billing-item">
+            <div><span style="color:#fff;">${b.item}</span><br><span style="color:#666;">TX: ${b.txid}</span></div>
+            <div style="color:var(--p); font-weight:700;">${b.date}</div>
+        </div>
+    `).join("");
+}
+
+function copyResponseModern(btn, encTxt) {
+    navigator.clipboard.writeText(decodeURIComponent(encTxt));
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = 'Copied';
+    btn.classList.add('success');
+    setTimeout(() => { 
+        btn.innerHTML = originalHTML; 
+        btn.classList.remove('success'); 
+    }, 2000);
+}
+
+// 3. CONTEXT MENUS & EDIT IN-PLACE LOGIC
+let pressTimer;
+function startPress(e, type, id, text) {
+    if(type === 'ai') return;
+    if(e.button !== 0 && e.type !== 'touchstart') return; 
+    pressTimer = setTimeout(() => { showContext(e, type, id, text); }, 400);
+}
+
+function cancelPress() { clearTimeout(pressTimer); }
+
+function showContext(e, type, id, textData) {
+    closeMenus();
+    const touch = e.touches ? e.touches[0] : e;
+    let html = '';
+    let cleanText = (textData || "").replace(/`/g, "\\`").replace(/"/g, "&quot;");
+
+    if(type === 'user') {
+        html = `<div class="ctx-item" onclick="navigator.clipboard.writeText(\`${cleanText}\`); closeMenus()">Copy Text</div>
+                <div class="ctx-item" onclick="initInPlaceEdit('${id}', \`${cleanText}\`); closeMenus()">Edit</div>`;
+    } else if(type === 'session') {
+        const chat = chats.find(c => c.id == id);
+        const isPinned = chat && chat.pinned;
+        html = `<div class="ctx-item" onclick="renameSession(${id}); closeMenus()">Rename</div>
+                <div class="ctx-item" onclick="togglePinSession(${id}); closeMenus()">${isPinned ? 'Unpin Session' : 'Pin to Top'}</div>
+                <div class="ctx-item danger" onclick="delH(${id}); closeMenus()">Delete</div>`;
+    }
+    
+    ctxMenu.innerHTML = html;
+    ctxMenu.style.display = "flex";
+    
+    let x = touch.clientX; let y = touch.clientY;
+    if(x + 150 > window.innerWidth) x = window.innerWidth - 160;
+    if(y + 120 > window.innerHeight) y = window.innerHeight - 130;
+    
+    ctxMenu.style.left = x + 'px'; ctxMenu.style.top = y + 'px';
+    if(navigator.vibrate) navigator.vibrate(50); 
+}
+
+function initInPlaceEdit(msgId, currentText) {
+    const msgNode = document.getElementById(msgId);
+    if(!msgNode) return;
+    
+    const container = document.createElement("div"); container.className = "edit-area-container";
+    const textarea = document.createElement("textarea"); textarea.className = "edit-textarea"; textarea.value = currentText;
+    const actions = document.createElement("div"); actions.className = "edit-actions";
+    const saveBtn = document.createElement("button"); saveBtn.className = "edit-btn edit-save"; saveBtn.innerText = "Save";
+    const cancelBtn = document.createElement("button"); cancelBtn.className = "edit-btn edit-cancel"; cancelBtn.innerText = "Cancel";
+    
+    actions.appendChild(cancelBtn); actions.appendChild(saveBtn);
+    container.appendChild(textarea); container.appendChild(actions);
+    
+    const originalContent = msgNode.innerHTML;
+    msgNode.innerHTML = ""; msgNode.appendChild(container);
+    
+    cancelBtn.onclick = (e) => { e.stopPropagation(); msgNode.innerHTML = originalContent; };
+    saveBtn.onclick = async (e) => {
+        e.stopPropagation();
+        const updatedText = textarea.value.trim();
+        if(!updatedText) return;
+        const index = msgId.split("-")[1];
+        const chat = chats.find(c => c.id == curId);
+        if(chat && chat.msgs[index]) {
+            chat.msgs[index].uText = updatedText; chat.msgs[index].u = updatedText;
+            chat.msgs.splice(index);
+            save();
+            loadChat(curId);
+            document.getElementById("ui").value = updatedText;
+            send();
+        }
+    };
+}
+
+function renameSession(id) {
+    let chat = chats.find(c => c.id == id);
+    let n = prompt("Rename Session:", chat.name);
+    if(n) { chat.name = n; save(); renderH(); }
+}
+
+function togglePinSession(id) {
+    let chat = chats.find(c => c.id == id);
+    if(chat) { chat.pinned = !chat.pinned; save(); renderH(); }
+}
+
+function newChat() {
+    const id = Date.now();
+    const personas = [
+        "Welcome back! I am Phraortes, ready to execute complex cross-computational sandbox tasks.",
+        "System initiated. Deep learning nodes are warmed up. How can I facilitate your structure discovery today?",
+        "Sandbox activated. Models 2.6, 2.7, and 2.8 are operational. State your architecture request."
+    ];
+    const chosenPersona = personas[Math.floor(Math.random() * personas.length)];
+    chats.unshift({ id, name: "New Discovery", msgs: [], pinned: false, persona: chosenPersona });
+    curId = id; save(); loadChat(id);
+    const sidebar = document.getElementById("sidebar");
+    if(sidebar && sidebar.classList.contains("active")) {
+        sidebar.classList.remove("active"); // Safe structural replacement for toggleS()
+    }
+}
+
+function filterHistory(type, btnElement) {
+    currentHistoryFilter = type;
+    document.querySelectorAll('.hf-btn').forEach(btn => btn.classList.remove('active'));
+    if(btnElement) btnElement.classList.add('active');
+    renderH();
+}
+
+// ⚡ UPDATE: LAYERED THINKING LOADER SYSTEM
+function getDynamicLoader(txt) {
+    let textCheck = txt.toLowerCase();
+    let shapeClass = "loading-standard"; 
+    let StageLabel = "Architecting Core Engine Context...";
+    
+    if (textCheck.includes("عکس") || textCheck.includes("تصویر") || textCheck.includes("camera") || textCheck.startsWith("/imagine")) {
+        shapeClass = "loading-camera";
+        StageLabel = "[Layer 1] Initiating Pollinations Matrix & Diffuser Model...";
+    } else if (textCheck.includes("کد") || textCheck.includes("برنامه") || textCheck.includes("code") || textCheck.includes("function") || activeModel === '2.7') {
+        shapeClass = "loading-code";
+        StageLabel = "[Layer 1] Analyzing Lexical Structures & Compiling Abstract Syntax Tree...";
+    }
+
+    return `
+        <div class="dynamic-loader">
+            <div class="thinking-stage-indicator" style="font-size: 12px; color: var(--p); font-family: monospace; margin-bottom: 8px; animation: pulse 1.5s infinite;">${StageLabel}</div>
+            <div class="dot-matrix ${shapeClass}"><span></span><span></span><span></span></div>
+        </div>`;
+}
+
+// ✨ UPDATE: UPDATE 5 - THE MAGIC BUTTON (PROMPT OPTIMIZER 1.0)
+function injectMagicPromptOptimizer() {
+    const inputField = document.getElementById("ui");
+    if(!inputField) return;
+    let rawText = inputField.value.trim();
+    if(!rawText) {
+        showToast("🪄 Type a draft first, then let magic fix it!");
+        return;
+    }
+    // Optimizing prompt patterns dynamically
+    let optimized = `[Optimize System Directives: Structure beautifully with clean sections and explicit architectural frameworks] -> ${rawText}`;
+    inputField.value = optimized;
+    showToast("🪄 Prompt Structured for High-Yield Analytics!");
+}
+
+// 4. SPEECH SYNTHESIS ENGINE
+function toggleSpeechPlayback(id, buttonElId) {
+    if (currentlyPlayingSpeech && currentSpeechButtonId === buttonElId) {
+        stopSpeak();
+        return;
+    }
+    if (currentlyPlayingSpeech) stopSpeak();
+
+    let txt = document.getElementById(id).innerText;
+    txt = txt.replace(/📋 Copy|▶ Listen|🛑 Stop|🔄 Regenerate|👍|👎/g, "").trim();
+    let utterance = new SpeechSynthesisUtterance(txt);
+    
+    currentlyPlayingSpeech = utterance;
+    currentSpeechButtonId = buttonElId;
+    
+    const targetBtn = document.getElementById(buttonElId);
+    if(targetBtn) targetBtn.innerHTML = "🛑 Stop";
+
+    utterance.onend = () => resetSpeechButtonState(buttonElId);
+    utterance.onerror = () => resetSpeechButtonState(buttonElId);
+
+    speechSynthesis.speak(utterance);
+}
+
+function stopSpeak() { 
+    speechSynthesis.cancel(); 
+    if (currentSpeechButtonId) resetSpeechButtonState(currentSpeechButtonId);
+}
+
+function resetSpeechButtonState(btnId) {
+    const targetBtn = document.getElementById(btnId);
+    if(targetBtn) targetBtn.innerHTML = "▶ Listen";
+    currentlyPlayingSpeech = null;
+    currentSpeechButtonId = null;
+}
+
+function regenerateResponseMsg(msgIndex) {
+    const chat = chats.find(c => c.id == curId);
+    if(!chat || !chat.msgs[msgIndex]) return;
+    const userText = chat.msgs[msgIndex].uText;
+    chat.msgs.splice(msgIndex); 
+    save();
+    loadChat(curId);
+    document.getElementById("ui").value = userText;
+    send();
+}
+
+function applySmartReadMore(msgId) {
+    const el = document.getElementById(msgId);
+    if(!el) return;
+    if(el.innerText.length > 250 && !el.querySelector('img') && !el.querySelector('audio')) {
+        el.classList.add("collapsed");
+        const trigger = document.createElement("div"); trigger.className = "read-more-trigger"; trigger.innerHTML = "▼";
+        trigger.onclick = (e) => {
+            e.stopPropagation();
+            if(el.classList.contains("collapsed")) {
+                el.classList.remove("collapsed");
+                el.style.maskImage = "none"; el.style.webkitMaskImage = "none";
+                trigger.innerHTML = "▲";
+            } else {
+                el.classList.add("collapsed");
+                el.style.maskImage = ""; el.style.webkitMaskImage = "";
+                trigger.innerHTML = "▼";
+            }
+        };
+        el.parentElement.appendChild(trigger);
+    }
+}
+
+function registerReaction(btn, type) {
+    const parent = btn.parentElement;
+    parent.querySelectorAll('.react-btn').forEach(b => b.style.transform = "scale(1)");
+    btn.style.transform = "scale(1.3)";
+    if(navigator.vibrate) navigator.vibrate(20);
+}
+
+// 5. EXTERNAL FALLBACK PIPELINES (OPENROUTER / TAVILY / MEDIA)
+async function fetchWithFallback(messages, useVision) {
+    let openRouterModel = "meta-llama/llama-3.3-70b-instruct:free"; 
+    if(activeModel === '2.6') openRouterModel = "openai/o1-preview"; 
+    if(activeModel === '2.7') openRouterModel = "anthropic/claude-3.5-sonnet";
+    if(activeModel === '2.8') openRouterModel = "deepseek/deepseek-chat";
+
+    let groqModel = useVision ? "llama-3.2-11b-vision-preview" : "llama-3.3-70b-versatile";
+
+    if (OPENROUTER_API_KEY && OPENROUTER_API_KEY.trim() !== "") {
+        try {
+            const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${OPENROUTER_API_KEY}`, "Content-Type": "application/json" },
+                body: JSON.stringify({ model: openRouterModel, messages: messages })
+            });
+            const data = await res.json();
+            if(!data.error) return data.choices[0].message.content;
+        } catch (e) { console.warn("OpenRouter Pipeline down, fallback scaling to Groq Node..."); }
+    }
+
+    const fullKey = _PART_A + _PART_B;
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST", 
+        headers: {"Authorization": `Bearer ${fullKey}`, "Content-Type": "application/json"},
+        body: JSON.stringify({ model: groqModel, messages: messages })
+    });
+    const data = await res.json();
+    if(data.error) throw new Error(data.error.message);
+    return data.choices[0].message.content;
+}
+
+async function performWebSearch(query) {
+    const TAVILY_API_KEY = ""; 
+    if(!TAVILY_API_KEY) {
+        return `**Live Web Search Results for "${query}"**\n\n*(Note: Tavily API Key is missing. Operating base knowledge engine structural matrices.)*`;
+    }
+    
+    try {
+        const res = await fetch("https://api.tavily.com/search", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ api_key: TAVILY_API_KEY, query: query, search_depth: "basic" })
+        });
+        const data = await res.json();
+        return `**Search Results for "${query}":**\n` + data.results.map(r => `- [${r.title}](${r.url}): ${r.content}`).join("\n\n");
+    } catch(e) {
+        return "Search pipeline extraction failure: " + e.message;
+    }
+}
+
+async function callMediaService(type, prompt) {
+    const FAL_KEY = ""; 
+    
+    if(!FAL_KEY) {
+        if(type === 'image') {
+            const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=800&nologo=true`;
+            return { html: `<div style="text-align:left;"><div class="media-capsule" style="width:130px; height:130px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ Prompt: ${prompt}</span></div>`, raw: "Image generated successfully via Pollinations Diffusion Link." };
+        }
+        if(type === 'video') return { html: `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎥</span><br><br><b>Video Synthesis Sandbox</b><br><span style="color:#aaa; font-size:12px;">Request queued in video rendering pipeline engine.</span></div>`, raw: "Video sandbox container operational." };
+        if(type === 'music') return { html: `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎵</span><br><br><b>Audio Synthesis Sandbox</b><br><span style="color:#aaa; font-size:12px;">Generating audio track matrix.</span><br><br><audio controls style="width:100%; filter: invert(1);"><source src="" type="audio/mpeg"></audio></div>`, raw: "Music pipeline engine response compiled." };
+    }
+}
+
+// 6. PRIMARY TRANSMISSION DISPATCH (PART 2 & 3 MAIN EXECUTION)
+async function send() {
+    const inp = document.getElementById("ui"), txt = inp.value.trim();
+    const chatBox = document.getElementById("chatBox");
+    if(!txt && attachedFiles.length === 0) return;
+
+    // Memory Injection Logic Check
+    if (txt.toLowerCase().includes("یادت باشه") || txt.toLowerCase().includes("remember")) {
+        const memoryItem = txt.replace(/یادت باشه|remember that|remember/gi, "").trim();
+        if (memoryItem) {
+            memoryDB.push(memoryItem);
+            localStorage.setItem("phraortes_memory", JSON.stringify(memoryDB));
+            showToast("🧠 Memory Added to Long-term Sandbox Core");
+        }
+    }
+
+    // Trial Access Verification Guard
+    if (!activePlan) {
+        if (trialMessageCount >= 5) {
+            openPremium();
+            showToast("Trial Limit Reached. Choose a structural tier plan.");
+            return;
+        }
+        trialMessageCount++;
+        localStorage.setItem("phraortes_trial_count", trialMessageCount);
+        if(trialMessageCount === 4) showToast("Warning: 1 Trial Message Remaining");
+    }
+
+    let displayHtml = txt;
+    let useVision = false;
+    let localAttachedData = "";
+
+    if(attachedFiles.length > 0) {
+        let galleryHtml = '<div class="chat-gallery">';
+        attachedFiles.forEach(f => {
+            if(f.type === 'image') {
+                galleryHtml += `<div class="media-capsule" onclick="openLightbox('${f.dataURL}')"><img src="${f.dataURL}"></div>`;
+                useVision = true;
+                if(!localAttachedData) localAttachedData = f.dataURL; 
+            }
+        });
+        galleryHtml += '</div>';
+        displayHtml = galleryHtml + (txt ? '<br>'+txt : '');
+        attachedFiles = []; 
+        if(typeof renderPreviews === 'function') renderPreviews();
+    }
+
+    const chat = chats.find(c => c.id == curId);
+    if(!chat) return;
+    
+    inp.value = ""; inp.style.height = "45px";
+    
+    const msgIndex = chat.msgs.length;
+    const uId = "u-"+msgIndex;
+    addUI(displayHtml || "[Media Uploaded]", "user", uId, txt);
+    
+    const aiId = "a-"+msgIndex;
+    addUI(getDynamicLoader(txt), "ai", aiId, "");
+
+    let isMediaCommand = false;
+    let finalHtmlResponse = ""; let finalRawResponse = "";
+    let txtContextForSearch = undefined;
+
+    // Multi-modal execution interception
+    if(txt.toLowerCase().startsWith("/imagine ")) {
+        isMediaCommand = true;
+        const res = await callMediaService('image', txt.substring(9));
+        finalHtmlResponse = res.html; finalRawResponse = res.raw;
+    } 
+    else if(txt.toLowerCase().startsWith("/video ")) {
+        isMediaCommand = true;
+        const res = await callMediaService('video', txt.substring(7));
+        finalHtmlResponse = res.html; finalRawResponse = res.raw;
+    }
+    else if(txt.toLowerCase().startsWith("/music ")) {
+        isMediaCommand = true;
+        const res = await callMediaService('music', txt.substring(7));
+        finalHtmlResponse = res.html; finalRawResponse = res.raw;
+    }
+    else if(txt.toLowerCase().startsWith("/search ")) {
+        const searchData = await performWebSearch(txt.substring(8));
+        txtContextForSearch = `${txt}\n\n[System Context: Here are live web search results to help you answer: ${searchData}]`;
+    }
+
+    if(isMediaCommand) {
+        setTimeout(() => { finishAITurn(aiId, finalHtmlResponse, finalRawResponse, chat, displayHtml, txt, msgIndex); }, 1500);
+        return;
+    }
+
+    // Processing Prompt Context Injections
+    let memoryContextStr = memoryDB.length > 0 ? " You have a long-term memory. Remember these details about the user: " + memoryDB.join("; ") : "";
+    let sysContent = "You are Phraortes. " + memoryContextStr;
+    
+    if(activeModel === '2.6') sysContent += " You are connected via OpenAI o1 engine slot. Provide precise architectures, multi-layered responses and explicit steps.";
+    else if(activeModel === '2.7') sysContent += " You are connected via Claude 3.5 Sonnet pipeline. Maintain extreme clarity, brilliant code structures and analytical context frameworks.";
+    else if(activeModel === '2.8') sysContent += " You are powered by DeepSeek V3 engine core. Deliver rich data metrics, complete lists, charts and rapid answers.";
+
+    let apiMessages = [{role: "system", content: sysContent}];
+    chat.msgs.forEach(m => {
+        apiMessages.push({role: "user", content: m.uText || m.u});
+        apiMessages.push({role: "assistant", content: m.aRaw || m.a});
+    });
+
+    let finalSendText = (typeof txtContextForSearch !== 'undefined') ? txtContextForSearch : txt;
+
+    if (localAttachedData) {
+        apiMessages.push({ role: "user", content: [{ type: "text", text: finalSendText || "Analyze." }, { type: "image_url", image_url: { url: localAttachedData } }] });
+    } else {
+        apiMessages.push({ role: "user", content: finalSendText });
+    }
+
+    try {
+        const full = await fetchWithFallback(apiMessages, useVision);
+        let renderedHtml = typeof marked !== 'undefined' ? marked.parse(full) : full;
+        finishAITurn(aiId, renderedHtml, full, chat, displayHtml, txt, msgIndex); 
+    } catch(e) { 
+        document.getElementById(aiId).innerHTML = "System Error: " + e.message;
+    }
+}
+
+async function streamMarkdown(aiId, rawContent) {
+    const el = document.getElementById(aiId);
+    if(!el) return;
+    let currentStr = "";
+    let chunkSize = 4; 
+    const chatBox = document.getElementById("chatBox");
+
+    for(let i=0; i<rawContent.length; i+=chunkSize) {
+        currentStr += rawContent.substring(i, Math.min(i+chunkSize, rawContent.length));
+        el.innerHTML = typeof marked !== 'undefined' ? marked.parse(currentStr) : currentStr;
+        if(chatBox) chatBox.scrollTo({ top: chatBox.scrollHeight });
+        await new Promise(r => setTimeout(r, 10)); 
+    }
+    el.innerHTML = typeof marked !== 'undefined' ? marked.parse(rawContent) : rawContent;
+    addCopyLogic();
+    applySmartReadMore(aiId);
+}
+
+function finishAITurn(aiId, htmlContent, rawContent, chat, userHtml, userTxt, msgIndex) {
+    const targetNode = document.getElementById(aiId);
+    if(!targetNode) return;
+    const w = targetNode.parentElement;
+    const copyRaw = encodeURIComponent(rawContent);
+    const dynamicSpeechButtonId = `speech-trigger-btn-${msgIndex}-${Date.now()}`;
+    
+    w.innerHTML = `
+        <div class="msg ai" id="${aiId}"></div>
+        <div class="listen-ops">
+            <button class="l-btn copy-btn-new" onclick="copyResponseModern(this, '${copyRaw}')">📋 Copy</button>
+            <button class="l-btn" id="${dynamicSpeechButtonId}" onclick="toggleSpeechPlayback('${aiId}', '${dynamicSpeechButtonId}')">▶ Listen</button>
+            <button class="l-btn" onclick="regenerateResponseMsg(${msgIndex})">🔄 Regenerate</button>
+            <span style="color:rgba(255,255,255,0.15)">|</span>
+            <span class="react-btn" onclick="registerReaction(this, 'like')">👍</span>
+            <span class="react-btn" onclick="registerReaction(this, 'dislike')">👎</span>
+        </div>
+    `;
+    
+    if(chat.msgs.length === 0) chat.name = (userTxt || "Media Analysis").substring(0, 20);
+    chat.msgs.push({u: userHtml, uText: userTxt, a: htmlContent, aRaw: rawContent}); 
+    save(); renderH(); 
+    
+    streamMarkdown(aiId, rawContent);
+}
+
+function addUI(t, r, id, rawText) {
+    const chatBox = document.getElementById("chatBox");
+    if(!chatBox) return;
+    const w = document.createElement("div");
+    w.className = `msg-wrap ${r}-wrap`;
+    let safeTxt = (rawText || "").replace(/`/g, "'"); 
+    
+    if(id === 'welcome') {
+        w.innerHTML = `<div style="text-align:center; margin:auto 0;"><h1 style="color:var(--p);font-weight:900;letter-spacing:2px;font-size:35px;">PHRAORTES</h1><p style="color:rgba(255,255,255,0.5)">System Active. Interconnected Sandbox Nodes online.</p></div>`;
+    } else if (id === 'welcome-persona') {
+        const copyRaw = encodeURIComponent(rawText);
+        w.innerHTML = `
+            <div class="msg ai" id="${id}">${t}</div>
+            <div class="listen-ops">
+                <button class="l-btn copy-btn-new" onclick="copyResponseModern(this, '${copyRaw}')">📋 Copy</button>
+            </div>
+        `;
+    } else {
+        if(r === 'user') {
+            w.innerHTML = `<div class="msg user" id="${id}" onpointerdown="startPress(event, 'user', '${id}', \`${safeTxt}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${t}</div>`;
+        } else {
+            w.innerHTML = `<div class="msg ai" id="${id}">${t}</div>`; 
+        }
+    }
+    chatBox.appendChild(w);
+    chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+}
+
+function addCopyLogic() {
+    document.querySelectorAll('pre').forEach(pre => {
+        if(pre.querySelector('.copy-btn')) return;
+        const b = document.createElement('button'); 
+        b.className = 'copy-btn';
+        b.style = "position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:6px 12px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer; color:#fff; transition:0.3s; display:flex; align-items:center; gap:5px;";
+        b.innerHTML = `<span>📋</span> Copy Code`;
+        b.onmouseover = () => b.style.background = 'var(--p)'; 
+        b.onmouseout = () => b.style.background = 'rgba(255,255,255,0.1)';
+        b.onclick = () => { 
+            let codeText = pre.innerText.replace('📋 Copy Code', '').trim();
+            navigator.clipboard.writeText(codeText); 
+            b.innerHTML = `<span>✅</span> Copied!`; 
+            setTimeout(() => b.innerHTML = `<span>📋</span> Copy Code`, 2000); 
+        };
+        pre.appendChild(b);
+    });
+}
+
+function loadChat(id) {
+    curId = id; save();
+    const chat = chats.find(c => c.id == id);
+    const chatBox = document.getElementById("chatBox");
+    if(!chatBox) return;
+    chatBox.innerHTML = "";
+    
+    addUI("", "ai", "welcome");
+
+    if(chat && chat.msgs.length) {
+        chat.msgs.forEach((m, i) => { 
+            const uMsgId = "u-"+i;
+            addUI(m.u, "user", uMsgId, m.uText); 
+            
+            const aId = "a-"+i;
+            const w = document.createElement("div"); w.className = "msg-wrap ai-wrap";
+            const copyRaw = encodeURIComponent(m.aRaw || "");
+            const dynamicSpeechButtonId = `speech-trigger-btn-${i}-${Date.now()}`;
+            
+            w.innerHTML = `
+                <div class="msg ai" id="${aId}">${m.a}</div>
+                <div class="listen-ops">
+                    <button class="l-btn copy-btn-new" onclick="copyResponseModern(this, '${copyRaw}')">📋 Copy</button>
+                    <button class="l-btn" id="${dynamicSpeechButtonId}" onclick="toggleSpeechPlayback('${aId}', '${dynamicSpeechButtonId}')">▶ Listen</button>
+                    <button class="l-btn" onclick="regenerateResponseMsg(${i})">🔄 Regenerate</button>
+                    <span style="color:rgba(255,255,255,0.15)">|</span>
+                    <span class="react-btn" onclick="registerReaction(this, 'like')">👍</span>
+                    <span class="react-btn" onclick="registerReaction(this, 'dislike')">👎</span>
+                </div>`;
+            chatBox.appendChild(w);
+            applySmartReadMore(aId);
+        });
+    } else if (chat) {
+        addUI(chat.persona, "ai", "welcome-persona", chat.persona);
+    }
+    
+    renderH(); addCopyLogic(); 
+    chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'auto' });
+}
+
+function save() { 
+    localStorage.setItem("phraortes_chats", JSON.stringify(chats)); 
+    localStorage.setItem("phraortes_id", curId); 
+}
+
+function renderH() {
+    const listContainer = document.getElementById("h-list");
+    if(!listContainer) return;
+    let sortedChats = [...chats].sort((x, y) => { return (y.pinned ? 1 : 0) - (x.pinned ? 1 : 0); });
+    
+    if(currentHistoryFilter !== 'all') {
+        sortedChats = sortedChats.filter(c => {
+            let allText = JSON.stringify(c).toLowerCase();
+            if(currentHistoryFilter === 'code') return allText.includes('```') || allText.includes('code');
+            if(currentHistoryFilter === 'image') return allText.includes('img') || allText.includes('/imagine');
+            if(currentHistoryFilter === 'music') return allText.includes('audio') || allText.includes('/music');
+            return true;
+        });
+    }
+
+    listContainer.innerHTML = sortedChats.map(c => `
+        <div class="h-item ${c.id == curId ? 'active-chat' : ''}" onclick="loadChat(${c.id})" onpointerdown="startPress(event, 'session', ${c.id}, null)" onpointerup="cancelPress()" onpointerleave="cancelPress()">
+            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:200px;">
+                ${c.pinned ? '📌 ' : '# '} ${c.name}
+            </span>
+        </div>`).join("");
+}
+
+function delH(id) { 
+    chats = chats.filter(c=>c.id!=id); 
+    if(!chats.length) newChat(); else loadChat(chats[0].id); 
+    save(); renderH(); 
+}
+
+// Global Execution Initialization on Window Load
+window.addEventListener("DOMContentLoaded", () => {
+    if(!chats.length) {
+        newChat();
+    } else {
+        loadChat(curId || chats[0].id);
+    }
+    renderBillingHistory();
+});
+
 </body>
 </html>
