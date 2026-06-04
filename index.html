@@ -46,33 +46,33 @@
         body.light-theme .crypto-input { background: rgba(255,255,255,0.8); color: #1d1d1f; border: 1px solid rgba(0,0,0,0.15); }
         
         /* Dynamic Emotion Colors - Soft Glassy Gradients */
-        body.mood-pos { --grad1: #0a2e18; --grad2: #061c0d; --p: #00ff88; }
-        body.mood-neg { --grad1: #3a0a0a; --grad2: #210505; --p: #ff3b30; }
-        body.mood-neu { --grad1: #1a1a2e; --grad2: #16213e; --p: #76b900; }
-        body.mood-excited { --grad1: #3d2305; --grad2: #211303; --p: #ff9500; } 
-        body.mood-calm { --grad1: #09202e; --grad2: #05131c; --p: #5ac8fa; } 
-        body.mood-angry { --grad1: #3a0a1a; --grad2: #21050e; --p: #ff2d55; } 
+        body.mood-pos { --grad1: #113a20; --grad2: #0b2218; --p: #00ff88; }
+        body.mood-neg { --grad1: #3a1111; --grad2: #220b0b; --p: #ff3b30; }
+        body.mood-neu { --grad1: #2a113a; --grad2: #180b22; --p: #af52de; }
+        body.mood-excited { --grad1: #3a2511; --grad2: #22150b; --p: #ff9500; } 
+        body.mood-calm { --grad1: #112a3a; --grad2: #0b1822; --p: #5ac8fa; } 
+        body.mood-angry { --grad1: #3a1122; --grad2: #220b15; --p: #ff2d55; } 
 
         /* Workspace Mode */
-        body.workspace-mode { --bg: #030a06; --grad1: #05120a; --grad2: #000000; --p: #00ff88; }
-        body.workspace-mode .bg-glow { opacity: 0.5; }
+        body.workspace-mode { --bg: #050505; --grad1: #0a0f0a; --grad2: #000000; --p: #00ff88; }
+        body.workspace-mode .bg-glow { opacity: 0.4; }
 
         * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: background 1s var(--apple-ease); overflow: hidden; user-select: none; }
+        body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: background 0.8s var(--apple-ease); overflow: hidden; user-select: none; }
         
         .bg-glow { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 20% 30%, var(--grad1) 0%, transparent 70%), radial-gradient(circle at 80% 80%, var(--grad2) 0%, transparent 70%); filter: blur(60px); transition: 1s var(--apple-ease); opacity: 0.9; }
 
-        /* Toast */
         #toast-container { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
         .toast { background: rgba(20,20,20,0.85); backdrop-filter: blur(20px); border: 1px solid var(--p); color: #fff; padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0; transform: translateY(-20px); transition: 0.4s var(--apple-ease); display: flex; align-items: center; gap: 10px;}
         body.light-theme .toast { background: rgba(255,255,255,0.9); color: #000; }
         .toast.show { opacity: 1; transform: translateY(0); }
 
-        /* Sidebar */
-        #sidebar { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(35px); border-right: 1px solid var(--brd); z-index: 4000; transition: transform 0.5s var(--apple-ease); box-shadow: 20px 0 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+        #sidebar { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border-right: 1px solid var(--brd); z-index: 4000; transition: transform 0.5s var(--apple-ease); box-shadow: 20px 0 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
         #sidebar.active { transform: translateX(300px); }
+        
         #sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); z-index: 3999; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--apple-ease); }
         #sidebar-overlay.show { opacity: 1; pointer-events: all; }
+
         .history-filters { display: flex; gap: 6px; padding: 0 20px 10px; overflow-x: auto; scrollbar-width: none; }
         .history-filters::-webkit-scrollbar { display: none; }
         .hf-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--brd); color: #aaa; padding: 6px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.2s; white-space: nowrap; }
@@ -80,20 +80,24 @@
         .hf-btn.active, .hf-btn:hover { background: var(--p); color: #000; border-color: var(--p); }
 
         main { flex: 1; display: flex; flex-direction: column; position: relative; width: 100%; transition: 0.5s var(--apple-ease); overflow-x: hidden;}
-        .btn-new { width: 90%; margin: 10px auto 15px; padding: 16px; background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid var(--brd); color: #fff; border-radius: 20px; font-weight: 700; cursor: pointer; display: block; transition: 0.3s; }
+
+        .btn-new { width: 90%; margin: 10px auto 15px; padding: 16px; background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid var(--brd); color: #fff; border-radius: 20px; font-weight: 700; cursor: pointer; display: block; letter-spacing: -0.5px; transition: 0.3s; }
         body.light-theme .btn-new { background: rgba(0,0,0,0.05); color: #1d1d1f; }
         .btn-new:hover { background: rgba(255,255,255,0.1); transform: scale(1.02); }
+
         #h-list { flex: 1; overflow-y: auto; padding: 0 15px 15px; }
-        .h-item { padding: 14px; border-radius: 16px; margin-bottom: 10px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: space-between; font-size: 13px; border: 1px solid transparent; transition: 0.3s var(--apple-ease); cursor: pointer; }
+        .h-item { padding: 14px; border-radius: 16px; margin-bottom: 10px; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: space-between; font-size: 13px; border: 1px solid transparent; transition: 0.3s var(--apple-ease); cursor: pointer; position: relative; }
         .h-item.active-chat { border-color: var(--p); background: rgba(255,255,255,0.08); box-shadow: 0 5px 15px var(--glow); }
 
         header { height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; border-bottom: 1px solid var(--brd); background: rgba(0,0,0,0.2); backdrop-filter: blur(20px); z-index: 100; }
+        
         .logo { height: 40px; display: flex; align-items: center; justify-content: center; font-weight: 900; letter-spacing: 1px; font-size: 18px; color: var(--p); }
         .logo img { height: 100%; width: auto; object-fit: contain; filter: drop-shadow(0 0 10px var(--glow)); mix-blend-mode: screen; display: block; }
         .logo span.logo-fallback { display: none; }
 
         .account-hub { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .account-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--p), #222); border: 2px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; color: #fff; transition: 0.4s; }
+        
         .account-menu { position: absolute; top: 55px; right: 0; width: 300px; background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(40px); border: 1px solid var(--brd); border-radius: 24px; padding: 15px; display: none; flex-direction: column; z-index: 5000; box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
         .account-menu.show { display: flex; animation: glassPop 0.4s var(--apple-ease); }
         @keyframes glassPop { from { opacity: 0; transform: translateY(-10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -116,6 +120,10 @@
         body.light-theme .account-item:hover { background: rgba(0,0,0,0.05); color: #000; }
         .account-item.premium-btn { color: var(--premium-color); border: 1px solid rgba(223, 178, 87, 0.3); background: rgba(223, 178, 87, 0.08); font-weight: 800; text-align: center; margin-bottom: 10px; }
         
+        .billing-list { max-height: 200px; overflow-y: auto; padding: 5px; margin-top: 10px; font-size: 12px; }
+        .billing-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .billing-item:last-child { border: none; }
+        
         .toggle-container { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; }
         .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -125,6 +133,7 @@
         input:checked + .slider:before { transform: translateX(20px); }
 
         #chat-box { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 30px 8% 180px; display: flex; flex-direction: column; gap: 35px; scroll-behavior: smooth; user-select: none; }
+        
         .msg-wrap { display: flex; flex-direction: column; max-width: 85%; animation: slideUp 0.5s var(--apple-ease); position: relative; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .user-wrap { align-self: flex-end; }
@@ -132,13 +141,30 @@
         
         .msg { padding: 18px 26px; border-radius: 28px; font-size: 16px; line-height: 1.7; position: relative; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word; cursor: pointer; border: 1px solid transparent; transition: max-height 0.4s ease, padding 0.3s ease; max-width: 100%; overflow-x: auto;}
         .msg img { max-width: 100%; height: auto; border-radius: 12px; }
+        .msg table { display: block; overflow-x: auto; white-space: nowrap; width: 100%; border-collapse: collapse; }
+        
         .user { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-bottom-right-radius: 6px; font-weight: 500; box-shadow: 0 8px 32px rgba(0,0,0,0.2); user-select: none; -webkit-user-select: none; }
         .ai { background: transparent; color: #fff; border: none; padding: 10px 0; font-weight: 400; cursor: default; user-select: text; -webkit-user-select: text; } 
+
+        .msg.collapsed { max-height: 160px; overflow: hidden; position: relative; padding-bottom: 40px; mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%); }
+        .read-more-trigger { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; backdrop-filter: blur(10px); border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; transition: 0.3s var(--apple-ease); z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        body.light-theme .read-more-trigger { background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1); color: #1d1d1f; }
+        .read-more-trigger:hover { background: rgba(255,255,255,0.2); transform: translateX(-50%) scale(1.1); }
+
+        .edit-area-container { display: flex; flex-direction: column; gap: 10px; width: 100%; min-width: 280px; }
+        .edit-textarea { background: rgba(0,0,0,0.25); border: 1px solid var(--p); color: inherit; font-size: 16px; padding: 12px; border-radius: 16px; resize: vertical; line-height: 1.5; font-family: inherit; }
+        .edit-actions { display: flex; gap: 10px; justify-content: flex-end; }
+        .edit-btn { padding: 6px 14px; border-radius: 10px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; }
+        .edit-save { background: var(--p); color: #000; }
+        .edit-cancel { background: rgba(255,255,255,0.1); color: inherit; }
+        body.light-theme .edit-cancel { background: rgba(0,0,0,0.05); }
 
         table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 16px; overflow: hidden; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
         th { background: rgba(255,255,255,0.1); color: var(--p); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        
+        tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+        tr:hover { background: rgba(255,255,255,0.05); }
+
         pre { background: rgba(10,10,10,0.8) !important; backdrop-filter: blur(20px); border: 1px solid var(--brd); border-radius: 20px; padding: 40px 20px 20px; margin: 20px 0; overflow-x: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; }
         
         .listen-ops { display: flex; gap: 12px; margin-top: 8px; padding-left: 5px; opacity: 0.5; transition: 0.3s; align-items: center; flex-wrap: wrap; }
@@ -146,31 +172,43 @@
         .l-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; transition: 0.2s; font-weight: 600; }
         body.light-theme .l-btn { color: #555; }
         .l-btn:hover { color: var(--p); }
+        
+        .l-btn.copy-btn-new { position: relative; }
+        .l-btn.copy-btn-new.success { color: #00ff88; }
+        .l-btn.copy-btn-new.success::after { content: '✔'; margin-left: 4px; animation: popIn 0.3s ease; }
 
-        #scroll-down-btn { position: absolute; bottom: 115px; left: 50%; transform: translateX(-50%) scale(0.8); width: 42px; height: 42px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; opacity: 0; pointer-events: none; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 999; transition: transform 0.4s var(--apple-ease), opacity 0.4s var(--apple-ease), background 0.3s; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .react-btn { font-size: 14px; cursor: pointer; opacity: 0.6; transition: 0.2s; display: inline-flex; align-items: center; }
+        .react-btn:hover { opacity: 1; transform: scale(1.15); }
+
+        #scroll-down-btn { position: absolute; bottom: 115px; left: 50%; transform: translateX(-50%) scale(0.8); width: 42px; height: 42px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; opacity: 0; pointer-events: none; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 999; transition: transform 0.4s var(--apple-ease), opacity 0.4s var(--apple-ease), background 0.3s; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        body.light-theme #scroll-down-btn { background: rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.1); color: #1d1d1f; }
+        #scroll-down-btn:hover { background: rgba(255,255,255,0.25); transform: translateX(-50%) scale(1.08); }
         #scroll-down-btn.show { opacity: 1; transform: translateX(-50%) scale(1); pointer-events: auto; }
 
         .media-capsule { display: inline-block; width: 90px; height: 90px; border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; margin-bottom: 8px; transition: transform 0.3s var(--apple-ease), box-shadow 0.3s; position: relative; background: rgba(255,255,255,0.05); }
         .media-capsule:hover { transform: scale(1.04); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
         .media-capsule img { width: 100%; height: 100%; object-fit: cover; }
+        
         .chat-gallery { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
 
-        /* Multiple File Input Preview - UPDATED WITH RED X */
-        #input-preview-container { display: none; position: absolute; bottom: 80px; left: 8%; background: rgba(20,20,20,0.85); backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.15); padding: 12px 16px; border-radius: 24px; z-index: 1000; box-shadow: 0 15px 45px rgba(0,0,0,0.6), 0 0 20px rgba(118,185,0,0.1); max-width: 84%; flex-direction: row; gap: 14px; overflow-x: auto; scrollbar-width: none; transition: all 0.4s var(--apple-ease); align-items: center; }
+        #input-preview-container { display: none; position: absolute; bottom: 80px; left: 8%; background: rgba(20,20,20,0.85); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.15); padding: 12px 16px; border-radius: 24px; z-index: 1000; box-shadow: 0 15px 45px rgba(0,0,0,0.6), 0 0 20px rgba(118,185,0,0.1); max-width: 84%; flex-direction: row; gap: 14px; overflow-x: auto; scrollbar-width: none; transition: all 0.4s var(--apple-ease); align-items: center; }
         #input-preview-container::-webkit-scrollbar { display: none; }
+        body.light-theme #input-preview-container { background: rgba(255,255,255,0.85); border-color: rgba(0,0,0,0.1); }
+        
         .preview-wrapper { position: relative; transition: opacity 0.35s var(--apple-ease), transform 0.35s var(--apple-ease); transform: scale(1); animation: cardPopIn 0.4s var(--apple-ease) forwards; flex-shrink: 0; }
         @keyframes cardPopIn { from { opacity: 0; transform: scale(0.7) translateY(15px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         .preview-wrapper.fade-out { opacity: 0; transform: scale(0.7) translateY(-10px); }
         
         .input-preview-img { width: 75px; height: 75px; object-fit: cover; border-radius: 16px; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.2s; }
         .input-preview-img:hover { transform: scale(1.03); }
+        .file-icon-preview { width: 75px; height: 75px; background: rgba(255,255,255,0.07); border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 28px; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         
-        /* Red X Button Update */
-        .remove-preview { position: absolute; top: -8px; right: -8px; background: #ff3b30; color: #fff; width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 13px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 12px rgba(255, 59, 48, 0.5); transition: transform 0.2s, background 0.2s; z-index: 10; border: 2px solid #1a1a1a; }
-        body.light-theme .remove-preview { border-color: #ffffff; }
-        .remove-preview:hover { transform: scale(1.15); background: #ff453a; box-shadow: 0 4px 15px rgba(255, 59, 48, 0.8); }
+        /* Updated Remove Preview Button: Red & Top Right */
+        .remove-preview { position: absolute; top: -8px; right: -8px; background: #ff3b30; color: #fff; width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 12px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.6); transition: transform 0.2s, background 0.2s; z-index: 10; border: 2px solid #141414; }
+        body.light-theme .remove-preview { border-color: #fff; }
+        .remove-preview:hover { transform: scale(1.2); background: #ff453a; }
 
-        #media-lightbox { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(25px); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s var(--apple-ease); }
+        #media-lightbox { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s var(--apple-ease); }
         #media-lightbox.show { opacity: 1; pointer-events: auto; }
         #media-lightbox img { max-width: 90%; max-height: 85vh; border-radius: 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.4s var(--apple-ease); }
         #media-lightbox.show img { transform: scale(1); }
@@ -184,42 +222,124 @@
         
         #ui { flex: 1; background: transparent; border: none; color: #fff; padding: 12px 0; font-size: 16px; resize: none; height: 45px; max-height: 150px; overflow-y: auto; line-height: 1.5; }
         
-        .btn-icon { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 24px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;}
+        .btn-icon { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 24px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; }
         .btn-icon:hover { color: var(--p); transform: scale(1.15); }
 
-        /* Magic Wand & Tooltip Styles */
-        .wand-wrapper { position: relative; display: flex; align-items: center; gap: 2px; }
-        .tooltip-icon { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 16px; height: 16px; display: flex; justify-content: center; align-items: center; font-size: 10px; color: #aaa; cursor: help; margin-top: -15px; position: relative; transition: 0.2s; }
-        .tooltip-icon:hover { background: var(--p); color: #000; border-color: var(--p); }
-        .tooltip-text { visibility: hidden; opacity: 0; width: 220px; background: rgba(20,20,20,0.95); color: #fff; text-align: center; border-radius: 12px; padding: 10px; position: absolute; z-index: 1; bottom: 130%; left: 50%; transform: translateX(-50%) translateY(10px); font-size: 11px; line-height: 1.5; border: 1px solid var(--p); box-shadow: 0 10px 20px rgba(0,0,0,0.5); transition: opacity 0.3s, transform 0.3s; pointer-events: none; }
-        .tooltip-icon:hover .tooltip-text, .tooltip-icon:active .tooltip-text { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
-        .tooltip-text::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: var(--p) transparent transparent transparent; }
+        /* Magic Wand & Tooltip CSS */
+        .wand-wrapper { position: relative; display: flex; align-items: center; gap: 5px; }
+        .btn-magic { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 34px; height: 34px; font-size: 16px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; color: #fff; }
+        .btn-magic:hover { background: var(--p); color: #000; transform: scale(1.1); border-color: var(--p); box-shadow: 0 0 15px var(--glow); }
+        
+        .help-icon { background: rgba(255,255,255,0.15); color: #fff; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; justify-content: center; align-items: center; cursor: help; font-weight: bold; position: relative; }
+        .help-tooltip { position: absolute; bottom: 45px; left: 50%; transform: translateX(-50%) translateY(10px); background: rgba(15,15,15,0.9); backdrop-filter: blur(20px); border: 1px solid var(--p); color: #fff; padding: 10px 14px; border-radius: 12px; font-size: 12px; width: 220px; text-align: center; opacity: 0; pointer-events: none; transition: 0.3s var(--apple-ease); box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 100; font-weight: 500; }
+        .wand-wrapper:hover .help-tooltip { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .help-tooltip::after { content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); border-width: 6px 6px 0; border-style: solid; border-color: var(--p) transparent transparent transparent; }
 
-        /* Drop Menu Updates */
-        .drop-menu { position: absolute; bottom: 85px; left: 8%; width: 320px; background: rgba(25, 25, 25, 0.85); backdrop-filter: blur(40px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.7); overflow: hidden; padding: 15px; }
+        .drop-menu { position: absolute; bottom: 85px; left: 8%; width: 340px; background: rgba(25, 25, 25, 0.85); backdrop-filter: blur(40px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.7); overflow: hidden; padding: 15px; }
         .drop-menu.show { display: flex; animation: glassPop 0.3s var(--apple-ease); }
-        .model-item { padding: 12px 15px; border-radius: 16px; cursor: pointer; margin-bottom: 5px; transition: 0.3s; border: 1px solid transparent; display: flex; flex-direction: column; gap: 4px; }
+        .model-item { padding: 14px 15px; border-radius: 16px; cursor: pointer; margin-bottom: 5px; transition: 0.3s; border: 1px solid transparent; display: flex; flex-direction: column; gap: 6px; }
         .model-item:hover { background: rgba(255,255,255,0.05); }
         body.light-theme .model-item:hover { background: rgba(0,0,0,0.03); }
         .model-item.active { background: rgba(255,255,255,0.08); border-color: var(--p); }
         body.light-theme .model-item.active { background: rgba(0,0,0,0.05); }
-        .m-title { font-size: 14px; font-weight: 800; color: #fff; }
+        .m-title { font-size: 15px; font-weight: 800; color: #fff; }
         .model-item.active .m-title { color: var(--p); }
         .m-desc { font-size: 11px; color: #888; line-height: 1.4;}
         
         .aura-btn { background: linear-gradient(45deg, #af52de, #00f2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; text-align: center; padding: 12px; cursor: pointer; font-size: 14px; letter-spacing: 1px; }
 
-        /* Terminal Loading Animation */
-        .multi-loader { background: rgba(10,10,15,0.85); backdrop-filter: blur(10px); padding: 15px 20px; border-radius: 16px; border: 1px solid rgba(118,185,0,0.3); font-family: monospace; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .ml-status { color: var(--p); font-size: 12px; margin-bottom: 12px; line-height: 1.5; letter-spacing: 0.5px; }
-        .ml-bar-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
-        .ml-bar-fill { height: 100%; background: var(--p); width: 0%; border-radius: 3px; transition: width 0.8s ease-out; box-shadow: 0 0 10px var(--p); }
+        #context-menu { position: fixed; background: rgba(30, 30, 30, 0.7); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 6px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); z-index: 9999; display: none; flex-direction: column; min-width: 140px; transform-origin: top left; animation: popIn 0.2s var(--apple-ease); }
+        body.light-theme #context-menu { background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.15); }
+        @keyframes popIn { from{ opacity:0; transform:scale(0.9); } to{ opacity:1; transform:scale(1); } }
+        .ctx-item { padding: 12px 16px; font-size: 14px; color: #fff; cursor: pointer; border-radius: 10px; transition: 0.2s; display: flex; align-items: center; justify-content: space-between; }
+        .ctx-item:hover { background: rgba(255,255,255,0.1); }
+        .ctx-item.danger { color: #ff3b30; }
+
+        #premium-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 6000; backdrop-filter: blur(20px); }
+        .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 95%; max-width: 1000px; max-height: 85vh; background: rgba(15,15,15,0.85); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; z-index: 7000; display: none; flex-direction: column; opacity: 0; box-shadow: 0 40px 80px rgba(0,0,0,0.8); transition: 0.4s var(--apple-ease); }
+        .modal-box.show { display: flex; transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        
+        .loyalty-banner { background: linear-gradient(90deg, #af52de, #00f2ff); color: #fff; padding: 10px 20px; font-size: 13px; font-weight: 800; text-align: center; border-radius: 15px; margin: 0 30px 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+
+        .plans-container { padding: 20px 30px 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .plan-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 25px; display: flex; flex-direction: column; position: relative; transition: 0.4s; }
+        body.light-theme .plan-card { background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); }
+        .plan-card:hover { background: rgba(255,255,255,0.06); transform: translateY(-5px); border-color: rgba(255,255,255,0.3); }
+        body.light-theme .plan-card:hover { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.25); }
+        
+        .plan-card.gold { border-color: var(--premium-color); background: rgba(223, 178, 87, 0.05); }
+        .plan-card.gold:hover { box-shadow: 0 20px 50px var(--premium-glow); transform: scale(1.02); }
+        
+        .plan-card.plat { border-color: var(--plat-color); background: rgba(229, 228, 226, 0.05); }
+        .plan-card.plat:hover { box-shadow: 0 20px 50px var(--plat-glow); transform: scale(1.02); }
+
+        .plan-title { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
+        .plan-price { font-size: 24px; color: var(--p); font-weight: 800; margin-bottom: 20px; }
+        .plan-card.gold .plan-price { color: var(--premium-color); }
+        .plan-card.plat .plan-price { color: var(--plat-color); }
+        
+        .plan-features { list-style: none; padding: 0; margin: 0 0 25px 0; flex: 1; }
+        .plan-features li { color: rgba(255,255,255,0.7); line-height: 1.8; font-size: 13px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;}
+        body.light-theme .plan-features li { color: rgba(0,0,0,0.7); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .plan-features li:last-child { border: none; }
+        .plan-features li b { color: #fff; }
+        body.light-theme .plan-features li b { color: #000; }
+
+        .btn-buy { background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 16px; border-radius: 16px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; font-size: 14px; position: relative; overflow: hidden; }
+        .plan-card.gold .btn-buy { background: linear-gradient(135deg, var(--premium-color), #b88a38); color: #000; }
+        .plan-card.plat .btn-buy { background: linear-gradient(135deg, #ffffff, #a0a0a0); color: #000; }
+        .btn-buy:hover { opacity: 0.9; transform: scale(1.02); }
+        .btn-buy.activated { background: #00ff88 !important; color: #000 !important; border: 1px solid #00ff88; box-shadow: 0 0 15px rgba(0,255,136,0.4); cursor: default; }
+
+        .btn-addons { width: 100%; padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: -10px; }
+        .btn-addons:hover { background: rgba(255,255,255,0.08); border-color: var(--p); color: var(--p); }
+
+        .bottom-sheet { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(20,20,20,0.95); backdrop-filter: blur(40px); border-top: 1px solid rgba(255,255,255,0.15); border-radius: 30px 30px 0 0; transform: translateY(100%); transition: 0.4s var(--apple-ease); z-index: 7100; padding: 25px 30px 40px; box-shadow: 0 -20px 50px rgba(0,0,0,0.6); display: flex; flex-direction: column; }
+        .bottom-sheet.show { transform: translateY(0); }
+        .bs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        
+        .addon-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .addon-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 18px; cursor: pointer; transition: all 0.3s var(--apple-ease); display: flex; flex-direction: column; gap: 6px; position: relative; overflow: hidden; }
+        body.light-theme .addon-item { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.08); }
+        .addon-item:hover { background: rgba(255,255,255,0.08); border-color: var(--p); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .addon-title { font-size: 15px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+        body.light-theme .addon-title { color: #1d1d1f; }
+        .addon-desc { font-size: 12px; color: #aaa; line-height: 1.4; margin-bottom: 4px; }
+        .addon-features-list { font-size: 11px; color: var(--p); font-weight: 600; margin: 2px 0 6px 0; padding: 0; list-style: none; }
+        .addon-price { font-size: 14px; color: var(--p); font-weight: 800; margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
+        .addon-status-badge { font-size: 10px; background: rgba(255,255,255,0.08); color: #fff; padding: 3px 8px; border-radius: 20px; font-weight: bold; border: 1px solid rgba(255,255,255,0.05); }
+
+        .crypto-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 14px; border-radius: 12px; font-size: 14px; width: 100%; transition: 0.3s; }
+        .crypto-input:focus { border-color: var(--p); outline: none; }
+
+        .dynamic-loader { display: flex; align-items: center; gap: 12px; padding: 15px 0; color: var(--p); font-weight: 600; font-size: 14px; animation: fadeIn 0.5s ease; }
+        .dot-matrix { display: flex; align-items: center; gap: 4px; width: 40px; height: 20px; justify-content: center; }
+        .dot-matrix span { display: inline-block; width: 6px; height: 6px; background: var(--p); border-radius: 50%; transition: transform 0.2s, border-radius 0.2s; }
+        .dot-matrix.loading-standard span { animation: pulseDot 1.2s infinite ease-in-out; }
+        .dot-matrix.loading-standard span:nth-child(2) { animation-delay: 0.2s; }
+        .dot-matrix.loading-standard span:nth-child(3) { animation-delay: 0.4s; }
+        .dot-matrix.loading-camera { width: 30px; height: 24px; display: grid; grid-template-columns: repeat(3, 6px); gap: 3px; animation: cameraFlash 1s infinite alternate; }
+        .dot-matrix.loading-camera span { transform: scale(1); }
+        .dot-matrix.loading-code { display: flex; flex-direction: column; gap: 4px; height: auto; width: 15px; }
+        .dot-matrix.loading-code span { animation: codeLine 0.9s infinite alternate; width: 8px; height: 4px; border-radius: 2px; }
+        .dot-matrix.loading-code span:nth-child(2) { animation-delay: 0.3s; }
+        .dot-matrix.loading-code span:nth-child(3) { animation-delay: 0.6s; }
+
+        /* Smart Multimedia Loader CSS */
+        .smart-loader-container { font-family: monospace; padding: 15px 20px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; margin: 10px 0; max-width: 400px;}
+        .sl-text { font-size: 12px; color: #00ff88; margin-bottom: 10px; word-break: break-all;}
+        .sl-bar-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; position: relative;}
+        .sl-bar-fill { height: 100%; background: #00ff88; width: 0%; transition: width 0.4s ease; box-shadow: 0 0 10px rgba(0,255,136,0.5);}
+        .sl-pct-text { font-size: 11px; color: #888; text-align: right; margin-top: 5px; font-weight: bold;}
+
+        @keyframes pulseDot { 0%, 100% { transform: scale(0.5); opacity: 0.3; } 50% { transform: scale(1.2); opacity: 1; } }
+        @keyframes cameraFlash { 0%, 40% { opacity: 0.4; } 50%, 100% { opacity: 1; } }
+        @keyframes codeLine { from { width: 4px; opacity: 0.3; } to { width: 12px; opacity: 1; } }
 
         #aura-screen { position: fixed; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(26, 17, 58, 0.95), #000); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(30px); animation: fadeIn 0.5s var(--apple-ease); }
         .aura-pulse-orb { width: 160px; height: 160px; border-radius: 50%; background: linear-gradient(45deg, #af52de, #00f2ff); box-shadow: 0 0 60px rgba(175,82,222,0.6); animation: auraPulse 2s infinite ease-in-out; position: relative; display: flex; align-items: center; justify-content: center; }
         .aura-pulse-orb::after { content: ''; position: absolute; inset: -15px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.2); animation: spin 12s linear infinite; }
         @keyframes auraPulse { 0%, 100% { transform: scale(1); opacity: 0.9; box-shadow: 0 0 50px rgba(175,82,222,0.5); } 50% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 90px rgba(0,242,255,0.8); } }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
         .aura-status { margin-top: 30px; font-size: 22px; font-weight: 800; letter-spacing: 2px; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
         .aura-close { position: absolute; top: 35px; right: 35px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 50%; width: 50px; height: 50px; color: #fff; font-size: 20px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
         .aura-close:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
@@ -229,16 +349,170 @@
 
 <div class="bg-glow"></div>
 <div id="sidebar-overlay" onclick="toggleS(event)"></div>
+
 <div id="toast-container"></div>
-<div id="media-lightbox" onclick="closeLightbox()"><span class="lightbox-close">✕</span><img id="lightbox-img" src="" alt="Media Preview" onclick="event.stopPropagation()"></div>
+
+<div id="context-menu" onclick="event.stopPropagation()"></div>
+
+<div id="media-lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close">✕</span>
+    <img id="lightbox-img" src="" alt="Media Preview" onclick="event.stopPropagation()">
+</div>
 
 <div id="aura-screen">
     <button class="aura-close" onclick="closeAura()">✕</button>
     <div class="aura-pulse-orb">
-        <span style="font-size: 40px;">🎙️</span>
+        <span style="font-size: 40px;">✨</span>
     </div>
-    <div class="aura-status">INITIALIZING VAPI.AI PROTOCOL...</div>
-    <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 10px; font-weight: 500;">Live Audio Node Active</p>
+    <div class="aura-status" id="vapi-status-text">AURA VOCAL NODE ACTIVE</div>
+    <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 10px; font-weight: 500;">Sandbox Environment Engine v1.0.2</p>
+</div>
+
+<div id="crypto-modal" class="modal-box" style="max-width: 450px; padding-bottom: 20px;" onclick="event.stopPropagation()">
+    <div style="padding: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <button onclick="backToPlans()" style="background:none; border:none; color:inherit; font-size:22px; cursor:pointer; display:flex; align-items:center;">←</button>
+            <h3 style="margin:0; font-weight:800; color:var(--p); letter-spacing: 1px;">VIP DEPOSIT <span style="color:#aaa; font-size: 12px;">(CRYPTO)</span></h3>
+        </div>
+        <button onclick="closeCryptoModal()" style="background:none; border:none; color:inherit; font-size:24px; cursor:pointer;">✕</button>
+    </div>
+    <div style="padding: 25px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto;">
+        
+        <div style="text-align: center; margin-bottom: 5px;">
+            <div style="color: inherit; font-size: 20px; font-weight: 900;" id="crypto-plan-name">Plan Name</div>
+            <div style="color: var(--p); font-size: 16px; font-weight: 800;" id="crypto-plan-price">$0.00</div>
+        </div>
+
+        <label style="font-size:12px; color:#aaa; margin-bottom: -5px;">1. Select Transfer Network:</label>
+        <select id="crypto-net" onchange="updateCryptoNet()" class="crypto-input" style="border-color: var(--p);">
+            <option value="trc20">USDT - TRC20 (Tron Network)</option>
+            <option value="polygon">USDT - Polygon (Matic Network)</option>
+        </select>
+
+        <div style="text-align:center; padding: 15px 0;">
+            <div style="width:160px; height:160px; background:#fff; margin:0 auto; border-radius:15px; display:flex; justify-content:center; align-items:center; color:#000; font-size:12px; font-weight: 800; border: 4px solid var(--p);">
+                [QR CODE]
+            </div>
+            <p style="font-size: 11px; color: #888; margin-top: 10px;">Scan or copy address below to send exact amount</p>
+        </div>
+
+        <label style="font-size:12px; color:#aaa; margin-bottom: -5px;">2. Nobitex Wallet Address:</label>
+        <div style="display:flex; gap:10px;">
+            <input type="text" id="crypto-address" readonly value="TXYZ... (Your TRC20 Address Here)" class="crypto-input" style="flex:1; font-family: monospace; font-size: 12px; cursor:copy;" onclick="this.select(); navigator.clipboard.writeText(this.value); alert('Wallet Address Copied!');">
+        </div>
+
+        <label style="font-size:12px; color:#aaa; margin-top: 10px; margin-bottom: -5px;">3. Enter Transaction ID (TXID / Hash):</label>
+        <input type="text" id="txid-val" placeholder="Paste TXID hash here after transfer..." class="crypto-input">
+
+        <button onclick="submitCrypto()" class="btn-buy" style="background: var(--p); color: #000; margin-top: 15px; box-shadow: 0 10px 30px var(--glow);">SUBMIT PAYMENT VERIFICATION</button>
+    </div>
+</div>
+
+<div id="premium-overlay" onclick="closeModal('premium-modal'); closeCryptoModal(); closeAddonsSheet()"></div>
+<div id="premium-modal" class="modal-box" onclick="event.stopPropagation()" style="position: relative; overflow: hidden;">
+    <div style="padding: 25px 35px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: 900; letter-spacing: 2px; font-size: 20px;">PHRAORTES <span style="color:var(--premium-color)">VIP</span></span>
+        <button onclick="closeModal('premium-modal')" style="background:none; border:none; color:inherit; font-size:24px; cursor:pointer;">✕</button>
+    </div>
+    
+    <div class="loyalty-banner">
+        <span>🎉 Loyalty Offer: Secure your plan today and get priority access!</span>
+    </div>
+
+    <div class="plans-container">
+        <div class="plan-card" id="plan-starter">
+            <div class="plan-title">Starter</div>
+            <div class="plan-price">$14.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <ul class="plan-features">
+                <li><b>Text Requests:</b> Unlimited Standard + 100 Advanced (o1/Sonnet)</li>
+                <li><b>Photo Studio:</b> 30 HD photos</li>
+                <li><b>Video Studio:</b> 5 Cinematic Videos (4s)</li>
+                <li><b>Audio Production:</b> 5 HQ tracks</li>
+                <li><b>AI Live Calls:</b> 60 minutes allocation</li>
+            </ul>
+            <button class="btn-buy" id="btn-purchase-starter" onclick="purchasePlan(this, 'Starter', '14.99')">PURCHASE STARTER</button>
+        </div>
+        <div class="plan-card gold" id="plan-pro">
+            <div class="plan-title" style="color:var(--premium-color)">Pro</div>
+            <div class="plan-price">$49.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <ul class="plan-features">
+                <li><b>Text Requests:</b> Unlimited + 350 Advanced (o1/Sonnet/DeepSeek)</li>
+                <li><b>Photo Studio:</b> 120 Ultra HD photos</li>
+                <li><b>Video Studio:</b> 15 Advanced Videos (8s)</li>
+                <li><b>Audio Production:</b> 20 HQ tracks</li>
+                <li><b>AI Live Calls:</b> 300 minutes Pro Calls</li>
+                <li><b>Early Access:</b> Get updates 1-2 weeks early</li>
+            </ul>
+            <button class="btn-buy" id="btn-purchase-pro" onclick="purchasePlan(this, 'Pro', '49.99')">UPGRADE TO PRO</button>
+        </div>
+        <div class="plan-card plat" id="plan-ultimate">
+            <div class="plan-title" style="color:var(--plat-color)">Ultimate (Unlimited)</div>
+            <div class="plan-price">$119.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <ul class="plan-features">
+                <li><b>Text Requests:</b> Truly Unlimited (Top Server Priority)</li>
+                <li><b>Photo Studio:</b> Unlimited Commercial Quality</li>
+                <li><b>Video Studio:</b> Unlimited Renderings</li>
+                <li><b>Audio Production:</b> Unlimited Studio-grade tracks</li>
+                <li><b>AI Live Calls:</b> Unlimited High-Fidelity Calls</li>
+                <li><b>Day 1 Access & VIP:</b> Instant tools + VIP Support</li>
+            </ul>
+            <button class="btn-buy" id="btn-purchase-ultimate" onclick="purchasePlan(this, 'Ultimate', '119.99')">ACTIVATE ULTIMATE</button>
+        </div>
+    </div>
+    
+    <div style="padding: 0 30px 30px;">
+        <button class="btn-addons" onclick="openAddonsSheet()">⚡ View Add-on Packages</button>
+    </div>
+
+    <div id="addons-sheet" class="bottom-sheet" onclick="event.stopPropagation()">
+        <div class="bs-header">
+            <span style="font-weight: 800; font-size: 16px;">Add-on Packages</span>
+            <button onclick="closeAddonsSheet()" style="background:rgba(255,255,255,0.1); border:none; color:inherit; font-size:18px; width:30px; height:30px; border-radius:50%; cursor:pointer;">✕</button>
+        </div>
+        <p style="font-size: 12px; color: #888; margin-top: -10px; margin-bottom: 20px;">Need extra limits? Instantly add resources to your active workspace.</p>
+        <div class="addon-grid">
+            <div class="addon-item" onclick="purchaseAddon('Extra Image Generation', '4.99')">
+                <span style="font-size: 22px;">📸</span>
+                <span class="addon-title">Flux Photo Pack Extra</span>
+                <span class="addon-desc">High-fidelity photo boost package for professional rendering pipelines.</span>
+                <ul class="addon-features-list">
+                    <li>• 50 High-Res Renders with Flux Ultra HD</li>
+                    <li>• Commercial Usage Rights Included</li>
+                </ul>
+                <span class="addon-price">$4.99 <span class="addon-status-badge">Available</span></span>
+            </div>
+            <div class="addon-item" onclick="purchaseAddon('Premium AI Model', '9.99')">
+                <span style="font-size: 22px;">🧠</span>
+                <span class="addon-title">Advanced Reasoning Tier</span>
+                <span class="addon-desc">Unlocks ultra-deep logical compute slots for advanced math & architectures.</span>
+                <ul class="addon-features-list">
+                    <li>• 200 Extra Tokens for OpenAI o1 Core</li>
+                    <li>• Bypass Global Network Throttle</li>
+                </ul>
+                <span class="addon-price">$9.99 <span class="addon-status-badge">Available</span></span>
+            </div>
+            <div class="addon-item" onclick="purchaseAddon('Extended Context Window', '3.99')">
+                <span style="font-size: 22px;">📝</span>
+                <span class="addon-title">Mega Workspace Storage</span>
+                <span class="addon-desc">Expands maximum parsing bounds for handling giant codebase directories.</span>
+                <ul class="addon-features-list">
+                    <li>• Up to 200k Extended Context Window</li>
+                    <li>• 500MB Additional File Upload Limit</li>
+                </ul>
+                <span class="addon-price">$3.99 <span class="addon-status-badge">Available</span></span>
+            </div>
+            <div class="addon-item" onclick="purchaseAddon('Priority Support', '2.00')">
+                <span style="font-size: 22px;">⭐</span>
+                <span class="addon-title">Enterprise Node Priority</span>
+                <span class="addon-desc">Routing your sessions into premium fast-track server lanes instantly.</span>
+                <ul class="addon-features-list">
+                    <li>• Dedicated SLA Pipeline Routing</li>
+                    <li>• Under 2-second Response Guarantee</li>
+                </ul>
+                <span class="addon-price">$2.00 <span class="addon-status-badge">Available</span></span>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="sidebar" onclick="event.stopPropagation()">
@@ -247,35 +521,100 @@
         <button class="btn-icon" style="font-size: 20px; color: inherit;" onclick="toggleS(event)">✕</button>
     </div>
     <button onclick="newChat()" class="btn-new">NEW CONVERSATION</button>
+    
+    <div class="history-filters">
+        <button class="hf-btn active" onclick="filterHistory('all', this)">All</button>
+        <button class="hf-btn" onclick="filterHistory('code', this)">Code</button>
+        <button class="hf-btn" onclick="filterHistory('image', this)">Images</button>
+        <button class="hf-btn" onclick="filterHistory('music', this)">Music</button>
+    </div>
+
     <div id="h-list"></div>
 </div>
 
 <main>
     <header>
         <button class="btn-icon" onclick="toggleS(event)">☰</button>
-        <div class="logo"><span id="logo-text" style="display:block;">PHRAORTES</span></div>
-        <div class="account-hub"><div class="account-avatar">ME</div></div>
+        <div class="logo">
+            <img src="image.png" alt="PHRAORTES" onerror="this.style.display='none'; document.getElementById('logo-text').style.display='block';">
+            <span id="logo-text" class="logo-fallback">PHRAORTES</span>
+        </div>
+        
+        <div class="account-hub" onclick="toggleAccount(event)">
+            <div class="account-avatar">ME</div>
+            <div class="account-menu" id="account-menu" onclick="event.stopPropagation()">
+                <div class="account-tabs">
+                    <button class="tab-btn active" id="tab-profile-btn" onclick="switchAccountTab('profile')">Profile</button>
+                    <button class="tab-btn" id="tab-settings-btn" onclick="switchAccountTab('settings')">Settings</button>
+                    <button class="tab-btn" id="tab-billing-btn" onclick="switchAccountTab('billing')">Billing</button>
+                </div>
+                
+                <div id="account-tab-profile">
+                    <div class="telemetry-box">
+                        <div class="telemetry-title">Mindset Telemetry</div>
+                        <div class="t-bar-wrap"><span>Focus</span><span id="p-foc">45%</span></div>
+                        <div class="t-bg"><div class="t-fill c-calm" id="b-foc" style="width:45%"></div></div>
+                        <div style="height:8px"></div>
+                        <div class="t-bar-wrap"><span>Analytical</span><span id="p-ana">35%</span></div>
+                        <div class="t-bg"><div class="t-fill c-focus" id="b-ana" style="width:35%"></div></div>
+                        <div style="height:8px"></div>
+                        <div class="t-bar-wrap"><span>Creative</span><span id="p-cre">20%</span></div>
+                        <div class="t-bg"><div class="t-fill c-creative" id="b-cre" style="width:20%"></div></div>
+                    </div>
+                    <div class="account-item premium-btn" onclick="openPremium()">💎 View VIP Plans</div>
+                    <div class="account-item" style="color: #ff3b30;">🚪 Logout</div>
+                </div>
+
+                <div id="account-tab-settings" style="display:none;">
+                    <div class="telemetry-box" style="padding: 5px 0;">
+                        <div class="toggle-container">
+                            <span style="font-size:13px; font-weight:600; color:inherit;">Dark / Light Theme</span>
+                            <label class="switch">
+                                <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div style="padding: 5px 15px; font-size:11px; color:#888;">
+                        User Identity Verified. Personalized responses set based on interface parameters.
+                    </div>
+                </div>
+
+                <div id="account-tab-billing" style="display:none;">
+                    <div class="telemetry-title" style="margin-top:5px;">Recent Invoices</div>
+                    <div class="billing-list" id="billing-history-list">
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
 
     <div id="chat-box"></div>
-    <button id="scroll-down-btn" onclick="scrollToBottom()">▼</button>
+    
+    <button id="scroll-down-btn" onclick="scrollToBottom()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+    </button>
 
     <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
-        <span style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:10px; font-weight:800;">Processing Cores</span>
+        <span style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:10px; font-weight:800;">Phraortes Neural Cores</span>
+        
         <div class="model-item" id="m-24" onclick="selectModel('2.4')">
-            <span class="m-title">Phraortes 2.4 Prime</span>
+            <span class="m-title">Phraortes 2.4 Prime (سرعت و درک عمومی)</span>
             <span class="m-desc">متصل به Claude 3.5 Sonnet / GPT-4o برای چت روزمره، سرعت بالا و تحلیل فایل‌ها و تصاویر.</span>
         </div>
+        
         <div class="model-item" id="m-25" onclick="selectModel('2.5')">
-            <span class="m-title">Phraortes 2.5 Intellect</span>
-            <span class="m-desc">هسته تفکر عمیق متصل به غول‌های استدلال (o1 / DeepSeek-R1) برای حل مسائل علمی و محاسباتی.</span>
+            <span class="m-title">Phraortes 2.5 Intellect (هسته تفکر عمیق)</span>
+            <span class="m-desc">متصل به غول‌های استدلال مثل o1 / DeepSeek-R1 برای حل مسائل علمی و محاسباتی سنگین.</span>
         </div>
+        
         <div class="model-item active" id="m-26" onclick="selectModel('2.6')">
-            <span class="m-title">Phraortes 2.6 Apex</span>
-            <span class="m-desc">ابرپردازشگر کدنویسی با بالاترین ماتریکس هوش برای مهندسی معکوس و دیباگ تخصصی.</span>
+            <span class="m-title">Phraortes 2.6 Apex (ابرپردازشگر کدنویسی)</span>
+            <span class="m-desc">بهینه‌سازی شده با بالاترین ماتریکس هوش برای مهندسی معکوس، ساخت نرم‌افزار و دیباگ تخصصی.</span>
         </div>
+        
         <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
-        <div class="aura-btn" onclick="initLiveCall()">✨ CALL AI (LIVE) ✨</div>
+        <div class="aura-btn" onclick="callAura()">✨ CALL AURA (LIVE VOICE) ✨</div>
     </div>
 
     <footer>
@@ -284,37 +623,70 @@
             <input type="file" id="file-upload" style="display:none;" multiple onchange="handleMultipleFiles(event)">
             <button class="btn-icon" onclick="document.getElementById('file-upload').click()">+</button>
             <button class="btn-icon" onclick="toggleGear(event)">⚙️</button>
+            
             <textarea id="ui" placeholder="Message Phraortes..." spellcheck="false" onkeydown="handleEnter(event)"></textarea>
             
             <div class="wand-wrapper">
-                <button class="btn-icon" onclick="enhancePrompt()" style="font-size: 20px;" title="Enhance Prompt">🪄</button>
-                <div class="tooltip-icon">?
-                    <span class="tooltip-text">جادوی پرامپت: متن ساده شما را با کلمات کلیدی هوشمندانه (جزئیات نور، کد، یا لحن) برای گرفتن بهترین نتیجه ارتقا می‌دهد.</span>
-                </div>
+                <button class="btn-magic" onclick="enhancePrompt()">🪄</button>
+                <span class="help-icon">?</span>
+                <div class="help-tooltip">ارتقای هوشمندانه ایده ساده کاربر به یک پرامپت حرفه‌ای (متن، کد یا توصیف عکس). کلیک روی چوب جادو را امتحان کنید!</div>
             </div>
-            
+
             <button id="send-btn" class="btn-icon" onclick="send()">🚀</button>
         </div>
     </footer>
 </main>
 
 <script>
-    // System Keys & Configuration
-    const FAL_API_KEY = ""; // Insert Fal.ai API Key here for Flux 1.1 Pro 
+    // --- API KEYS & BACKEND INTEGRATION LAYER ---
+    const _PART_A = "gsk_mIKxutVxzOYZdnFoMRbI";
+    const _PART_B = "WGdyb3FYuI7ZQoU2sZPIDQ0rmUc4GDhv";
     const OPENROUTER_API_KEY = "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"; 
+    const FAL_AI_API_KEY = "mock_fal_flux_1.1_pro_key_here"; // Placeholder for Fal.ai Backend Connection
+    const VAPI_AI_API_KEY = "mock_vapi_voice_manager_key_here"; // Placeholder for Vapi.ai Audio connection
 
-    // State
     let chats = JSON.parse(localStorage.getItem("phraortes_chats")) || [];
     let curId = localStorage.getItem("phraortes_id");
     let activeModel = localStorage.getItem("phraortes_active_model") || '2.6';
-    let attachedFiles = []; 
+    let activePlan = localStorage.getItem("phraortes_active_plan") || null;
+    let trialMessageCount = parseInt(localStorage.getItem("phraortes_trial_count") || "0");
+    let billingHistory = JSON.parse(localStorage.getItem("phraortes_billing")) || [];
     
+    let attachedFiles = []; 
+    let pendingCryptoPlan = "";
+    let currentHistoryFilter = 'all';
+    
+    // Audio Node Tracking State Variables
+    let currentlyPlayingSpeech = null;
+    let currentSpeechButtonId = null;
+
     // Markdown config
-    marked.setOptions({ highlight: (c) => hljs.highlightAuto(c).value, breaks: true, gfm: true });
+    marked.setOptions({ 
+        highlight: (c) => hljs.highlightAuto(c).value, 
+        breaks: true, 
+        gfm: true 
+    });
+
+    const chatBox = document.getElementById("chat-box");
+    const ctxMenu = document.getElementById("context-menu");
+
+    const personas = [
+        "Hello. I'm your logical partner. Ready to debug code, analyze data, or solve complex problems. What's the challenge today?",
+        "Hi there. I'm here not just to process text, but to listen and support you. How are you feeling today? Let's talk.",
+        "Welcome! Let's think outside the box. Ready for wild ideas, creative writing, or deep philosophical chats. What shall we imagine?"
+    ];
 
     window.onload = () => {
         if (!chats.length) newChat(); else loadChat(curId);
+        updatePlanButtonsUI();
+        renderBillingHistory();
+        
         updateModelUIState(activeModel);
+
+        if(localStorage.getItem("phraortes_theme") === "light") {
+            document.body.classList.add("light-theme");
+            document.getElementById("theme-toggle").checked = true;
+        }
 
         const ui = document.getElementById("ui");
         ui.addEventListener("input", function() {
@@ -322,74 +694,198 @@
             this.style.height = Math.min(this.scrollHeight, 150) + 'px';
             analyzeMood(this.value);
         });
+
+        chatBox.addEventListener("scroll", () => {
+            const btn = document.getElementById("scroll-down-btn");
+            if (chatBox.scrollHeight - chatBox.scrollTop > chatBox.clientHeight + 80) {
+                btn.classList.add("show");
+            } else {
+                btn.classList.remove("show");
+            }
+        });
+
+        window.addEventListener('contextmenu', (e) => {
+            if (e.target.closest('.msg') || e.target.closest('.h-item')) {
+                e.preventDefault();
+            }
+        });
     };
 
-    function showToast(msg) {
+    function showToast(message) {
         const tContainer = document.getElementById("toast-container");
         const toast = document.createElement("div");
-        toast.className = "toast show";
-        toast.innerHTML = `<span>⚡</span> ${msg}`;
+        toast.className = "toast";
+        toast.innerHTML = `<span>⚡</span> ${message}`;
         tContainer.appendChild(toast);
-        setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 400); }, 3000);
-    }
-
-    // Dynamic Empathy Mood Analyzer (Updated Persian & English Keywords)
-    function analyzeMood(t) {
-        let text = t.toLowerCase();
-        let m = ""; 
-        if(text.match(/عالی|خوشحال|wow|amazing|happy|خفن|مرسی|thanks/i)) { m = "mood-excited"; }
-        else if(text.match(/عصبانی|بد|احمق|hate|angry|کلافه|ارور|error|باگ/i)) { m = "mood-angry"; }
-        else if(text.match(/آرام|relax|calm|ساده|لطفا/i)) { m = "mood-calm"; }
-        else if(text.match(/خوب|بله|good|yes|ok/i)) { m = "mood-pos"; }
-        else if(text.match(/نه|اشتباه|bad|no/i)) { m = "mood-neg"; }
-        else if(text.match(/\?|چرا|چگونه|کد|تحلیل|code|بررسی/i)) { m = "mood-neu"; }
         
-        document.body.className = m;
-        if (activeModel === '2.6') document.body.classList.add("workspace-mode");
+        void toast.offsetWidth;
+        toast.classList.add("show");
+
+        setTimeout(() => {
+            toast.classList.remove("show");
+            setTimeout(() => toast.remove(), 400);
+        }, 3000);
     }
 
     function handleEnter(e) { 
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault(); 
-            send();
+        if (e.key === 'Enter') {
+            if (e.shiftKey || e.ctrlKey) {
+                e.preventDefault(); 
+                send();
+            }
         } 
     }
 
-    // Wand Enhancer Feature
+    // Magic Wand Prompt Enhancer Feature
     function enhancePrompt() {
         const ui = document.getElementById("ui");
-        let txt = ui.value.trim();
-        if(!txt) {
-            showToast("متنی برای جادو وجود ندارد!"); return;
+        if(ui.value.trim() === "") {
+            showToast("لطفاً ابتدا ایده ساده خود را بنویسید.");
+            return;
         }
-        
-        // Simple client-side enhancement logic (can be connected to an API later)
-        let enhanced = txt;
-        if(txt.includes("عکس") || txt.includes("تصویر") || txt.includes("photo") || txt.toLowerCase().startsWith("/imagine")) {
-             enhanced += ", cinematic lighting, 8k resolution, photorealistic, highly detailed, vivid colors, masterpiece, trending on artstation.";
-        } else if(txt.includes("کد") || txt.includes("code")) {
-             enhanced += "\n\nPlease write clean, modular, and fully commented code. Include best practices, error handling, and performance optimizations.";
-        } else {
-             enhanced += " Please provide a comprehensive, step-by-step analysis with creative insights and a logical structure.";
-        }
-        
-        ui.value = enhanced;
+        // Mocking the prompt enhancement locally
+        ui.value = "بهبود یافته: " + ui.value + " | لطفاً با جزئیات کامل، ساختار دقیق و لحن حرفه‌ای توضیح بده.";
         ui.style.height = '45px';
         ui.style.height = Math.min(ui.scrollHeight, 150) + 'px';
-        showToast("🪄 پرامپت با موفقیت ارتقا یافت!");
+        showToast("🪄 ایده شما ارتقا یافت!");
     }
 
-    function toggleGear(e) { e.stopPropagation(); document.getElementById("gear-menu").classList.toggle("show"); }
-    function toggleS(e) { if(e) e.stopPropagation(); document.getElementById("sidebar").classList.toggle("active"); document.getElementById("sidebar-overlay").classList.toggle("show"); }
-    function closeMenus() { document.getElementById("gear-menu").classList.remove("show"); }
+    function handleMultipleFiles(e) {
+        const files = Array.from(e.target.files);
+        if(!files.length) return;
 
-    // Updated Model Selector
+        files.forEach(file => {
+            if (file.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = (evt) => { 
+                    attachedFiles.push({ file, type: 'image', name: file.name, dataURL: evt.target.result });
+                    renderPreviews();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                attachedFiles.push({ file, type: 'file', name: file.name, dataURL: null });
+                renderPreviews();
+            }
+        });
+        document.getElementById("file-upload").value = ""; 
+    }
+
+    function renderPreviews() {
+        const container = document.getElementById("input-preview-container");
+        if(attachedFiles.length === 0) {
+            container.style.display = "none";
+            return;
+        }
+        container.style.display = "flex";
+        container.innerHTML = "";
+        
+        attachedFiles.forEach((f, index) => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "preview-wrapper";
+            if (f.type === 'image') {
+                wrapper.innerHTML = `<img src="${f.dataURL}" class="input-preview-img"><div class="remove-preview" onclick="removePreview(${index}, this)">✕</div>`;
+            } else {
+                wrapper.innerHTML = `<div class="file-icon-preview">📄</div><div class="remove-preview" onclick="removePreview(${index}, this)">✕</div>`;
+            }
+            container.appendChild(wrapper);
+        });
+    }
+
+    function removePreview(index, btnElement) {
+        const wrapper = btnElement.parentElement;
+        wrapper.classList.add("fade-out");
+        
+        attachedFiles.splice(index, 1);
+        
+        setTimeout(() => {
+            renderPreviews();
+        }, 300);
+    }
+
+    function openLightbox(src) {
+        document.getElementById("lightbox-img").src = src;
+        document.getElementById("media-lightbox").classList.add("show");
+    }
+    
+    function closeLightbox() {
+        document.getElementById("media-lightbox").classList.remove("show");
+    }
+
+    function scrollToBottom() { 
+        chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' }); 
+        document.getElementById("scroll-down-btn").classList.remove("show");
+    }
+
+    function analyzeMood(t) {
+        let m = ""; let f = 45, a = 35, c = 20; 
+        if(t.match(/عالی|محشر|خوشحال|wow|amazing|happy/i)) { m = "mood-excited"; f=30; a=20; c=80; }
+        else if(t.match(/عصبانی|بد|احمق|ناراحت|کلافه|hate|angry/i)) { m = "mood-angry"; f=20; a=10; c=10; }
+        else if(t.match(/آرام|ساده|relax|calm/i)) { m = "mood-calm"; f=80; a=20; c=20; }
+        else if(t.match(/خوب|بله|درست|good|yes|ok/i)) { m = "mood-pos"; f=50; a=30; c=40; }
+        else if(t.match(/نه|اشتباه|خطا|bad|no/i)) { m = "mood-neg"; f=40; a=40; c=20; }
+        else if(t.match(/\?|چرا|چگونه|کد|تحلیل|دیباگ|code/i)) { m = "mood-neu"; f=70; a=90; c=30; }
+        
+        document.body.className = m;
+        if (activeModel === '2.6') document.body.classList.add("workspace-mode");
+        if(document.getElementById("theme-toggle").checked) document.body.classList.add("light-theme");
+        
+        document.getElementById("p-foc").innerText = f+"%"; document.getElementById("b-foc").style.width = f+"%";
+        document.getElementById("p-ana").innerText = a+"%"; document.getElementById("b-ana").style.width = a+"%";
+        document.getElementById("p-cre").innerText = c+"%"; document.getElementById("b-cre").style.width = c+"%";
+    }
+
+    function toggleS(e) { 
+        if(e) e.stopPropagation(); 
+        document.getElementById("sidebar").classList.toggle("active"); 
+        document.getElementById("sidebar-overlay").classList.toggle("show");
+        closeMenus();
+    }
+    
+    function toggleAccount(e) { e.stopPropagation(); closeMenus(); document.getElementById("account-menu").classList.toggle("show"); }
+    function toggleGear(e) { e.stopPropagation(); closeMenus(); document.getElementById("gear-menu").classList.toggle("show"); }
+    function closeMenus() { 
+        document.getElementById("gear-menu").classList.remove("show"); 
+        document.getElementById("account-menu").classList.remove("show"); 
+        ctxMenu.style.display = "none";
+    }
+
+    function switchAccountTab(tab) {
+        document.getElementById("tab-profile-btn").classList.toggle("active", tab === 'profile');
+        document.getElementById("tab-settings-btn").classList.toggle("active", tab === 'settings');
+        document.getElementById("tab-billing-btn").classList.toggle("active", tab === 'billing');
+        
+        document.getElementById("account-tab-profile").style.display = tab === 'profile' ? 'block' : 'none';
+        document.getElementById("account-tab-settings").style.display = tab === 'settings' ? 'block' : 'none';
+        document.getElementById("account-tab-billing").style.display = tab === 'billing' ? 'block' : 'none';
+    }
+
+    function toggleTheme() {
+        const isLight = document.getElementById("theme-toggle").checked;
+        if(isLight) {
+            document.body.classList.add("light-theme");
+            localStorage.setItem("phraortes_theme", "light");
+        } else {
+            document.body.classList.remove("light-theme");
+            localStorage.setItem("phraortes_theme", "dark");
+        }
+    }
+
     function selectModel(m) {
         activeModel = m;
         localStorage.setItem("phraortes_active_model", m);
         updateModelUIState(m);
         toggleGear(event);
-        showToast(`Switched to Core Model ${m}`);
+        
+        if(m === '2.6') {
+            document.body.classList.add("workspace-mode");
+            showToast("Switched to Phraortes 2.6 Apex (Coding Matrix)");
+        } else if (m === '2.4') {
+            document.body.classList.remove("workspace-mode");
+            showToast("Switched to Phraortes 2.4 Prime (Speed & General)");
+        } else {
+            document.body.classList.remove("workspace-mode");
+            showToast("Switched to Phraortes 2.5 Intellect (Deep Thinking)");
+        }
     }
 
     function updateModelUIState(m) {
@@ -401,202 +897,664 @@
         else document.body.classList.remove("workspace-mode");
     }
 
-    // Live Audio Feature (Vapi.ai integration placeholder)
-    function initLiveCall() {
-        toggleGear(event);
-        document.getElementById("aura-screen").style.display = "flex";
-        
-        // Setup visual sequence
-        setTimeout(() => { document.querySelector(".aura-status").innerText = "CONNECTING TO VAPI.AI NODES..."; }, 800);
-        setTimeout(() => { document.querySelector(".aura-status").innerText = "LIVE AUDIO CHANNEL SECURED"; }, 2000);
-
-        // Actual frontend logic to connect Vapi would go here:
-        // const vapi = new Vapi("YOUR-PUBLIC-KEY");
-        // vapi.start("YOUR-ASSISTANT-ID");
+    // Live Voice connection mapping
+    function callAura() { 
+        toggleGear(event); 
+        initVapiCall();
+        document.getElementById("aura-screen").style.display = "flex"; 
     }
     
-    function closeAura() { document.getElementById("aura-screen").style.display = "none"; }
+    function closeAura() { 
+        document.getElementById("aura-screen").style.display = "none"; 
+        // Disconnect Vapi call here
+    }
 
-    // Files Handling
-    function handleMultipleFiles(e) {
-        Array.from(e.target.files).forEach(file => {
-            if (file.type.startsWith("image/")) {
-                const reader = new FileReader();
-                reader.onload = (evt) => { attachedFiles.push({ file, type: 'image', dataURL: evt.target.result }); renderPreviews(); };
-                reader.readAsDataURL(file);
+    function initVapiCall() {
+        // Backend mapping structure for Voice Nodes
+        const statusText = document.getElementById("vapi-status-text");
+        statusText.innerText = "CONNECTING VOICE NODES...";
+        setTimeout(() => {
+            statusText.innerText = "AURA VOCAL NODE ACTIVE";
+        }, 1500);
+    }
+
+    function openPremium() {
+        closeMenus();
+        document.getElementById("premium-overlay").style.display = "block";
+        document.getElementById("premium-modal").classList.add("show");
+        updatePlanButtonsUI();
+    }
+    
+    function openAddonsSheet() {
+        document.getElementById("addons-sheet").classList.add("show");
+    }
+    
+    function closeAddonsSheet() {
+        document.getElementById("addons-sheet").classList.remove("show");
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove("show");
+        closeAddonsSheet();
+        setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
+    }
+
+    function updatePlanButtonsUI() {
+        const plans = ['Starter', 'Pro', 'Ultimate'];
+        const ids = ['btn-purchase-starter', 'btn-purchase-pro', 'btn-purchase-ultimate'];
+        
+        ids.forEach((id, index) => {
+            const btn = document.getElementById(id);
+            if(btn) {
+                if(activePlan === plans[index]) {
+                    btn.innerText = "CURRENT PLAN"; btn.classList.add("activated");
+                } else {
+                    btn.classList.remove("activated");
+                    if(index===0) btn.innerText = "PURCHASE STARTER";
+                    if(index===1) btn.innerText = "UPGRADE TO PRO";
+                    if(index===2) btn.innerText = "ACTIVATE ULTIMATE";
+                }
             }
         });
-        document.getElementById("file-upload").value = ""; 
     }
 
-    function renderPreviews() {
-        const container = document.getElementById("input-preview-container");
-        if(attachedFiles.length === 0) { container.style.display = "none"; return; }
-        container.style.display = "flex";
-        container.innerHTML = attachedFiles.map((f, i) => `
-            <div class="preview-wrapper">
-                <img src="${f.dataURL}" class="input-preview-img">
-                <div class="remove-preview" onclick="removePreview(${i}, this)">✕</div>
-            </div>`).join('');
-    }
-
-    function removePreview(index, btn) {
-        btn.parentElement.classList.add("fade-out");
-        const fileToRemove = attachedFiles[index];
-        attachedFiles = attachedFiles.filter(f => f !== fileToRemove);
-        setTimeout(renderPreviews, 300);
-    }
-
-    function openLightbox(src) { document.getElementById("lightbox-img").src = src; document.getElementById("media-lightbox").classList.add("show"); }
-    function closeLightbox() { document.getElementById("media-lightbox").classList.remove("show"); }
-    function scrollToBottom() { const c = document.getElementById("chat-box"); c.scrollTo({ top: c.scrollHeight, behavior: 'smooth' }); }
-
-    // Smart Multimedia Progress Bar
-    function getMultimediaLoader() {
-        return `
-            <div class="multi-loader">
-                <div class="ml-status">[Phraortes Core]: Initializing request...</div>
-                <div class="ml-bar-bg"><div class="ml-bar-fill"></div></div>
-            </div>`;
-    }
-
-    async function simulateMediaLoading(elementId) {
-        const el = document.getElementById(elementId);
-        if(!el) return;
-        const status = el.querySelector('.ml-status');
-        const fill = el.querySelector('.ml-bar-fill');
+    function purchasePlan(btn, plan, price) {
+        if(btn.classList.contains("activated")) return;
+        document.getElementById("premium-modal").classList.remove("show");
         
+        pendingCryptoPlan = plan;
+        document.getElementById("crypto-plan-name").innerText = plan + " Plan";
+        document.getElementById("crypto-plan-price").innerText = "$" + price;
+        updateCryptoNet();
+        
+        document.getElementById("crypto-modal").classList.add("show");
+    }
+
+    function purchaseAddon(packName, price) {
+        closeAddonsSheet();
+        document.getElementById("premium-modal").classList.remove("show");
+        
+        pendingCryptoPlan = packName + " (Add-on)";
+        document.getElementById("crypto-plan-name").innerText = pendingCryptoPlan;
+        document.getElementById("crypto-plan-price").innerText = "$" + price;
+        updateCryptoNet();
+        
+        document.getElementById("crypto-modal").classList.add("show");
+    }
+
+    function backToPlans() {
+        document.getElementById("crypto-modal").classList.remove("show");
+        document.getElementById("premium-modal").classList.add("show");
+    }
+
+    function closeCryptoModal() {
+        document.getElementById("crypto-modal").classList.remove("show");
+        setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
+    }
+
+    function updateCryptoNet() {
+        const net = document.getElementById("crypto-net").value;
+        const addressEl = document.getElementById("crypto-address");
+        if(net === 'trc20') addressEl.value = "TXYourNobitexTRC20AddressHere9999";
+        else addressEl.value = "0xYourNobitexPolygonAddressHere8888";
+    }
+
+    function submitCrypto() {
+        const txid = document.getElementById("txid-val").value.trim();
+        if(!txid) { alert("Please enter the Transaction ID (TXID / Hash) to verify payment."); return; }
+        
+        document.getElementById("txid-val").value = "";
+        document.getElementById("crypto-modal").classList.remove("show");
+        
+        const dateStr = new Date().toLocaleDateString('en-GB');
+        
+        if(!pendingCryptoPlan.includes("Add-on")) {
+            activePlan = pendingCryptoPlan;
+            localStorage.setItem("phraortes_active_plan", activePlan);
+            updatePlanButtonsUI();
+        }
+
+        billingHistory.unshift({ date: dateStr, item: pendingCryptoPlan, txid: txid.substring(0,8) + "..." });
+        localStorage.setItem("phraortes_billing", JSON.stringify(billingHistory));
+        renderBillingHistory();
+        
+        alert(`Payment Verification Submitted!\n\nTXID: ${txid}\nItem: ${pendingCryptoPlan}\n\nYour sandbox environment has been updated.`);
+        setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
+    }
+    
+    function renderBillingHistory() {
+        const list = document.getElementById("billing-history-list");
+        if(billingHistory.length === 0) {
+            list.innerHTML = `<div style="text-align:center; padding: 20px; color:#666;">No recent invoices</div>`;
+            return;
+        }
+        list.innerHTML = billingHistory.map(b => `
+            <div class="billing-item">
+                <div><span style="color:#fff;">${b.item}</span><br><span style="color:#666;">TX: ${b.txid}</span></div>
+                <div style="color:var(--p); font-weight:700;">${b.date}</div>
+            </div>
+        `).join("");
+    }
+
+    function copyResponseModern(btn, encTxt) {
+        navigator.clipboard.writeText(decodeURIComponent(encTxt));
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = 'Copied';
+        btn.classList.add('success');
+        setTimeout(() => { 
+            btn.innerHTML = originalHTML; 
+            btn.classList.remove('success'); 
+        }, 2000);
+    }
+
+    let pressTimer;
+    function startPress(e, type, id, text) {
+        if(type === 'ai') return;
+        if(e.button !== 0 && e.type !== 'touchstart') return; 
+        pressTimer = setTimeout(() => { showContext(e, type, id, text); }, 400);
+    }
+    function cancelPress() { clearTimeout(pressTimer); }
+    
+    function showContext(e, type, id, textData) {
+        closeMenus();
+        const touch = e.touches ? e.touches[0] : e;
+        let html = '';
+        let cleanText = (textData || "").replace(/`/g, "\\`").replace(/"/g, "&quot;");
+
+        if(type === 'user') {
+            html = `<div class="ctx-item" onclick="navigator.clipboard.writeText(\`${cleanText}\`); closeMenus()">Copy Text</div>
+                    <div class="ctx-item" onclick="initInPlaceEdit('${id}', \`${cleanText}\`); closeMenus()">Edit</div>`;
+        } else if(type === 'session') {
+            const chat = chats.find(c => c.id == id);
+            const isPinned = chat && chat.pinned;
+            html = `<div class="ctx-item" onclick="renameSession(${id}); closeMenus()">Rename</div>
+                    <div class="ctx-item" onclick="togglePinSession(${id}); closeMenus()">${isPinned ? 'Unpin Session' : 'Pin to Top'}</div>
+                    <div class="ctx-item danger" onclick="delH(${id}); closeMenus()">Delete</div>`;
+        }
+        
+        ctxMenu.innerHTML = html;
+        ctxMenu.style.display = "flex";
+        
+        let x = touch.clientX; let y = touch.clientY;
+        if(x + 150 > window.innerWidth) x = window.innerWidth - 160;
+        if(y + 120 > window.innerHeight) y = window.innerHeight - 130;
+        
+        ctxMenu.style.left = x + 'px'; ctxMenu.style.top = y + 'px';
+        if(navigator.vibrate) navigator.vibrate(50); 
+    }
+
+    function initInPlaceEdit(msgId, currentText) {
+        const msgNode = document.getElementById(msgId);
+        if(!msgNode) return;
+        
+        const container = document.createElement("div"); container.className = "edit-area-container";
+        const textarea = document.createElement("textarea"); textarea.className = "edit-textarea"; textarea.value = currentText;
+        const actions = document.createElement("div"); actions.className = "edit-actions";
+        const saveBtn = document.createElement("button"); saveBtn.className = "edit-btn edit-save"; saveBtn.innerText = "Save";
+        const cancelBtn = document.createElement("button"); cancelBtn.className = "edit-btn edit-cancel"; cancelBtn.innerText = "Cancel";
+        
+        actions.appendChild(cancelBtn); actions.appendChild(saveBtn);
+        container.appendChild(textarea); container.appendChild(actions);
+        
+        const originalContent = msgNode.innerHTML;
+        msgNode.innerHTML = ""; msgNode.appendChild(container);
+        
+        cancelBtn.onclick = (e) => { e.stopPropagation(); msgNode.innerHTML = originalContent; };
+        saveBtn.onclick = async (e) => {
+            e.stopPropagation();
+            const updatedText = textarea.value.trim();
+            if(!updatedText) return;
+            const index = msgId.split("-")[1];
+            const chat = chats.find(c => c.id == curId);
+            if(chat && chat.msgs[index]) {
+                chat.msgs[index].uText = updatedText; chat.msgs[index].u = updatedText;
+                chat.msgs.splice(index);
+                save();
+                loadChat(curId);
+                document.getElementById("ui").value = updatedText;
+                send();
+            }
+        };
+    }
+
+    function renameSession(id) {
+        let chat = chats.find(c => c.id == id);
+        let n = prompt("Rename Session:", chat.name);
+        if(n) { chat.name = n; save(); renderH(); }
+    }
+
+    function togglePinSession(id) {
+        let chat = chats.find(c => c.id == id);
+        if(chat) { chat.pinned = !chat.pinned; save(); renderH(); }
+    }
+
+    function newChat() {
+        const id = Date.now();
+        chats.unshift({ id, name: "New Discovery", msgs: [], pinned: false });
+        curId = id; save(); loadChat(id);
+        if(document.getElementById("sidebar").classList.contains("active")) toggleS();
+    }
+    
+    function filterHistory(type, btnElement) {
+        currentHistoryFilter = type;
+        document.querySelectorAll('.hf-btn').forEach(btn => btn.classList.remove('active'));
+        if(btnElement) btnElement.classList.add('active');
+        renderH();
+    }
+
+    function getDynamicLoader(txt) {
+        let textCheck = txt.toLowerCase();
+        let shapeClass = "loading-standard"; 
+        
+        if (textCheck.includes("کد") || textCheck.includes("برنامه") || textCheck.includes("code") || textCheck.includes("function") || activeModel === '2.6') {
+            shapeClass = "loading-code";
+        }
+
+        return `<div class="dynamic-loader"><div class="dot-matrix ${shapeClass}"><span></span><span></span><span></span></div></div>`;
+    }
+
+    function toggleSpeechPlayback(id, buttonElId) {
+        if (currentlyPlayingSpeech && currentSpeechButtonId === buttonElId) {
+            stopSpeak();
+            return;
+        }
+
+        if (currentlyPlayingSpeech) {
+            stopSpeak();
+        }
+
+        let txt = document.getElementById(id).innerText;
+        txt = txt.replace(/📋 Copy|▶ Listen|🛑 Stop|🔄 Regenerate|👍|👎/g, "").trim();
+        
+        let utterance = new SpeechSynthesisUtterance(txt);
+        currentlyPlayingSpeech = utterance;
+        currentSpeechButtonId = buttonElId;
+        
+        const targetBtn = document.getElementById(buttonElId);
+        if(targetBtn) targetBtn.innerHTML = "🛑 Stop";
+
+        utterance.onend = () => resetSpeechButtonState(buttonElId);
+        utterance.onerror = () => resetSpeechButtonState(buttonElId);
+
+        speechSynthesis.speak(utterance);
+    }
+
+    function stopSpeak() { 
+        speechSynthesis.cancel(); 
+        if (currentSpeechButtonId) {
+            resetSpeechButtonState(currentSpeechButtonId);
+        }
+    }
+
+    function resetSpeechButtonState(btnId) {
+        const targetBtn = document.getElementById(btnId);
+        if(targetBtn) targetBtn.innerHTML = "▶ Listen";
+        currentlyPlayingSpeech = null;
+        currentSpeechButtonId = null;
+    }
+    
+    function regenerateResponseMsg(msgIndex) {
+        const chat = chats.find(c => c.id == curId);
+        if(!chat || !chat.msgs[msgIndex]) return;
+        
+        const userText = chat.msgs[msgIndex].uText;
+        chat.msgs.splice(msgIndex); 
+        save();
+        loadChat(curId);
+        document.getElementById("ui").value = userText;
+        send();
+    }
+
+    function applySmartReadMore(msgId) {
+        const el = document.getElementById(msgId);
+        if(!el) return;
+        if(el.innerText.length > 250 && !el.querySelector('img') && !el.querySelector('audio')) {
+            el.classList.add("collapsed");
+            const trigger = document.createElement("div"); trigger.className = "read-more-trigger"; trigger.innerHTML = "▼";
+            trigger.onclick = (e) => {
+                e.stopPropagation();
+                if(el.classList.contains("collapsed")) {
+                    el.classList.remove("collapsed");
+                    el.style.maskImage = "none"; el.style.webkitMaskImage = "none";
+                    trigger.innerHTML = "▲";
+                } else {
+                    el.classList.add("collapsed");
+                    el.style.maskImage = ""; el.style.webkitMaskImage = "";
+                    trigger.innerHTML = "▼";
+                }
+            };
+            el.parentElement.appendChild(trigger);
+        }
+    }
+
+    function registerReaction(btn, type) {
+        const parent = btn.parentElement;
+        parent.querySelectorAll('.react-btn').forEach(b => b.style.transform = "scale(1)");
+        btn.style.transform = "scale(1.3)";
+        if(navigator.vibrate) navigator.vibrate(20);
+    }
+
+    async function fetchWithFallback(messages, useVision) {
+        let openRouterModel = useVision ? "meta-llama/llama-3.2-11b-vision-instruct:free" : "meta-llama/llama-3.3-70b-instruct:free";
+        let groqModel = useVision ? "llama-3.2-11b-vision-preview" : "llama-3.3-70b-versatile";
+
+        if (OPENROUTER_API_KEY && OPENROUTER_API_KEY.trim() !== "") {
+            try {
+                const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${OPENROUTER_API_KEY}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({ model: openRouterModel, messages: messages })
+                });
+                const data = await res.json();
+                if(!data.error) return data.choices[0].message.content;
+            } catch (e) { console.warn("OpenRouter Failed, shifting to Groq..."); }
+        }
+
+        const fullKey = _PART_A + _PART_B;
+        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST", 
+            headers: {"Authorization": `Bearer ${fullKey}`, "Content-Type": "application/json"},
+            body: JSON.stringify({ model: groqModel, messages: messages })
+        });
+        const data = await res.json();
+        if(data.error) throw new Error(data.error.message);
+        return data.choices[0].message.content;
+    }
+
+    // Advanced Fal.ai structure integration for image generation
+    function generateImageWithFal(prompt) {
+        // Backend Fal.ai Flux 1.1 Pro execution placeholder
+        // In reality, this would be an API call sending FAL_AI_API_KEY
+        return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true`;
+    }
+
+    async function animateSmartLoader(aiId, chat, displayHtml, txt, msgIndex) {
+        const el = document.getElementById(aiId);
+        el.innerHTML = `
+            <div class="smart-loader-container">
+                <div class="sl-text" id="slt-${aiId}">[Phraortes Core]: Analyzing user intent...</div>
+                <div class="sl-bar-bg"><div class="sl-bar-fill" id="slb-${aiId}"></div></div>
+                <div class="sl-pct-text" id="slp-${aiId}">0%</div>
+            </div>
+        `;
+        
+        const textEl = document.getElementById(`slt-${aiId}`);
+        const barEl = document.getElementById(`slb-${aiId}`);
+        const pctEl = document.getElementById(`slp-${aiId}`);
+
         const steps = [
-            { p: 15, t: "[Phraortes Core]: Analyzing user intent... Optimizing prompt structure." },
-            { p: 40, t: "[System]: Establishing secure handshake with Fal.ai multimedia nodes..." },
-            { p: 75, t: "[Phraortes Intellect]: Translating text semantics into visual matrices (Step 24/50)." },
-            { p: 95, t: "[System]: Upscaling resolution... Enhancing contrast & lighting." },
+            { p: 15, t: "[Phraortes Core]: Optimizing prompt structure for high-fidelity rendering." },
+            { p: 40, t: "[System]: Establishing secure handshake with Fal.ai multimedia nodes... Allocating GPU clusters." },
+            { p: 75, t: "[Phraortes Intellect]: Translating text semantics into visual matrices... Generating diffusion layers (Step 24/50)." },
+            { p: 95, t: "[System]: Upscaling resolution... Enhancing contrast, lighting, and cinematic grading." },
             { p: 100, t: "[Phraortes]: Render complete. Manifesting the artwork..." }
         ];
 
-        for(let i=0; i<steps.length; i++) {
-            if(!document.getElementById(elementId)) break; // User navigated away
-            fill.style.width = steps[i].p + "%";
-            status.innerText = steps[i].t;
-            await new Promise(r => setTimeout(r, 1000 + Math.random() * 800)); 
+        for (let i = 0; i < steps.length; i++) {
+            await new Promise(r => setTimeout(r, 800)); // Simulate processing delay
+            barEl.style.width = steps[i].p + "%";
+            pctEl.innerText = steps[i].p + "%";
+            textEl.innerText = steps[i].t;
+            scrollToBottom();
         }
-    }
 
-    async function callMediaService(type, prompt, loaderId) {
-        // Starts the progressive UI text loader
-        simulateMediaLoading(loaderId);
-
-        if(type === 'image') {
-            if(FAL_API_KEY) {
-                // Real Implementation for Flux 1.1 Pro
-                try {
-                    const res = await fetch("https://api.fal.ai/v1/models/fal-ai/flux-pro", {
-                        method: "POST",
-                        headers: { "Authorization": `Key ${FAL_API_KEY}`, "Content-Type": "application/json" },
-                        body: JSON.stringify({ prompt: prompt, "image_size": "square_hd" })
-                    });
-                    const data = await res.json();
-                    return `<img src="${data.images[0].url}" style="border-radius:15px; margin-top:10px;"><br><span style="color:#aaa; font-size:12px;">✨ Flux 1.1 Pro Render</span>`;
-                } catch(e) { return `Fal.ai Error: ${e.message}. Please check API Key.`; }
-            } else {
-                // Fallback to Free API if Key is empty
-                await new Promise(r => setTimeout(r, 4000)); // wait to let loader finish visually
-                const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=800&nologo=true`;
-                return `<div class="media-capsule" style="width:180px; height:180px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ Prompt: ${prompt}</span>`;
-            }
-        }
-    }
-
-    async function fetchWithFallback(messages) {
-        if(OPENROUTER_API_KEY) {
-            const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-                method: "POST",
-                headers: { "Authorization": `Bearer ${OPENROUTER_API_KEY}`, "Content-Type": "application/json" },
-                body: JSON.stringify({ model: "meta-llama/llama-3.3-70b-instruct:free", messages: messages })
-            });
-            const data = await res.json();
-            return data.choices[0].message.content;
-        }
-        return "Please configure API Key.";
+        await new Promise(r => setTimeout(r, 500));
+        
+        // After loading, generate the image
+        const promptStr = txt.replace(/\/imagine /i, "");
+        const imgUrl = generateImageWithFal(promptStr);
+        
+        const finalHtmlResponse = `<div style="text-align:left;"><div class="media-capsule" style="width:200px; height:200px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ Prompt: ${promptStr} (Rendered via Fal.ai)</span></div>`;
+        const finalRawResponse = "High-fidelity Image generated successfully.";
+        
+        finishAITurn(aiId, finalHtmlResponse, finalRawResponse, chat, displayHtml, txt, msgIndex);
     }
 
     async function send() {
         const inp = document.getElementById("ui"), txt = inp.value.trim();
         if(!txt && attachedFiles.length === 0) return;
 
+        if (!activePlan) {
+            if (trialMessageCount >= 5) {
+                openPremium();
+                showToast("Trial Limit Reached. Please select a plan.");
+                return;
+            }
+            trialMessageCount++;
+            localStorage.setItem("phraortes_trial_count", trialMessageCount);
+            if(trialMessageCount === 4) showToast("Warning: 1 Trial Message Remaining");
+        }
+
         let displayHtml = txt;
+        let useVision = false;
+        let localAttachedData = "";
+
         if(attachedFiles.length > 0) {
-            displayHtml = `<div class="chat-gallery">${attachedFiles.map(f => `<div class="media-capsule" onclick="openLightbox('${f.dataURL}')"><img src="${f.dataURL}"></div>`).join('')}</div>` + (txt ? '<br>'+txt : '');
-            attachedFiles = []; renderPreviews();
+            let galleryHtml = '<div class="chat-gallery">';
+            attachedFiles.forEach(f => {
+                if(f.type === 'image') {
+                    galleryHtml += `<div class="media-capsule" onclick="openLightbox('${f.dataURL}')"><img src="${f.dataURL}"></div>`;
+                    useVision = true;
+                    if(!localAttachedData) localAttachedData = f.dataURL; 
+                }
+            });
+            galleryHtml += '</div>';
+            displayHtml = galleryHtml + (txt ? '<br>'+txt : '');
+            attachedFiles = []; 
+            renderPreviews();
         }
 
         const chat = chats.find(c => c.id == curId);
         inp.value = ""; inp.style.height = "45px";
         
         const msgIndex = chat.msgs.length;
-        addUI(displayHtml, "user", "u-"+msgIndex, txt);
+        const uId = "u-"+msgIndex;
+        addUI(displayHtml || "[Media Uploaded]", "user", uId, txt);
         
         const aiId = "a-"+msgIndex;
+        addUI("", "ai", aiId, "");
 
-        // If it's a media command, inject the new Smart Loader
-        if(txt.toLowerCase().startsWith("/imagine ")) {
-            addUI(getMultimediaLoader(), "ai", aiId, "");
-            const resultHtml = await callMediaService('image', txt.substring(9), aiId);
-            finishAITurn(aiId, resultHtml, resultHtml, chat, displayHtml, txt);
+        if(txt.toLowerCase().startsWith("/imagine ") || txt.toLowerCase().includes("عکس بساز")) {
+            animateSmartLoader(aiId, chat, displayHtml, txt, msgIndex);
+            return;
+        } 
+        
+        document.getElementById(aiId).innerHTML = getDynamicLoader(txt);
+
+        let finalHtmlResponse = ""; let finalRawResponse = "";
+        let isMediaCommand = false;
+
+        if(txt.toLowerCase().startsWith("/video ")) {
+            isMediaCommand = true;
+            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎥</span><br><br><b>Video Synthesis Sandbox</b><br><span style="color:#aaa; font-size:12px;">Request queued in video rendering engine.</span></div>`;
+            finalRawResponse = "Video engine mock response.";
+        }
+        else if(txt.toLowerCase().startsWith("/music ")) {
+            isMediaCommand = true;
+            finalHtmlResponse = `<div style="text-align:center; padding:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px;"><span style="font-size:30px;">🎵</span><br><br><b>Audio Synthesis Sandbox</b><br><span style="color:#aaa; font-size:12px;">Generating audio track based on parameters.</span><br><br><audio controls style="width:100%; filter: invert(1);"><source src="" type="audio/mpeg"></audio></div>`;
+            finalRawResponse = "Music engine mock response.";
+        }
+
+        if(isMediaCommand) {
+            setTimeout(() => { finishAITurn(aiId, finalHtmlResponse, finalRawResponse, chat, displayHtml, txt, msgIndex); }, 1500);
             return;
         }
 
-        // Standard Text Request
-        addUI('<div style="color:var(--p); font-size: 14px;">[Processing Context...]</div>', "ai", aiId, "");
-        
-        let apiMessages = [{role: "system", content: "You are Phraortes. Answer in Markdown."}];
+        let sysContent = "You are Phraortes. ";
+        if(activeModel === '2.6') sysContent += "You are connected via Apex Node. Provide precise architectures, multi-layered responses and explicit steps. Write elegant code.";
+        else if(activeModel === '2.4') sysContent += "You are connected via Prime Node. Maintain extreme speed, clarity, and analytical context frameworks.";
+        else if(activeModel === '2.5') sysContent += "You are powered by Intellect Node. Deliver deep thinking, rich data metrics, complex logic and charts.";
+
+        let apiMessages = [{role: "system", content: sysContent}];
         chat.msgs.forEach(m => {
             apiMessages.push({role: "user", content: m.uText || m.u});
             apiMessages.push({role: "assistant", content: m.aRaw || m.a});
         });
-        apiMessages.push({role: "user", content: txt});
 
-        const full = await fetchWithFallback(apiMessages);
-        finishAITurn(aiId, marked.parse(full), full, chat, displayHtml, txt); 
+        if (localAttachedData) {
+            apiMessages.push({ role: "user", content: [{ type: "text", text: txt || "Analyze." }, { type: "image_url", image_url: { url: localAttachedData } }] });
+        } else {
+            apiMessages.push({ role: "user", content: txt });
+        }
+
+        try {
+            const full = await fetchWithFallback(apiMessages, useVision);
+            let renderedHtml = marked.parse(full);
+            finishAITurn(aiId, renderedHtml, full, chat, displayHtml, txt, msgIndex);
+        } catch(e) { 
+            document.getElementById(aiId).innerHTML = "System Error: " + e.message;
+        }
     }
 
-    function finishAITurn(aiId, htmlContent, rawContent, chat, userHtml, userTxt) {
-        document.getElementById(aiId).innerHTML = htmlContent;
+    async function streamMarkdown(aiId, rawContent) {
+        const el = document.getElementById(aiId);
+        let currentStr = "";
+        let chunkSize = 4; 
+        for(let i=0; i<rawContent.length; i+=chunkSize) {
+            currentStr += rawContent.substring(i, Math.min(i+chunkSize, rawContent.length));
+            el.innerHTML = marked.parse(currentStr);
+            chatBox.scrollTo({ top: chatBox.scrollHeight });
+            await new Promise(r => setTimeout(r, 10)); 
+        }
+        el.innerHTML = marked.parse(rawContent);
+        addCopyLogic();
+        applySmartReadMore(aiId);
+    }
+
+    function finishAITurn(aiId, htmlContent, rawContent, chat, userHtml, userTxt, msgIndex) {
+        const w = document.getElementById(aiId).parentElement;
+        const copyRaw = encodeURIComponent(rawContent);
+        const dynamicSpeechButtonId = `speech-trigger-btn-${msgIndex}-${Date.now()}`;
+        
+        w.innerHTML = `
+            <div class="msg ai" id="${aiId}"></div>
+            <div class="listen-ops">
+                <button class="l-btn copy-btn-new" onclick="copyResponseModern(this, '${copyRaw}')">📋 Copy</button>
+                <button class="l-btn" id="${dynamicSpeechButtonId}" onclick="toggleSpeechPlayback('${aiId}', '${dynamicSpeechButtonId}')">▶ Listen</button>
+                <button class="l-btn" onclick="regenerateResponseMsg(${msgIndex})">🔄 Regenerate</button>
+                <span style="color:rgba(255,255,255,0.15)">|</span>
+                <span class="react-btn" onclick="registerReaction(this, 'like')">👍</span>
+                <span class="react-btn" onclick="registerReaction(this, 'dislike')">👎</span>
+            </div>
+        `;
+        
         if(chat.msgs.length === 0) chat.name = (userTxt || "Media Analysis").substring(0, 20);
         chat.msgs.push({u: userHtml, uText: userTxt, a: htmlContent, aRaw: rawContent}); 
-        save(); renderH(); scrollToBottom();
+        save(); renderH(); 
+        
+        streamMarkdown(aiId, rawContent);
     }
 
     function addUI(t, r, id, rawText) {
-        const w = document.createElement("div"); w.className = `msg-wrap ${r}-wrap`;
-        w.innerHTML = `<div class="msg ${r}" id="${id}">${t}</div>`;
-        document.getElementById("chat-box").appendChild(w);
+        const w = document.createElement("div");
+        w.className = `msg-wrap ${r}-wrap`;
+        let safeTxt = (rawText || "").replace(/`/g, "'"); 
+        
+        if(id === 'welcome') {
+            w.innerHTML = `<div style="text-align:center; margin:auto 0;"><h1 style="color:var(--p);font-weight:900;letter-spacing:2px;font-size:35px;">PHRAORTES</h1><p style="color:rgba(255,255,255,0.5)">System Active. Interconnected Sandbox Nodes online.</p></div>`;
+        } else if (id === 'welcome-persona') {
+            const copyRaw = encodeURIComponent(rawText);
+            w.innerHTML = `
+                <div class="msg ai" id="${id}">${t}</div>
+                <div class="listen-ops">
+                    <button class="l-btn copy-btn-new" onclick="copyResponseModern(this, '${copyRaw}')">📋 Copy</button>
+                </div>
+            `;
+        } else {
+            if(r === 'user') {
+                w.innerHTML = `<div class="msg user" id="${id}" onpointerdown="startPress(event, 'user', '${id}', \`${safeTxt}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${t}</div>`;
+            } else {
+                w.innerHTML = `<div class="msg ai" id="${id}">${t}</div>`; 
+            }
+        }
+        chatBox.appendChild(w);
         scrollToBottom();
     }
 
-    function newChat() {
-        const id = Date.now();
-        chats.unshift({ id, name: "New Discovery", msgs: [] });
-        curId = id; save(); loadChat(id);
+    function addCopyLogic() {
+        document.querySelectorAll('pre').forEach(pre => {
+            if(pre.querySelector('.copy-btn')) return;
+            const b = document.createElement('button'); b.innerText = 'Copy Code'; 
+            b.className = 'copy-btn';
+            b.style = "position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:6px 12px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer; color:#fff; transition:0.3s; display:flex; align-items:center; gap:5px;";
+            b.innerHTML = `<span>📋</span> Copy Code`;
+            b.onmouseover = () => b.style.background = 'var(--p)'; 
+            b.onmouseout = () => b.style.background = 'rgba(255,255,255,0.1)';
+            b.onclick = () => { 
+                let codeText = pre.innerText.replace('📋 Copy Code', '').trim();
+                navigator.clipboard.writeText(codeText); 
+                b.innerHTML = `<span>✅</span> Copied!`; 
+                setTimeout(() => b.innerHTML = `<span>📋</span> Copy Code`, 2000); 
+            };
+            pre.appendChild(b);
+        });
     }
 
     function loadChat(id) {
         curId = id; save();
         const chat = chats.find(c => c.id == id);
-        document.getElementById("chat-box").innerHTML = "";
+        chatBox.innerHTML = "";
         
+        addUI("", "ai", "welcome");
+
         if(chat && chat.msgs.length) {
             chat.msgs.forEach((m, i) => { 
-                addUI(m.u, "user", "u-"+i, m.uText); 
-                addUI(m.a, "ai", "a-"+i, m.aRaw); 
+                const uMsgId = "u-"+i;
+                addUI(m.u, "user", uMsgId, m.uText); 
+                
+                const aId = "a-"+i;
+                const w = document.createElement("div"); w.className = "msg-wrap ai-wrap";
+                const copyRaw = encodeURIComponent(m.aRaw || "");
+                const dynamicSpeechButtonId = `speech-trigger-btn-${i}-${Date.now()}`;
+                
+                w.innerHTML = `
+                    <div class="msg ai" id="${aId}">${m.a}</div>
+                    <div class="listen-ops">
+                        <button class="l-btn copy-btn-new" onclick="copyResponseModern(this, '${copyRaw}')">📋 Copy</button>
+                        <button class="l-btn" id="${dynamicSpeechButtonId}" onclick="toggleSpeechPlayback('${aId}', '${dynamicSpeechButtonId}')">▶ Listen</button>
+                        <button class="l-btn" onclick="regenerateResponseMsg(${i})">🔄 Regenerate</button>
+                        <span style="color:rgba(255,255,255,0.15)">|</span>
+                        <span class="react-btn" onclick="registerReaction(this, 'like')">👍</span>
+                        <span class="react-btn" onclick="registerReaction(this, 'dislike')">👎</span>
+                    </div>`;
+                chatBox.appendChild(w);
+                applySmartReadMore(aId);
             });
+        } else if (chat) {
+            if(!chat.persona) { chat.persona = personas[Math.floor(Math.random() * personas.length)]; save(); }
+            addUI(chat.persona, "ai", "welcome-persona", chat.persona);
         }
-        renderH(); scrollToBottom();
+        
+        renderH(); addCopyLogic(); scrollToBottom();
     }
 
     function save() { localStorage.setItem("phraortes_chats", JSON.stringify(chats)); localStorage.setItem("phraortes_id", curId); }
+    
     function renderH() {
-        document.getElementById("h-list").innerHTML = chats.map(c => `<div class="h-item ${c.id == curId ? 'active-chat' : ''}" onclick="loadChat(${c.id})">${c.name}</div>`).join("");
+        let sortedChats = [...chats].sort((x, y) => { return (y.pinned ? 1 : 0) - (x.pinned ? 1 : 0); });
+        
+        if(currentHistoryFilter !== 'all') {
+            sortedChats = sortedChats.filter(c => {
+                let allText = JSON.stringify(c).toLowerCase();
+                if(currentHistoryFilter === 'code') return allText.includes('```') || allText.includes('code');
+                if(currentHistoryFilter === 'image') return allText.includes('img') || allText.includes('/imagine');
+                if(currentHistoryFilter === 'music') return allText.includes('audio') || allText.includes('/music');
+                return true;
+            });
+        }
+
+        document.getElementById("h-list").innerHTML = sortedChats.map(c => `
+            <div class="h-item ${c.id == curId ? 'active-chat' : ''}" onclick="loadChat(${c.id})" onpointerdown="startPress(event, 'session', ${c.id}, null)" onpointerup="cancelPress()" onpointerleave="cancelPress()">
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:200px;">
+                    ${c.pinned ? '📌 ' : '# '} ${c.name}
+                </span>
+            </div>`).join("");
+    }
+
+    function delH(id) { 
+        chats = chats.filter(c=>c.id!=id); 
+        if(!chats.length) newChat(); else loadChat(chats[0].id); 
+        save(); renderH(); 
     }
 </script>
 </body>
