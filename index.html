@@ -45,7 +45,7 @@
         body.light-theme .ctx-item:hover { background: rgba(0,0,0,0.05); }
         body.light-theme .crypto-input { background: rgba(255,255,255,0.8); color: #1d1d1f; border: 1px solid rgba(0,0,0,0.15); }
         
-        /* Dynamic Emotion Colors - Soft Glassy Gradients */
+        /* Dynamic Emotion Colors */
         body.mood-pos { --grad1: #113a20; --grad2: #0b2218; --p: #00ff88; }
         body.mood-neg { --grad1: #3a1111; --grad2: #220b0b; --p: #ff3b30; }
         body.mood-neu { --grad1: #2a113a; --grad2: #180b22; --p: #af52de; }
@@ -53,12 +53,24 @@
         body.mood-calm { --grad1: #112a3a; --grad2: #0b1822; --p: #5ac8fa; } 
         body.mood-angry { --grad1: #3a1122; --grad2: #220b15; --p: #ff2d55; } 
 
-        /* Workspace Mode */
-        body.workspace-mode { --bg: #050505; --grad1: #0a0f0a; --grad2: #000000; --p: #00ff88; }
-        body.workspace-mode .bg-glow { opacity: 0.4; }
+        /* ====================================================
+           ATMOSPHERE SHIFTING: Apex (IDE) & Intellect (Research)
+           ==================================================== */
+        
+        /* Apex Mode (2.6) - The Coding Matrix */
+        body.workspace-mode { --bg: #030305; --grad1: #060a06; --grad2: #000000; --p: #00ff88; }
+        body.workspace-mode .bg-glow { opacity: 0.25; background-image: linear-gradient(rgba(0, 255, 136, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 136, 0.04) 1px, transparent 1px); background-size: 30px 30px; }
+        body.workspace-mode .msg { font-family: "Fira Code", "Courier New", Courier, monospace; font-size: 14.5px; }
+        body.workspace-mode #ui { font-family: "Fira Code", "Courier New", Courier, monospace; }
+
+        /* Intellect Mode (2.5) - Deep Thinking & Philosophy */
+        body.intellect-mode { --bg: #0a0a0c; --grad1: #181822; --grad2: #08080a; --p: #af52de; }
+        body.intellect-mode .bg-glow { opacity: 0.6; }
+        body.intellect-mode .msg { font-family: "Georgia", "Times New Roman", serif; font-size: 17px; line-height: 1.8; letter-spacing: 0.3px; color: #e5e5eb; }
+        body.intellect-mode #ui { font-family: "Georgia", "Times New Roman", serif; font-size: 16px; }
 
         * { box-sizing: border-box; font-family: -apple-system, system-ui, sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: background 0.8s var(--apple-ease); overflow: hidden; user-select: none; }
+        body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: background 0.8s var(--apple-ease); overflow: hidden; user-select: none; will-change: background, font-family; }
         
         .bg-glow { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 20% 30%, var(--grad1) 0%, transparent 70%), radial-gradient(circle at 80% 80%, var(--grad2) 0%, transparent 70%); filter: blur(60px); transition: 1s var(--apple-ease); opacity: 0.9; }
 
@@ -67,10 +79,11 @@
         body.light-theme .toast { background: rgba(255,255,255,0.9); color: #000; }
         .toast.show { opacity: 1; transform: translateY(0); }
 
-        #sidebar { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border-right: 1px solid var(--brd); z-index: 4000; transition: transform 0.5s var(--apple-ease); box-shadow: 20px 0 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+        /* Elastic Sidebar Transition */
+        #sidebar { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border-right: 1px solid var(--brd); z-index: 4000; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); box-shadow: 20px 0 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; will-change: transform; }
         #sidebar.active { transform: translateX(300px); }
         
-        #sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); z-index: 3999; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--apple-ease); }
+        #sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 3999; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--apple-ease); will-change: opacity; }
         #sidebar-overlay.show { opacity: 1; pointer-events: all; }
 
         .history-filters { display: flex; gap: 6px; padding: 0 20px 10px; overflow-x: auto; scrollbar-width: none; }
@@ -98,9 +111,10 @@
         .account-hub { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .account-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--p), #222); border: 2px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; color: #fff; transition: 0.4s; }
         
-        .account-menu { position: absolute; top: 55px; right: 0; width: 300px; background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(40px); border: 1px solid var(--brd); border-radius: 24px; padding: 15px; display: none; flex-direction: column; z-index: 5000; box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
-        .account-menu.show { display: flex; animation: glassPop 0.4s var(--apple-ease); }
-        @keyframes glassPop { from { opacity: 0; transform: translateY(-10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        /* Glass Pop Animation for Dropdowns */
+        .account-menu { position: absolute; top: 55px; right: 0; width: 300px; background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(40px); border: 1px solid var(--brd); border-radius: 24px; padding: 15px; display: none; flex-direction: column; z-index: 5000; box-shadow: 0 25px 50px rgba(0,0,0,0.6); transform-origin: top right; will-change: transform, opacity; }
+        .account-menu.show { display: flex; animation: glassPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes glassPop { from { opacity: 0; transform: translateY(-15px) scale(0.92); filter: blur(10px); } to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
 
         .telemetry-box { background: rgba(0,0,0,0.4); border-radius: 16px; padding: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
         body.light-theme .telemetry-box { background: rgba(0,0,0,0.03); }
@@ -132,19 +146,25 @@
         input:checked + .slider { background-color: var(--p); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        #chat-box { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 30px 8% 180px; display: flex; flex-direction: column; gap: 35px; scroll-behavior: smooth; user-select: none; }
+        #chat-box { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 30px 8% 180px; display: flex; flex-direction: column; gap: 35px; scroll-behavior: smooth; user-select: none; transition: opacity 0.4s var(--apple-ease); }
         
-        .msg-wrap { display: flex; flex-direction: column; max-width: 85%; animation: slideUp 0.5s var(--apple-ease); position: relative; }
+        /* Focus Dimming Effect */
+        #chat-box.chat-dimmed .msg-wrap { opacity: 0.35; transition: opacity 0.4s var(--apple-ease); filter: grayscale(30%); }
+        #chat-box.chat-dimmed .msg-wrap:last-child { opacity: 1; filter: none; }
+        
+        .msg-wrap { display: flex; flex-direction: column; max-width: 85%; animation: slideUp 0.5s var(--apple-ease); position: relative; transition: opacity 0.4s ease, filter 0.4s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .user-wrap { align-self: flex-end; }
         .ai-wrap { align-self: flex-start; width: 100%; position: relative; }
         
+        /* Layout Shift Prevention for Images */
+        .msg img { max-width: 100%; height: auto; border-radius: 12px; min-height: 50px; background: rgba(255,255,255,0.05); }
+        
         .msg { padding: 18px 26px; border-radius: 28px; font-size: 16px; line-height: 1.7; position: relative; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word; cursor: pointer; border: 1px solid transparent; transition: max-height 0.4s ease, padding 0.3s ease; max-width: 100%; overflow-x: auto;}
-        .msg img { max-width: 100%; height: auto; border-radius: 12px; }
         .msg table { display: block; overflow-x: auto; white-space: nowrap; width: 100%; border-collapse: collapse; }
         
-        .user { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-bottom-right-radius: 6px; font-weight: 500; box-shadow: 0 8px 32px rgba(0,0,0,0.2); user-select: none; -webkit-user-select: none; }
-        .ai { background: transparent; color: #fff; border: none; padding: 10px 0; font-weight: 400; cursor: default; user-select: text; -webkit-user-select: text; } 
+        .user { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-bottom-right-radius: 6px; font-weight: 500; box-shadow: 0 8px 32px rgba(0,0,0,0.2); user-select: none; -webkit-user-select: none; font-size: 16px; }
+        .ai { background: transparent; color: #fff; border: none; padding: 10px 0; font-weight: 400; cursor: default; user-select: text; -webkit-user-select: text; font-size: 16px; } 
 
         .msg.collapsed { max-height: 160px; overflow: hidden; position: relative; padding-bottom: 40px; mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%); }
         .read-more-trigger { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; backdrop-filter: blur(10px); border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 12px; transition: 0.3s var(--apple-ease); z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
@@ -165,7 +185,8 @@
         tr:nth-child(even) { background: rgba(255,255,255,0.02); }
         tr:hover { background: rgba(255,255,255,0.05); }
 
-        pre { background: rgba(10,10,10,0.8) !important; backdrop-filter: blur(20px); border: 1px solid var(--brd); border-radius: 20px; padding: 40px 20px 20px; margin: 20px 0; overflow-x: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; }
+        /* Code Overflow Bug Fix */
+        pre { contain: paint; max-width: 100%; overflow-x: auto; background: rgba(10,10,10,0.8) !important; backdrop-filter: blur(20px); border: 1px solid var(--brd); border-radius: 20px; padding: 40px 20px 20px; margin: 20px 0; box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; }
         
         .listen-ops { display: flex; gap: 12px; margin-top: 8px; padding-left: 5px; opacity: 0.5; transition: 0.3s; align-items: center; flex-wrap: wrap; }
         .listen-ops:hover { opacity: 1; }
@@ -191,20 +212,29 @@
         
         .chat-gallery { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
 
-        #input-preview-container { display: none; position: absolute; bottom: 80px; left: 8%; background: rgba(20,20,20,0.85); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.15); padding: 12px 16px; border-radius: 24px; z-index: 1000; box-shadow: 0 15px 45px rgba(0,0,0,0.6), 0 0 20px rgba(118,185,0,0.1); max-width: 84%; flex-direction: row; gap: 14px; overflow-x: auto; scrollbar-width: none; transition: all 0.4s var(--apple-ease); align-items: center; }
+        /* ====================================================
+           FILE CHIP UI (Claude-style intelligent file tracking)
+           ==================================================== */
+        #input-preview-container { display: none; position: absolute; bottom: 80px; left: 8%; padding: 0 10px; z-index: 1000; max-width: 84%; flex-direction: row; gap: 12px; overflow-x: auto; scrollbar-width: none; transition: all 0.4s var(--apple-ease); align-items: center; }
         #input-preview-container::-webkit-scrollbar { display: none; }
-        body.light-theme #input-preview-container { background: rgba(255,255,255,0.85); border-color: rgba(0,0,0,0.1); }
         
-        .preview-wrapper { position: relative; transition: opacity 0.35s var(--apple-ease), transform 0.35s var(--apple-ease); transform: scale(1); animation: cardPopIn 0.4s var(--apple-ease) forwards; flex-shrink: 0; }
-        @keyframes cardPopIn { from { opacity: 0; transform: scale(0.7) translateY(15px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .preview-wrapper { position: relative; transition: opacity 0.3s var(--apple-ease), transform 0.3s var(--apple-ease); transform: scale(1); animation: cardPopIn 0.3s var(--apple-ease) forwards; flex-shrink: 0; }
+        @keyframes cardPopIn { from { opacity: 0; transform: scale(0.8) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         .preview-wrapper.fade-out { opacity: 0; transform: scale(0.7) translateY(-10px); }
         
-        .input-preview-img { width: 75px; height: 75px; object-fit: cover; border-radius: 16px; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.2s; }
-        .input-preview-img:hover { transform: scale(1.03); }
-        .file-icon-preview { width: 75px; height: 75px; background: rgba(255,255,255,0.07); border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 28px; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .file-chip { display: flex; align-items: center; background: rgba(30,30,35,0.9); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 6px 14px 6px 6px; gap: 10px; max-width: 200px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); }
+        body.light-theme .file-chip { background: rgba(255,255,255,0.95); border-color: rgba(0,0,0,0.15); }
         
-        /* Updated Remove Preview Button: Red & Top Right */
-        .remove-preview { position: absolute; top: -8px; right: -8px; background: #ff3b30; color: #fff; width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 12px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.6); transition: transform 0.2s, background 0.2s; z-index: 10; border: 2px solid #141414; }
+        .input-preview-img { width: 42px; height: 42px; object-fit: cover; border-radius: 10px; box-shadow: none; border: none; }
+        .file-icon-preview { width: 42px; height: 42px; background: rgba(255,255,255,0.07); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 20px; border: 1px solid rgba(255,255,255,0.05); color: #fff;}
+        body.light-theme .file-icon-preview { background: rgba(0,0,0,0.05); color: #000; }
+        
+        .file-chip-info { display: flex; flex-direction: column; overflow: hidden; font-family: -apple-system, sans-serif;}
+        .file-name { font-size: 13px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600;}
+        body.light-theme .file-name { color: #1d1d1f; }
+        .file-size { font-size: 11px; color: #aaa; margin-top: 2px;}
+        
+        .remove-preview { position: absolute; top: -8px; right: -8px; background: #ff3b30; color: #fff; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 11px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.6); transition: transform 0.2s, background 0.2s; z-index: 10; border: 2px solid #141414; }
         body.light-theme .remove-preview { border-color: #fff; }
         .remove-preview:hover { transform: scale(1.2); background: #ff453a; }
 
@@ -217,10 +247,12 @@
 
         footer { position: absolute; bottom: 0; width: 100%; padding: 20px 8% 40px; background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, transparent); pointer-events: none; z-index: 1000;}
         body.light-theme footer { background: linear-gradient(to top, rgba(245,245,247,0.9) 20%, transparent); }
+        body.workspace-mode footer { background: linear-gradient(to top, rgba(5,5,5,0.95) 20%, transparent); }
+        
         .input-bar { background: rgba(25, 25, 25, 0.55); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 35px; display: flex; align-items: center; padding: 10px 25px; gap: 15px; pointer-events: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: 0.3s; position: relative; }
         .input-bar:focus-within { border-color: var(--p); background: rgba(35, 35, 35, 0.65); box-shadow: 0 20px 60px var(--glow); }
         
-        #ui { flex: 1; background: transparent; border: none; color: #fff; padding: 12px 0; font-size: 16px; resize: none; height: 45px; max-height: 150px; overflow-y: auto; line-height: 1.5; }
+        #ui { flex: 1; background: transparent; border: none; color: #fff; padding: 12px 0; resize: none; height: 45px; max-height: 150px; overflow-y: auto; line-height: 1.5; }
         
         .btn-icon { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 24px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; }
         .btn-icon:hover { color: var(--p); transform: scale(1.15); }
@@ -230,13 +262,13 @@
         .btn-magic { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 34px; height: 34px; font-size: 16px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; color: #fff; }
         .btn-magic:hover { background: var(--p); color: #000; transform: scale(1.1); border-color: var(--p); box-shadow: 0 0 15px var(--glow); }
         
-        .help-icon { background: rgba(255,255,255,0.15); color: #fff; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; justify-content: center; align-items: center; cursor: help; font-weight: bold; position: relative; }
-        .help-tooltip { position: absolute; bottom: 45px; left: 50%; transform: translateX(-50%) translateY(10px); background: rgba(15,15,15,0.9); backdrop-filter: blur(20px); border: 1px solid var(--p); color: #fff; padding: 10px 14px; border-radius: 12px; font-size: 12px; width: 220px; text-align: center; opacity: 0; pointer-events: none; transition: 0.3s var(--apple-ease); box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 100; font-weight: 500; }
+        .help-icon { background: rgba(255,255,255,0.15); color: #fff; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; justify-content: center; align-items: center; cursor: help; font-weight: bold; position: relative; font-family: sans-serif; }
+        .help-tooltip { position: absolute; bottom: 45px; left: 50%; transform: translateX(-50%) translateY(10px); background: rgba(15,15,15,0.9); backdrop-filter: blur(20px); border: 1px solid var(--p); color: #fff; padding: 10px 14px; border-radius: 12px; font-size: 12px; width: 230px; text-align: center; opacity: 0; pointer-events: none; transition: 0.3s var(--apple-ease); box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 100; font-weight: 500; font-family: -apple-system, sans-serif; }
         .wand-wrapper:hover .help-tooltip { opacity: 1; transform: translateX(-50%) translateY(0); }
         .help-tooltip::after { content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); border-width: 6px 6px 0; border-style: solid; border-color: var(--p) transparent transparent transparent; }
 
-        .drop-menu { position: absolute; bottom: 85px; left: 8%; width: 340px; background: rgba(25, 25, 25, 0.85); backdrop-filter: blur(40px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.7); overflow: hidden; padding: 15px; }
-        .drop-menu.show { display: flex; animation: glassPop 0.3s var(--apple-ease); }
+        .drop-menu { position: absolute; bottom: 85px; left: 8%; width: 350px; background: rgba(25, 25, 25, 0.85); backdrop-filter: blur(40px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.7); overflow: hidden; padding: 15px; transform-origin: bottom left; will-change: transform, opacity; }
+        .drop-menu.show { display: flex; animation: glassPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         .model-item { padding: 14px 15px; border-radius: 16px; cursor: pointer; margin-bottom: 5px; transition: 0.3s; border: 1px solid transparent; display: flex; flex-direction: column; gap: 6px; }
         .model-item:hover { background: rgba(255,255,255,0.05); }
         body.light-theme .model-item:hover { background: rgba(0,0,0,0.03); }
@@ -256,7 +288,7 @@
         .ctx-item.danger { color: #ff3b30; }
 
         #premium-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 6000; backdrop-filter: blur(20px); }
-        .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 95%; max-width: 1000px; max-height: 85vh; background: rgba(15,15,15,0.85); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; z-index: 7000; display: none; flex-direction: column; opacity: 0; box-shadow: 0 40px 80px rgba(0,0,0,0.8); transition: 0.4s var(--apple-ease); }
+        .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 95%; max-width: 1000px; max-height: 85vh; background: rgba(15,15,15,0.85); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; z-index: 7000; display: none; flex-direction: column; opacity: 0; box-shadow: 0 40px 80px rgba(0,0,0,0.8); transition: 0.4s var(--apple-ease); font-family: -apple-system, sans-serif;}
         .modal-box.show { display: flex; transform: translate(-50%, -50%) scale(1); opacity: 1; }
         
         .loyalty-banner { background: linear-gradient(90deg, #af52de, #00f2ff); color: #fff; padding: 10px 20px; font-size: 13px; font-weight: 800; text-align: center; border-radius: 15px; margin: 0 30px 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
@@ -294,7 +326,7 @@
         .btn-addons { width: 100%; padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: -10px; }
         .btn-addons:hover { background: rgba(255,255,255,0.08); border-color: var(--p); color: var(--p); }
 
-        .bottom-sheet { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(20,20,20,0.95); backdrop-filter: blur(40px); border-top: 1px solid rgba(255,255,255,0.15); border-radius: 30px 30px 0 0; transform: translateY(100%); transition: 0.4s var(--apple-ease); z-index: 7100; padding: 25px 30px 40px; box-shadow: 0 -20px 50px rgba(0,0,0,0.6); display: flex; flex-direction: column; }
+        .bottom-sheet { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(20,20,20,0.95); backdrop-filter: blur(40px); border-top: 1px solid rgba(255,255,255,0.15); border-radius: 30px 30px 0 0; transform: translateY(100%); transition: 0.4s var(--apple-ease); z-index: 7100; padding: 25px 30px 40px; box-shadow: 0 -20px 50px rgba(0,0,0,0.6); display: flex; flex-direction: column; font-family: -apple-system, sans-serif;}
         .bottom-sheet.show { transform: translateY(0); }
         .bs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         
@@ -312,7 +344,7 @@
         .crypto-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 14px; border-radius: 12px; font-size: 14px; width: 100%; transition: 0.3s; }
         .crypto-input:focus { border-color: var(--p); outline: none; }
 
-        .dynamic-loader { display: flex; align-items: center; gap: 12px; padding: 15px 0; color: var(--p); font-weight: 600; font-size: 14px; animation: fadeIn 0.5s ease; }
+        .dynamic-loader { display: flex; align-items: center; gap: 12px; padding: 15px 0; color: var(--p); font-weight: 600; font-size: 14px; animation: fadeIn 0.5s ease; font-family: -apple-system, sans-serif;}
         .dot-matrix { display: flex; align-items: center; gap: 4px; width: 40px; height: 20px; justify-content: center; }
         .dot-matrix span { display: inline-block; width: 6px; height: 6px; background: var(--p); border-radius: 50%; transition: transform 0.2s, border-radius 0.2s; }
         .dot-matrix.loading-standard span { animation: pulseDot 1.2s infinite ease-in-out; }
@@ -325,18 +357,24 @@
         .dot-matrix.loading-code span:nth-child(2) { animation-delay: 0.3s; }
         .dot-matrix.loading-code span:nth-child(3) { animation-delay: 0.6s; }
 
-        /* Smart Multimedia Loader CSS */
-        .smart-loader-container { font-family: monospace; padding: 15px 20px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; margin: 10px 0; max-width: 400px;}
-        .sl-text { font-size: 12px; color: #00ff88; margin-bottom: 10px; word-break: break-all;}
+        /* ====================================================
+           PREDICTIVE TIME COUNTER & SMART LOADER UI
+           ==================================================== */
+        .smart-loader-container { font-family: "Fira Code", "Courier New", monospace; padding: 18px 22px; background: rgba(10,10,15,0.85); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; margin: 10px 0; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(20px);}
+        body.light-theme .smart-loader-container { background: rgba(255,255,255,0.9); border-color: rgba(0,0,0,0.1); }
+        .sl-text { font-size: 13px; color: var(--p); margin-bottom: 12px; word-break: break-all; font-weight: 600;}
         .sl-bar-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; position: relative;}
-        .sl-bar-fill { height: 100%; background: #00ff88; width: 0%; transition: width 0.4s ease; box-shadow: 0 0 10px rgba(0,255,136,0.5);}
-        .sl-pct-text { font-size: 11px; color: #888; text-align: right; margin-top: 5px; font-weight: bold;}
+        body.light-theme .sl-bar-bg { background: rgba(0,0,0,0.1); }
+        .sl-bar-fill { height: 100%; background: var(--p); width: 0%; transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1); box-shadow: 0 0 12px var(--glow);}
+        .sl-meta-row { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11.5px; color: #888; font-weight: bold; align-items: center; }
+        .sl-timer { color: #fff; background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 6px;}
+        body.light-theme .sl-timer { color: #000; background: rgba(0,0,0,0.05); }
 
         @keyframes pulseDot { 0%, 100% { transform: scale(0.5); opacity: 0.3; } 50% { transform: scale(1.2); opacity: 1; } }
         @keyframes cameraFlash { 0%, 40% { opacity: 0.4; } 50%, 100% { opacity: 1; } }
         @keyframes codeLine { from { width: 4px; opacity: 0.3; } to { width: 12px; opacity: 1; } }
 
-        #aura-screen { position: fixed; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(26, 17, 58, 0.95), #000); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(30px); animation: fadeIn 0.5s var(--apple-ease); }
+        #aura-screen { position: fixed; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(26, 17, 58, 0.95), #000); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(30px); animation: fadeIn 0.5s var(--apple-ease); font-family: -apple-system, sans-serif;}
         .aura-pulse-orb { width: 160px; height: 160px; border-radius: 50%; background: linear-gradient(45deg, #af52de, #00f2ff); box-shadow: 0 0 60px rgba(175,82,222,0.6); animation: auraPulse 2s infinite ease-in-out; position: relative; display: flex; align-items: center; justify-content: center; }
         .aura-pulse-orb::after { content: ''; position: absolute; inset: -15px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.2); animation: spin 12s linear infinite; }
         @keyframes auraPulse { 0%, 100% { transform: scale(1); opacity: 0.9; box-shadow: 0 0 50px rgba(175,82,222,0.5); } 50% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 90px rgba(0,242,255,0.8); } }
@@ -599,18 +637,18 @@
         <span style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:10px; font-weight:800;">Phraortes Neural Cores</span>
         
         <div class="model-item" id="m-24" onclick="selectModel('2.4')">
-            <span class="m-title">Phraortes 2.4 Prime (سرعت و درک عمومی)</span>
-            <span class="m-desc">متصل به Claude 3.5 Sonnet / GPT-4o برای چت روزمره، سرعت بالا و تحلیل فایل‌ها و تصاویر.</span>
+            <span class="m-title">Phraortes 2.4 Prime</span>
+            <span class="m-desc">Optimized for rapid daily conversations, quick summaries, and swift multimedia analysis.</span>
         </div>
         
         <div class="model-item" id="m-25" onclick="selectModel('2.5')">
-            <span class="m-title">Phraortes 2.5 Intellect (هسته تفکر عمیق)</span>
-            <span class="m-desc">متصل به غول‌های استدلال مثل o1 / DeepSeek-R1 برای حل مسائل علمی و محاسباتی سنگین.</span>
+            <span class="m-title">Phraortes 2.5 Intellect</span>
+            <span class="m-desc">Deep research and advanced reasoning core for complex mathematical, scientific, and logic tasks.</span>
         </div>
         
         <div class="model-item active" id="m-26" onclick="selectModel('2.6')">
-            <span class="m-title">Phraortes 2.6 Apex (ابرپردازشگر کدنویسی)</span>
-            <span class="m-desc">بهینه‌سازی شده با بالاترین ماتریکس هوش برای مهندسی معکوس، ساخت نرم‌افزار و دیباگ تخصصی.</span>
+            <span class="m-title">Phraortes 2.6 Apex</span>
+            <span class="m-desc">Ultimate coding matrix. Specialized in reverse-engineering, software architecture, and expert debugging.</span>
         </div>
         
         <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
@@ -629,19 +667,18 @@
             <div class="wand-wrapper">
                 <button class="btn-magic" onclick="enhancePrompt()">🪄</button>
                 <span class="help-icon">?</span>
-                <div class="help-tooltip">ارتقای هوشمندانه ایده ساده کاربر به یک پرامپت حرفه‌ای (متن، کد یا توصیف عکس). کلیک روی چوب جادو را امتحان کنید!</div>
+                <div class="help-tooltip">Intelligently enhance your simple idea into a professional prompt (Text, Code, or Image). Click the magic wand!</div>
             </div>
 
             <button id="send-btn" class="btn-icon" onclick="send()">🚀</button>
         </div>
     </footer>
 </main>
-
 <script>
     // --- API KEYS & BACKEND INTEGRATION LAYER ---
     const _PART_A = "gsk_mIKxutVxzOYZdnFoMRbI";
     const _PART_B = "WGdyb3FYuI7ZQoU2sZPIDQ0rmUc4GDhv";
-    const OPENROUTER_API_KEY = "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"; 
+    const OPENROUTER_API_KEY = "11a5c3f1-60cf-4c12-b091-486ce6c27a63:aba44179243735d881a0509a79d11a7f"; 
     const FAL_AI_API_KEY = "mock_fal_flux_1.1_pro_key_here"; // Placeholder for Fal.ai Backend Connection
     const VAPI_AI_API_KEY = "mock_vapi_voice_manager_key_here"; // Placeholder for Vapi.ai Audio connection
 
@@ -656,9 +693,10 @@
     let pendingCryptoPlan = "";
     let currentHistoryFilter = 'all';
     
-    // Audio Node Tracking State Variables
+    // UI Interaction Tracking
     let currentlyPlayingSpeech = null;
     let currentSpeechButtonId = null;
+    let isUserScrolling = false;
 
     // Markdown config
     marked.setOptions({ 
@@ -669,6 +707,7 @@
 
     const chatBox = document.getElementById("chat-box");
     const ctxMenu = document.getElementById("context-menu");
+    const uiInput = document.getElementById("ui");
 
     const personas = [
         "Hello. I'm your logical partner. Ready to debug code, analyze data, or solve complex problems. What's the challenge today?",
@@ -688,19 +727,26 @@
             document.getElementById("theme-toggle").checked = true;
         }
 
-        const ui = document.getElementById("ui");
-        ui.addEventListener("input", function() {
+        uiInput.addEventListener("input", function() {
             this.style.height = '45px';
             this.style.height = Math.min(this.scrollHeight, 150) + 'px';
             analyzeMood(this.value);
         });
 
+        // Focus Dimming Effect
+        uiInput.addEventListener("focus", () => chatBox.classList.add("chat-dimmed"));
+        uiInput.addEventListener("blur", () => chatBox.classList.remove("chat-dimmed"));
+
+        // Smart Scroll Lock Logic
         chatBox.addEventListener("scroll", () => {
             const btn = document.getElementById("scroll-down-btn");
-            if (chatBox.scrollHeight - chatBox.scrollTop > chatBox.clientHeight + 80) {
+            const distanceToBottom = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight;
+            if (distanceToBottom > 80) {
                 btn.classList.add("show");
+                isUserScrolling = true;
             } else {
                 btn.classList.remove("show");
+                isUserScrolling = false;
             }
         });
 
@@ -736,18 +782,15 @@
         } 
     }
 
-    // Magic Wand Prompt Enhancer Feature
     function enhancePrompt() {
-        const ui = document.getElementById("ui");
-        if(ui.value.trim() === "") {
-            showToast("لطفاً ابتدا ایده ساده خود را بنویسید.");
+        if(uiInput.value.trim() === "") {
+            showToast("Please enter your basic idea first.");
             return;
         }
-        // Mocking the prompt enhancement locally
-        ui.value = "بهبود یافته: " + ui.value + " | لطفاً با جزئیات کامل، ساختار دقیق و لحن حرفه‌ای توضیح بده.";
-        ui.style.height = '45px';
-        ui.style.height = Math.min(ui.scrollHeight, 150) + 'px';
-        showToast("🪄 ایده شما ارتقا یافت!");
+        uiInput.value = "Enhanced Prompt: " + uiInput.value + " | Please explain with full detail, precise structure, and a highly professional tone.";
+        uiInput.style.height = '45px';
+        uiInput.style.height = Math.min(uiInput.scrollHeight, 150) + 'px';
+        showToast("🪄 Prompt upgraded successfully!");
     }
 
     function handleMultipleFiles(e) {
@@ -755,15 +798,18 @@
         if(!files.length) return;
 
         files.forEach(file => {
+            const fileId = Date.now() + Math.random().toString(36).substr(2, 9); // UUID Generation
+            const sizeStr = (file.size / 1024).toFixed(1) + ' KB';
+            
             if (file.type.startsWith("image/")) {
                 const reader = new FileReader();
                 reader.onload = (evt) => { 
-                    attachedFiles.push({ file, type: 'image', name: file.name, dataURL: evt.target.result });
+                    attachedFiles.push({ id: fileId, file, type: 'image', name: file.name, size: sizeStr, dataURL: evt.target.result });
                     renderPreviews();
                 };
                 reader.readAsDataURL(file);
             } else {
-                attachedFiles.push({ file, type: 'file', name: file.name, dataURL: null });
+                attachedFiles.push({ id: fileId, file, type: 'file', name: file.name, size: sizeStr, dataURL: null });
                 renderPreviews();
             }
         });
@@ -779,23 +825,40 @@
         container.style.display = "flex";
         container.innerHTML = "";
         
-        attachedFiles.forEach((f, index) => {
+        attachedFiles.forEach((f) => {
             const wrapper = document.createElement("div");
-            wrapper.className = "preview-wrapper";
+            wrapper.className = "preview-wrapper file-chip";
+            
             if (f.type === 'image') {
-                wrapper.innerHTML = `<img src="${f.dataURL}" class="input-preview-img"><div class="remove-preview" onclick="removePreview(${index}, this)">✕</div>`;
+                wrapper.innerHTML = `
+                    <img src="${f.dataURL}" class="input-preview-img">
+                    <div class="file-chip-info">
+                        <span class="file-name">${f.name}</span>
+                        <span class="file-size">${f.size}</span>
+                    </div>
+                    <div class="remove-preview" onclick="removePreview('${f.id}', event)">✕</div>
+                `;
             } else {
-                wrapper.innerHTML = `<div class="file-icon-preview">📄</div><div class="remove-preview" onclick="removePreview(${index}, this)">✕</div>`;
+                wrapper.innerHTML = `
+                    <div class="file-icon-preview">📄</div>
+                    <div class="file-chip-info">
+                        <span class="file-name">${f.name}</span>
+                        <span class="file-size">${f.size}</span>
+                    </div>
+                    <div class="remove-preview" onclick="removePreview('${f.id}', event)">✕</div>
+                `;
             }
             container.appendChild(wrapper);
         });
     }
 
-    function removePreview(index, btnElement) {
-        const wrapper = btnElement.parentElement;
-        wrapper.classList.add("fade-out");
+    // Bug-Free Dual Sync Remove Logic (Event Stop Propagation)
+    function removePreview(id, event) {
+        event.stopPropagation(); // Stop click from bubbling up
+        const wrapper = event.target.closest('.preview-wrapper');
+        if(wrapper) wrapper.classList.add("fade-out");
         
-        attachedFiles.splice(index, 1);
+        attachedFiles = attachedFiles.filter(f => f.id !== id);
         
         setTimeout(() => {
             renderPreviews();
@@ -814,6 +877,7 @@
     function scrollToBottom() { 
         chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' }); 
         document.getElementById("scroll-down-btn").classList.remove("show");
+        isUserScrolling = false;
     }
 
     function analyzeMood(t) {
@@ -826,7 +890,8 @@
         else if(t.match(/\?|چرا|چگونه|کد|تحلیل|دیباگ|code/i)) { m = "mood-neu"; f=70; a=90; c=30; }
         
         document.body.className = m;
-        if (activeModel === '2.6') document.body.classList.add("workspace-mode");
+        updateModelUIState(activeModel); // Re-apply specific environment modes forcefully
+
         if(document.getElementById("theme-toggle").checked) document.body.classList.add("light-theme");
         
         document.getElementById("p-foc").innerText = f+"%"; document.getElementById("b-foc").style.width = f+"%";
@@ -876,16 +941,9 @@
         updateModelUIState(m);
         toggleGear(event);
         
-        if(m === '2.6') {
-            document.body.classList.add("workspace-mode");
-            showToast("Switched to Phraortes 2.6 Apex (Coding Matrix)");
-        } else if (m === '2.4') {
-            document.body.classList.remove("workspace-mode");
-            showToast("Switched to Phraortes 2.4 Prime (Speed & General)");
-        } else {
-            document.body.classList.remove("workspace-mode");
-            showToast("Switched to Phraortes 2.5 Intellect (Deep Thinking)");
-        }
+        if(m === '2.6') showToast("Switched to Apex Node (Expert Coding Matrix)");
+        else if (m === '2.4') showToast("Switched to Prime Node (Daily Agile Chat)");
+        else showToast("Switched to Intellect Node (Deep Research Core)");
     }
 
     function updateModelUIState(m) {
@@ -893,11 +951,12 @@
         const targetElement = document.getElementById('m-'+m.replace('.',''));
         if(targetElement) targetElement.classList.add('active');
         
+        document.body.classList.remove("workspace-mode", "intellect-mode");
+        
         if(m === '2.6') document.body.classList.add("workspace-mode");
-        else document.body.classList.remove("workspace-mode");
+        if(m === '2.5') document.body.classList.add("intellect-mode");
     }
 
-    // Live Voice connection mapping
     function callAura() { 
         toggleGear(event); 
         initVapiCall();
@@ -906,11 +965,9 @@
     
     function closeAura() { 
         document.getElementById("aura-screen").style.display = "none"; 
-        // Disconnect Vapi call here
     }
 
     function initVapiCall() {
-        // Backend mapping structure for Voice Nodes
         const statusText = document.getElementById("vapi-status-text");
         statusText.innerText = "CONNECTING VOICE NODES...";
         setTimeout(() => {
@@ -1111,7 +1168,7 @@
                 chat.msgs.splice(index);
                 save();
                 loadChat(curId);
-                document.getElementById("ui").value = updatedText;
+                uiInput.value = updatedText;
                 send();
             }
         };
@@ -1149,19 +1206,14 @@
         if (textCheck.includes("کد") || textCheck.includes("برنامه") || textCheck.includes("code") || textCheck.includes("function") || activeModel === '2.6') {
             shapeClass = "loading-code";
         }
-
         return `<div class="dynamic-loader"><div class="dot-matrix ${shapeClass}"><span></span><span></span><span></span></div></div>`;
     }
 
     function toggleSpeechPlayback(id, buttonElId) {
         if (currentlyPlayingSpeech && currentSpeechButtonId === buttonElId) {
-            stopSpeak();
-            return;
+            stopSpeak(); return;
         }
-
-        if (currentlyPlayingSpeech) {
-            stopSpeak();
-        }
+        if (currentlyPlayingSpeech) stopSpeak();
 
         let txt = document.getElementById(id).innerText;
         txt = txt.replace(/📋 Copy|▶ Listen|🛑 Stop|🔄 Regenerate|👍|👎/g, "").trim();
@@ -1199,10 +1251,7 @@
         
         const userText = chat.msgs[msgIndex].uText;
         chat.msgs.splice(msgIndex); 
-        save();
-        loadChat(curId);
-        document.getElementById("ui").value = userText;
-        send();
+        save(); loadChat(curId); uiInput.value = userText; send();
     }
 
     function applySmartReadMore(msgId) {
@@ -1261,10 +1310,7 @@
         return data.choices[0].message.content;
     }
 
-    // Advanced Fal.ai structure integration for image generation
     function generateImageWithFal(prompt) {
-        // Backend Fal.ai Flux 1.1 Pro execution placeholder
-        // In reality, this would be an API call sending FAL_AI_API_KEY
         return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true`;
     }
 
@@ -1274,52 +1320,53 @@
             <div class="smart-loader-container">
                 <div class="sl-text" id="slt-${aiId}">[Phraortes Core]: Analyzing user intent...</div>
                 <div class="sl-bar-bg"><div class="sl-bar-fill" id="slb-${aiId}"></div></div>
-                <div class="sl-pct-text" id="slp-${aiId}">0%</div>
+                <div class="sl-meta-row">
+                    <span class="sl-timer" id="sltimer-${aiId}">Est. Time: 00:04s</span>
+                    <span class="sl-pct-text" id="slp-${aiId}">0%</span>
+                </div>
             </div>
         `;
         
         const textEl = document.getElementById(`slt-${aiId}`);
         const barEl = document.getElementById(`slb-${aiId}`);
         const pctEl = document.getElementById(`slp-${aiId}`);
+        const timerEl = document.getElementById(`sltimer-${aiId}`);
 
         const steps = [
-            { p: 15, t: "[Phraortes Core]: Optimizing prompt structure for high-fidelity rendering." },
-            { p: 40, t: "[System]: Establishing secure handshake with Fal.ai multimedia nodes... Allocating GPU clusters." },
-            { p: 75, t: "[Phraortes Intellect]: Translating text semantics into visual matrices... Generating diffusion layers (Step 24/50)." },
-            { p: 95, t: "[System]: Upscaling resolution... Enhancing contrast, lighting, and cinematic grading." },
-            { p: 100, t: "[Phraortes]: Render complete. Manifesting the artwork..." }
+            { p: 15, t: "Optimizing prompt structure for high-fidelity rendering...", rem: 4 },
+            { p: 40, t: "Establishing handshake with Fal.ai nodes... Allocating GPU clusters.", rem: 3 },
+            { p: 75, t: "Translating semantics into visual matrices... Generating diffusion layers.", rem: 2 },
+            { p: 95, t: "Upscaling resolution... Enhancing contrast and lighting.", rem: 1 },
+            { p: 100, t: "Render complete. Manifesting the artwork...", rem: 0 }
         ];
 
         for (let i = 0; i < steps.length; i++) {
-            await new Promise(r => setTimeout(r, 800)); // Simulate processing delay
+            await new Promise(r => setTimeout(r, 800));
             barEl.style.width = steps[i].p + "%";
             pctEl.innerText = steps[i].p + "%";
-            textEl.innerText = steps[i].t;
-            scrollToBottom();
+            textEl.innerText = "[System]: " + steps[i].t;
+            timerEl.innerText = `Est. Time: 00:0${steps[i].rem}s`;
+            if(!isUserScrolling) scrollToBottom();
         }
 
         await new Promise(r => setTimeout(r, 500));
         
-        // After loading, generate the image
-        const promptStr = txt.replace(/\/imagine /i, "");
-        const imgUrl = generateImageWithFal(promptStr);
+        const promptStr = txt.replace(/\/imagine /i, "").replace(/عکس بساز/i, "").trim();
+        const fallbackPrompt = promptStr || "A stunning digital masterpiece";
+        const imgUrl = generateImageWithFal(fallbackPrompt);
         
-        const finalHtmlResponse = `<div style="text-align:left;"><div class="media-capsule" style="width:200px; height:200px; border-radius:28px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:13px;">✨ Prompt: ${promptStr} (Rendered via Fal.ai)</span></div>`;
+        const finalHtmlResponse = `<div style="text-align:left;"><div class="media-capsule" style="width:250px; height:250px; border-radius:24px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:12px; font-family: monospace;">✨ Prompt: ${fallbackPrompt} (Rendered via Fal.ai)</span></div>`;
         const finalRawResponse = "High-fidelity Image generated successfully.";
         
         finishAITurn(aiId, finalHtmlResponse, finalRawResponse, chat, displayHtml, txt, msgIndex);
     }
 
     async function send() {
-        const inp = document.getElementById("ui"), txt = inp.value.trim();
+        const txt = uiInput.value.trim();
         if(!txt && attachedFiles.length === 0) return;
 
         if (!activePlan) {
-            if (trialMessageCount >= 5) {
-                openPremium();
-                showToast("Trial Limit Reached. Please select a plan.");
-                return;
-            }
+            if (trialMessageCount >= 5) { openPremium(); showToast("Trial Limit Reached. Please select a plan."); return; }
             trialMessageCount++;
             localStorage.setItem("phraortes_trial_count", trialMessageCount);
             if(trialMessageCount === 4) showToast("Warning: 1 Trial Message Remaining");
@@ -1345,16 +1392,15 @@
         }
 
         const chat = chats.find(c => c.id == curId);
-        inp.value = ""; inp.style.height = "45px";
+        uiInput.value = ""; uiInput.style.height = "45px";
         
         const msgIndex = chat.msgs.length;
-        const uId = "u-"+msgIndex;
-        addUI(displayHtml || "[Media Uploaded]", "user", uId, txt);
+        addUI(displayHtml || "[Media Uploaded]", "user", "u-"+msgIndex, txt);
         
         const aiId = "a-"+msgIndex;
         addUI("", "ai", aiId, "");
 
-        if(txt.toLowerCase().startsWith("/imagine ") || txt.toLowerCase().includes("عکس بساز")) {
+        if(txt.toLowerCase().startsWith("/imagine ") || txt.toLowerCase().includes("عکس بساز") || txt.toLowerCase().includes("generate image")) {
             animateSmartLoader(aiId, chat, displayHtml, txt, msgIndex);
             return;
         } 
@@ -1381,9 +1427,13 @@
         }
 
         let sysContent = "You are Phraortes. ";
-        if(activeModel === '2.6') sysContent += "You are connected via Apex Node. Provide precise architectures, multi-layered responses and explicit steps. Write elegant code.";
-        else if(activeModel === '2.4') sysContent += "You are connected via Prime Node. Maintain extreme speed, clarity, and analytical context frameworks.";
-        else if(activeModel === '2.5') sysContent += "You are powered by Intellect Node. Deliver deep thinking, rich data metrics, complex logic and charts.";
+        if(activeModel === '2.6') {
+            sysContent += "You are operating on the APEX Node (Model 2.6) - The Ultimate Coding & Engineering Matrix. YOUR BEHAVIOR MUST CHANGE STRICTLY: You are an elite, senior software architect. Provide highly optimized, production-ready code. Use advanced patterns, minimal fluff, strict error handling, and profound technical depth. If asked to code, deliver complete, bug-free, deeply annotated scripts. Act like a top-tier principal engineer.";
+        } else if(activeModel === '2.5') {
+            sysContent += "You are operating on the INTELLECT Node (Model 2.5) - The Deep Research & Reasoning Core. YOUR BEHAVIOR: Think step-by-step. Break down complex scientific, mathematical, or analytical questions into deeply researched, logically sound, and comprehensive answers. Provide charts, lists, and thorough theoretical background. Prioritize extreme detail and profound logical flow.";
+        } else {
+            sysContent += "You are operating on the PRIME Node (Model 2.4) - The Agile Daily Assistant. YOUR BEHAVIOR: Be fast, conversational, highly empathetic, and direct. Keep answers concise, friendly, and perfectly suited for daily chats, quick summaries, and general knowledge tasks.";
+        }
 
         let apiMessages = [{role: "system", content: sysContent}];
         chat.msgs.forEach(m => {
@@ -1391,18 +1441,23 @@
             apiMessages.push({role: "assistant", content: m.aRaw || m.a});
         });
 
-        if (localAttachedData) {
-            apiMessages.push({ role: "user", content: [{ type: "text", text: txt || "Analyze." }, { type: "image_url", image_url: { url: localAttachedData } }] });
-        } else {
-            apiMessages.push({ role: "user", content: txt });
-        }
+        if (localAttachedData) apiMessages.push({ role: "user", content: [{ type: "text", text: txt || "Analyze." }, { type: "image_url", image_url: { url: localAttachedData } }] });
+        else apiMessages.push({ role: "user", content: txt });
 
         try {
-            const full = await fetchWithFallback(apiMessages, useVision);
+            // Graceful API Timeout Handling (15 seconds)
+            const fetchPromise = fetchWithFallback(apiMessages, useVision);
+            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 15000));
+            
+            const full = await Promise.race([fetchPromise, timeoutPromise]);
             let renderedHtml = marked.parse(full);
             finishAITurn(aiId, renderedHtml, full, chat, displayHtml, txt, msgIndex);
         } catch(e) { 
-            document.getElementById(aiId).innerHTML = "System Error: " + e.message;
+            let errorMsg = e.message === "Timeout" ? "Network Timeout: 15s exceeded. Please retry." : "System Error: " + e.message;
+            document.getElementById(aiId).parentElement.innerHTML = `
+                <div class="msg ai" style="color:#ff3b30; font-weight:600;">[X] ${errorMsg}</div>
+                <button class="btn-buy" onclick="regenerateResponseMsg(${msgIndex})" style="width:auto; padding:10px 20px; font-size:12px; margin-top:10px;">🔄 Retry Connection</button>
+            `;
         }
     }
 
@@ -1413,7 +1468,7 @@
         for(let i=0; i<rawContent.length; i+=chunkSize) {
             currentStr += rawContent.substring(i, Math.min(i+chunkSize, rawContent.length));
             el.innerHTML = marked.parse(currentStr);
-            chatBox.scrollTo({ top: chatBox.scrollHeight });
+            if(!isUserScrolling) chatBox.scrollTo({ top: chatBox.scrollHeight }); // Smart Scroll Lock applied
             await new Promise(r => setTimeout(r, 10)); 
         }
         el.innerHTML = marked.parse(rawContent);
@@ -1461,14 +1516,11 @@
                 </div>
             `;
         } else {
-            if(r === 'user') {
-                w.innerHTML = `<div class="msg user" id="${id}" onpointerdown="startPress(event, 'user', '${id}', \`${safeTxt}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${t}</div>`;
-            } else {
-                w.innerHTML = `<div class="msg ai" id="${id}">${t}</div>`; 
-            }
+            if(r === 'user') w.innerHTML = `<div class="msg user" id="${id}" onpointerdown="startPress(event, 'user', '${id}', \`${safeTxt}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${t}</div>`;
+            else w.innerHTML = `<div class="msg ai" id="${id}">${t}</div>`; 
         }
         chatBox.appendChild(w);
-        scrollToBottom();
+        if(!isUserScrolling) scrollToBottom();
     }
 
     function addCopyLogic() {
