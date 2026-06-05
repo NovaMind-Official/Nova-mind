@@ -56,14 +56,11 @@
         /* ====================================================
            ATMOSPHERE SHIFTING: Apex (IDE) & Intellect (Research)
            ==================================================== */
-        
-        /* Apex Mode (2.6) - The Coding Matrix */
         body.workspace-mode { --bg: #030305; --grad1: #060a06; --grad2: #000000; --p: #00ff88; }
         body.workspace-mode .bg-glow { opacity: 0.25; background-image: linear-gradient(rgba(0, 255, 136, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 136, 0.04) 1px, transparent 1px); background-size: 30px 30px; }
         body.workspace-mode .msg { font-family: "Fira Code", "Courier New", Courier, monospace; font-size: 14.5px; }
         body.workspace-mode #ui { font-family: "Fira Code", "Courier New", Courier, monospace; }
 
-        /* Intellect Mode (2.5) - Deep Thinking & Philosophy */
         body.intellect-mode { --bg: #0a0a0c; --grad1: #181822; --grad2: #08080a; --p: #af52de; }
         body.intellect-mode .bg-glow { opacity: 0.6; }
         body.intellect-mode .msg { font-family: "Georgia", "Times New Roman", serif; font-size: 17px; line-height: 1.8; letter-spacing: 0.3px; color: #e5e5eb; }
@@ -73,13 +70,15 @@
         body { margin: 0; background: var(--bg); color: var(--txt); height: 100dvh; display: flex; transition: background 0.8s var(--apple-ease); overflow: hidden; user-select: none; will-change: background, font-family; }
         
         .bg-glow { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 20% 30%, var(--grad1) 0%, transparent 70%), radial-gradient(circle at 80% 80%, var(--grad2) 0%, transparent 70%); filter: blur(60px); transition: 1s var(--apple-ease); opacity: 0.9; }
+        
+        /* Neon Pulse Animation for Model Switch */
+        @keyframes neonPulse { 0% { filter: blur(60px) brightness(1); opacity: 0.9; } 50% { filter: blur(40px) brightness(1.6); opacity: 1; } 100% { filter: blur(60px) brightness(1); opacity: 0.9; } }
 
         #toast-container { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-        .toast { background: rgba(20,20,20,0.85); backdrop-filter: blur(20px); border: 1px solid var(--p); color: #fff; padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0; transform: translateY(-20px); transition: 0.4s var(--apple-ease); display: flex; align-items: center; gap: 10px;}
+        .toast { background: rgba(20,20,20,0.85); backdrop-filter: blur(20px); border: 1px solid var(--p); color: #fff; padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0; transform: translateY(-20px); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px;}
         body.light-theme .toast { background: rgba(255,255,255,0.9); color: #000; }
         .toast.show { opacity: 1; transform: translateY(0); }
 
-        /* Elastic Sidebar Transition */
         #sidebar { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border-right: 1px solid var(--brd); z-index: 4000; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); box-shadow: 20px 0 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; will-change: transform; }
         #sidebar.active { transform: translateX(300px); }
         
@@ -111,7 +110,6 @@
         .account-hub { position: relative; display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .account-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--p), #222); border: 2px solid rgba(255,255,255,0.2); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; color: #fff; transition: 0.4s; }
         
-        /* Glass Pop Animation for Dropdowns */
         .account-menu { position: absolute; top: 55px; right: 0; width: 300px; background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(40px); border: 1px solid var(--brd); border-radius: 24px; padding: 15px; display: none; flex-direction: column; z-index: 5000; box-shadow: 0 25px 50px rgba(0,0,0,0.6); transform-origin: top right; will-change: transform, opacity; }
         .account-menu.show { display: flex; animation: glassPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         @keyframes glassPop { from { opacity: 0; transform: translateY(-15px) scale(0.92); filter: blur(10px); } to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
@@ -234,6 +232,7 @@
         body.light-theme .file-name { color: #1d1d1f; }
         .file-size { font-size: 11px; color: #aaa; margin-top: 2px;}
         
+        /* Flawless Red X Fix */
         .remove-preview { position: absolute; top: -8px; right: -8px; background: #ff3b30; color: #fff; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 11px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.6); transition: transform 0.2s, background 0.2s; z-index: 10; border: 2px solid #141414; }
         body.light-theme .remove-preview { border-color: #fff; }
         .remove-preview:hover { transform: scale(1.2); background: #ff453a; }
@@ -257,15 +256,26 @@
         .btn-icon { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 24px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; }
         .btn-icon:hover { color: var(--p); transform: scale(1.15); }
 
-        /* Magic Wand & Tooltip CSS */
+        /* ====================================================
+           iOS Native Nodes: Bottom Action Sheet & Magic Customizer
+           ==================================================== */
+        .ios-action-sheet { position: absolute; bottom: 70px; left: 20px; background: rgba(20,20,25,0.85); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; display: none; flex-direction: column; z-index: 5000; box-shadow: 0 15px 40px rgba(0,0,0,0.5); overflow: hidden; width: 220px; transform-origin: bottom left; animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; font-family: -apple-system, sans-serif;}
+        .ios-action-sheet.show { display: flex; }
+        .ios-action-item { padding: 14px 18px; color: #fff; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; font-weight: 500; }
+        .ios-action-item:last-child { border-bottom: none; }
+        .ios-action-item:hover { background: rgba(255,255,255,0.1); }
+        body.light-theme .ios-action-sheet { background: rgba(255,255,255,0.9); border-color: rgba(0,0,0,0.1); }
+        body.light-theme .ios-action-item { color: #1d1d1f; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        body.light-theme .ios-action-item:hover { background: rgba(0,0,0,0.05); }
+
         .wand-wrapper { position: relative; display: flex; align-items: center; gap: 5px; }
         .btn-magic { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 34px; height: 34px; font-size: 16px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; color: #fff; }
         .btn-magic:hover { background: var(--p); color: #000; transform: scale(1.1); border-color: var(--p); box-shadow: 0 0 15px var(--glow); }
         
-        .help-icon { background: rgba(255,255,255,0.15); color: #fff; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; justify-content: center; align-items: center; cursor: help; font-weight: bold; position: relative; font-family: sans-serif; }
-        .help-tooltip { position: absolute; bottom: 45px; left: 50%; transform: translateX(-50%) translateY(10px); background: rgba(15,15,15,0.9); backdrop-filter: blur(20px); border: 1px solid var(--p); color: #fff; padding: 10px 14px; border-radius: 12px; font-size: 12px; width: 230px; text-align: center; opacity: 0; pointer-events: none; transition: 0.3s var(--apple-ease); box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 100; font-weight: 500; font-family: -apple-system, sans-serif; }
-        .wand-wrapper:hover .help-tooltip { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .help-tooltip::after { content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); border-width: 6px 6px 0; border-style: solid; border-color: var(--p) transparent transparent transparent; }
+        .magic-menu { position: absolute; bottom: 45px; left: 50%; transform: translateX(-50%) scale(0.9); opacity: 0; pointer-events: none; background: rgba(20,20,25,0.95); backdrop-filter: blur(25px); border: 1px solid var(--p); border-radius: 16px; padding: 6px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); transition: 0.3s cubic-bezier(0.25, 1, 0.5, 1); z-index: 6000; width: 190px; }
+        .magic-menu.show { opacity: 1; transform: translateX(-50%) scale(1); pointer-events: auto; }
+        .magic-item { padding: 10px 12px; font-size: 12px; color: #fff; border-radius: 10px; cursor: pointer; transition: 0.2s; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .magic-item:hover { background: var(--p); color: #000; }
 
         .drop-menu { position: absolute; bottom: 85px; left: 8%; width: 350px; background: rgba(25, 25, 25, 0.85); backdrop-filter: blur(40px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.15); display: none; flex-direction: column; z-index: 5000; box-shadow: 0 30px 60px rgba(0,0,0,0.7); overflow: hidden; padding: 15px; transform-origin: bottom left; will-change: transform, opacity; }
         .drop-menu.show { display: flex; animation: glassPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
@@ -280,12 +290,15 @@
         
         .aura-btn { background: linear-gradient(45deg, #af52de, #00f2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; text-align: center; padding: 12px; cursor: pointer; font-size: 14px; letter-spacing: 1px; }
 
-        #context-menu { position: fixed; background: rgba(30, 30, 30, 0.7); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 6px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); z-index: 9999; display: none; flex-direction: column; min-width: 140px; transform-origin: top left; animation: popIn 0.2s var(--apple-ease); }
-        body.light-theme #context-menu { background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.15); }
+        /* iOS-style Context Menu */
+        #context-menu { position: fixed; background: rgba(30, 30, 35, 0.85); backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 6px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); z-index: 9999; display: none; flex-direction: column; min-width: 150px; transform-origin: top left; animation: popIn 0.2s var(--apple-ease); font-family: -apple-system, sans-serif;}
+        body.light-theme #context-menu { background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.1); }
         @keyframes popIn { from{ opacity:0; transform:scale(0.9); } to{ opacity:1; transform:scale(1); } }
-        .ctx-item { padding: 12px 16px; font-size: 14px; color: #fff; cursor: pointer; border-radius: 10px; transition: 0.2s; display: flex; align-items: center; justify-content: space-between; }
+        @keyframes popUp { from{ opacity:0; transform:scale(0.9) translateY(10px); } to{ opacity:1; transform:scale(1) translateY(0); } }
+        .ctx-item { padding: 12px 14px; font-size: 14px; font-weight: 500; color: #fff; cursor: pointer; border-radius: 8px; transition: 0.2s; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05);}
+        .ctx-item:last-child { border-bottom: none; }
         .ctx-item:hover { background: rgba(255,255,255,0.1); }
-        .ctx-item.danger { color: #ff3b30; }
+        .ctx-item.danger { color: #ff453a; }
 
         #premium-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 6000; backdrop-filter: blur(20px); }
         .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 95%; max-width: 1000px; max-height: 85vh; background: rgba(15,15,15,0.85); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; z-index: 7000; display: none; flex-direction: column; opacity: 0; box-shadow: 0 40px 80px rgba(0,0,0,0.8); transition: 0.4s var(--apple-ease); font-family: -apple-system, sans-serif;}
@@ -655,19 +668,35 @@
         <div class="aura-btn" onclick="callAura()">✨ CALL AURA (LIVE VOICE) ✨</div>
     </div>
 
+    <div class="ios-action-sheet" id="attachment-sheet" onclick="event.stopPropagation()">
+        <div class="ios-action-item" onclick="document.getElementById('file-upload').setAttribute('accept', 'image/*'); document.getElementById('file-upload').click(); closeMenus();">
+            <span style="font-size: 18px;">📸</span> Photo / Image
+        </div>
+        <div class="ios-action-item" onclick="document.getElementById('file-upload').setAttribute('accept', 'video/*'); document.getElementById('file-upload').click(); closeMenus();">
+            <span style="font-size: 18px;">🎥</span> Video Studio
+        </div>
+        <div class="ios-action-item" onclick="document.getElementById('file-upload').removeAttribute('accept'); document.getElementById('file-upload').click(); closeMenus();">
+            <span style="font-size: 18px;">📄</span> Document / File
+        </div>
+    </div>
+
     <footer>
         <div id="input-preview-container"></div>
         <div class="input-bar" onclick="event.stopPropagation()">
             <input type="file" id="file-upload" style="display:none;" multiple onchange="handleMultipleFiles(event)">
-            <button class="btn-icon" onclick="document.getElementById('file-upload').click()">+</button>
+            <button class="btn-icon" onclick="toggleAttachmentSheet(event)">+</button>
             <button class="btn-icon" onclick="toggleGear(event)">⚙️</button>
             
             <textarea id="ui" placeholder="Message Phraortes..." spellcheck="false" onkeydown="handleEnter(event)"></textarea>
             
             <div class="wand-wrapper">
-                <button class="btn-magic" onclick="enhancePrompt()">🪄</button>
-                <span class="help-icon">?</span>
-                <div class="help-tooltip">Intelligently enhance your simple idea into a professional prompt (Text, Code, or Image). Click the magic wand!</div>
+                <button class="btn-magic" onclick="toggleMagicMenu(event)">🪄</button>
+                
+                <div class="magic-menu" id="magic-menu" onclick="event.stopPropagation()">
+                    <div class="magic-item" onclick="applyEnhancement('Artistic Prompt')">🎨 Artistic Prompt</div>
+                    <div class="magic-item" onclick="applyEnhancement('Engineering Prompt')">💻 Engineering Prompt</div>
+                    <div class="magic-item" onclick="applyEnhancement('Academic Prompt')">📝 Academic Prompt</div>
+                </div>
             </div>
 
             <button id="send-btn" class="btn-icon" onclick="send()">🚀</button>
@@ -782,15 +811,29 @@
         } 
     }
 
-    function enhancePrompt() {
+    // iOS Popups and Magic Handlers
+    function toggleAttachmentSheet(e) {
+        e.stopPropagation();
+        closeMenus();
+        document.getElementById("attachment-sheet").classList.toggle("show");
+    }
+
+    function toggleMagicMenu(e) {
+        e.stopPropagation();
+        closeMenus();
+        document.getElementById("magic-menu").classList.toggle("show");
+    }
+
+    function applyEnhancement(type) {
+        closeMenus();
         if(uiInput.value.trim() === "") {
-            showToast("Please enter your basic idea first.");
+            showToast("Please enter a basic idea first.");
             return;
         }
-        uiInput.value = "Enhanced Prompt: " + uiInput.value + " | Please explain with full detail, precise structure, and a highly professional tone.";
+        uiInput.value = `[${type}]: ` + uiInput.value + " | Ensure maximum detail, optimal structure, and highly professional tone.";
         uiInput.style.height = '45px';
         uiInput.style.height = Math.min(uiInput.scrollHeight, 150) + 'px';
-        showToast("🪄 Prompt upgraded successfully!");
+        showToast(`🪄 Upgraded to ${type}!`);
     }
 
     function handleMultipleFiles(e) {
@@ -908,9 +951,12 @@
     
     function toggleAccount(e) { e.stopPropagation(); closeMenus(); document.getElementById("account-menu").classList.toggle("show"); }
     function toggleGear(e) { e.stopPropagation(); closeMenus(); document.getElementById("gear-menu").classList.toggle("show"); }
+    
     function closeMenus() { 
         document.getElementById("gear-menu").classList.remove("show"); 
         document.getElementById("account-menu").classList.remove("show"); 
+        document.getElementById("attachment-sheet").classList.remove("show");
+        document.getElementById("magic-menu").classList.remove("show");
         ctxMenu.style.display = "none";
     }
 
@@ -935,9 +981,17 @@
         }
     }
 
+    // Model Switch with Neon Pulse Animation
     function selectModel(m) {
         activeModel = m;
         localStorage.setItem("phraortes_active_model", m);
+        
+        // Neon Pulse Effect
+        const glow = document.querySelector('.bg-glow');
+        glow.style.animation = 'none';
+        void glow.offsetWidth; // trigger reflow
+        glow.style.animation = 'neonPulse 0.8s ease-out';
+
         updateModelUIState(m);
         toggleGear(event);
         
@@ -1203,7 +1257,7 @@
         let textCheck = txt.toLowerCase();
         let shapeClass = "loading-standard"; 
         
-        if (textCheck.includes("کد") || textCheck.includes("برنامه") || textCheck.includes("code") || textCheck.includes("function") || activeModel === '2.6') {
+        if (textCheck.includes("code") || textCheck.includes("function") || activeModel === '2.6') {
             shapeClass = "loading-code";
         }
         return `<div class="dynamic-loader"><div class="dot-matrix ${shapeClass}"><span></span><span></span><span></span></div></div>`;
@@ -1351,8 +1405,8 @@
 
         await new Promise(r => setTimeout(r, 500));
         
-        const promptStr = txt.replace(/\/imagine /i, "").replace(/عکس بساز/i, "").trim();
-        const fallbackPrompt = promptStr || "A stunning digital masterpiece";
+        const promptStr = txt.replace(/^\/imagine /i, "").replace(/(عکس|تصویر|تصویرسازی|image|pic|picture)/gi, "").replace(/(بساز|خلق|تولید|generate|create|make|draw)/gi, "").trim();
+        const fallbackPrompt = promptStr || "A stunning digital masterpiece, ultra detailed";
         const imgUrl = generateImageWithFal(fallbackPrompt);
         
         const finalHtmlResponse = `<div style="text-align:left;"><div class="media-capsule" style="width:250px; height:250px; border-radius:24px;" onclick="openLightbox('${imgUrl}')"><img src="${imgUrl}"></div><br><span style="color:#aaa; font-size:12px; font-family: monospace;">✨ Prompt: ${fallbackPrompt} (Rendered via Fal.ai)</span></div>`;
@@ -1400,7 +1454,9 @@
         const aiId = "a-"+msgIndex;
         addUI("", "ai", aiId, "");
 
-        if(txt.toLowerCase().startsWith("/imagine ") || txt.toLowerCase().includes("عکس بساز") || txt.toLowerCase().includes("generate image")) {
+        // Smart Regex Media Detector (Image Generator)
+        const isImageRequest = /^\/imagine /i.test(txt) || (/(عکس|تصویر|تصویرسازی|image|pic|picture)/i.test(txt) && /(بساز|خلق|تولید|generate|create|make|draw)/i.test(txt));
+        if(isImageRequest) {
             animateSmartLoader(aiId, chat, displayHtml, txt, msgIndex);
             return;
         } 
