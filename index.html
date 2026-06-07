@@ -71,7 +71,6 @@
         
         @keyframes neonPulse { 0% { filter: blur(60px) brightness(1); opacity: 0.9; } 50% { filter: blur(40px) brightness(1.6); opacity: 1; } 100% { filter: blur(60px) brightness(1); opacity: 0.9; } }
 
-        /* CORE SWITCH FLASH OVERLAY */
         #core-flash { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 10000; transition: opacity 0.2s var(--apple-ease); mix-blend-mode: overlay; }
         #core-flash.flash { opacity: 0.25; }
 
@@ -146,7 +145,6 @@
         input:checked + .slider:before { transform: translateX(20px); }
 
         #chat-box { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 30px 8% 180px; display: flex; flex-direction: column; gap: 35px; scroll-behavior: smooth; user-select: none; transition: opacity 0.4s var(--apple-ease); }
-        
         #chat-box.chat-dimmed .msg-wrap { opacity: 0.35; transition: opacity 0.4s var(--apple-ease); filter: grayscale(30%); }
         #chat-box.chat-dimmed .msg-wrap:last-child { opacity: 1; filter: none; }
         
@@ -156,7 +154,6 @@
         .ai-wrap { align-self: flex-start; width: 100%; position: relative; }
         
         .msg img { max-width: 100%; height: auto; border-radius: 12px; min-height: 50px; background: rgba(255,255,255,0.05); }
-        
         .msg { padding: 18px 26px; border-radius: 28px; font-size: 16px; line-height: 1.7; position: relative; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word; cursor: pointer; border: 1px solid transparent; transition: max-height 0.4s ease, padding 0.3s ease; max-width: 100%; overflow-x: auto;}
         .msg table { display: block; overflow-x: auto; white-space: nowrap; width: 100%; border-collapse: collapse; }
         
@@ -174,7 +171,21 @@
         tr:nth-child(even) { background: rgba(255,255,255,0.02); }
         tr:hover { background: rgba(255,255,255,0.05); }
 
-        pre { contain: paint; max-width: 100%; overflow-x: auto; background: rgba(10,10,10,0.8) !important; backdrop-filter: blur(20px); border: 1px solid var(--brd); border-radius: 20px; padding: 40px 20px 20px; margin: 20px 0; box-shadow: 0 15px 35px rgba(0,0,0,0.5); position: relative; }
+        /* ====================================================
+           ADVANCED IDE CODE BLOCKS & FULLSCREEN
+           ==================================================== */
+        .code-block-wrapper { margin: 20px 0; border-radius: 20px; overflow: hidden; border: 1px solid var(--brd); box-shadow: 0 15px 35px rgba(0,0,0,0.6); background: rgba(10,10,10,0.9); backdrop-filter: blur(20px); font-family: "Fira Code", monospace; position: relative; transition: 0.4s var(--apple-ease); }
+        .code-header { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.6); padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .code-lang { font-size: 11px; color: #888; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+        .code-tools { display: flex; gap: 8px; }
+        .code-tool-btn { background: transparent; border: none; color: #888; cursor: pointer; padding: 4px; display: flex; align-items: center; transition: 0.3s; }
+        .code-tool-btn:hover { color: #fff; transform: scale(1.1); }
+        .code-tool-btn svg { width: 16px; height: 16px; fill: currentColor; }
+        .code-tool-btn.success { color: var(--p); transform: scale(1.1); }
+        .code-block-wrapper pre { margin: 0; padding: 20px; overflow-x: auto; background: transparent !important; box-shadow: none; border: none; font-size: 13.5px; line-height: 1.6; }
+        
+        .fullscreen-code { position: fixed !important; inset: 0 !important; margin: 0 !important; z-index: 10000 !important; border-radius: 0 !important; display: flex; flex-direction: column; background: #050505 !important; }
+        .fullscreen-code pre { flex: 1; overflow: auto; }
         
         .listen-ops { display: flex; gap: 12px; margin-top: 8px; padding-left: 5px; opacity: 0.5; transition: 0.3s; align-items: center; flex-wrap: wrap; }
         .listen-ops:hover { opacity: 1; }
@@ -245,7 +256,6 @@
         .btn-icon:hover { color: var(--p); transform: scale(1.15); }
         .btn-icon:disabled { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
         
-        /* IN-PLACE EDIT MODE BUTTON STYLE */
         .edit-mode-btn { color: #00ff88 !important; transform: scale(1.1); font-weight: bold; text-shadow: 0 0 10px rgba(0,255,136,0.5); }
 
         .wand-wrapper { position: relative; display: flex; align-items: center; gap: 5px; }
@@ -271,18 +281,36 @@
         .aura-btn { background: linear-gradient(45deg, #af52de, #00f2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; text-align: center; padding: 12px; cursor: pointer; font-size: 14px; letter-spacing: 1px; }
 
         /* ====================================================
-           iOS-style Gemini Bottom Sheet (GHOST FIX APPLIED)
+           HOLLOW RADIAL ARC MENU (NEW 3D UI)
            ==================================================== */
-        #context-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 9998; display: none; opacity: 0; transition: opacity 0.3s var(--apple-ease); }
-        #context-sheet { position: absolute; left: 0; width: 100%; background: rgba(20,20,20,0.95); backdrop-filter: blur(40px); border-top: 1px solid rgba(255,255,255,0.15); border-radius: 30px 30px 0 0; transform: translateY(calc(100% + 80px)); pointer-events: none; visibility: hidden; opacity: 0; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s, visibility 0.4s; z-index: 9999; padding: 25px 30px 40px; box-shadow: 0 -20px 50px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 8px; font-family: -apple-system, sans-serif; bottom: 0;}
-        #context-sheet.show { transform: translateY(0); pointer-events: auto; visibility: visible; opacity: 1; }
-        body.light-theme #context-sheet { background: rgba(255,255,255,0.95); border-color: rgba(0,0,0,0.1); }
+        #context-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 9998; display: none; opacity: 0; transition: opacity 0.3s var(--apple-ease); }
         
-        .cs-item { padding: 16px; background: rgba(255,255,255,0.05); border-radius: 16px; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; text-align: center; transition: 0.2s; }
-        .cs-item:hover { background: rgba(255,255,255,0.1); }
-        body.light-theme .cs-item { color: #000; background: rgba(0,0,0,0.05); }
-        body.light-theme .cs-item:hover { background: rgba(0,0,0,0.1); }
-        .cs-item.danger { color: #ff3b30; }
+        #floating-menu { 
+            position: fixed; width: 120px; height: 120px; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.1); background: transparent;
+            pointer-events: none; visibility: hidden; opacity: 0; z-index: 9999;
+            transform: translate(-50%, -50%) scale(0.5) rotate(-45deg);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #floating-menu.show { 
+            transform: translate(-50%, -50%) scale(1) rotate(0deg); 
+            opacity: 1; visibility: visible; pointer-events: auto; 
+            box-shadow: 0 0 30px rgba(118, 185, 0, 0.2), inset 0 0 20px rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+        }
+        
+        .f-item { 
+            position: absolute; width: 40px; height: 40px;
+            background: rgba(25,25,30,0.9); border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            color: #fff; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: 0.2s;
+        }
+        .f-item:hover { background: rgba(255,255,255,0.15); transform: scale(1.15); }
+        body.light-theme .f-item { color: #1d1d1f; background: #fff; border-color: rgba(0,0,0,0.1); }
+        body.light-theme .f-item:hover { background: rgba(0,0,0,0.05); }
+        .f-item.danger { color: #ff3b30; }
+        .f-item.danger:hover { background: rgba(255,59,48,0.15); }
 
         #premium-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 6000; backdrop-filter: blur(20px); }
         .modal-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); width: 95%; max-width: 1000px; max-height: 85vh; background: rgba(15,15,15,0.85); backdrop-filter: blur(40px); border: 1px solid rgba(255,255,255,0.15); border-radius: 30px; z-index: 7000; display: none; flex-direction: column; opacity: 0; box-shadow: 0 40px 80px rgba(0,0,0,0.8); transition: 0.4s var(--apple-ease); font-family: -apple-system, sans-serif;}
@@ -290,31 +318,51 @@
         
         .loyalty-banner { background: linear-gradient(90deg, #af52de, #00f2ff); color: #fff; padding: 10px 20px; font-size: 13px; font-weight: 800; text-align: center; border-radius: 15px; margin: 0 30px 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
 
-        .plans-container { padding: 20px 30px 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .plan-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 25px; display: flex; flex-direction: column; position: relative; transition: 0.4s; }
-        body.light-theme .plan-card { background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); }
-        .plan-card:hover { background: rgba(255,255,255,0.06); transform: translateY(-5px); border-color: rgba(255,255,255,0.3); }
-        body.light-theme .plan-card:hover { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.25); }
+        /* ====================================================
+           CYBER-SLAB TIMELINE PLANS & MAGNETIC ADD-ONS
+           ==================================================== */
+        .plans-container { padding: 20px 30px 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; position: relative; padding-left: 45px; }
+        .plans-container::before { content: ''; position: absolute; left: 25px; top: 30px; bottom: 30px; width: 2px; background: rgba(255,255,255,0.1); border-radius: 2px; }
+        body.light-theme .plans-container::before { background: rgba(0,0,0,0.1); }
         
-        .plan-card.gold { border-color: var(--premium-color); background: rgba(223, 178, 87, 0.05); }
-        .plan-card.gold:hover { box-shadow: 0 20px 50px var(--premium-glow); transform: scale(1.02); }
+        .plan-card { 
+            background: rgba(20, 20, 25, 0.4); border: 1px solid rgba(255,255,255,0.05); 
+            border-radius: 20px; padding: 25px; display: flex; flex-direction: column; position: relative; 
+            transition: 0.4s var(--apple-ease); backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .plan-card::before { content: ''; position: absolute; left: -26px; top: 35px; width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 3px solid #111; box-shadow: 0 0 10px rgba(255,255,255,0.5); z-index: 2; transition: 0.4s; }
+        .plan-card::after { content: ''; position: absolute; inset: 0; border-radius: 20px; background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%, transparent 100%); pointer-events: none; }
         
-        .plan-card.plat { border-color: var(--plat-color); background: rgba(229, 228, 226, 0.05); }
-        .plan-card.plat:hover { box-shadow: 0 20px 50px var(--plat-glow); transform: scale(1.02); }
+        body.light-theme .plan-card { background: rgba(255,255,255,0.6); border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        body.light-theme .plan-card::before { background: #000; border-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+        
+        .plan-card:hover { background: rgba(30, 30, 40, 0.6); border-color: rgba(255,255,255,0.2); box-shadow: 0 15px 40px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.2); transform: scale(1.02) translateX(5px); }
+        .plan-card:hover::before { transform: scale(1.3); background: var(--p); box-shadow: 0 0 15px var(--p); }
+        body.light-theme .plan-card:hover { background: rgba(255,255,255,0.9); border-color: rgba(0,0,0,0.25); }
+        
+        .plan-card.gold { border-color: var(--premium-color); }
+        .plan-card.gold::before { background: var(--premium-color); box-shadow: 0 0 10px var(--premium-glow); }
+        .plan-card.gold:hover { box-shadow: 0 20px 50px var(--premium-glow); }
+        
+        .plan-card.plat { border-color: var(--plat-color); }
+        .plan-card.plat::before { background: var(--plat-color); box-shadow: 0 0 10px var(--plat-glow); }
+        .plan-card.plat:hover { box-shadow: 0 20px 50px var(--plat-glow); }
 
+        .plan-header-flex { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; z-index: 5; position: relative;}
         .plan-title { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
-        .plan-price { font-size: 24px; color: var(--p); font-weight: 800; margin-bottom: 20px; }
+        .plan-price { font-size: 24px; color: var(--p); font-weight: 800; text-align: right; }
         .plan-card.gold .plan-price { color: var(--premium-color); }
         .plan-card.plat .plan-price { color: var(--plat-color); }
         
-        .plan-features { list-style: none; padding: 0; margin: 0 0 25px 0; flex: 1; }
-        .plan-features li { color: rgba(255,255,255,0.7); line-height: 1.8; font-size: 13px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;}
-        body.light-theme .plan-features li { color: rgba(0,0,0,0.7); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .plan-features { list-style: none; padding: 0; margin: 0 0 25px 0; flex: 1; z-index: 5; position: relative;}
+        .plan-features li { color: rgba(255,255,255,0.7); line-height: 1.8; font-size: 13px; margin-bottom: 10px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 10px;}
+        body.light-theme .plan-features li { color: rgba(0,0,0,0.7); border-bottom: 1px dashed rgba(0,0,0,0.1); }
         .plan-features li:last-child { border: none; }
         .plan-features li b { color: #fff; }
         body.light-theme .plan-features li b { color: #000; }
 
-        .btn-buy { background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 16px; border-radius: 16px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; font-size: 14px; position: relative; overflow: hidden; }
+        .btn-buy { background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 16px; border-radius: 16px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.3s; font-size: 14px; position: relative; overflow: hidden; z-index: 5;}
         .plan-card.gold .btn-buy { background: linear-gradient(135deg, var(--premium-color), #b88a38); color: #000; }
         .plan-card.plat .btn-buy { background: linear-gradient(135deg, #ffffff, #a0a0a0); color: #000; }
         .btn-buy:hover { opacity: 0.9; transform: scale(1.02); }
@@ -328,15 +376,16 @@
         .bs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         
         .addon-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .addon-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 18px; cursor: pointer; transition: all 0.3s var(--apple-ease); display: flex; flex-direction: column; gap: 6px; position: relative; overflow: hidden; }
-        body.light-theme .addon-item { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.08); }
-        .addon-item:hover { background: rgba(255,255,255,0.08); border-color: var(--p); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-        .addon-title { font-size: 15px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+        
+        /* MAGNETIC CORE MODULES */
+        .addon-item { background: rgba(15,15,20,0.8); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; cursor: pointer; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; flex-direction: column; gap: 8px; position: relative; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);}
+        body.light-theme .addon-item { background: #fff; border-color: rgba(0,0,0,0.08); box-shadow: 0 5px 15px rgba(0,0,0,0.05);}
+        .addon-item:hover, .addon-item:active { background: rgba(25,25,30,0.9); border-color: var(--p); transform: scale(1.08) translateY(-5px); box-shadow: 0 15px 25px rgba(118, 185, 0, 0.15), inset 0 0 15px rgba(118,185,0,0.05); z-index: 10; }
+        .addon-title { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -0.3px; display: flex; align-items: center; gap: 8px;}
         body.light-theme .addon-title { color: #1d1d1f; }
-        .addon-desc { font-size: 12px; color: #aaa; line-height: 1.4; margin-bottom: 4px; }
-        .addon-features-list { font-size: 11px; color: var(--p); font-weight: 600; margin: 2px 0 6px 0; padding: 0; list-style: none; }
-        .addon-price { font-size: 14px; color: var(--p); font-weight: 800; margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
-        .addon-status-badge { font-size: 10px; background: rgba(255,255,255,0.08); color: #fff; padding: 3px 8px; border-radius: 20px; font-weight: bold; border: 1px solid rgba(255,255,255,0.05); }
+        .addon-desc { font-size: 12px; color: #aaa; line-height: 1.5; margin-bottom: 4px; }
+        .addon-price { font-size: 15px; color: var(--p); font-weight: 900; margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
+        .addon-status-badge { font-size: 10px; background: rgba(118, 185, 0, 0.15); color: var(--p); padding: 4px 10px; border-radius: 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
 
         .crypto-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 14px; border-radius: 12px; font-size: 14px; width: 100%; transition: 0.3s; }
         .crypto-input:focus { border-color: var(--p); outline: none; }
@@ -354,9 +403,6 @@
         .dot-matrix.loading-code span:nth-child(2) { animation-delay: 0.3s; }
         .dot-matrix.loading-code span:nth-child(3) { animation-delay: 0.6s; }
 
-        /* ====================================================
-           PREDICTIVE TIME COUNTER & SMART LOADER UI
-           ==================================================== */
         .smart-loader-container { font-family: "Fira Code", "Courier New", monospace; padding: 18px 22px; background: rgba(10,10,15,0.85); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; margin: 10px 0; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(20px);}
         body.light-theme .smart-loader-container { background: rgba(255,255,255,0.9); border-color: rgba(0,0,0,0.1); }
         .sl-text { font-size: 13px; color: var(--p); margin-bottom: 12px; word-break: break-all; font-weight: 600;}
@@ -371,12 +417,12 @@
 <body onclick="closeMenus()">
 
 <div class="bg-glow"></div>
-<div id="core-flash"></div> <div id="sidebar-overlay" onclick="toggleS(event)"></div>
-
+<div id="core-flash"></div> 
+<div id="sidebar-overlay" onclick="toggleS(event)"></div>
 <div id="toast-container"></div>
 
 <div id="context-overlay" onclick="closeContextSheet()"></div>
-<div id="context-sheet"></div>
+<div id="floating-menu" onclick="event.stopPropagation()"></div>
 
 <div id="media-lightbox" onclick="closeLightbox()">
     <span class="lightbox-close">✕</span>
@@ -431,67 +477,76 @@
         <button onclick="closeModal('premium-modal')" style="background:none; border:none; color:inherit; font-size:24px; cursor:pointer;">✕</button>
     </div>
     <div class="loyalty-banner"><span>🎉 Loyalty Offer: Secure your plan today and get priority access!</span></div>
+    
     <div class="plans-container">
         <div class="plan-card" id="plan-starter">
-            <div class="plan-title">Starter</div><div class="plan-price">$14.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <div class="plan-header-flex">
+                <div><div class="plan-title">Starter Node</div></div>
+                <div class="plan-price">$14.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            </div>
             <ul class="plan-features">
                 <li><b>Text Requests:</b> Unlimited Standard Compute + 100 Advanced Reasoning Slots</li>
                 <li><b>Photo Production:</b> 30 High-Fidelity Image Renders (Phraortes Vision Node)</li>
                 <li><b>Video Generation:</b> 5 Cinematic Motion Clips (4s)</li>
-                <li><b>Audio Studio:</b> 5 Master-Grade Sound Tracks</li>
                 <li><b>Vocal Live Network:</b> 60 Minutes Voice Node Allocation</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-starter" onclick="purchasePlan(this, 'Starter', '14.99')">PURCHASE STARTER</button>
+            <button class="btn-buy" id="btn-purchase-starter" onclick="purchasePlan(this, 'Starter Node', '14.99')">PURCHASE STARTER</button>
         </div>
         <div class="plan-card gold" id="plan-pro">
-            <div class="plan-title" style="color:var(--premium-color)">Pro</div><div class="plan-price">$49.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <div class="plan-header-flex">
+                <div><div class="plan-title" style="color:var(--premium-color)">Pro Matrix</div></div>
+                <div class="plan-price">$49.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            </div>
             <ul class="plan-features">
                 <li><b>Text Requests:</b> Unlimited Standard + 350 Premium Reasoning Slots</li>
                 <li><b>Photo Production:</b> 120 Ultra-HD Studio Quality Renders</li>
                 <li><b>Video Generation:</b> 15 Elite Motion Renders (8s)</li>
-                <li><b>Audio Studio:</b> 20 Studio-Grade Sound Tracks</li>
                 <li><b>Vocal Live Network:</b> 300 Minutes Priority Voice Allocation</li>
                 <li><b>Early Access Matrix:</b> Try new features 1-2 weeks early</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-pro" onclick="purchasePlan(this, 'Pro', '49.99')">UPGRADE TO PRO</button>
+            <button class="btn-buy" id="btn-purchase-pro" onclick="purchasePlan(this, 'Pro Matrix', '49.99')">UPGRADE TO PRO</button>
         </div>
         <div class="plan-card plat" id="plan-ultimate">
-            <div class="plan-title" style="color:var(--plat-color)">Ultimate (Unlimited)</div><div class="plan-price">$119.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            <div class="plan-header-flex">
+                <div><div class="plan-title" style="color:var(--plat-color)">Ultimate Core</div></div>
+                <div class="plan-price">$119.99 <span style="font-size:14px; color:#888;">/mo</span></div>
+            </div>
             <ul class="plan-features">
                 <li><b>Text Requests:</b> Truly Unlimited Advanced Compute (Maximum Server Priority)</li>
                 <li><b>Photo Production:</b> Unlimited Commercial Quality Artworks</li>
-                <li><b>Video Generation:</b> Unlimited Cinematic Video Rendering</li>
-                <li><b>Audio Studio:</b> Unlimited Studio-Grade Audio Master Tracks</li>
+                <li><b>Video & Audio Studio:</b> Unlimited Cinematic Rendering & Master Tracks</li>
                 <li><b>Vocal Live Network:</b> Uncapped High-Fidelity Live Voice Sessions</li>
                 <li><b>Customization:</b> Interface Personalization & Custom Theme Node (Beta)</li>
                 <li><b>VIP Protocol:</b> Day 1 Tool Access & Dedicated Support Nodes</li>
             </ul>
-            <button class="btn-buy" id="btn-purchase-ultimate" onclick="purchasePlan(this, 'Ultimate', '119.99')">ACTIVATE ULTIMATE</button>
+            <button class="btn-buy" id="btn-purchase-ultimate" onclick="purchasePlan(this, 'Ultimate Core', '119.99')">ACTIVATE ULTIMATE</button>
         </div>
     </div>
-    <div style="padding: 0 30px 30px;"><button class="btn-addons" onclick="openAddonsSheet()">⚡ View Add-on Packages (Power-Ups)</button></div>
+    <div style="padding: 0 30px 30px;"><button class="btn-addons" onclick="openAddonsSheet()">⚡ View Power-Up Modules</button></div>
+    
     <div id="addons-sheet" class="bottom-sheet" onclick="event.stopPropagation()">
-        <div class="bs-header"><span style="font-weight: 800; font-size: 16px;">Add-on Packages</span><button onclick="closeAddonsSheet()" style="background:rgba(255,255,255,0.1); border:none; color:inherit; font-size:18px; width:30px; height:30px; border-radius:50%; cursor:pointer;">✕</button></div>
+        <div class="bs-header"><span style="font-weight: 800; font-size: 16px;">Power-Up Modules</span><button onclick="closeAddonsSheet()" style="background:rgba(255,255,255,0.1); border:none; color:inherit; font-size:18px; width:30px; height:30px; border-radius:50%; cursor:pointer;">✕</button></div>
+        
         <div class="addon-grid">
             <div class="addon-item" onclick="purchaseAddon('Premium Artistic Suite', '4.99')">
-                <span style="font-size: 22px;">📸</span><span class="addon-title">Premium Artistic Suite</span>
+                <div class="addon-title"><span style="font-size: 20px;">📸</span> Premium Artistic Suite</div>
                 <span class="addon-desc">100 Ultra-HD 4K Renders, AI Image Upscaler & Background Removal.</span>
-                <span class="addon-price">$4.99</span>
+                <div class="addon-price">$4.99 <span class="addon-status-badge">Inject</span></div>
             </div>
             <div class="addon-item" onclick="purchaseAddon('Codebase Auditor Matrix', '9.99')">
-                <span style="font-size: 22px;">🧠</span><span class="addon-title">Codebase Auditor Matrix</span>
+                <div class="addon-title"><span style="font-size: 20px;">🧠</span> Codebase Auditor Matrix</div>
                 <span class="addon-desc">500 Premium Reasoning Slots + Giant Directory Bug Mapping.</span>
-                <span class="addon-price">$9.99</span>
+                <div class="addon-price">$9.99 <span class="addon-status-badge">Inject</span></div>
             </div>
-            <div class="addon-item" onclick="purchaseAddon('Mega Context Vault & Sync', '3.99')">
-                <span style="font-size: 22px;">📝</span><span class="addon-title">Mega Context Vault</span>
+            <div class="addon-item" onclick="purchaseAddon('Mega Context Vault', '3.99')">
+                <div class="addon-title"><span style="font-size: 20px;">📝</span> Mega Context Vault</div>
                 <span class="addon-desc">1 Million Context Window & 2GB Persistent Cloud Sandbox.</span>
-                <span class="addon-price">$3.99</span>
+                <div class="addon-price">$3.99 <span class="addon-status-badge">Inject</span></div>
             </div>
             <div class="addon-item" onclick="purchaseAddon('Turbo Multimedia Pass', '2.99')">
-                <span style="font-size: 22px;">🚀</span><span class="addon-title">Turbo Multimedia Pass</span>
+                <div class="addon-title"><span style="font-size: 20px;">🚀</span> Turbo Multimedia Pass</div>
                 <span class="addon-desc">Sub-0.5s Response Speed & 24-Hour VIP Guest Ticket.</span>
-                <span class="addon-price">$2.99</span>
+                <div class="addon-price">$2.99 <span class="addon-status-badge">Inject</span></div>
             </div>
         </div>
     </div>
@@ -622,11 +677,49 @@
     let currentlyPlayingSpeech = null;
     let currentSpeechButtonId = null;
     let isUserScrolling = false;
-    
-    // In-place edit Tracker
     let globalEditMsgId = null;
 
-    marked.setOptions({ highlight: (c) => hljs.highlightAuto(c).value, breaks: true, gfm: true });
+    // --- MINI IDE, PURE COPY & CODE-TO-FILE LOGIC ---
+    const customRenderer = new marked.Renderer();
+    customRenderer.code = function(code, language) {
+        const lineCount = code.split('\n').length;
+        const langText = language ? language.toLowerCase() : 'code';
+        const safeCode = encodeURIComponent(code);
+
+        // Code-to-File Anti-Lag System (> 500 lines)
+        if (lineCount > 500) {
+            return `
+            <div class="code-block-wrapper" style="display:flex; align-items:center; justify-content:space-between; padding: 20px;">
+                <div style="display:flex; align-items:center; gap: 15px;">
+                    <span style="font-size: 30px;">📦</span>
+                    <div>
+                        <div style="font-weight: bold; color: #fff;">${langText}_snippet.txt</div>
+                        <div style="font-size: 11px; color: #888;">${lineCount} lines • Heavy File</div>
+                    </div>
+                </div>
+                <button class="btn-buy" style="width: auto; padding: 10px 20px;" onclick="downloadCode('${safeCode}', '${langText}_snippet.txt')">⬇ Download</button>
+            </div>`;
+        }
+
+        const validLang = !!(language && hljs.getLanguage(language));
+        const highlighted = validLang ? hljs.highlight(code, { language }).value : hljs.highlightAuto(code).value;
+        return `
+        <div class="code-block-wrapper">
+            <div class="code-header">
+                <span class="code-lang">${langText}</span>
+                <div class="code-tools">
+                    <button class="code-tool-btn" onclick="toggleFullscreenCode(this)" title="Fullscreen">
+                        <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                    </button>
+                    <button class="code-tool-btn code-copy-btn" onclick="copyPureCode(this, '${safeCode}')" title="Copy Code">
+                        <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                    </button>
+                </div>
+            </div>
+            <pre><code class="hljs ${language}">${highlighted}</code></pre>
+        </div>`;
+    };
+    marked.setOptions({ renderer: customRenderer, breaks: true, gfm: true });
 
     const chatBox = document.getElementById("chat-box");
     const uiInput = document.getElementById("ui");
@@ -644,12 +737,8 @@
         }
 
         uiInput.addEventListener("input", function() {
-            if (this.value.trim() === '') {
-                this.style.height = '45px';
-            } else {
-                this.style.height = '45px';
-                this.style.height = Math.min(this.scrollHeight, 150) + 'px';
-            }
+            if (this.value.trim() === '') { this.style.height = '45px'; } 
+            else { this.style.height = '45px'; this.style.height = Math.min(this.scrollHeight, 150) + 'px'; }
             analyzeMood(this.value);
         });
 
@@ -714,10 +803,7 @@
         attachedFiles = attachedFiles.filter(f => f.id !== fileId);
         const chip = document.getElementById("file-chip-" + fileId);
         if (chip) chip.remove();
-        if (attachedFiles.length === 0) {
-            const container = document.getElementById("input-preview-container");
-            container.style.display = "none"; container.innerHTML = "";
-        }
+        if (attachedFiles.length === 0) { container.style.display = "none"; container.innerHTML = ""; }
     };
 
     function openLightbox(src) { document.getElementById("lightbox-img").src = src; document.getElementById("media-lightbox").classList.add("show"); }
@@ -759,10 +845,8 @@
         activeModel = m; localStorage.setItem("phraortes_active_model", m);
         const glow = document.querySelector('.bg-glow'); glow.style.animation = 'none'; void glow.offsetWidth; glow.style.animation = 'neonPulse 0.8s ease-out';
         
-        // CORE SWITCH FLASH EFFECT
         const fl = document.getElementById('core-flash');
-        fl.classList.add('flash');
-        setTimeout(() => fl.classList.remove('flash'), 200);
+        fl.classList.add('flash'); setTimeout(() => fl.classList.remove('flash'), 200);
 
         updateModelUIState(m); toggleGear(event);
         if(m === '2.6') showToast("Switched to Phraortes Apex Node"); else if (m === '2.4') showToast("Switched to Phraortes Prime Node"); else showToast("Switched to Phraortes Intellect Node");
@@ -787,7 +871,7 @@
     function closeModal(id) { document.getElementById(id).classList.remove("show"); closeAddonsSheet(); setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400); }
 
     function updatePlanButtonsUI() {
-        const plans = ['Starter', 'Pro', 'Ultimate']; const ids = ['btn-purchase-starter', 'btn-purchase-pro', 'btn-purchase-ultimate'];
+        const plans = ['Starter Node', 'Pro Matrix', 'Ultimate Core']; const ids = ['btn-purchase-starter', 'btn-purchase-pro', 'btn-purchase-ultimate'];
         ids.forEach((id, index) => {
             const btn = document.getElementById(id);
             if(btn) {
@@ -797,7 +881,7 @@
         });
     }
 
-    function purchasePlan(btn, plan, price) { if(btn.classList.contains("activated")) return; document.getElementById("premium-modal").classList.remove("show"); pendingCryptoPlan = plan; document.getElementById("crypto-plan-name").innerText = plan + " Plan"; document.getElementById("crypto-plan-price").innerText = "$" + price; updateCryptoNet(); document.getElementById("crypto-modal").classList.add("show"); }
+    function purchasePlan(btn, plan, price) { if(btn.classList.contains("activated")) return; document.getElementById("premium-modal").classList.remove("show"); pendingCryptoPlan = plan; document.getElementById("crypto-plan-name").innerText = plan; document.getElementById("crypto-plan-price").innerText = "$" + price; updateCryptoNet(); document.getElementById("crypto-modal").classList.add("show"); }
     function purchaseAddon(packName, price) { closeAddonsSheet(); document.getElementById("premium-modal").classList.remove("show"); pendingCryptoPlan = packName; document.getElementById("crypto-plan-name").innerText = pendingCryptoPlan; document.getElementById("crypto-plan-price").innerText = "$" + price; updateCryptoNet(); document.getElementById("crypto-modal").classList.add("show"); }
     function backToPlans() { document.getElementById("crypto-modal").classList.remove("show"); document.getElementById("premium-modal").classList.add("show"); }
     function closeCryptoModal() { document.getElementById("crypto-modal").classList.remove("show"); setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400); }
@@ -808,45 +892,116 @@
         if(!txid) { alert("Please enter the Transaction ID to verify payment."); return; }
         document.getElementById("txid-val").value = ""; document.getElementById("crypto-modal").classList.remove("show");
         const dateStr = new Date().toLocaleDateString('en-GB');
-        if(!pendingCryptoPlan.includes("Premium") && !pendingCryptoPlan.includes("Matrix") && !pendingCryptoPlan.includes("Vault") && !pendingCryptoPlan.includes("Pass")) { activePlan = pendingCryptoPlan; localStorage.setItem("phraortes_active_plan", activePlan); updatePlanButtonsUI(); }
+        if(pendingCryptoPlan.includes("Node") || pendingCryptoPlan.includes("Matrix") || pendingCryptoPlan.includes("Core")) { activePlan = pendingCryptoPlan; localStorage.setItem("phraortes_active_plan", activePlan); updatePlanButtonsUI(); }
         billingHistory.unshift({ date: dateStr, item: pendingCryptoPlan, txid: txid.substring(0,8) + "..." }); localStorage.setItem("phraortes_billing", JSON.stringify(billingHistory)); renderBillingHistory();
         alert(`Payment Verification Submitted!`); setTimeout(() => { document.getElementById("premium-overlay").style.display = "none"; }, 400);
     }
     
     function renderBillingHistory() { const list = document.getElementById("billing-history-list"); if(billingHistory.length === 0) { list.innerHTML = `<div style="text-align:center; padding: 20px; color:#666;">No recent invoices</div>`; return; } list.innerHTML = billingHistory.map(b => `<div class="billing-item"><div><span style="color:#fff;">${b.item}</span><br><span style="color:#666;">TX: ${b.txid}</span></div><div style="color:var(--p); font-weight:700;">${b.date}</div></div>`).join(""); }
 
-    function copyResponseModern(btn, encTxt) { navigator.clipboard.writeText(decodeURIComponent(encTxt)); const originalHTML = btn.innerHTML; btn.innerHTML = 'Copied'; btn.classList.add('success'); setTimeout(() => { btn.innerHTML = originalHTML; btn.classList.remove('success'); }, 2000); }
+    // --- FULLSCREEN CODE ---
+    window.toggleFullscreenCode = function(btn) {
+        const wrapper = btn.closest('.code-block-wrapper');
+        wrapper.classList.toggle('fullscreen-code');
+        if(wrapper.classList.contains('fullscreen-code')) {
+            document.body.style.overflow = 'hidden'; 
+        } else {
+            document.body.style.overflow = '';
+        }
+    };
 
+    // --- NEW FIXED IDE PURE COPY LOGIC ---
+    window.copyPureCode = function(btn, encodedCode) {
+        navigator.clipboard.writeText(decodeURIComponent(encodedCode));
+        const svgBackup = btn.innerHTML;
+        btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>`;
+        btn.classList.add('success');
+        setTimeout(() => { btn.innerHTML = svgBackup; btn.classList.remove('success'); }, 2000);
+    };
+
+    // --- DOWNLOAD CODE FILE ---
+    window.downloadCode = function(encodedData, filename) {
+        const data = decodeURIComponent(encodedData);
+        const blob = new Blob([data], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
+    // --- HOLLOW RADIAL MENU LOGIC ---
     let pressTimer;
+    let touchX = 0, touchY = 0;
+
     function startPress(e, type, id, text) { 
         if(type === 'ai') return; 
         if(e.button !== 0 && e.type !== 'touchstart') return; 
+        
+        touchX = e.clientX || (e.touches && e.touches[0].clientX) || window.innerWidth/2;
+        touchY = e.clientY || (e.touches && e.touches[0].clientY) || window.innerHeight/2;
+
         pressTimer = setTimeout(() => { 
             if(navigator.vibrate) navigator.vibrate(50); 
-            showContext(e, type, id, text); 
+            showContext(type, id, text, touchX, touchY); 
         }, 400); 
     }
     function cancelPress() { clearTimeout(pressTimer); }
     
-    function showContext(e, type, id, textData) {
-        closeMenus(); let html = ''; let cleanText = (textData || "").replace(/`/g, "\\`").replace(/"/g, "&quot;");
-        if(type === 'user') { html = `<div style="width: 40px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 10px; margin: 0 auto 15px;"></div><div class="cs-item" onclick="navigator.clipboard.writeText(\`${cleanText}\`); closeContextSheet()">📋 Copy Text</div><div class="cs-item" onclick="initInPlaceEdit('${id}', \`${cleanText}\`); closeContextSheet()">✏️ Edit Message</div><div class="cs-item" style="background: transparent; color: #888;" onclick="closeContextSheet()">Cancel</div>`; } 
-        else if(type === 'session') { const chat = chats.find(c => c.id == id); const isPinned = chat && chat.pinned; html = `<div style="width: 40px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 10px; margin: 0 auto 15px;"></div><div class="cs-item" onclick="renameSession(${id}); closeContextSheet()">✏️ Rename Session</div><div class="cs-item" onclick="togglePinSession(${id}); closeContextSheet()">${isPinned ? '📌 Unpin Session' : '📌 Pin to Top'}</div><div class="cs-item danger" onclick="delH(${id}); closeContextSheet()">🗑️ Delete Session</div><div class="cs-item" style="background: transparent; color: #888;" onclick="closeContextSheet()">Cancel</div>`; }
-        const sheet = document.getElementById("context-sheet"); sheet.innerHTML = html; document.getElementById("context-overlay").style.display = "block"; setTimeout(() => { document.getElementById("context-overlay").style.opacity = "1"; sheet.classList.add("show"); }, 10); 
+    function showContext(type, id, textData, x, y) {
+        closeMenus(); 
+        let cleanText = (textData || "").replace(/`/g, "\\`").replace(/"/g, "&quot;");
+        let buttons = [];
+        
+        if(type === 'user') { 
+            buttons.push({ icon: '📋', action: `navigator.clipboard.writeText(\`${cleanText}\`); closeContextSheet()` });
+            buttons.push({ icon: '✏️', action: `initInPlaceEdit('${id}', \`${cleanText}\`); closeContextSheet()` });
+            buttons.push({ icon: '✕', action: `closeContextSheet()`, danger: true });
+        } else if(type === 'session') { 
+            const chat = chats.find(c => c.id == id); const isPinned = chat && chat.pinned; 
+            buttons.push({ icon: '✏️', action: `renameSession(${id}); closeContextSheet()` });
+            buttons.push({ icon: isPinned ? '📌' : '📍', action: `togglePinSession(${id}); closeContextSheet()` });
+            buttons.push({ icon: '🗑️', action: `delH(${id}); closeContextSheet()`, danger: true });
+        }
+        
+        const menu = document.getElementById("floating-menu");
+        menu.innerHTML = '';
+        
+        // Smart Positioning
+        menu.style.left = `${Math.min(Math.max(x, 70), window.innerWidth - 70)}px`;
+        menu.style.top = `${Math.max(y, 90)}px`;
+
+        const radius = 60; 
+        const arcStart = Math.PI + (Math.PI / 6); // 210 deg
+        const arcEnd = (Math.PI * 2) - (Math.PI / 6); // 330 deg
+        const angleStep = buttons.length > 1 ? (arcEnd - arcStart) / (buttons.length - 1) : 0;
+        
+        buttons.forEach((btn, i) => {
+            let angle = buttons.length === 1 ? Math.PI * 1.5 : arcStart + (i * angleStep);
+            const bx = radius * Math.cos(angle);
+            const by = radius * Math.sin(angle);
+            
+            const el = document.createElement('button');
+            el.className = `f-item ${btn.danger ? 'danger' : ''}`;
+            el.innerHTML = btn.icon;
+            el.setAttribute('onclick', btn.action);
+            el.style.left = `calc(50% + ${bx}px - 20px)`;
+            el.style.top = `calc(50% + ${by}px - 20px)`;
+            menu.appendChild(el);
+        });
+
+        document.getElementById("context-overlay").style.display = "block"; 
+        setTimeout(() => { document.getElementById("context-overlay").style.opacity = "1"; menu.classList.add("show"); }, 10); 
     }
 
-    function closeContextSheet() { document.getElementById("context-sheet").classList.remove("show"); document.getElementById("context-overlay").style.opacity = "0"; setTimeout(() => { document.getElementById("context-overlay").style.display = "none"; }, 400); }
+    function closeContextSheet() { document.getElementById("floating-menu").classList.remove("show"); document.getElementById("context-overlay").style.opacity = "0"; setTimeout(() => { document.getElementById("context-overlay").style.display = "none"; }, 400); }
 
     function initInPlaceEdit(msgId, currentText) {
-        globalEditMsgId = msgId;
-        uiInput.value = currentText;
-        uiInput.placeholder = "Editing message...";
-        uiInput.style.height = '45px';
-        uiInput.style.height = Math.min(uiInput.scrollHeight, 150) + 'px';
-        uiInput.focus();
-        
-        sendBtn.innerHTML = "✔";
-        sendBtn.classList.add("edit-mode-btn");
+        globalEditMsgId = msgId; uiInput.value = currentText; uiInput.placeholder = "Editing message..."; uiInput.style.height = '45px'; uiInput.style.height = Math.min(uiInput.scrollHeight, 150) + 'px'; uiInput.focus();
+        sendBtn.innerHTML = "✔"; sendBtn.classList.add("edit-mode-btn");
     }
 
     function renameSession(id) { let chat = chats.find(c => c.id == id); let n = prompt("Rename Session:", chat.name); if(n) { chat.name = n; save(); renderH(); } }
@@ -881,15 +1036,11 @@
         const textEl = document.getElementById(`slt-${aiId}`); const barEl = document.getElementById(`slb-${aiId}`); const pctEl = document.getElementById(`slp-${aiId}`); const timerEl = document.getElementById(`sltimer-${aiId}`);
         
         let timeLeft = 4;
-        const countdownInt = setInterval(() => {
-            if(timeLeft > 0) timeLeft--;
-            timerEl.innerText = `Est. Time: 00:0${timeLeft}s`;
-        }, 1000);
+        const countdownInt = setInterval(() => { if(timeLeft > 0) timeLeft--; timerEl.innerText = `Est. Time: 00:0${timeLeft}s`; }, 1000);
 
         const steps = [ { p: 15, t: "Optimizing logic matrix..." }, { p: 40, t: "Establishing Phraortes Vision link..." }, { p: 75, t: "Translating semantics into visual data..." }, { p: 95, t: "Upscaling resolution & rendering layers..." }, { p: 100, t: "Render complete." } ];
         for (let i = 0; i < steps.length; i++) { await new Promise(r => setTimeout(r, 800)); barEl.style.width = steps[i].p + "%"; pctEl.innerText = steps[i].p + "%"; textEl.innerText = "[System]: " + steps[i].t; if(!isUserScrolling) scrollToBottom(); }
-        await new Promise(r => setTimeout(r, 500));
-        clearInterval(countdownInt);
+        await new Promise(r => setTimeout(r, 500)); clearInterval(countdownInt);
 
         const promptStr = txt.replace(/^\/imagine/i, "").replace(/(عکس|تصویر|تصویرسازی|image|pic|picture|photo|طرح)/gi, "").replace(/(بساز|خلق|تولید|رندر|بکش|generate|create|make|draw|render)/gi, "").replace(/\[.*?\]:/, "").trim();
         const fallbackPrompt = promptStr || "A stunning digital masterpiece, ultra detailed";
@@ -902,17 +1053,12 @@
         const txt = uiInput.value.trim();
         
         if (globalEditMsgId) {
-            if(!txt) {
-                globalEditMsgId = null; sendBtn.innerHTML = "🚀"; sendBtn.classList.remove("edit-mode-btn"); uiInput.placeholder = "Message Phraortes..."; return;
-            }
+            if(!txt) { globalEditMsgId = null; sendBtn.innerHTML = "🚀"; sendBtn.classList.remove("edit-mode-btn"); uiInput.placeholder = "Message Phraortes..."; return; }
             const editIndex = parseInt(globalEditMsgId.split("-")[1]); const chatObj = chats.find(c => c.id == curId);
-            if(chatObj && chatObj.msgs[editIndex]) {
-                chatObj.msgs.splice(editIndex); save(); loadChat(curId); globalEditMsgId = null; sendBtn.innerHTML = "🚀"; sendBtn.classList.remove("edit-mode-btn"); uiInput.placeholder = "Message Phraortes...";
-            }
+            if(chatObj && chatObj.msgs[editIndex]) { chatObj.msgs.splice(editIndex); save(); loadChat(curId); globalEditMsgId = null; sendBtn.innerHTML = "🚀"; sendBtn.classList.remove("edit-mode-btn"); uiInput.placeholder = "Message Phraortes..."; }
         }
 
         if(!txt && attachedFiles.length === 0) return;
-
         if (!activePlan) { if (trialMessageCount >= 5) { openPremium(); showToast("Trial Limit Reached. Please select a plan."); return; } trialMessageCount++; localStorage.setItem("phraortes_trial_count", trialMessageCount); if(trialMessageCount === 4) showToast("Warning: 1 Trial Message Remaining"); }
 
         sendBtn.disabled = true;
@@ -924,8 +1070,7 @@
             galleryHtml += '</div>'; displayHtml = galleryHtml + (txt ? '<br>'+txt : ''); attachedFiles = []; renderPreviews();
         }
 
-        const chat = chats.find(c => c.id == curId);
-        uiInput.value = ""; uiInput.style.height = "45px";
+        const chat = chats.find(c => c.id == curId); uiInput.value = ""; uiInput.style.height = "45px";
         const msgIndex = chat.msgs.length; addUI(displayHtml || "[Media Uploaded]", "user", "u-"+msgIndex, txt);
         const aiId = "a-"+msgIndex; addUI("", "ai", aiId, "");
 
@@ -941,20 +1086,27 @@
         if(isMediaCommand) { setTimeout(() => { finishAITurn(aiId, finalHtmlResponse, finalRawResponse, chat, displayHtml, txt, msgIndex); }, 1500); return; }
 
         let sysContent = "You are Phraortes. ";
-        if(activeModel === '2.6') { sysContent += "You are operating on the Phraortes APEX Node (Model 2.6) - The Ultimate Coding & Engineering Matrix. YOUR BEHAVIOR MUST CHANGE STRICTLY: You are an elite, senior software architect. Provide highly optimized, production-ready code. Use advanced patterns, minimal fluff, strict error handling, and profound technical depth. If asked to code, deliver complete, bug-free, deeply annotated scripts. Act like a top-tier principal engineer."; } else if(activeModel === '2.5') { sysContent += "You are operating on the Phraortes INTELLECT Node (Model 2.5) - The Deep Research & Reasoning Core. YOUR BEHAVIOR: Think step-by-step. Break down complex scientific, mathematical, or analytical questions into deeply researched, logically sound, and comprehensive answers. Provide charts, lists, and thorough theoretical background. Prioritize extreme detail and profound logical flow."; } else { sysContent += "You are operating on the Phraortes PRIME Node (Model 2.4) - The Agile Daily Assistant. YOUR BEHAVIOR: Be fast, conversational, highly empathetic, and direct. Keep answers concise, friendly, and perfectly suited for daily chats, quick summaries, and general knowledge tasks."; }
+        if(activeModel === '2.6') { 
+            sysContent += "You are operating on the Phraortes APEX Node (Model 2.6) - The Ultimate Coding & Engineering Matrix. YOUR BEHAVIOR MUST CHANGE STRICTLY: You are an elite, senior software architect. Provide highly optimized, production-ready code. Use advanced design patterns, multi-layer architectures, robust error handling, and strict modularity. Your code must be profound, deeply annotated, and flawless. Do not provide simple snippets; provide complete engineering solutions. Act like a top-tier principal engineer."; 
+        } else if(activeModel === '2.5') { 
+            sysContent += "You are operating on the Phraortes INTELLECT Node (Model 2.5) - The Deep Research & Reasoning Core. YOUR BEHAVIOR: Think step-by-step. Break down complex scientific, mathematical, or analytical questions into deeply researched, logically sound, and comprehensive answers. Provide charts, lists, and thorough theoretical background. Prioritize extreme detail and profound logical flow."; 
+        } else { 
+            sysContent += "You are operating on the Phraortes PRIME Node (Model 2.4) - The Agile Daily Assistant. YOUR BEHAVIOR: Be fast, conversational, highly empathetic, and direct. Keep answers concise, friendly, and perfectly suited for daily chats, quick summaries, and general knowledge tasks."; 
+        }
 
         let apiMessages = [{role: "system", content: sysContent}];
         chat.msgs.forEach(m => { apiMessages.push({role: "user", content: m.uText || m.u}); apiMessages.push({role: "assistant", content: m.aRaw || m.a}); });
         if (localAttachedData) apiMessages.push({ role: "user", content: [{ type: "text", text: txt || "Analyze." }, { type: "image_url", image_url: { url: localAttachedData } }] }); else apiMessages.push({ role: "user", content: txt });
 
         try {
+            // FIX: Extended Timeout for heavy coding outputs (60s instead of 15s)
             const fetchPromise = fetchWithFallback(apiMessages, useVision);
-            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 15000));
+            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 60000));
             const full = await Promise.race([fetchPromise, timeoutPromise]);
             let renderedHtml = marked.parse(full);
             finishAITurn(aiId, renderedHtml, full, chat, displayHtml, txt, msgIndex);
         } catch(e) { 
-            let errorMsg = e.message === "Timeout" ? "Network Timeout: 15s exceeded. Please retry." : "System Error: " + e.message;
+            let errorMsg = e.message === "Timeout" ? "Network Timeout: Server overloaded. Please retry." : "System Error: " + e.message;
             document.getElementById(aiId).parentElement.innerHTML = `<div class="msg ai" style="color:#ff3b30; font-weight:600;">[X] ${errorMsg}</div><button class="btn-buy" onclick="regenerateResponseMsg(${msgIndex})" style="width:auto; padding:10px 20px; font-size:12px; margin-top:10px;">🔄 Retry Connection</button>`;
             sendBtn.disabled = false; 
         }
@@ -968,8 +1120,7 @@
             if(!isUserScrolling) chatBox.scrollTo({ top: chatBox.scrollHeight }); 
             await new Promise(r => setTimeout(r, 10)); 
         }
-        el.innerHTML = marked.parse(rawContent); addCopyLogic(); applySmartReadMore(aiId);
-        sendBtn.disabled = false;
+        el.innerHTML = marked.parse(rawContent); applySmartReadMore(aiId); sendBtn.disabled = false;
     }
 
     function finishAITurn(aiId, htmlContent, rawContent, chat, userHtml, userTxt, msgIndex) {
@@ -988,16 +1139,6 @@
         chatBox.appendChild(w); if(!isUserScrolling) scrollToBottom();
     }
 
-    function addCopyLogic() {
-        document.querySelectorAll('pre').forEach(pre => {
-            if(pre.querySelector('.copy-btn')) return;
-            const b = document.createElement('button'); b.innerText = 'Copy Code'; b.className = 'copy-btn';
-            b.style = "position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:6px 12px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer; color:#fff; transition:0.3s; display:flex; align-items:center; gap:5px;";
-            b.innerHTML = `<span>📋</span> Copy Code`; b.onmouseover = () => b.style.background = 'var(--p)'; b.onmouseout = () => b.style.background = 'rgba(255,255,255,0.1)';
-            b.onclick = () => { let codeText = pre.innerText.replace('📋 Copy Code', '').trim(); navigator.clipboard.writeText(codeText); b.innerHTML = `<span>✅</span> Copied!`; setTimeout(() => b.innerHTML = `<span>📋</span> Copy Code`, 2000); }; pre.appendChild(b);
-        });
-    }
-
     function loadChat(id) {
         curId = id; save(); const chat = chats.find(c => c.id == id); chatBox.innerHTML = ""; addUI("", "ai", "welcome");
         if(chat && chat.msgs.length) {
@@ -1008,7 +1149,7 @@
                 chatBox.appendChild(w); applySmartReadMore(aId);
             });
         } else if (chat) { if(!chat.persona) { chat.persona = personas[Math.floor(Math.random() * personas.length)]; save(); } addUI(chat.persona, "ai", "welcome-persona", chat.persona); }
-        renderH(); addCopyLogic(); scrollToBottom();
+        renderH(); scrollToBottom();
     }
 
     function save() { localStorage.setItem("phraortes_chats", JSON.stringify(chats)); localStorage.setItem("phraortes_id", curId); }
