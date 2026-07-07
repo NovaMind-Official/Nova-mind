@@ -103,10 +103,22 @@ header{height:66px;display:flex;justify-content:space-between;align-items:center
 .account-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;position:relative;z-index:1}
 .account-avatar .av-initials{position:relative;z-index:1;color:#fff}
 
+/* ==== NEW: ACCOUNT AVATAR SUMMON RING (aura / 360 spin / morph) ==== */
+.account-hub{overflow:visible}
+.avatar-summon-ring{position:absolute;inset:-6px;border-radius:50%;pointer-events:none;opacity:0;z-index:0}
+.avatar-summon-ring::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,var(--pulse),var(--pulse-bright),var(--cyan-star),var(--pulse));filter:blur(3px)}
+.account-hub.summoning .avatar-summon-ring{opacity:1;animation:ringSpin360 0.62s cubic-bezier(0.45,0,0.55,1) forwards}
+@keyframes ringSpin360{0%{transform:rotate(0deg) scale(0.6);opacity:0}25%{opacity:1}70%{transform:rotate(300deg) scale(1.18)}100%{transform:rotate(360deg) scale(1.4);opacity:0}}
+.account-hub.summoning .account-avatar{animation:avatarPulseIn 0.62s cubic-bezier(0.34,1.56,0.64,1) forwards}
+@keyframes avatarPulseIn{0%{transform:scale(1)}45%{transform:scale(0.86)}75%{transform:scale(1.14)}100%{transform:scale(1)}}
+#core-flash.flash-account{background:radial-gradient(circle at var(--fx) var(--fy),rgba(168,85,247,0.35),transparent 55%);mix-blend-mode:normal}
+
 /* ACCOUNT FULLSCREEN PAGE */
-#account-page{position:fixed;inset:0;z-index:8000;background:rgba(6,6,12,0.97);backdrop-filter:blur(40px);display:none;opacity:0;transition:opacity 0.4s var(--ease);overflow-y:auto}
-#account-page.show{display:block;animation:acPageIn 0.45s var(--ease) forwards}
-@keyframes acPageIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+#account-page{position:fixed;inset:0;z-index:8000;background:rgba(6,6,12,0.97);backdrop-filter:blur(40px);display:none;opacity:0;transition:opacity 0.4s var(--ease);overflow-y:auto;perspective:1400px}
+#account-page.show{display:block;animation:acPageIn3D 0.55s cubic-bezier(0.22,1,0.36,1) forwards}
+@keyframes acPageIn3D{0%{opacity:0;transform:rotateY(-14deg) rotateX(6deg) scale(0.88);transform-origin:right center}60%{opacity:1}100%{opacity:1;transform:rotateY(0deg) rotateX(0deg) scale(1)}}
+#account-page.closing{animation:acPageOut3D 0.4s cubic-bezier(0.55,0,1,0.45) forwards}
+@keyframes acPageOut3D{0%{opacity:1;transform:rotateY(0deg) scale(1)}100%{opacity:0;transform:rotateY(10deg) scale(0.92)}}
 .ac-page-header{display:flex;align-items:center;justify-content:space-between;padding:28px 32px 0}
 .ac-page-close{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:#fff;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:0.25s}
 .ac-page-close:hover{background:rgba(255,255,255,0.14);transform:scale(1.08)}
@@ -810,7 +822,8 @@ footer{width:100%;padding:8px 8% 26px;background:linear-gradient(to top,rgba(0,0
         <span class="logo-sub">Intelligence OS</span>
       </div>
     </div>
-    <div class="account-hub" onclick="openAccountPage()">
+    <div class="account-hub" id="account-hub" onclick="openAccountPage(event)">
+      <div class="avatar-summon-ring" id="avatar-summon-ring"></div>
       <div class="account-avatar" id="account-avatar"><span class="av-placeholder" style="font-size:18px;color:rgba(255,255,255,0.15)">?</span></div>
     </div>
   </header>
@@ -869,7 +882,7 @@ footer{width:100%;padding:8px 8% 26px;background:linear-gradient(to top,rgba(0,0
 <script>
 'use strict';
 const _A="gsk_mIKxutVxzOYZdnFoMRbI",_B="WGdyb3FYuI7ZQoU2sZPIDQ0rmUc4GDhv";
-const OR_KEY="11a5c3f1-60cf-4c12-b091-486ce6c27a63:aba44179243735d881a0509a79d11a7f";
+const OR_KEY="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";
 const GOOGLE_CLIENT_ID="961077952714-d1ba3ls025vrqou4hfr3jgvtdltsqh55.apps.googleusercontent.com";
 const REDIRECT_URI="https://novamind-official.github.io/Nova-mind/";
 const PLAN_CFG={free:{name:"Free",msgLimit:5,advSlots:0,images:0,models:["2.4"]},starter:{name:"Starter Node",msgLimit:null,advSlots:100,images:30,models:["2.4","2.5"]},pro:{name:"Pro Matrix",msgLimit:null,advSlots:350,images:120,models:["2.4","2.5","2.6"]},ultimate:{name:"Ultimate Core",msgLimit:null,advSlots:null,images:null,models:["2.4","2.5","2.6"]}};
@@ -890,6 +903,39 @@ let cTimer=null,sTimer=null,asTimer=null,animFId=null,freeSeconds=parseInt(local
 let mediaRecorder=null,isRecording=false,recognitionObj=null;
 const chatBox=document.getElementById("chat-box"),uiInput=document.getElementById("ui"),sendBtn=document.getElementById("send-btn");
 const PERSONAS=["Hello. I'm your logical partner.","Hi there. Let's talk.","Welcome! Let's think outside the box."];
+
+// ═══ LONG-TERM MEMORY (layered memory: short-term = current chat, long-term = cross-chat facts) ═══
+let longMemory=JSON.parse(localStorage.getItem("phraortes_longmemory")||"[]"); // array of short fact strings
+function extractFactsFromText(text){
+  const facts=[];
+  const nameMatch=text.match(/(?:اسمم|من|my name is|i'm|i am)\s+([آ-یA-Za-z]{2,20})/i);
+  if(nameMatch)facts.push("Name mentioned: "+nameMatch[1]);
+  if(/(کدنویس|برنامه‌نویس|developer|programmer|coder)/i.test(text))facts.push("User is a developer/programmer");
+  if(/(دانشجو|student)/i.test(text))facts.push("User is a student");
+  if(/(پروژه|project)/i.test(text)){const m=text.match(/(?:پروژه|project)\s+([^\.\n,،]{3,40})/i);if(m)facts.push("Working on project: "+m[1].trim())}
+  return facts;
+}
+function updateLongMemory(userText){
+  const facts=extractFactsFromText(userText);
+  let changed=false;
+  facts.forEach(f=>{if(!longMemory.includes(f)){longMemory.push(f);changed=true}});
+  if(longMemory.length>25)longMemory=longMemory.slice(-25);
+  if(changed)localStorage.setItem("phraortes_longmemory",JSON.stringify(longMemory));
+}
+function getLongMemoryPrompt(){
+  if(!longMemory.length)return"";
+  return"\n\nKnown context about this user from previous sessions (use naturally, don't repeat verbatim): "+longMemory.join("; ");
+}
+
+// ═══ TONE DETECTION → system prompt tone hint ═══
+function detectToneHint(text){
+  if(/(لطفا|ممنون میشم|خواهش|would you|please|thank you)/i.test(text)&&text.length>40)return"Respond in a polished, respectful tone.";
+  if(/(هه|لول|خب دیگه|haha|lol|😂|😅|عه|وای)/i.test(text))return"Respond in a casual, friendly, slightly playful tone.";
+  if(/(عصبانی|لعنت|خراب|بد شد|damn|ugh|frustrated|angry)/i.test(text))return"Respond calmly and helpfully; the user may be frustrated — be reassuring and solution-focused.";
+  if(text.length<15)return"Keep the response brief and to the point.";
+  return"";
+}
+let lastToneUsed=localStorage.getItem("phraortes_lasttone")||"";
 
 // ═══ INIT ═══
 window.addEventListener("load",()=>{
@@ -956,9 +1002,30 @@ function handleLogout(){
   showToast("Logged out.");closeAccountPage();
 }
 
-// ═══ ACCOUNT PAGE ═══
-function openAccountPage(){document.getElementById("account-page").classList.add("show");updateAcPlanBadge()}
-function closeAccountPage(){const pg=document.getElementById("account-page");pg.style.opacity="0";setTimeout(()=>{pg.classList.remove("show");pg.style.opacity=""},400)}
+// ═══ ACCOUNT PAGE (with summon-ring aura + 360 spin + 3D open) ═══
+function openAccountPage(e){
+  const hub=document.getElementById("account-hub");
+  hub.classList.add("summoning");
+  // Flash originates at the click point
+  if(e){
+    const fl=document.getElementById("core-flash");
+    fl.style.setProperty("--fx",e.clientX+"px");fl.style.setProperty("--fy",e.clientY+"px");
+    fl.classList.add("flash-account","flash");
+    setTimeout(()=>fl.classList.remove("flash-account","flash"),350);
+  }
+  haptic("double");playSound("woosh");
+  setTimeout(()=>{
+    hub.classList.remove("summoning");
+    document.getElementById("account-page").classList.remove("closing");
+    document.getElementById("account-page").classList.add("show");
+    updateAcPlanBadge();
+  },340);
+}
+function closeAccountPage(){
+  const pg=document.getElementById("account-page");
+  pg.classList.add("closing");
+  setTimeout(()=>{pg.classList.remove("show","closing")},380);
+}
 function switchAcTab(tab,btn){
   ["profile","settings","billing","notifications"].forEach(t=>{const el=document.getElementById("actab-"+t);if(el)el.style.display=t===tab?"block":"none"});
   document.querySelectorAll(".ac-tab-btn").forEach(b=>b.classList.remove("active"));
@@ -1129,6 +1196,7 @@ async function send(){
   if(!txt&&!attachedFiles.length)return;
   if(activePlan==="free"){if(trialCount>=PLAN_CFG.free.msgLimit){initPlanUI();openPremium();showToast(`Free limit: ${PLAN_CFG.free.msgLimit} messages used.`,"error");return}trialCount++;localStorage.setItem("phraortes_trial",trialCount);if(trialCount>=PLAN_CFG.free.msgLimit)initPlanUI()}
   haptic("send");playSound("woosh");sendBtn.disabled=true;uiInput.disabled=true;autoCtxSwitch(txt);localStorage.removeItem("draft_"+curId);
+  if(txt)updateLongMemory(txt);
   let dispHtml=txt,useVision=false,imgData=null;
   if(attachedFiles.length){let gal='<div style="display:flex;gap:7px;margin-bottom:9px">';attachedFiles.forEach(f=>{if(f.type==="image"){gal+=`<div style="width:58px;height:58px;border-radius:9px;overflow:hidden;cursor:pointer" onclick="openLightbox('${f.dataURL}')"><img src="${f.dataURL}" style="width:100%;height:100%;object-fit:cover"></div>`;useVision=true;if(!imgData)imgData=f.dataURL}});gal+="</div>";dispHtml=gal+(txt?"<br>"+txt:"");attachedFiles=[];renderPreviews()}
   const chat=chats.find(c=>c.id==curId);uiInput.value="";uiInput.style.height="44px";
@@ -1137,29 +1205,50 @@ async function send(){
   const isImg=/^\/imagine/i.test(txt)||(/(عکس|تصویر|image|pic|photo)/i.test(txt)&&/(بساز|خلق|تولید|render|generate|create|draw)/i.test(txt));
   if(isImg){animImgLoader("a-"+idx,chat,dispHtml,txt,idx);return}
   document.getElementById("a-"+idx).innerHTML=`<div class="dynamic-loader"><div class="dot-matrix"><span></span><span></span><span></span></div></div>`;
+  const isCodeQuery=/(code|bug|debug|python|javascript|html|css|react|api|sql|function|algorithm|باگ|کد|پایتون|دیباگ|برنامه|الگوریتم)/i.test(txt);
   let sys="You are Phraortes OS — an advanced intelligence assistant. Respond clearly and helpfully. ";
-  if(activeModel==="2.6")sys+="You are Apex 2.6, expert coder and senior developer. Format code with proper syntax.";
+  if(activeModel==="2.6"||isCodeQuery)sys+="You are Apex 2.6, expert coder and senior developer. Think through the approach briefly, then write clean, correct, well-formatted code with proper syntax highlighting. Explain non-obvious parts concisely.";
   else if(activeModel==="2.5")sys+="You are Intellect 2.5, expert in deep research and analysis.";
   else sys+="You are Prime 2.4, fast and precise for everyday tasks.";
+  const toneHint=detectToneHint(txt);if(toneHint)sys+=" "+toneHint;
+  sys+=getLongMemoryPrompt();
   const apiMsgs=[{role:"system",content:sys}];
   chat.msgs.forEach(m=>{apiMsgs.push({role:"user",content:m.uText||m.u});apiMsgs.push({role:"assistant",content:m.aRaw||m.a})});
   if(imgData)apiMsgs.push({role:"user",content:[{type:"text",text:txt||"Analyze this image."},{type:"image_url",image_url:{url:imgData}}]});
   else apiMsgs.push({role:"user",content:txt});
   if(activePlan==="pro"||activePlan==="starter"){proSlotsUsed++;localStorage.setItem("phraortes_slots",proSlotsUsed);if(activePlan==="pro")updateProGauge();if(activePlan==="starter"&&proSlotsUsed>=PLAN_CFG.starter.advSlots)initPlanUI()}
-  try{const full=await fetchAI(apiMsgs,useVision);finishTurn("a-"+idx,marked.parse(full),full,chat,dispHtml,txt,idx)}
-  catch(e){haptic("error");const encTxt=encodeURIComponent(txt);showInlineError(e.message,encTxt,idx);const wrap=document.getElementById("a-"+idx)?.parentElement;if(wrap)wrap.innerHTML=`<div class="msg ai" style="color:#ff453a;font-size:13px;padding:8px 0">⚠ ${e.message.includes("plan")||e.message.includes("Apex")||e.message.includes("Intellect")?"Upgrade required to use this model.":"Connection error. Try again."}</div>`;sendBtn.disabled=false;uiInput.disabled=false}
+  try{const full=await fetchAI(apiMsgs,useVision,isCodeQuery);finishTurn("a-"+idx,marked.parse(full),full,chat,dispHtml,txt,idx)}
+  catch(e){haptic("error");const encTxt=encodeURIComponent(txt);showInlineError(e.message,encTxt,idx);const wrap=document.getElementById("a-"+idx)?.parentElement;const isPlanErr=e.message.includes("plan")||e.message.includes("Apex")||e.message.includes("Intellect");if(wrap)wrap.innerHTML=`<div class="msg ai" style="color:#ff453a;font-size:13px;padding:8px 0">⚠ ${isPlanErr?"Upgrade required to use this model.":"Connection error: "+e.message}</div>`;sendBtn.disabled=false;uiInput.disabled=false}
 }
 function showInlineError(msg,encTxt,idx){const f=document.querySelector("footer");const ex=f.querySelector(".inline-err");if(ex)ex.remove();const isLim=msg.includes("plan")||msg.includes("Apex")||msg.includes("Intellect")||msg.includes("limit");const d=document.createElement("div");d.className="inline-err";d.style.cssText="display:flex;align-items:center;gap:9px;padding:8px 14px;margin-bottom:7px;background:rgba(255,58,48,0.07);border:1px solid rgba(255,58,48,0.2);border-radius:17px;font-size:12px;color:rgba(255,255,255,0.65)";d.innerHTML=`<span style="flex:1;font-family:'Space Mono',monospace">⚠ ${isLim?"Upgrade required":"Connection error"}</span>${isLim?`<button onclick="openPremium();this.parentElement.remove()" style="padding:5px 12px;background:var(--pulse);border:none;border-radius:14px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Upgrade</button>`:`<button onclick="retryMsg(${idx},'${encTxt}');this.parentElement.remove()" style="padding:5px 12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:14px;color:#fff;font-size:11px;cursor:pointer;font-family:inherit">🔄 Retry</button>`}<button onclick="this.parentElement.remove()" style="background:none;border:none;color:#888;cursor:pointer;font-size:15px">✕</button>`;f.insertBefore(d,f.firstChild);setTimeout(()=>d.remove(),9000)}
 function retryMsg(idx,encTxt){uiInput.value=decodeURIComponent(encTxt);autoResize(uiInput);const chat=chats.find(c=>c.id==curId);if(chat?.msgs[idx])chat.msgs.splice(idx);send()}
 
-async function fetchAI(messages,useVision){
+async function fetchAI(messages,useVision,isCodeQuery){
   if(activeModel==="2.5"&&activePlan==="free")throw new Error("Intellect 2.5 requires a paid plan.");
   if(activeModel==="2.6"&&activePlan!=="pro"&&activePlan!=="ultimate")throw new Error("Apex 2.6 requires Pro Matrix or above.");
-  const orM=useVision?"meta-llama/llama-3.2-11b-vision-instruct:free":"meta-llama/llama-3.3-70b-instruct:free";
-  const grM=useVision?"llama-3.2-11b-vision-preview":"llama-3.3-70b-versatile";
-  if(OR_KEY){try{const r=await fetch("https://openrouter.ai/api/v1/chat/completions",{method:"POST",headers:{Authorization:`Bearer ${OR_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({model:orM,messages})});const d=await r.json();if(!d.error&&d.choices?.[0])return d.choices[0].message.content}catch(e){}}
-  const r=await fetch("https://api.groq.com/openai/v1/chat/completions",{method:"POST",headers:{Authorization:`Bearer ${_A+_B}`,"Content-Type":"application/json"},body:JSON.stringify({model:grM,messages})});
-  const d=await r.json();if(d.error)throw new Error(d.error.message);return d.choices[0].message.content;
+  // Model routing: OpenRouter's free catalog changes often (models lose :free status without notice),
+  // so we try a short ordered list and fall back through it instead of hardcoding one model.
+  let orCandidates,grM;
+  if(useVision){orCandidates=["google/gemma-4-31b-it:free","openrouter/free"];grM="llama-3.2-11b-vision-preview"}
+  else if(isCodeQuery||activeModel==="2.6"){orCandidates=["openai/gpt-oss-120b:free","nvidia/nemotron-3-super-120b-a12b:free","openrouter/free"];grM="llama-3.3-70b-versatile"}
+  else{orCandidates=["openrouter/free","openai/gpt-oss-120b:free"];grM="llama-3.3-70b-versatile"}
+  const errors=[];
+  if(OR_KEY){
+    for(const orM of orCandidates){
+      try{
+        const r=await fetch("https://openrouter.ai/api/v1/chat/completions",{method:"POST",headers:{Authorization:`Bearer ${OR_KEY}`,"Content-Type":"application/json","HTTP-Referer":location.href,"X-Title":"Phraortes"},body:JSON.stringify({model:orM,messages})});
+        const d=await r.json();
+        if(!d.error&&d.choices?.[0])return d.choices[0].message.content;
+        if(d.error)errors.push(`OR:${orM} → ${d.error.message||JSON.stringify(d.error)}`);
+      }catch(e){errors.push(`OR:${orM} → ${e.message}`)}
+    }
+  }
+  try{
+    const r=await fetch("https://api.groq.com/openai/v1/chat/completions",{method:"POST",headers:{Authorization:`Bearer ${_A+_B}`,"Content-Type":"application/json"},body:JSON.stringify({model:grM,messages})});
+    const d=await r.json();
+    if(d.error){errors.push(`Groq → ${d.error.message}`);console.error("Phraortes AI errors:",errors);throw new Error(errors[errors.length-1])}
+    return d.choices[0].message.content;
+  }catch(e){console.error("Phraortes AI errors:",errors,e);throw new Error(errors.length?errors[0]:e.message)}
 }
 
 // ═══ IMAGE GEN ═══
@@ -1343,7 +1432,16 @@ function showContext(type,id,textData,x,y){
 function closeContextSheet(){document.getElementById("floating-menu").classList.remove("show");const ov=document.getElementById("context-overlay");ov.style.opacity="0";setTimeout(()=>{ov.style.display="none"},350)}
 function initEdit(msgId,text){editMsgId=msgId;uiInput.value=text;autoResize(uiInput);uiInput.focus();uiInput.placeholder="Editing...";sendBtn.innerHTML="✔";document.querySelector(".input-bar").style.borderColor="var(--gold-star)";document.querySelector(".wand-wrapper").style.display="none";document.getElementById("cancel-edit-btn").style.display="flex"}
 function cancelEdit(){editMsgId=null;uiInput.value=localStorage.getItem("draft_"+curId)||"";uiInput.placeholder="Message Phraortes...";sendBtn.innerHTML="🚀";document.querySelector(".input-bar").style.borderColor="";document.querySelector(".wand-wrapper").style.display="";document.getElementById("cancel-edit-btn").style.display="none";uiInput.style.height="44px"}
-function deleteMsg(msgId){const el=document.getElementById(msgId);if(!el)return;const w=el.closest(".msg-wrap");if(w){w.classList.add("glitch-dissolve");setTimeout(()=>w.remove(),450)}}
+function deleteMsg(msgId){
+  const match=msgId.match(/^u-(\d+)$/);
+  if(!match){const el=document.getElementById(msgId);if(!el)return;const w=el.closest(".msg-wrap");if(w){w.classList.add("glitch-dissolve");setTimeout(()=>w.remove(),450)}return}
+  const idx=parseInt(match[1]);
+  const chat=chats.find(c=>c.id==curId);if(!chat||!chat.msgs[idx])return;
+  const uEl=document.getElementById("u-"+idx)?.closest(".msg-wrap"),aEl=document.getElementById("a-"+idx)?.closest(".msg-wrap");
+  [uEl,aEl].forEach(w=>{if(w)w.classList.add("glitch-dissolve")});
+  chat.msgs.splice(idx,1);save();
+  setTimeout(()=>loadChat(curId),450);
+}
 
 // ═══ SPEECH ═══
 function toggleSpeech(textId,btnId){if(speechUtt&&speechBtnId===btnId){stopSpeech();return}if(speechUtt)stopSpeech();const el=document.getElementById(textId);if(!el)return;const txt=el.innerText.replace(/[👍👎]/g,"").trim();const utt=new SpeechSynthesisUtterance(txt);speechUtt=utt;speechBtnId=btnId;const btn=document.getElementById(btnId);if(btn)btn.classList.add("active-speech");utt.onend=utt.onerror=()=>resetSpeech(btnId);speechSynthesis.speak(utt)}
