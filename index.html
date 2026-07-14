@@ -717,6 +717,14 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
   <div id="files-panel-body" style="max-height:56vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-top:4px"></div>
 </div>
 
+<div id="compare-modal" style="display:none;position:fixed;inset:0;z-index:45000;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);flex-direction:column;padding:20px;overflow-y:auto">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#fff">Compare Responses</div>
+    <button onclick="closeCompareModal()" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer">✕</button>
+  </div>
+  <div id="compare-body" style="display:flex;flex-direction:column;gap:14px;flex:1"></div>
+</div>
+
 <!-- VIRTUAL EDITOR -->
 <div id="virtual-code-editor" class="virtual-editor-popup" onclick="event.stopPropagation()">
   <div class="editor-header">
@@ -1186,6 +1194,105 @@ function openTrackedFile(id){
   closeFilesPanel();
 }
 
+// ═══ TWO-FINGER COMPARE GESTURE ═══
+let compareTouchTarget=null;
+function initCompareGesture(){
+  chatBox.addEventListener("touchstart",e=>{
+    if(e.touches.length===2){
+      const target=e.target.closest(".msg.ai");
+      if(target&&target.id?.match(/^a-\d+$/))compareTouchTarget=target;
+      else compareTouchTarget=null;
+    }else{compareTouchTarget=null}
+  },{passive:true});
+  chatBox.addEventListener("touchend",e=>{
+    if(compareTouchTarget&&e.touches.length===0){
+      const m=compareTouchTarget.id.match(/^a-(\d+)$/);
+      if(m)triggerCompare(parseInt(m[1]));
+      compareTouchTarget=null;
+    }
+  });
+}
+async function triggerCompare(idx){
+  const chat=chats.find(c=>c.id==curId);if(!chat||!chat.msgs[idx])return;
+  haptic("double");
+  document.getElementById("compare-modal").style.display="flex";
+  const body=document.getElementById("compare-body");
+  body.innerHTML=`<div style="text-align:center;padding:50px 0;color:#888;font-size:13px;font-family:'Space Mono',monospace">Generating an alternate response...</div>`;
+  const sys={role:"system",content:"You are Phraortes OS. Provide a helpful, well-formatted answer, offering a genuinely different angle, structure or style from a typical response."};
+  const priorMsgs=[sys];
+  chat.msgs.slice(0,idx).forEach(m=>{priorMsgs.push({role:"user",content:m.uText||m.u});priorMsgs.push({role:"assistant",content:m.aRaw||m.a})});
+  priorMsgs.push({role:"user",content:chat.msgs[idx].uText});
+  try{
+    const alt=await fetchAI(priorMsgs,false,false);
+    body.innerHTML=`
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px">
+        <div style="font-size:11px;color:#888;margin-bottom:8px;font-family:'Space Mono',monospace">ORIGINAL</div>
+        <div style="font-size:14px;color:#eee;line-height:1.7">${marked.parse(chat.msgs[idx].aRaw||"")}</div>
+        <button onclick="closeCompareModal()" style="margin-top:12px;padding:9px 16px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;color:#fff;font-size:12px;cursor:pointer">Keep This</button>
+      </div>
+      <div style="background:rgba(201,162,39,0.06);border:1px solid rgba(201,162,39,0.28);border-radius:16px;padding:16px">
+        <div style="font-size:11px;color:#E8C468;margin-bottom:8px;font-family:'Space Mono',monospace">ALTERNATE</div>
+        <div style="font-size:14px;color:#eee;line-height:1.7">${marked.parse(alt)}</div>
+        <button onclick="useAlternate(${idx},'${encodeURIComponent(alt)}')" style="margin-top:12px;padding:9px 16px;background:linear-gradient(135deg,#C9A227,#E8C468);border:none;border-radius:12px;color:#1a1206;font-weight:700;font-size:12px;cursor:pointer">Use This Instead</button>
+      </div>`;
+  }catch(e){body.innerHTML=`<div style="text-align:center;padding:40px 0;color:#ff453a;font-size:13px">Couldn't generate an alternate: ${e.message}</div>`}
+}
+function useAlternate(idx,encAlt){
+  const alt=decodeURIComponent(encAlt);
+  const chat=chats.find(c=>c.id==curId);if(!chat||!chat.msgs[idx])return;
+  chat.msgs[idx].a=marked.parse(alt);chat.msgs[idx].aRaw=alt;save();
+  closeCompareModal();loadChat(curId);showToast("Switched to the alternate response","success");
+}
+function closeCompareModal(){document.getElementById("compare-modal").style.display="none"}
+
+// ═══ SELECTION → QUICK TRANSLATE ═══
+let selTranslateBtn=null;
+function initSelectionTranslate(){
+  document.addEventListener("mouseup",handleSelectionForTranslate);
+  document.addEventListener("touchend",handleSelectionForTranslate);
+}
+function handleSelectionForTranslate(){
+  setTimeout(()=>{
+    removeSelTranslateBtn();
+    const sel=window.getSelection();
+    const text=sel?sel.toString().trim():"";
+    if(!text||text.length<2||sel.rangeCount===0)return;
+    const anchorEl=sel.anchorNode?.parentElement;
+    if(!anchorEl?.closest(".msg.ai"))return;
+    const rect=sel.getRangeAt(0).getBoundingClientRect();
+    if(!rect||(rect.width===0&&rect.height===0))return;
+    const btn=document.createElement("button");
+    btn.textContent="🌐 Translate";
+    btn.style.cssText=`position:fixed;top:${Math.max(8,rect.top-40)}px;left:${Math.max(8,Math.min(rect.left,window.innerWidth-110))}px;z-index:31000;background:rgba(13,13,18,0.97);border:1px solid var(--p);color:#fff;padding:7px 13px;border-radius:14px;font-size:12px;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,0.5);font-family:inherit`;
+    btn.onclick=()=>openTranslatePopup(text,rect);
+    document.body.appendChild(btn);
+    selTranslateBtn=btn;
+  },10);
+}
+function removeSelTranslateBtn(){if(selTranslateBtn){selTranslateBtn.remove();selTranslateBtn=null}}
+function openTranslatePopup(text,rect){
+  removeSelTranslateBtn();
+  document.querySelectorAll(".tr-popup").forEach(p=>p.remove());
+  const langs=[["Persian","فارسی"],["English","English"],["Arabic","العربية"],["Spanish","Español"],["French","Français"]];
+  const pop=document.createElement("div");pop.className="tr-popup";
+  const top=Math.min(rect.top,window.innerHeight-260),left=Math.max(10,Math.min(rect.left,window.innerWidth-260));
+  pop.style.cssText=`position:fixed;top:${top}px;left:${left}px;z-index:31001;background:rgba(13,13,18,0.98);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:12px;width:240px;box-shadow:0 14px 40px rgba(0,0,0,0.6)`;
+  pop.innerHTML=`<div style="font-size:11px;color:#888;margin-bottom:8px;font-family:'Space Mono',monospace">TRANSLATE TO</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">${langs.map(([c,n])=>`<button class="tr-lang-btn" data-c="${c}" style="padding:5px 10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;font-size:11px;cursor:pointer">${n}</button>`).join("")}</div>
+    <div id="tr-result" style="font-size:13px;color:#ccc;line-height:1.6;max-height:160px;overflow-y:auto"></div>
+    <button class="tr-close-btn" style="margin-top:8px;width:100%;padding:6px;background:rgba(255,255,255,0.05);border:none;border-radius:10px;color:#888;font-size:11px;cursor:pointer">Close</button>`;
+  document.body.appendChild(pop);
+  pop.querySelector(".tr-close-btn").onclick=()=>pop.remove();
+  pop.querySelectorAll(".tr-lang-btn").forEach(b=>b.onclick=async()=>{
+    const resEl=pop.querySelector("#tr-result");
+    resEl.textContent="Translating...";
+    try{
+      const out=await fetchAI([{role:"system",content:`Translate the user's text to ${b.dataset.c}. Reply with ONLY the translation, nothing else.`},{role:"user",content:text}],false,false);
+      resEl.textContent=out;
+    }catch(e){resEl.textContent="Translation failed."}
+  });
+}
+
 function companionHTML(id,state,small){
   return `<div class="phra-companion ${state||""} ${small?"small":""}" id="${id}"><div class="pc-body"></div><div class="pc-crest"></div><div class="pc-eye l"></div><div class="pc-eye r"></div><div class="pc-beak"></div></div>`;
 }
@@ -1278,6 +1385,8 @@ window.addEventListener("load",()=>{
   setInterval(spawnParticle,700);
   initMagneticDrop();
   initAICore();
+  initCompareGesture();
+  initSelectionTranslate();
   document.getElementById("premium-immersive-viewport").addEventListener("scroll",e=>{const y=e.target.scrollTop;[[".blob-1",[0.03,0.05]],[".blob-2",[-0.04,0.03]],[".blob-3",[0.02,-0.04]]].forEach(([s,t])=>{const el=document.querySelector(s);if(el)el.style.transform=`translate(${y*t[0]}px,${y*t[1]}px)`})},{passive:true});
 });
 function autoResize(el){el.style.height="44px";el.style.height=Math.min(el.scrollHeight,148)+"px"}
@@ -1625,7 +1734,18 @@ document.addEventListener("click",e=>{
 // ═══ SEND ═══
 async function send(){
   const raw=uiInput.value;const txt=raw.trim().replace(/\n{3,}/g,"\n\n");
-  if(editMsgId){if(!txt){cancelEdit();return}const idx=parseInt(editMsgId.split("-")[1]);const chat=chats.find(c=>c.id==curId);if(chat?.msgs[idx]){saveBranch(idx,chat.msgs[idx].uText);chat.msgs.splice(idx);save();loadChat(curId);cancelEdit();uiInput.value=txt}}
+  if(editMsgId){
+    if(!txt){cancelEdit();return}
+    const idx=parseInt(editMsgId.split("-")[1]);
+    const chatE=chats.find(c=>c.id==curId);
+    if(chatE?.msgs[idx]){
+      saveBranch(idx,chatE.msgs[idx].uText);
+      chatE.msgs.splice(idx);save();
+      const uWrap=document.getElementById("u-"+idx)?.closest(".msg-wrap");
+      if(uWrap){let node=uWrap;while(node){const next=node.nextElementSibling;node.remove();node=next}}
+    }
+    cancelEdit();
+  }
   if(!txt&&!attachedFiles.length)return;
   if(activePlan==="free"){if(trialCount>=PLAN_CFG.free.msgLimit){initPlanUI();openPremium();showToast(`Free limit: ${PLAN_CFG.free.msgLimit} messages used.`,"error");return}trialCount++;localStorage.setItem("phraortes_trial",trialCount);if(trialCount>=PLAN_CFG.free.msgLimit)initPlanUI()}
   haptic("send");playSound("woosh");sendBtn.disabled=true;uiInput.disabled=true;autoCtxSwitch(txt);localStorage.removeItem("draft_"+curId);
@@ -1671,23 +1791,28 @@ async function fetchAI(messages,useVision,isCodeQuery){
   else if(isCodeQuery||activeModel==="2.6"){orCandidates=["openai/gpt-oss-120b:free","nvidia/nemotron-3-super-120b-a12b:free","openrouter/free"];grM="llama-3.3-70b-versatile"}
   else if(activeModel==="2.5"){orCandidates=["nvidia/nemotron-3-super-120b-a12b:free","google/gemma-4-31b-it:free","openrouter/free"];grM="llama-3.3-70b-versatile"}
   else{orCandidates=["openrouter/free","openai/gpt-oss-120b:free"];grM="llama-3.3-70b-versatile"}
-  const errors=[];
-  if(OR_KEY){
-    for(const orM of orCandidates){
-      try{
-        const r=await fetch("https://openrouter.ai/api/v1/chat/completions",{method:"POST",headers:{Authorization:`Bearer ${OR_KEY}`,"Content-Type":"application/json","HTTP-Referer":location.href,"X-Title":"Phraortes"},body:JSON.stringify({model:orM,messages})});
-        const d=await r.json();
-        if(!d.error&&d.choices?.[0])return d.choices[0].message.content;
-        if(d.error)errors.push(`OR:${orM} → ${d.error.message||JSON.stringify(d.error)}`);
-      }catch(e){errors.push(`OR:${orM} → ${e.message}`)}
+  for(let pass=0;pass<2;pass++){
+    const errors=[];
+    if(OR_KEY){
+      for(const orM of orCandidates){
+        try{
+          const r=await fetch("https://openrouter.ai/api/v1/chat/completions",{method:"POST",headers:{Authorization:`Bearer ${OR_KEY}`,"Content-Type":"application/json","HTTP-Referer":location.href,"X-Title":"Phraortes"},body:JSON.stringify({model:orM,messages})});
+          const d=await r.json();
+          if(!d.error&&d.choices?.[0])return d.choices[0].message.content;
+          if(d.error)errors.push(`OR:${orM} → ${d.error.message||JSON.stringify(d.error)}`);
+        }catch(e){errors.push(`OR:${orM} → ${e.message}`)}
+      }
     }
+    try{
+      const r=await fetch("https://api.groq.com/openai/v1/chat/completions",{method:"POST",headers:{Authorization:`Bearer ${_A+_B}`,"Content-Type":"application/json"},body:JSON.stringify({model:grM,messages})});
+      const d=await r.json();
+      if(!d.error)return d.choices[0].message.content;
+      errors.push(`Groq → ${d.error.message}`);
+    }catch(e){errors.push(`Groq → ${e.message}`)}
+    if(pass===0){await new Promise(r=>setTimeout(r,1300));continue}
+    console.error("Phraortes AI errors (after auto-retry):",errors);
+    throw new Error(errors.length?errors[0]:"All providers failed");
   }
-  try{
-    const r=await fetch("https://api.groq.com/openai/v1/chat/completions",{method:"POST",headers:{Authorization:`Bearer ${_A+_B}`,"Content-Type":"application/json"},body:JSON.stringify({model:grM,messages})});
-    const d=await r.json();
-    if(d.error){errors.push(`Groq → ${d.error.message}`);console.error("Phraortes AI errors:",errors);throw new Error(errors[errors.length-1])}
-    return d.choices[0].message.content;
-  }catch(e){console.error("Phraortes AI errors:",errors,e);throw new Error(errors.length?errors[0]:e.message)}
 }
 
 // ═══ IMAGE GEN ═══
@@ -1867,7 +1992,23 @@ function loadChat(id){
   }else if(chat){if(!chat.persona){chat.persona=PERSONAS[Math.floor(Math.random()*PERSONAS.length)];save()}addUI(chat.persona,"ai","welcome-persona",chat.persona)}
   renderH();scrollToBottom();updateFilesBadge();
 }
-function newChat(){const id=Date.now();chats.unshift({id,name:"New Chat",msgs:[],pinned:false});curId=id;save();loadChat(id);if(document.getElementById("sidebar").classList.contains("active"))toggleS(null)}
+async function summarizeChatForLongMemory(chat){
+  if(!chat||!chat.msgs||chat.msgs.length<2)return;
+  try{
+    const convo=chat.msgs.slice(-8).map(m=>`User: ${m.uText}\nAI: ${(m.aRaw||"").substring(0,200)}`).join("\n");
+    const sysMsg={role:"system",content:"Extract up to 3 short factual bullet points about the USER (name, profession, preferences, ongoing projects — not opinions or emotions) from this conversation. Reply with ONLY the bullets, one per line, no extra commentary. If nothing notable, reply with exactly: NONE"};
+    const summary=await fetchAI([sysMsg,{role:"user",content:convo}],false,false);
+    if(summary&&!/^none$/i.test(summary.trim())){
+      let changed=false;
+      summary.split("\n").map(l=>l.replace(/^[-•*]\s*/,"").trim()).filter(Boolean).forEach(fact=>{
+        if(!longMemory.includes(fact)){longMemory.push(fact);changed=true}
+      });
+      if(longMemory.length>25)longMemory=longMemory.slice(-25);
+      if(changed)localStorage.setItem("phraortes_longmemory",JSON.stringify(longMemory));
+    }
+  }catch(e){}
+}
+function newChat(){const oldChat=chats.find(c=>c.id==curId);if(oldChat)summarizeChatForLongMemory(oldChat);const id=Date.now();chats.unshift({id,name:"New Chat",msgs:[],pinned:false});curId=id;save();loadChat(id);if(document.getElementById("sidebar").classList.contains("active"))toggleS(null)}
 function save(){localStorage.setItem("phraortes_chats",JSON.stringify(chats));localStorage.setItem("phraortes_id",curId)}
 let sessionFilter="all";
 function renderH(){
@@ -1925,11 +2066,16 @@ function deleteMsg(msgId){
   const match=msgId.match(/^u-(\d+)$/);
   if(!match){const el=document.getElementById(msgId);if(!el)return;const w=el.closest(".msg-wrap");if(w){w.classList.add("glitch-dissolve");setTimeout(()=>w.remove(),450)}return}
   const idx=parseInt(match[1]);
-  const chat=chats.find(c=>c.id==curId);if(!chat||!chat.msgs[idx])return;
+  const chat=chats.find(c=>c.id==curId);
   const uEl=document.getElementById("u-"+idx)?.closest(".msg-wrap"),aEl=document.getElementById("a-"+idx)?.closest(".msg-wrap");
   [uEl,aEl].forEach(w=>{if(w)w.classList.add("glitch-dissolve")});
-  chat.msgs.splice(idx,1);save();
-  setTimeout(()=>loadChat(curId),450);
+  if(chat&&chat.msgs[idx]){
+    chat.msgs.splice(idx,1);save();
+    setTimeout(()=>loadChat(curId),450);
+  }else{
+    const errBar=document.querySelector("footer .inline-err");if(errBar)errBar.remove();
+    setTimeout(()=>{uEl?.remove();aEl?.remove()},450);
+  }
 }
 
 // ═══ SPEECH ═══
