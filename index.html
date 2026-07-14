@@ -99,6 +99,16 @@ header{height:66px;display:flex;justify-content:space-between;align-items:center
 .logo-main{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;font-weight:700;color:var(--p);letter-spacing:1px;text-shadow:0 0 20px var(--glow)}
 .logo-sub{font-family:'Space Mono',monospace;font-size:8px;color:rgba(255,255,255,0.3);letter-spacing:3px;text-transform:uppercase;margin-top:2px}
 
+/* LIVING AI CORE */
+.ai-core{position:relative;width:30px;height:30px;flex-shrink:0;cursor:pointer;perspective:300px}
+.ai-core-inner{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--p),transparent 75%);box-shadow:0 0 14px var(--glow),inset -4px -4px 8px rgba(0,0,0,0.3);transition:transform 0.15s ease-out,background 0.8s ease,box-shadow 0.8s ease;animation:aiCoreBreathe 3.2s ease-in-out infinite}
+@keyframes aiCoreBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.ai-core-ring{position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--p);opacity:0.35;transition:border-color 0.8s ease;pointer-events:none}
+.ai-core.thinking .ai-core-inner{animation:aiCoreThink 0.9s ease-in-out infinite}
+@keyframes aiCoreThink{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.15) rotate(180deg)}}
+.ai-core.speaking .ai-core-ring{animation:aiCoreSpeak 0.7s ease-out infinite}
+@keyframes aiCoreSpeak{0%{transform:scale(1);opacity:0.4}100%{transform:scale(1.7);opacity:0}}
+
 /* ACCOUNT AVATAR */
 .account-hub{position:relative;display:flex;align-items:center;gap:10px;cursor:pointer}
 .account-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,0.1),rgba(255,255,255,0.04));border:1.5px solid rgba(255,255,255,0.15);display:flex;justify-content:center;align-items:center;font-weight:600;font-size:13px;color:rgba(255,255,255,0.5);overflow:hidden;flex-shrink:0;transition:0.3s;position:relative}
@@ -108,23 +118,29 @@ header{height:66px;display:flex;justify-content:space-between;align-items:center
 .account-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;position:relative;z-index:1}
 .account-avatar .av-initials{position:relative;z-index:1;color:#fff}
 
-/* ==== NEW: ACCOUNT AVATAR SUMMON RING (aura / 360 spin / morph) ==== */
+/* ==== ACCOUNT AVATAR: subtle solid-color pulse on tap (no rainbow spin) ==== */
 .account-hub{overflow:visible}
-.avatar-summon-ring{position:absolute;inset:-6px;border-radius:50%;pointer-events:none;opacity:0;z-index:0}
-.avatar-summon-ring::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,var(--pulse),var(--pulse-bright),var(--cyan-star),var(--pulse));filter:blur(3px)}
-.account-hub.summoning .avatar-summon-ring{opacity:1;animation:ringSpin360 0.62s cubic-bezier(0.45,0,0.55,1) forwards}
-@keyframes ringSpin360{0%{transform:rotate(0deg) scale(0.6);opacity:0}25%{opacity:1}70%{transform:rotate(300deg) scale(1.18)}100%{transform:rotate(360deg) scale(1.4);opacity:0}}
-.account-hub.summoning .account-avatar{animation:avatarPulseIn 0.62s cubic-bezier(0.34,1.56,0.64,1) forwards}
-@keyframes avatarPulseIn{0%{transform:scale(1)}45%{transform:scale(0.86)}75%{transform:scale(1.14)}100%{transform:scale(1)}}
-#core-flash.flash-account{background:radial-gradient(circle at var(--fx) var(--fy),rgba(168,85,247,0.35),transparent 55%);mix-blend-mode:normal}
+.avatar-summon-ring{position:absolute;inset:-6px;border-radius:50%;pointer-events:none;opacity:0;z-index:0;border:2px solid var(--p)}
+.account-hub.summoning .avatar-summon-ring{opacity:0.8;animation:ringPulseOut 0.5s ease-out forwards}
+@keyframes ringPulseOut{0%{transform:scale(0.7);opacity:0.8}100%{transform:scale(1.7);opacity:0}}
+.account-hub.summoning .account-avatar{animation:avatarPulseIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards}
+@keyframes avatarPulseIn{0%{transform:scale(1)}45%{transform:scale(0.9)}75%{transform:scale(1.08)}100%{transform:scale(1)}}
+#core-flash.flash-account{background:radial-gradient(circle at var(--fx) var(--fy),rgba(201,162,39,0.28),transparent 55%);mix-blend-mode:normal}
 
-/* ACCOUNT FULLSCREEN PAGE */
-#account-page{position:fixed;inset:0;z-index:8000;background:rgba(6,6,12,0.97);backdrop-filter:blur(40px);display:none;opacity:0;transition:opacity 0.4s var(--ease);overflow-y:auto;perspective:1400px}
-#account-page.show{display:block;animation:acPageIn3D 0.55s cubic-bezier(0.22,1,0.36,1) forwards}
-@keyframes acPageIn3D{0%{opacity:0;transform:rotateY(-14deg) rotateX(6deg) scale(0.88);transform-origin:right center}60%{opacity:1}100%{opacity:1;transform:rotateY(0deg) rotateX(0deg) scale(1)}}
-#account-page.closing{animation:acPageOut3D 0.4s cubic-bezier(0.55,0,1,0.45) forwards}
-@keyframes acPageOut3D{0%{opacity:1;transform:rotateY(0deg) scale(1)}100%{opacity:0;transform:rotateY(10deg) scale(0.92)}}
-.ac-page-header{display:flex;align-items:center;justify-content:space-between;padding:28px 32px 0}
+/* ACCOUNT PAGE — bottom sheet, Claude-style: slides up, closes from the top handle */
+#account-page-backdrop{position:fixed;inset:0;z-index:7999;background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);display:none;opacity:0;transition:opacity 0.4s ease}
+#account-page-backdrop.visible{opacity:1}
+#account-page{position:fixed;left:0;right:0;bottom:0;top:8vh;z-index:8000;background:rgba(8,8,14,0.99);border-top-left-radius:26px;border-top-right-radius:26px;box-shadow:0 -24px 70px rgba(0,0,0,0.55);display:none;transform:translateY(100%);overflow-y:auto}
+#account-page.show{display:block;animation:sheetRise 0.68s cubic-bezier(0.16,1,0.3,1) forwards}
+@keyframes sheetRise{0%{transform:translateY(100%)}55%{transform:translateY(-1.4%)}75%{transform:translateY(0.5%)}100%{transform:translateY(0)}}
+#account-page.closing{animation:sheetFall 0.38s cubic-bezier(0.55,0,1,0.45) forwards}
+@keyframes sheetFall{from{transform:translateY(0)}to{transform:translateY(100%)}}
+#account-page::before{content:'';position:absolute;top:0;left:15%;right:15%;height:2px;background:linear-gradient(90deg,transparent,rgba(201,162,39,0.7),transparent);opacity:0;pointer-events:none}
+#account-page.show::before{animation:edgeShimmer 1s ease 0.42s forwards}
+@keyframes edgeShimmer{0%{opacity:0}45%{opacity:1}100%{opacity:0}}
+.ac-sheet-handle{width:40px;height:5px;background:rgba(255,255,255,0.22);border-radius:3px;margin:12px auto 2px;cursor:pointer;transition:background 0.2s}
+.ac-sheet-handle:hover{background:rgba(255,255,255,0.4)}
+.ac-page-header{display:flex;align-items:center;justify-content:space-between;padding:14px 32px 0}
 .ac-page-close{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:#fff;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:0.25s}
 .ac-page-close:hover{background:rgba(255,255,255,0.14);transform:scale(1.08)}
 .ac-page-tabs{display:flex;gap:6px;padding:20px 32px 0}
@@ -774,8 +790,10 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
   </div>
 </div>
 
-<!-- ACCOUNT FULLSCREEN PAGE -->
+<!-- ACCOUNT PAGE (bottom sheet) -->
+<div id="account-page-backdrop" onclick="closeAccountPage()"></div>
 <div id="account-page">
+  <div class="ac-sheet-handle" onclick="closeAccountPage()"></div>
   <div class="ac-page-header">
     <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800">Account</div>
     <button class="ac-page-close" onclick="closeAccountPage()">✕</button>
@@ -992,19 +1010,21 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
   <header id="core-header">
     <button class="btn-icon" onclick="toggleS(event)">☰</button>
     <div class="logo">
-      <img src="image.png" class="logo-img" id="logo-img" alt="" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+      <div class="ai-core" id="ai-core"><div class="ai-core-inner"></div><div class="ai-core-ring"></div></div>
       <div class="logo-text-wrap">
         <span class="logo-main">Phraortes</span>
         <span class="logo-sub">Intelligence OS</span>
       </div>
     </div>
-    <button class="btn-icon" id="files-btn" onclick="openFilesPanel()" style="position:relative">
-      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-      <span id="files-badge" style="display:none;position:absolute;top:-2px;right:-2px;background:var(--pulse-bright,#A855F7);color:#fff;font-size:9px;border-radius:50%;width:15px;height:15px;align-items:center;justify-content:center;font-family:'Space Mono',monospace;line-height:1">0</span>
-    </button>
-    <div class="account-hub" id="account-hub" onclick="openAccountPage(event)">
-      <div class="avatar-summon-ring" id="avatar-summon-ring"></div>
-      <div class="account-avatar" id="account-avatar"><span class="av-placeholder" style="font-size:18px;color:rgba(255,255,255,0.15)">?</span></div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="btn-icon" id="files-btn" onclick="openFilesPanel()" style="position:relative">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+        <span id="files-badge" style="display:none;position:absolute;top:-2px;right:-2px;background:var(--pulse-bright,#A855F7);color:#fff;font-size:9px;border-radius:50%;width:15px;height:15px;align-items:center;justify-content:center;font-family:'Space Mono',monospace;line-height:1">0</span>
+      </button>
+      <div class="account-hub" id="account-hub" onclick="openAccountPage(event)">
+        <div class="avatar-summon-ring" id="avatar-summon-ring"></div>
+        <div class="account-avatar" id="account-avatar"><span class="av-placeholder" style="font-size:18px;color:rgba(255,255,255,0.15)">?</span></div>
+      </div>
     </div>
   </header>
 
@@ -1170,20 +1190,31 @@ function companionHTML(id,state,small){
   return `<div class="phra-companion ${state||""} ${small?"small":""}" id="${id}"><div class="pc-body"></div><div class="pc-crest"></div><div class="pc-eye l"></div><div class="pc-eye r"></div><div class="pc-beak"></div></div>`;
 }
 
-// ═══ CONTEXT-AWARE LOADER (icon + rotating text per domain) ═══
+// ═══ CONTEXT-AWARE LOADER (icon + rotating text per domain, matched to the user's own language) ═══
 const LOADER_PHRASES={
-  code:{icon:"⌘",cls:"li-code",phrases:["در حال تحلیل کد...","بررسی منطق برنامه...","نوشتن راه‌حل...","بازبینی خروجی..."]},
-  image:{icon:"◆",cls:"li-image",phrases:["ترسیم ایده...","رندر جزئیات...","اعمال نور و رنگ..."]},
-  think:{icon:"✧",cls:"li-think",phrases:["تحلیل عمیق در جریانه...","بررسی زوایای مختلف...","جمع‌بندی یافته‌ها..."]},
-  chat:{icon:"…",cls:"li-chat",phrases:["در حال فکر کردن...","آماده‌سازی پاسخ..."]}
+  fa:{
+    code:{icon:"⌘",cls:"li-code",phrases:["در حال تحلیل کد...","بررسی منطق برنامه...","نوشتن راه‌حل...","بازبینی خروجی..."]},
+    image:{icon:"◆",cls:"li-image",phrases:["ترسیم ایده...","رندر جزئیات...","اعمال نور و رنگ..."]},
+    think:{icon:"✧",cls:"li-think",phrases:["تحلیل عمیق در جریانه...","بررسی زوایای مختلف...","جمع‌بندی یافته‌ها..."]},
+    chat:{icon:"…",cls:"li-chat",phrases:["در حال فکر کردن...","آماده‌سازی پاسخ..."]}
+  },
+  en:{
+    code:{icon:"⌘",cls:"li-code",phrases:["Analyzing the code...","Reviewing the logic...","Writing the solution...","Reviewing output..."]},
+    image:{icon:"◆",cls:"li-image",phrases:["Sketching the idea...","Rendering details...","Applying light & color..."]},
+    think:{icon:"✧",cls:"li-think",phrases:["Deep analysis underway...","Weighing different angles...","Synthesizing findings..."]},
+    chat:{icon:"…",cls:"li-chat",phrases:["Thinking...","Preparing a response..."]}
+  }
 };
+function detectMsgLang(text){return /[\u0600-\u06FF]/.test(text||"")?"fa":"en"}
 let loaderIntervals={};
-function startContextLoader(elId,type){
-  const cfg=LOADER_PHRASES[type]||LOADER_PHRASES.chat;
+function startContextLoader(elId,type,lang){
+  const set=LOADER_PHRASES[lang]||LOADER_PHRASES.en;
+  const cfg=set[type]||set.chat;
   const el=document.getElementById(elId);if(!el)return;
   const textId=elId+"-lt";
   const compState=type==="code"?"coding":"thinking";
   el.innerHTML=`<div class="loader-context">${companionHTML(elId+"-pc",compState,false)}<span class="loader-text" id="${textId}">${cfg.phrases[0]}</span></div>`;
+  document.getElementById("ai-core")?.classList.add("thinking");
   let i=0;
   loaderIntervals[elId]=setInterval(()=>{
     i=(i+1)%cfg.phrases.length;
@@ -1191,7 +1222,7 @@ function startContextLoader(elId,type){
     if(t){t.style.opacity="0";setTimeout(()=>{if(t){t.textContent=cfg.phrases[i];t.style.opacity="1"}},220)}
   },1600);
 }
-function stopContextLoader(elId){if(loaderIntervals[elId]){clearInterval(loaderIntervals[elId]);delete loaderIntervals[elId]}}
+function stopContextLoader(elId){if(loaderIntervals[elId]){clearInterval(loaderIntervals[elId]);delete loaderIntervals[elId]}document.getElementById("ai-core")?.classList.remove("thinking")}
 
 // ═══ LONG-TERM MEMORY (layered memory: short-term = current chat, long-term = cross-chat facts) ═══
 let longMemory=JSON.parse(localStorage.getItem("phraortes_longmemory")||"[]"); // array of short fact strings
@@ -1246,9 +1277,24 @@ window.addEventListener("load",()=>{
   });
   setInterval(spawnParticle,700);
   initMagneticDrop();
+  initAICore();
   document.getElementById("premium-immersive-viewport").addEventListener("scroll",e=>{const y=e.target.scrollTop;[[".blob-1",[0.03,0.05]],[".blob-2",[-0.04,0.03]],[".blob-3",[0.02,-0.04]]].forEach(([s,t])=>{const el=document.querySelector(s);if(el)el.style.transform=`translate(${y*t[0]}px,${y*t[1]}px)`})},{passive:true});
 });
 function autoResize(el){el.style.height="44px";el.style.height=Math.min(el.scrollHeight,148)+"px"}
+function initAICore(){
+  const core=document.getElementById("ai-core");if(!core)return;
+  const inner=core.querySelector(".ai-core-inner");
+  function tilt(x,y){
+    const r=core.getBoundingClientRect();
+    const dx=(x-r.left-r.width/2)/r.width,dy=(y-r.top-r.height/2)/r.height;
+    inner.style.transform=`rotateY(${dx*34}deg) rotateX(${-dy*34}deg) scale(1.1)`;
+  }
+  core.addEventListener("mousemove",e=>tilt(e.clientX,e.clientY));
+  core.addEventListener("mouseleave",()=>{inner.style.transform=""});
+  core.addEventListener("touchstart",e=>{if(e.touches[0])tilt(e.touches[0].clientX,e.touches[0].clientY)},{passive:true});
+  core.addEventListener("touchmove",e=>{if(e.touches[0])tilt(e.touches[0].clientX,e.touches[0].clientY)},{passive:true});
+  core.addEventListener("touchend",()=>{setTimeout(()=>{inner.style.transform=""},250)});
+}
 
 // ═══ GOOGLE OAUTH ═══
 function initiateGoogleOAuth(){
@@ -1292,11 +1338,10 @@ function handleLogout(){
   showToast("Logged out.");closeAccountPage();
 }
 
-// ═══ ACCOUNT PAGE (with summon-ring aura + 360 spin + 3D open) ═══
+// ═══ ACCOUNT PAGE — bottom sheet like Claude: tap avatar to pulse-open, tap handle/backdrop to close ═══
 function openAccountPage(e){
   const hub=document.getElementById("account-hub");
   hub.classList.add("summoning");
-  // Flash originates at the click point
   if(e){
     const fl=document.getElementById("core-flash");
     fl.style.setProperty("--fx",e.clientX+"px");fl.style.setProperty("--fy",e.clientY+"px");
@@ -1306,15 +1351,19 @@ function openAccountPage(e){
   haptic("double");playSound("woosh");
   setTimeout(()=>{
     hub.classList.remove("summoning");
-    document.getElementById("account-page").classList.remove("closing");
-    document.getElementById("account-page").classList.add("show");
+    const bd=document.getElementById("account-page-backdrop");
+    bd.style.display="block";requestAnimationFrame(()=>bd.classList.add("visible"));
+    const pg=document.getElementById("account-page");
+    pg.classList.remove("closing");pg.classList.add("show");
     updateAcPlanBadge();renderWeeklyStats();
-  },340);
+  },260);
 }
 function closeAccountPage(){
   const pg=document.getElementById("account-page");
-  pg.classList.add("closing");
-  setTimeout(()=>{pg.classList.remove("show","closing")},380);
+  const bd=document.getElementById("account-page-backdrop");
+  pg.classList.add("closing");bd.classList.remove("visible");
+  haptic("light");
+  setTimeout(()=>{pg.classList.remove("show","closing");bd.style.display="none"},400);
 }
 function switchAcTab(tab,btn){
   const body=document.querySelector(".ac-page-body");
@@ -1591,7 +1640,7 @@ async function send(){
   document.getElementById("a-"+idx).innerHTML=`<div class="dynamic-loader"><div class="dot-matrix"><span></span><span></span><span></span></div></div>`;
   const isCodeQuery=/(code|bug|debug|python|javascript|html|css|react|api|sql|function|algorithm|باگ|کد|پایتون|دیباگ|برنامه|الگوریتم)/i.test(txt);
   const loaderType=activeModel==="2.7"?"think":isCodeQuery||activeModel==="2.6"?"code":activeModel==="2.5"?"think":"chat";
-  startContextLoader("a-"+idx,loaderType);
+  startContextLoader("a-"+idx,loaderType,detectMsgLang(txt));
   let sys="You are Phraortes OS — an advanced intelligence assistant. Respond clearly and helpfully. ";
   if(activeModel==="2.7")sys+="You are Sovereign 2.7, Phraortes' most advanced core — built for large, complex, professional-grade projects. Provide thorough, precise, production-quality output, considering edge cases and long-term maintainability.";
   else if(activeModel==="2.6"||isCodeQuery)sys+="You are Apex 2.6, expert coder and senior developer. Think through the approach briefly, then write clean, correct, well-formatted code with proper syntax highlighting. Explain non-obvious parts concisely.";
@@ -1750,7 +1799,9 @@ async function streamMarkdown(aiId,raw){
   let built="";let chunk=4,delay=6;
   if(activeModel==="2.6"){chunk=12;delay=2}
   if(activeModel==="2.5"){chunk=2;delay=18}
+  document.getElementById("ai-core")?.classList.add("speaking");
   for(let i=0;i<raw.length;i+=chunk){built+=raw.substring(i,i+chunk);if(el)el.innerHTML=marked.parse(built);if(!isScrolling)chatBox.scrollTo({top:chatBox.scrollHeight});await new Promise(r=>setTimeout(r,delay))}
+  document.getElementById("ai-core")?.classList.remove("speaking");
   playSound("chime");if(el)el.innerHTML=marked.parse(raw);
   // Fix: apply read more after render
   setTimeout(()=>applyReadMore(aiId),100);
