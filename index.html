@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Phraortes — Intelligence Interface</title>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
@@ -808,6 +810,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
   </div>
   <div class="ac-page-tabs">
     <button class="ac-tab-btn active" onclick="switchAcTab('profile',this)">Profile</button>
+    <button class="ac-tab-btn" onclick="switchAcTab('usage',this)">Usage</button>
     <button class="ac-tab-btn" onclick="switchAcTab('settings',this)">Settings</button>
     <button class="ac-tab-btn" onclick="switchAcTab('billing',this)">Billing</button>
     <button class="ac-tab-btn" onclick="switchAcTab('notifications',this)">Notifications</button>
@@ -850,6 +853,20 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
         <div class="toggle-row"><div><div class="toggle-row-label">Luxury Soundscapes</div><div class="toggle-row-sub">UI audio feedback on interactions</div></div><label class="switch"><input type="checkbox" id="sound-toggle" checked><span class="slider"></span></label></div>
         <div class="toggle-row"><div><div class="toggle-row-label">Haptic Feedback</div><div class="toggle-row-sub">Vibration on mobile devices</div></div><label class="switch"><input type="checkbox" id="haptic-toggle" checked><span class="slider"></span></label></div>
         <div class="toggle-row"><div><div class="toggle-row-label">Auto Context Switch</div><div class="toggle-row-sub">AI model switches based on your input</div></div><label class="switch"><input type="checkbox" id="auto-switch-toggle" checked><span class="slider"></span></label></div>
+      </div>
+    </div>
+    <!-- USAGE -->
+    <div id="actab-usage" style="display:none">
+      <div class="ac-section">
+        <div class="ac-section-title">Token Usage · Today</div>
+        <div id="usage-token-body"></div>
+      </div>
+      <div class="ac-section">
+        <div class="ac-section-title">Plan Quota</div>
+        <div id="usage-quota-body"></div>
+      </div>
+      <div class="ac-section" style="text-align:center;padding:16px">
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);line-height:1.6">Token counts are estimates (≈4 characters per token). All current models are free-tier, so usage here is informational only — it doesn't cost you anything.</div>
       </div>
     </div>
     <!-- BILLING -->
@@ -1076,7 +1093,8 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
       <button id="limit-upgrade-btn" onclick="openPremium()">⚡ Upgrade</button>
     </div>
     <div id="input-preview-container"></div>
-    <div class="input-bar" onclick="event.stopPropagation()">
+    <div id="token-estimate" style="display:none;font-size:10px;color:rgba(255,255,255,0.3);font-family:'Space Mono',monospace;padding:0 16px 4px;text-align:right"></div>
+    <div class="input-bar" id="main-input-bar" onclick="event.stopPropagation()">
       <input type="file" id="file-upload" style="display:none" multiple onchange="handleFiles(event)">
       <button class="btn-icon" onclick="document.getElementById('file-upload').click()">＋</button>
       <button class="btn-icon" onclick="toggleGear(event)">⚙️</button>
@@ -1085,7 +1103,6 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
       <button class="voice-btn" id="voice-btn" onclick="toggleVoiceInput()" title="Voice input">
         <svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path fill="none" stroke="currentColor" stroke-width="1.8" d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
       </button>
-      <canvas id="voice-wave" width="56" height="28"></canvas>
       <div class="wand-wrapper">
         <button class="btn-icon" onclick="toggleMagicMenu(event)">🪄</button>
         <div class="magic-menu" id="magic-menu" onclick="event.stopPropagation()">
@@ -1098,11 +1115,18 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
       <button id="cancel-edit-btn" class="btn-icon" onclick="cancelEdit()" style="display:none;color:#ff3b30">✕</button>
       <button id="send-btn" class="btn-icon" onclick="send()">🚀</button>
     </div>
+    <div class="input-bar" id="voice-record-bar" style="display:none;border-color:rgba(255,59,48,0.35)">
+      <button class="btn-icon" onclick="cancelVoiceRecording()" style="color:#ff453a;font-size:18px">✕</button>
+      <canvas id="voice-wave" width="150" height="30" style="flex:1;margin:0 8px"></canvas>
+      <span id="voice-record-timer" style="font-family:'Space Mono',monospace;font-size:12px;color:#ff453a;min-width:36px;text-align:center">0:00</span>
+      <button class="btn-icon" onclick="stopAndSendVoice()" style="color:#00b36b;font-size:20px">✓</button>
+    </div>
   </footer>
 </main>
 
 <script>
 'use strict';
+if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 const _A="gsk_mIKxutVxzOYZdnFoMRbI",_B="WGdyb3FYuI7ZQoU2sZPIDQ0rmUc4GDhv";
 const OR_KEY="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";
 const GOOGLE_CLIENT_ID="961077952714-d1ba3ls025vrqou4hfr3jgvtdltsqh55.apps.googleusercontent.com";
@@ -1372,7 +1396,7 @@ window.addEventListener("load",()=>{
   handleOAuthRedirect();
   if(!chats.length)newChat();else loadChat(curId);
   renderBilling();updateModelUI(activeModel);initPlanUI();
-  uiInput.addEventListener("input",()=>{localStorage.setItem("draft_"+curId,uiInput.value);autoResize(uiInput);analyzeMood(uiInput.value);autoCtxSwitch(uiInput.value)});
+  uiInput.addEventListener("input",()=>{localStorage.setItem("draft_"+curId,uiInput.value);autoResize(uiInput);analyzeMood(uiInput.value);autoCtxSwitch(uiInput.value);updateTokenEstimate()});
   uiInput.addEventListener("keydown",e=>{if(!["Enter","Backspace","Shift"].includes(e.key))playSound("click");if(e.key==="Enter"&&(e.shiftKey||e.ctrlKey)){e.preventDefault();send()}});
   uiInput.addEventListener("focus",()=>{const ws=chatBox.querySelectorAll(".msg-wrap");if(ws.length)ws[ws.length-1].classList.add("last-typing-session");document.body.classList.add("isolation-active")});
   uiInput.addEventListener("blur",()=>{document.body.classList.remove("isolation-active");setTimeout(()=>window.scrollTo(0,0),50)});
@@ -1390,6 +1414,14 @@ window.addEventListener("load",()=>{
   document.getElementById("premium-immersive-viewport").addEventListener("scroll",e=>{const y=e.target.scrollTop;[[".blob-1",[0.03,0.05]],[".blob-2",[-0.04,0.03]],[".blob-3",[0.02,-0.04]]].forEach(([s,t])=>{const el=document.querySelector(s);if(el)el.style.transform=`translate(${y*t[0]}px,${y*t[1]}px)`})},{passive:true});
 });
 function autoResize(el){el.style.height="44px";el.style.height=Math.min(el.scrollHeight,148)+"px"}
+function estimateTokens(text){return Math.max(0,Math.round((text||"").length/4))}
+function updateTokenEstimate(){
+  const el=document.getElementById("token-estimate");if(!el)return;
+  const n=estimateTokens(uiInput.value);
+  if(n<8){el.style.display="none";return}
+  el.style.display="block";
+  el.textContent=`~${n.toLocaleString()} tokens · Free tier`;
+}
 function initAICore(){
   const core=document.getElementById("ai-core");if(!core)return;
   const inner=core.querySelector(".ai-core-inner");
@@ -1478,12 +1510,43 @@ function switchAcTab(tab,btn){
   const body=document.querySelector(".ac-page-body");
   if(body)body.classList.add("smoke-out");
   setTimeout(()=>{
-    ["profile","settings","billing","notifications"].forEach(t=>{const el=document.getElementById("actab-"+t);if(el)el.style.display=t===tab?"block":"none"});
+    ["profile","usage","settings","billing","notifications"].forEach(t=>{const el=document.getElementById("actab-"+t);if(el)el.style.display=t===tab?"block":"none"});
     document.querySelectorAll(".ac-tab-btn").forEach(b=>b.classList.remove("active"));
     if(btn)btn.classList.add("active");
     if(tab==="profile")renderWeeklyStats();
+    if(tab==="usage")renderUsageTab();
     if(body){body.classList.remove("smoke-out");body.classList.add("smoke-in");setTimeout(()=>body.classList.remove("smoke-in"),560)}
   },300);
+}
+function getTodayKey(){const d=new Date();return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`}
+function trackTokenUsage(inputText,outputText){
+  const tKey="phraortes_tokens_"+getTodayKey(),mKey="phraortes_tokenmsgs_"+getTodayKey();
+  const curT=parseInt(localStorage.getItem(tKey)||"0"),curM=parseInt(localStorage.getItem(mKey)||"0");
+  localStorage.setItem(tKey,String(curT+estimateTokens(inputText)+estimateTokens(outputText)));
+  localStorage.setItem(mKey,String(curM+1));
+}
+function renderUsageTab(){
+  const tokens=parseInt(localStorage.getItem("phraortes_tokens_"+getTodayKey())||"0");
+  const msgs=parseInt(localStorage.getItem("phraortes_tokenmsgs_"+getTodayKey())||"0");
+  const tEl=document.getElementById("usage-token-body");
+  if(tEl)tEl.innerHTML=`<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px"><span style="font-family:'Syne',sans-serif;font-size:30px;font-weight:800">${tokens.toLocaleString()}</span><span style="font-size:12px;color:rgba(255,255,255,0.4)">tokens today</span></div><div style="font-size:12px;color:rgba(255,255,255,0.35)">across ${msgs} message${msgs===1?"":"s"} · resets at midnight</div>`;
+  const qEl=document.getElementById("usage-quota-body");if(!qEl)return;
+  let html="";
+  if(activePlan==="free"){
+    const used=trialCount,total=PLAN_CFG.free.msgLimit,pct=Math.min(100,used/total*100);
+    html=`<div class="ws-row"><span class="ws-label">Messages</span><div class="ws-bar-bg"><div class="ws-bar-fill" style="width:${pct}%;background:var(--p)"></div></div><span class="ws-val">${used}/${total}</span></div>`;
+    if(used>=total)html+=`<div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">⏳ Resets in ${fmtTime(freeSeconds)}</div>`;
+  }else if(activePlan==="starter"){
+    const used=proSlotsUsed,total=PLAN_CFG.starter.advSlots,pct=Math.min(100,used/total*100);
+    html=`<div class="ws-row"><span class="ws-label">Advanced Slots</span><div class="ws-bar-bg"><div class="ws-bar-fill" style="width:${pct}%;background:var(--p)"></div></div><span class="ws-val">${used}/${total}</span></div><div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">Standard requests: unlimited</div>`;
+    if(used>=total)html+=`<div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px">⏳ Slots reset in ${fmtTime(starterSeconds)}</div>`;
+  }else if(activePlan==="pro"){
+    const used=proSlotsUsed,total=PLAN_CFG.pro.advSlots,pct=Math.min(100,used/total*100);
+    html=`<div class="ws-row"><span class="ws-label">Premium Slots</span><div class="ws-bar-bg"><div class="ws-bar-fill" style="width:${pct}%;background:var(--p)"></div></div><span class="ws-val">${used}/${total}</span></div><div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">Standard requests: unlimited</div>`;
+  }else{
+    html=`<div style="text-align:center;padding:16px 0;color:#F5D78A;font-family:'Space Mono',monospace;font-size:13px">✦ Shahanshah — truly unlimited</div>`;
+  }
+  qEl.innerHTML=html;
 }
 function computeWeeklyStats(){
   const weekAgo=Date.now()-7*24*3600*1000;
@@ -1659,16 +1722,49 @@ function playSound(type){
 function haptic(type){if(!navigator.vibrate||!document.getElementById("haptic-toggle")?.checked)return;const p={light:[14],double:[38,76,38],error:[78,58,78],send:[14,48,14],success:[18,38,58]};navigator.vibrate(p[type]||[14])}
 
 // ═══ VOICE INPUT ═══
+let voiceFinalText="",voiceRecordTimer=null,voiceRecordSeconds=0;
 function toggleVoiceInput(){
-  const btn=document.getElementById("voice-btn");
   if(!("webkitSpeechRecognition" in window)&&!("SpeechRecognition" in window)){showToast("Voice not supported in this browser","error");return}
-  if(isRecording){if(recognitionObj)recognitionObj.stop();isRecording=false;btn.classList.remove("recording");return}
+  if(isRecording)return;
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  recognitionObj=new SR();recognitionObj.continuous=false;recognitionObj.interimResults=true;recognitionObj.lang="fa-IR,en-US";
-  recognitionObj.onresult=e=>{let interim="",final="";for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)final+=e.results[i][0].transcript;else interim+=e.results[i][0].transcript}uiInput.value=final||interim;autoResize(uiInput)};
-  recognitionObj.onend=()=>{isRecording=false;btn.classList.remove("recording");stopVoiceWave();if(uiInput.value.trim())setTimeout(()=>send(),300)};
-  recognitionObj.onerror=()=>{isRecording=false;btn.classList.remove("recording");stopVoiceWave();showToast("Voice recognition error","error")};
-  recognitionObj.start();isRecording=true;btn.classList.add("recording");haptic("light");startVoiceWave();
+  recognitionObj=new SR();recognitionObj.continuous=true;recognitionObj.interimResults=true;recognitionObj.lang="fa-IR,en-US";
+  voiceFinalText="";
+  recognitionObj.onresult=e=>{
+    let interim="";
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal)voiceFinalText+=e.results[i][0].transcript+" ";
+      else interim+=e.results[i][0].transcript;
+    }
+    uiInput.value=(voiceFinalText+interim).trim();autoResize(uiInput);
+  };
+  recognitionObj.onerror=e=>{if(e.error==="no-speech"||e.error==="aborted")return;finishVoiceUI();showToast("Voice recognition error: "+e.error,"error")};
+  recognitionObj.onend=()=>{finishVoiceUI()};
+  try{recognitionObj.start()}catch(e){showToast("Couldn't start microphone","error");return}
+  isRecording=true;
+  document.getElementById("main-input-bar").style.display="none";
+  document.getElementById("voice-record-bar").style.display="flex";
+  voiceRecordSeconds=0;document.getElementById("voice-record-timer").textContent="0:00";
+  voiceRecordTimer=setInterval(()=>{voiceRecordSeconds++;const m=Math.floor(voiceRecordSeconds/60),s=voiceRecordSeconds%60;const t=document.getElementById("voice-record-timer");if(t)t.textContent=`${m}:${String(s).padStart(2,"0")}`},1000);
+  haptic("light");startVoiceWave();
+}
+function finishVoiceUI(){
+  isRecording=false;
+  document.getElementById("main-input-bar").style.display="flex";
+  document.getElementById("voice-record-bar").style.display="none";
+  clearInterval(voiceRecordTimer);
+  stopVoiceWave();
+}
+function cancelVoiceRecording(){
+  if(recognitionObj){try{recognitionObj.onend=null;recognitionObj.onresult=null;recognitionObj.abort()}catch(e){}}
+  uiInput.value="";autoResize(uiInput);
+  finishVoiceUI();haptic("light");showToast("Recording cancelled");
+}
+function stopAndSendVoice(){
+  if(recognitionObj){
+    recognitionObj.onend=()=>{finishVoiceUI();if(uiInput.value.trim())send()};
+    try{recognitionObj.stop()}catch(e){finishVoiceUI();if(uiInput.value.trim())send()}
+  }else{finishVoiceUI()}
+  haptic("send");
 }
 
 // ═══ MOOD ═══
@@ -1751,7 +1847,8 @@ async function send(){
   haptic("send");playSound("woosh");sendBtn.disabled=true;uiInput.disabled=true;autoCtxSwitch(txt);localStorage.removeItem("draft_"+curId);
   if(txt)updateLongMemory(txt);
   let dispHtml=txt,useVision=false,imgData=null;
-  if(attachedFiles.length){let gal='<div style="display:flex;gap:7px;margin-bottom:9px">';attachedFiles.forEach(f=>{if(f.type==="image"){gal+=`<div style="width:58px;height:58px;border-radius:9px;overflow:hidden;cursor:pointer" onclick="openLightbox('${f.dataURL}')"><img src="${f.dataURL}" style="width:100%;height:100%;object-fit:cover"></div>`;useVision=true;if(!imgData)imgData=f.dataURL}});gal+="</div>";dispHtml=gal+(txt?"<br>"+txt:"");attachedFiles=[];renderPreviews()}
+  let docContext="";
+  if(attachedFiles.length){let gal='<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:9px">';attachedFiles.forEach(f=>{if(f.type==="image"){gal+=`<div style="width:58px;height:58px;border-radius:9px;overflow:hidden;cursor:pointer" onclick="openLightbox('${f.dataURL}')"><img src="${f.dataURL}" style="width:100%;height:100%;object-fit:cover"></div>`;useVision=true;if(!imgData)imgData=f.dataURL}else if(f.type==="doc"){gal+=`<div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:6px 11px;font-size:12px">📄 ${f.name}</div>`;if(f.text)docContext+=`\n\n[Attached document: ${f.name}]\n${f.text}`}});gal+="</div>";dispHtml=gal+(txt?"<br>"+txt:"");attachedFiles=[];renderPreviews()}
   const chat=chats.find(c=>c.id==curId);uiInput.value="";uiInput.style.height="44px";
   const idx=chat.msgs.length;
   addUI(dispHtml||"[Media]","user","u-"+idx,txt);addUI("","ai","a-"+idx,"");
@@ -1770,10 +1867,11 @@ async function send(){
   sys+=getLongMemoryPrompt();
   const apiMsgs=[{role:"system",content:sys}];
   chat.msgs.forEach(m=>{apiMsgs.push({role:"user",content:m.uText||m.u});apiMsgs.push({role:"assistant",content:m.aRaw||m.a})});
-  if(imgData)apiMsgs.push({role:"user",content:[{type:"text",text:txt||"Analyze this image."},{type:"image_url",image_url:{url:imgData}}]});
-  else apiMsgs.push({role:"user",content:txt});
+  const finalUserText=(txt||(docContext?"Please analyze the attached document.":""))+docContext;
+  if(imgData)apiMsgs.push({role:"user",content:[{type:"text",text:finalUserText||"Analyze this image."},{type:"image_url",image_url:{url:imgData}}]});
+  else apiMsgs.push({role:"user",content:finalUserText});
   if(activePlan==="pro"||activePlan==="starter"){proSlotsUsed++;localStorage.setItem("phraortes_slots",proSlotsUsed);if(activePlan==="pro")updateProGauge();if(activePlan==="starter"&&proSlotsUsed>=PLAN_CFG.starter.advSlots)initPlanUI()}
-  try{const full=await fetchAI(apiMsgs,useVision,isCodeQuery);finishTurn("a-"+idx,marked.parse(full),full,chat,dispHtml,txt,idx)}
+  try{const t0=performance.now();const full=await fetchAI(apiMsgs,useVision,isCodeQuery);const elapsedS=((performance.now()-t0)/1000).toFixed(1);trackTokenUsage(finalUserText,full);finishTurn("a-"+idx,marked.parse(full),full,chat,dispHtml,txt,idx,elapsedS)}
   catch(e){haptic("error");stopContextLoader("a-"+idx);const encTxt=encodeURIComponent(txt);showInlineError(e.message,encTxt,idx);const wrap=document.getElementById("a-"+idx)?.parentElement;const isPlanErr=e.message.includes("plan")||e.message.includes("Apex")||e.message.includes("Intellect");if(wrap)wrap.innerHTML=`<div class="msg ai" style="color:#ff453a;font-size:13px;padding:8px 0">⚠ ${isPlanErr?"Upgrade required to use this model.":"Connection error: "+e.message}</div>`;sendBtn.disabled=false;uiInput.disabled=false}
 }
 function showInlineError(msg,encTxt,idx){triggerGlitch();const f=document.querySelector("footer");const ex=f.querySelector(".inline-err");if(ex)ex.remove();const isLim=msg.includes("plan")||msg.includes("Apex")||msg.includes("Intellect")||msg.includes("limit");const d=document.createElement("div");d.className="inline-err";d.style.cssText="display:flex;align-items:center;gap:9px;padding:8px 14px;margin-bottom:7px;background:rgba(255,58,48,0.07);border:1px solid rgba(255,58,48,0.2);border-radius:17px;font-size:12px;color:rgba(255,255,255,0.65)";d.innerHTML=`${companionHTML("err-pc-"+idx,"errorstate",true)}<span style="flex:1;font-family:'Space Mono',monospace">⚠ ${isLim?"Upgrade required":"Connection error"}</span>${isLim?`<button onclick="openPremium();this.parentElement.remove()" style="padding:5px 12px;background:var(--pulse);border:none;border-radius:14px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Upgrade</button>`:`<button onclick="retryMsg(${idx},'${encTxt}');this.parentElement.remove()" style="padding:5px 12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:14px;color:#fff;font-size:11px;cursor:pointer;font-family:inherit">🔄 Retry</button>`}<button onclick="this.parentElement.remove()" style="background:none;border:none;color:#888;cursor:pointer;font-size:15px">✕</button>`;f.insertBefore(d,f.firstChild);setTimeout(()=>d.remove(),9000)}
@@ -1842,7 +1940,7 @@ async function animImgLoader(aiId,chat,dispHtml,txt,msgIndex){
 }
 
 // ═══ FINISH TURN ═══
-function finishTurn(aiId,htmlContent,rawContent,chat,userHtml,userTxt,msgIndex){
+function finishTurn(aiId,htmlContent,rawContent,chat,userHtml,userTxt,msgIndex,elapsedS){
   stopContextLoader(aiId);
   const wrap=document.getElementById(aiId)?.parentElement;if(!wrap)return;
   const enc=encodeURIComponent(rawContent),sId=`sp-${msgIndex}-${Date.now()}`,bHTML=getBranchHTML(msgIndex);
@@ -1850,9 +1948,11 @@ function finishTurn(aiId,htmlContent,rawContent,chat,userHtml,userTxt,msgIndex){
   const fuType=/^\[Image rendered/.test(rawContent)?"image":/```/.test(rawContent)?"code":activeModel==="2.5"?"think":"chat";
   const fuHTML=followupHTML(fuType,msgIndex);
   const srcChipHTML=srcs.length?`<div class="claude-source-chip" onclick="openSourceDrawer('${encSrc}','${qc}')">🌐 ${srcs.length} Source${srcs.length>1?"s":""}</div>`:"";
+  const speedHTML=elapsedS?`<div class="claude-source-chip" style="cursor:default">⚡ ${elapsedS}s · ~${estimateTokens(rawContent).toLocaleString()} tok</div>`:"";
   wrap.innerHTML=`
     <div class="msg ai" id="${aiId}"></div>
     <div style="margin-top:6px;display:flex;align-items:center;flex-wrap:wrap;gap:5px">
+      ${speedHTML}
       ${srcChipHTML}
       ${bHTML}
     </div>
@@ -2084,8 +2184,48 @@ function stopSpeech(){speechSynthesis.cancel();if(speechBtnId)resetSpeech(speech
 function resetSpeech(id){const b=document.getElementById(id);if(b)b.classList.remove("active-speech");speechUtt=null;speechBtnId=null}
 
 // ═══ FILES ═══
-function handleFiles(e){Array.from(e.target.files).forEach(file=>{const id=Date.now()+Math.random().toString(36).substr(2,6),sz=(file.size/1024).toFixed(1)+" KB";if((activePlan==="free"||activePlan==="starter")&&file.size>5*1024*1024){showToast("Files > 5MB require Pro Matrix","error");return}if(file.type.startsWith("image/")){const reader=new FileReader();reader.onload=ev=>{attachedFiles.push({id,file,type:"image",name:file.name,size:sz,dataURL:ev.target.result});renderPreviews()};reader.readAsDataURL(file)}else{attachedFiles.push({id,file,type:"file",name:file.name,size:sz,dataURL:null});renderPreviews()}});e.target.value=""}
-function renderPreviews(){const c=document.getElementById("input-preview-container");if(!attachedFiles.length){c.style.display="none";c.innerHTML="";return}c.style.display="flex";c.innerHTML="";attachedFiles.forEach(f=>{const el=document.createElement("div");el.className="file-chip";el.id="chip-"+f.id;el.innerHTML=f.type==="image"?`<img src="${f.dataURL}" class="input-preview-img"><div class="file-chip-info"><span class="file-name">${f.name}</span><span class="file-size">${f.size}</span></div><button class="remove-preview" onclick="removeFile('${f.id}')">✕</button>`:`<span style="font-size:17px">📄</span><div class="file-chip-info"><span class="file-name">${f.name}</span><span class="file-size">${f.size}</span></div><button class="remove-preview" onclick="removeFile('${f.id}')">✕</button>`;c.appendChild(el)})}
+function handleFiles(e){
+  Array.from(e.target.files).forEach(file=>{
+    const id=Date.now()+Math.random().toString(36).substr(2,6),sz=(file.size/1024).toFixed(1)+" KB";
+    if((activePlan==="free"||activePlan==="starter")&&file.size>5*1024*1024){showToast("Files > 5MB require the Immortal plan or above","error");return}
+    if(file.type.startsWith("image/")){
+      const reader=new FileReader();
+      reader.onload=ev=>{attachedFiles.push({id,file,type:"image",name:file.name,size:sz,dataURL:ev.target.result});renderPreviews()};
+      reader.readAsDataURL(file);
+    }else if(file.name.toLowerCase().endsWith(".pdf")||file.type==="application/pdf"){
+      attachedFiles.push({id,file,type:"doc",name:file.name,size:sz,dataURL:null,text:"",loading:true});renderPreviews();
+      extractPdfText(file).then(text=>{const f=attachedFiles.find(x=>x.id===id);if(f){f.text=text;f.loading=false;renderPreviews()}}).catch(()=>{const f=attachedFiles.find(x=>x.id===id);if(f){f.text="[Could not extract text from this PDF]";f.loading=false;renderPreviews()}showToast("Couldn't read that PDF","error")});
+    }else if(file.name.toLowerCase().endsWith(".docx")){
+      attachedFiles.push({id,file,type:"doc",name:file.name,size:sz,dataURL:null,text:"",loading:true});renderPreviews();
+      extractDocxText(file).then(text=>{const f=attachedFiles.find(x=>x.id===id);if(f){f.text=text;f.loading=false;renderPreviews()}}).catch(()=>{const f=attachedFiles.find(x=>x.id===id);if(f){f.text="[Could not extract text from this document]";f.loading=false;renderPreviews()}showToast("Couldn't read that Word file","error")});
+    }else if(/\.(txt|md|csv|json|js|py|html|css)$/i.test(file.name)){
+      const reader=new FileReader();
+      reader.onload=ev=>{attachedFiles.push({id,file,type:"doc",name:file.name,size:sz,dataURL:null,text:ev.target.result});renderPreviews()};
+      reader.readAsText(file);
+    }else{
+      attachedFiles.push({id,file,type:"file",name:file.name,size:sz,dataURL:null});renderPreviews();
+    }
+  });
+  e.target.value="";
+}
+async function extractPdfText(file){
+  const buf=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+  let text="";
+  const maxPages=Math.min(pdf.numPages,40);
+  for(let p=1;p<=maxPages;p++){
+    const page=await pdf.getPage(p);
+    const content=await page.getTextContent();
+    text+=content.items.map(it=>it.str).join(" ")+"\n\n";
+  }
+  return text.trim().substring(0,20000);
+}
+async function extractDocxText(file){
+  const buf=await file.arrayBuffer();
+  const result=await mammoth.extractRawText({arrayBuffer:buf});
+  return (result.value||"").trim().substring(0,20000);
+}
+function renderPreviews(){const c=document.getElementById("input-preview-container");if(!attachedFiles.length){c.style.display="none";c.innerHTML="";return}c.style.display="flex";c.innerHTML="";attachedFiles.forEach(f=>{const el=document.createElement("div");el.className="file-chip";el.id="chip-"+f.id;const statusLine=f.type==="doc"?(f.loading?"Reading...":`${(f.text||"").length.toLocaleString()} chars read`):f.size;el.innerHTML=f.type==="image"?`<img src="${f.dataURL}" class="input-preview-img"><div class="file-chip-info"><span class="file-name">${f.name}</span><span class="file-size">${f.size}</span></div><button class="remove-preview" onclick="removeFile('${f.id}')">✕</button>`:`<span style="font-size:17px">${f.type==="doc"?(f.loading?"⏳":"📄"):"📎"}</span><div class="file-chip-info"><span class="file-name">${f.name}</span><span class="file-size">${statusLine}</span></div><button class="remove-preview" onclick="removeFile('${f.id}')">✕</button>`;c.appendChild(el)})}
 function removeFile(id){attachedFiles=attachedFiles.filter(f=>f.id!==id);const el=document.getElementById("chip-"+id);if(el)el.remove();if(!attachedFiles.length){const c=document.getElementById("input-preview-container");c.style.display="none";c.innerHTML=""}}
 
 // ═══ SCROLL / MISC ═══
