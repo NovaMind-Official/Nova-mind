@@ -39,13 +39,55 @@ body.intellect-mode{--bg:#0a0a0c;--grad1:#181822;--grad2:#08080a;--p:#bf5af2;--g
 body.intellect-mode .msg,body.intellect-mode #ui{font-family:Georgia,serif;font-size:17px;line-height:1.8}
 body.sovereign-mode{--bg:#0a0805;--grad1:#1c1408;--grad2:#0a0700;--p:#E8C468;--glow:rgba(232,196,104,0.2)}
 body.sovereign-mode .msg,body.sovereign-mode #ui{font-family:'Space Grotesk',sans-serif;font-size:15.5px}
-body.light-theme{--bg:#f5f5f7;--txt:#1d1d1f;--grad1:#e2e2e7;--grad2:#d1d1d6;--brd:rgba(0,0,0,0.1);--glow:rgba(118,185,0,0.08)}
-body.light-theme #sidebar{background:rgba(245,245,247,0.8);border-right:1px solid rgba(0,0,0,0.1)}
-body.light-theme header{background:rgba(255,255,255,0.45);border-bottom:1px solid rgba(0,0,0,0.1)}
-body.light-theme .account-menu{background:rgba(255,255,255,0.95);color:#1d1d1f}
-body.light-theme .user{background:rgba(0,0,0,0.05);border:1px solid rgba(0,0,0,0.08);color:#1d1d1f}
-body.light-theme .input-bar{background:rgba(255,255,255,0.75)}
-body.light-theme .ai{color:#1d1d1f}
+body.light-theme{--bg:#F7F2E7;--txt:#2b2313;--grad1:#EDE3C8;--grad2:#F7F2E7;--brd:rgba(43,35,19,0.12);--glow:rgba(201,162,39,0.18);--p:#8a6d1f}
+body.light-theme #sidebar{background:rgba(247,242,231,0.94);border-right:1px solid rgba(43,35,19,0.1)}
+body.light-theme header{background:rgba(247,242,231,0.8);border-bottom:1px solid rgba(43,35,19,0.1)}
+body.light-theme .logo-main{color:#8a6d1f;text-shadow:none}
+body.light-theme .logo-sub{color:rgba(43,35,19,0.4)}
+body.light-theme .sidebar-title{color:#8a6d1f}
+body.light-theme .h-item{background:rgba(43,35,19,0.035);border-color:rgba(43,35,19,0.08)}
+body.light-theme .h-item span{color:#2b2313}
+body.light-theme .h-item.active-chat{border-color:#8a6d1f}
+body.light-theme .btn-new-chat{background:linear-gradient(135deg,rgba(201,162,39,0.16),rgba(201,162,39,0.08));border-color:rgba(201,162,39,0.4);color:#2b2313}
+body.light-theme .session-search{background:rgba(43,35,19,0.035);border-color:rgba(43,35,19,0.1);color:#2b2313}
+body.light-theme .session-search::placeholder{color:rgba(43,35,19,0.35)}
+body.light-theme .hf-btn{color:rgba(43,35,19,0.5);border-color:rgba(43,35,19,0.1)}
+body.light-theme .hf-btn.active,body.light-theme .hf-btn:hover{color:#2b2313;background:rgba(43,35,19,0.06)}
+body.light-theme .account-menu{background:rgba(255,255,255,0.97);color:#2b2313}
+body.light-theme .user{background:rgba(201,162,39,0.16);border:1px solid rgba(201,162,39,0.32);color:#2b2313}
+body.light-theme .ai{color:#2b2313}
+body.light-theme .ai table{background:rgba(43,35,19,0.02);border-color:rgba(43,35,19,0.1)}
+body.light-theme .ai th{background:rgba(43,35,19,0.05);color:#8a6d1f;border-color:rgba(43,35,19,0.1)}
+body.light-theme .ai td{color:rgba(43,35,19,0.85);border-color:rgba(43,35,19,0.06)}
+body.light-theme .input-bar{background:rgba(255,255,255,0.8);border-color:rgba(43,35,19,0.14)}
+body.light-theme #ui{color:#2b2313}
+body.light-theme #ui::placeholder{color:rgba(43,35,19,0.32)}
+body.light-theme .btn-icon{color:rgba(43,35,19,0.55)}
+body.light-theme .voice-btn{color:rgba(43,35,19,0.45)}
+body.light-theme footer{background:linear-gradient(to top,rgba(247,242,231,0.96) 55%,transparent)}
+body.light-theme .code-header span{color:rgba(43,35,19,0.55)}
+body.light-theme .code-tool-btn{background:rgba(43,35,19,0.05);border-color:rgba(43,35,19,0.1);color:rgba(43,35,19,0.65)}
+body.light-theme .toast{background:rgba(255,255,255,0.97);color:#2b2313}
+body.light-theme .listen-ops{background:rgba(255,255,255,0.75)}
+body.light-theme .l-btn{color:rgba(43,35,19,0.5)}
+body.light-theme .followup-chip{background:rgba(43,35,19,0.04);border-color:rgba(43,35,19,0.12);color:rgba(43,35,19,0.75)}
+body.light-theme .followup-chip:hover{background:rgba(43,35,19,0.08);color:#2b2313}
+body.light-theme .loader-text{color:rgba(43,35,19,0.55)}
+body.light-theme .claude-source-chip{background:rgba(43,35,19,0.05);border-color:rgba(43,35,19,0.1);color:#8a6d1f}
+body.light-theme .drop-menu,body.light-theme .magic-menu{background:rgba(255,255,255,0.98);border-color:rgba(43,35,19,0.12)}
+body.light-theme .mi-name{color:#2b2313}
+body.light-theme .mi-sub{color:rgba(43,35,19,0.45)}
+body.light-theme .menu-header-label{color:rgba(43,35,19,0.4)}
+body.light-theme .menu-header-label::after{background:linear-gradient(90deg,rgba(43,35,19,0.15),transparent)}
+body.light-theme .magic-item{color:#2b2313}
+body.light-theme .magic-item:hover{background:rgba(43,35,19,0.06)}
+body.light-theme #account-page{background:rgba(250,246,238,0.99);color:#2b2313}
+body.light-theme .ac-section{background:rgba(43,35,19,0.025);border-color:rgba(43,35,19,0.08)}
+body.light-theme .ac-section-title{color:#8a6d1f}
+body.light-theme .toggle-row-sub{color:rgba(43,35,19,0.4)}
+body.light-theme .google-btn{box-shadow:0 4px 16px rgba(0,0,0,0.12)}
+body.light-theme .ac-user-email{color:rgba(43,35,19,0.4)}
+body.light-theme #core-header,body.light-theme #core-footer{color:#2b2313}
 
 /* FLASH & TOAST */
 #core-flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:10000;transition:opacity 0.2s;mix-blend-mode:overlay}
@@ -145,7 +187,9 @@ header{height:66px;display:flex;justify-content:space-between;align-items:center
 .ac-page-header{display:flex;align-items:center;justify-content:space-between;padding:14px 32px 0}
 .ac-page-close{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:#fff;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:0.25s}
 .ac-page-close:hover{background:rgba(255,255,255,0.14);transform:scale(1.08)}
-.ac-page-tabs{display:flex;gap:6px;padding:20px 32px 0}
+.ac-page-tabs{display:flex;gap:6px;padding:20px 32px 10px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.ac-page-tabs::-webkit-scrollbar{display:none}
+.ac-tab-btn{flex-shrink:0}
 .ac-tab-btn{padding:10px 20px;background:none;border:1px solid rgba(255,255,255,0.07);color:#888;font-size:13px;font-weight:600;cursor:pointer;transition:0.25s;border-radius:12px;font-family:inherit}
 .ac-tab-btn.active{color:#fff;background:rgba(108,92,231,0.15);border-color:rgba(108,92,231,0.35);box-shadow:0 4px 16px rgba(108,92,231,0.15)}
 .ac-page-body{padding:24px 32px 40px;max-width:700px;margin:0 auto}
@@ -206,8 +250,8 @@ main{flex:1;display:flex;flex-direction:column;position:relative;width:100%;heig
 @keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 .user-wrap{align-self:flex-end}
 .ai-wrap{align-self:flex-start;width:100%}
-.msg{padding:16px 22px;border-radius:24px;font-size:15px;line-height:1.75;position:relative;word-break:break-word;overflow-wrap:break-word;max-width:100%;overflow-x:auto}
-.user{background:rgba(255,255,255,0.09);backdrop-filter:blur(25px);border:1px solid rgba(255,255,255,0.12);color:#fff;border-bottom-right-radius:5px;font-weight:500;box-shadow:0 8px 28px rgba(0,0,0,0.2),0 2px 8px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.08);-webkit-user-select:text;user-select:text}
+.msg{padding:16px 22px;border-radius:21px 23px 21px 19px;font-size:15px;line-height:1.75;position:relative;word-break:break-word;overflow-wrap:break-word;max-width:100%;overflow-x:auto}
+.user{background:rgba(255,255,255,0.09);backdrop-filter:blur(25px);border:1px solid rgba(255,255,255,0.12);color:#fff;border-radius:23px 20px 6px 22px;font-weight:500;box-shadow:0 8px 28px rgba(0,0,0,0.2),0 2px 8px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.08);-webkit-user-select:text;user-select:text}
 .ai{background:transparent;color:#fff;border:none;padding:10px 0;-webkit-user-select:text;user-select:text}
 
 /* Tables */
@@ -216,6 +260,9 @@ main{flex:1;display:flex;flex-direction:column;position:relative;width:100%;heig
 .ai td{padding:9px 16px;border-bottom:1px solid rgba(255,255,255,0.04);color:rgba(255,255,255,0.85);line-height:1.5}
 .ai tr:last-child td{border-bottom:none}
 .ai tr:hover td{background:rgba(255,255,255,0.03)}
+.ai li:has(input[type="checkbox"]){list-style:none;margin-left:-22px;transition:opacity 0.3s}
+.ai input[type="checkbox"]{width:16px;height:16px;margin-right:9px;accent-color:var(--p);cursor:pointer;vertical-align:middle}
+.ai li.checked-item{opacity:0.45;text-decoration:line-through}
 
 /* Read More - with animation */
 .msg-expandable{overflow:hidden;transition:max-height 0.7s cubic-bezier(0.4,0,0.2,1)}
@@ -667,6 +714,10 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
 .ws-bar-fill{height:100%;border-radius:3px;transition:width 0.6s ease}
 .ws-val{width:26px;text-align:right;font-family:'Space Mono',monospace;color:#fff;flex-shrink:0}
 
+/* Deeper glass + parallax glow for Billing/Usage */
+#actab-billing .ac-section,#actab-usage .ac-section{background:rgba(255,255,255,0.035);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,0.09);position:relative;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.05)}
+.glass-glow{position:absolute;top:-45%;right:-15%;width:190px;height:190px;background:radial-gradient(circle,rgba(201,162,39,0.16),transparent 70%);filter:blur(18px);pointer-events:none;will-change:transform}
+
 
 /* ==== Companion character: small robotic-mythic bird ==== */
 .phra-companion{position:relative;width:32px;height:32px;flex-shrink:0}
@@ -690,10 +741,28 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
 @keyframes pcError{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px) rotate(-6deg)}40%{transform:translateX(4px) rotate(6deg)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
 .phra-companion.errorstate .pc-eye{background:#ff453a}
 .loader-context{gap:12px}
+/* ONBOARDING */
+#onboard-screen{position:fixed;inset:0;z-index:99998;background:radial-gradient(circle at 50% 30%,#1c1408,#07070A 70%);display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;gap:16px}
+#onboard-screen.show{display:flex}
+.onboard-orb-stage{margin-bottom:6px;opacity:0;animation:obFade 1s ease forwards 0.2s}
+.onboard-title{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;letter-spacing:2px;color:#E8C468;opacity:0;animation:obFade 1s ease forwards 0.6s}
+.onboard-tagline{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.4);opacity:0;animation:obFade 1s ease forwards 0.9s}
+.onboard-desc{max-width:300px;font-size:14px;color:rgba(255,255,255,0.55);line-height:1.7;opacity:0;animation:obFade 1s ease forwards 1.2s}
+.onboard-enter-btn{margin-top:8px;padding:14px 34px;background:linear-gradient(135deg,#C9A227,#E8C468);border:none;border-radius:30px;color:#1a1206;font-weight:700;font-size:14px;cursor:pointer;opacity:0;animation:obFade 1s ease forwards 1.6s;box-shadow:0 10px 30px rgba(201,162,39,0.35);font-family:inherit}
+@keyframes obFade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body onclick="closeMenus(event)">
 <div class="bg-glow"></div>
+<div id="onboard-screen">
+  <div class="onboard-orb-stage">
+    <div class="story-orb orb-pro" style="width:130px;height:130px;position:relative"><div class="story-orb-core"></div><div class="story-orb-ring r1"></div><div class="story-orb-ring r2"></div><div class="story-orb-ring r3"></div></div>
+  </div>
+  <div class="onboard-title">PHRAORTES</div>
+  <div class="onboard-tagline">Intelligence of the Ancient Throne</div>
+  <p class="onboard-desc">A council of cores — Satrap, Immortal, and Shahanshah — awaits your command. Speak, and the throne answers.</p>
+  <button class="onboard-enter-btn" onclick="closeOnboarding()">Enter the Throne →</button>
+</div>
 <div id="core-flash"></div>
 <div id="sidebar-overlay" onclick="toggleS(event)"></div>
 <div id="toast-container"></div>
@@ -805,7 +874,10 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
 <div id="account-page">
   <div class="ac-sheet-handle" onclick="closeAccountPage()"></div>
   <div class="ac-page-header">
-    <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800">Account</div>
+    <div style="display:flex;align-items:center;gap:11px">
+      <div class="phra-companion" id="account-companion"><div class="pc-body"></div><div class="pc-crest"></div><div class="pc-eye l"></div><div class="pc-eye r"></div><div class="pc-beak"></div></div>
+      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800">Account</div>
+    </div>
     <button class="ac-page-close" onclick="closeAccountPage()">✕</button>
   </div>
   <div class="ac-page-tabs">
@@ -858,10 +930,12 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
     <!-- USAGE -->
     <div id="actab-usage" style="display:none">
       <div class="ac-section">
+        <div class="glass-glow"></div>
         <div class="ac-section-title">Token Usage · Today</div>
         <div id="usage-token-body"></div>
       </div>
       <div class="ac-section">
+        <div class="glass-glow"></div>
         <div class="ac-section-title">Plan Quota</div>
         <div id="usage-quota-body"></div>
       </div>
@@ -872,6 +946,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
     <!-- BILLING -->
     <div id="actab-billing" style="display:none">
       <div class="ac-section">
+        <div class="glass-glow"></div>
         <div class="ac-section-title">Active Plan</div>
         <div class="plan-badge-row">
           <div class="plan-badge free" id="ac-plan-badge">Free Tier</div>
@@ -879,6 +954,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
         </div>
       </div>
       <div class="ac-section">
+        <div class="glass-glow"></div>
         <div class="ac-section-title">Recent Invoices</div>
         <div id="billing-scroll"><div style="text-align:center;padding:20px 0;color:#444;font-size:13px">No invoices yet</div></div>
       </div>
@@ -1411,6 +1487,8 @@ window.addEventListener("load",()=>{
   initAICore();
   initCompareGesture();
   initSelectionTranslate();
+  initAccountParallax();
+  initOnboarding();
   document.getElementById("premium-immersive-viewport").addEventListener("scroll",e=>{const y=e.target.scrollTop;[[".blob-1",[0.03,0.05]],[".blob-2",[-0.04,0.03]],[".blob-3",[0.02,-0.04]]].forEach(([s,t])=>{const el=document.querySelector(s);if(el)el.style.transform=`translate(${y*t[0]}px,${y*t[1]}px)`})},{passive:true});
 });
 function autoResize(el){el.style.height="44px";el.style.height=Math.min(el.scrollHeight,148)+"px"}
@@ -1496,7 +1574,7 @@ function openAccountPage(e){
     bd.style.display="block";requestAnimationFrame(()=>bd.classList.add("visible"));
     const pg=document.getElementById("account-page");
     pg.classList.remove("closing");pg.classList.add("show");
-    updateAcPlanBadge();renderWeeklyStats();
+    updateAcPlanBadge();renderWeeklyStats();updateAccountCompanion("profile");
   },260);
 }
 function closeAccountPage(){
@@ -1505,6 +1583,18 @@ function closeAccountPage(){
   pg.classList.add("closing");bd.classList.remove("visible");
   haptic("light");
   setTimeout(()=>{pg.classList.remove("show","closing");bd.style.display="none"},400);
+}
+function updateAccountCompanion(tab){
+  const pc=document.getElementById("account-companion");if(!pc)return;
+  pc.classList.remove("happy","thinking","errorstate","coding");
+  if(tab==="billing"){pc.classList.add("happy")}
+  else if(tab==="usage"){
+    let exhausted=false;
+    if(activePlan==="free")exhausted=trialCount>=PLAN_CFG.free.msgLimit;
+    else if(activePlan==="starter")exhausted=proSlotsUsed>=PLAN_CFG.starter.advSlots;
+    else if(activePlan==="pro")exhausted=proSlotsUsed>=PLAN_CFG.pro.advSlots;
+    pc.classList.add(exhausted?"errorstate":"happy");
+  }else if(tab==="settings"){pc.classList.add("thinking")}
 }
 function switchAcTab(tab,btn){
   const body=document.querySelector(".ac-page-body");
@@ -1515,6 +1605,7 @@ function switchAcTab(tab,btn){
     if(btn)btn.classList.add("active");
     if(tab==="profile")renderWeeklyStats();
     if(tab==="usage")renderUsageTab();
+    updateAccountCompanion(tab);
     if(body){body.classList.remove("smoke-out");body.classList.add("smoke-in");setTimeout(()=>body.classList.remove("smoke-in"),560)}
   },300);
 }
@@ -1525,6 +1616,19 @@ function trackTokenUsage(inputText,outputText){
   localStorage.setItem(tKey,String(curT+estimateTokens(inputText)+estimateTokens(outputText)));
   localStorage.setItem(mKey,String(curM+1));
 }
+function circularRing(pct,color,valueText,label){
+  const r=42,c=2*Math.PI*r,offset=c*(1-Math.min(100,pct)/100);
+  return `<div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:6px 0">
+    <div style="position:relative;width:100px;height:100px">
+      <svg width="100" height="100" viewBox="0 0 100 100" style="transform:rotate(-90deg);position:absolute;inset:0">
+        <circle cx="50" cy="50" r="${r}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
+        <circle cx="50" cy="50" r="${r}" fill="none" stroke="${color}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${offset}" style="transition:stroke-dashoffset 0.9s cubic-bezier(0.16,1,0.3,1)"/>
+      </svg>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;text-align:center;line-height:1.2">${valueText}</div>
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.4);text-align:center">${label}</div>
+  </div>`;
+}
 function renderUsageTab(){
   const tokens=parseInt(localStorage.getItem("phraortes_tokens_"+getTodayKey())||"0");
   const msgs=parseInt(localStorage.getItem("phraortes_tokenmsgs_"+getTodayKey())||"0");
@@ -1533,16 +1637,16 @@ function renderUsageTab(){
   const qEl=document.getElementById("usage-quota-body");if(!qEl)return;
   let html="";
   if(activePlan==="free"){
-    const used=trialCount,total=PLAN_CFG.free.msgLimit,pct=Math.min(100,used/total*100);
-    html=`<div class="ws-row"><span class="ws-label">Messages</span><div class="ws-bar-bg"><div class="ws-bar-fill" style="width:${pct}%;background:var(--p)"></div></div><span class="ws-val">${used}/${total}</span></div>`;
-    if(used>=total)html+=`<div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">⏳ Resets in ${fmtTime(freeSeconds)}</div>`;
+    const used=trialCount,total=PLAN_CFG.free.msgLimit,pct=used/total*100;
+    html=circularRing(pct,"var(--p)",`${used}/${total}`,"Messages");
+    if(used>=total)html+=`<div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">⏳ Resets in ${fmtTime(freeSeconds)}</div>`;
   }else if(activePlan==="starter"){
-    const used=proSlotsUsed,total=PLAN_CFG.starter.advSlots,pct=Math.min(100,used/total*100);
-    html=`<div class="ws-row"><span class="ws-label">Advanced Slots</span><div class="ws-bar-bg"><div class="ws-bar-fill" style="width:${pct}%;background:var(--p)"></div></div><span class="ws-val">${used}/${total}</span></div><div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">Standard requests: unlimited</div>`;
-    if(used>=total)html+=`<div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px">⏳ Slots reset in ${fmtTime(starterSeconds)}</div>`;
+    const used=proSlotsUsed,total=PLAN_CFG.starter.advSlots,pct=used/total*100;
+    html=circularRing(pct,"var(--p)",`${used}/${total}`,"Advanced Slots")+`<div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">Standard requests: unlimited</div>`;
+    if(used>=total)html+=`<div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px">⏳ Slots reset in ${fmtTime(starterSeconds)}</div>`;
   }else if(activePlan==="pro"){
-    const used=proSlotsUsed,total=PLAN_CFG.pro.advSlots,pct=Math.min(100,used/total*100);
-    html=`<div class="ws-row"><span class="ws-label">Premium Slots</span><div class="ws-bar-bg"><div class="ws-bar-fill" style="width:${pct}%;background:var(--p)"></div></div><span class="ws-val">${used}/${total}</span></div><div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">Standard requests: unlimited</div>`;
+    const used=proSlotsUsed,total=PLAN_CFG.pro.advSlots,pct=used/total*100;
+    html=circularRing(pct,"var(--p)",`${used}/${total}`,"Premium Slots")+`<div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">Standard requests: unlimited</div>`;
   }else{
     html=`<div style="text-align:center;padding:16px 0;color:#F5D78A;font-family:'Space Mono',monospace;font-size:13px">✦ Shahanshah — truly unlimited</div>`;
   }
@@ -1571,6 +1675,24 @@ function renderWeeklyStats(){
 }
 
 // ==== Magnetic drag-drop ====
+function initAccountParallax(){
+  const pg=document.getElementById("account-page");if(!pg)return;
+  pg.addEventListener("scroll",()=>{
+    const y=pg.scrollTop;
+    document.querySelectorAll(".glass-glow").forEach(el=>{el.style.transform=`translateY(${y*0.12}px) translateX(${y*0.04}px)`});
+  },{passive:true});
+}
+function initOnboarding(){
+  if(localStorage.getItem("phraortes_onboarded"))return;
+  const el=document.getElementById("onboard-screen");if(el)el.classList.add("show");
+}
+function closeOnboarding(){
+  localStorage.setItem("phraortes_onboarded","1");
+  const el=document.getElementById("onboard-screen");if(!el)return;
+  el.style.transition="opacity 0.6s ease";el.style.opacity="0";
+  setTimeout(()=>{el.classList.remove("show");el.style.opacity=""},600);
+  haptic("double");
+}
 function initMagneticDrop(){
   const bar=document.querySelector(".input-bar");if(!bar)return;
   ["dragenter","dragover"].forEach(evt=>bar.addEventListener(evt,e=>{e.preventDefault();bar.classList.add("drag-magnet")}));
@@ -1858,7 +1980,7 @@ async function send(){
   const isCodeQuery=/(code|bug|debug|python|javascript|html|css|react|api|sql|function|algorithm|باگ|کد|پایتون|دیباگ|برنامه|الگوریتم)/i.test(txt);
   const loaderType=activeModel==="2.7"?"think":isCodeQuery||activeModel==="2.6"?"code":activeModel==="2.5"?"think":"chat";
   startContextLoader("a-"+idx,loaderType,detectMsgLang(txt));
-  let sys="You are Phraortes OS — an advanced intelligence assistant. Respond clearly and helpfully. ";
+  let sys="You are Phraortes OS — an advanced intelligence assistant. Respond clearly and helpfully. Always respond in the same language the user just wrote in — match it exactly (Persian, English, Arabic, or any other language), regardless of what language earlier turns or these instructions are in. When giving a multi-step plan, checklist, or sequence of tasks, format it as a markdown task list using '- [ ] ' syntax for each step so it can be checked off. ";
   if(activeModel==="2.7")sys+="You are Sovereign 2.7, Phraortes' most advanced core — built for large, complex, professional-grade projects. Provide thorough, precise, production-quality output, considering edge cases and long-term maintainability.";
   else if(activeModel==="2.6"||isCodeQuery)sys+="You are Apex 2.6, expert coder and senior developer. Think through the approach briefly, then write clean, correct, well-formatted code with proper syntax highlighting. Explain non-obvious parts concisely.";
   else if(activeModel==="2.5")sys+="You are Intellect 2.5, expert in deep research and analysis.";
@@ -2029,11 +2151,27 @@ async function streamMarkdown(aiId,raw){
   document.getElementById("ai-core")?.classList.remove("speaking");
   playSound("chime");if(el)el.innerHTML=marked.parse(raw);
   // Fix: apply read more after render
-  setTimeout(()=>applyReadMore(aiId),100);
+  setTimeout(()=>{applyReadMore(aiId);const m=aiId.match(/^a-(\d+)$/);if(m)enableChecklists(aiId,parseInt(m[1]))},100);
   sendBtn.disabled=false;uiInput.disabled=false;
 }
 
 // ═══ READ MORE - with animation ═══
+function enableChecklists(elId,msgIndex){
+  const el=document.getElementById(elId);if(!el)return;
+  const boxes=el.querySelectorAll('input[type="checkbox"]');
+  boxes.forEach((cb,i)=>{
+    cb.disabled=false;
+    const key=`checklist_${curId}_${msgIndex}_${i}`;
+    const saved=localStorage.getItem(key);
+    const li=cb.closest("li");
+    if(saved==="1"){cb.checked=true;if(li)li.classList.add("checked-item")}
+    cb.addEventListener("change",()=>{
+      localStorage.setItem(key,cb.checked?"1":"0");
+      if(li)li.classList.toggle("checked-item",cb.checked);
+      haptic("light");
+    });
+  });
+}
 function applyReadMore(id){
   const el=document.getElementById(id);
   if(!el||el.innerText.length<380||el.querySelector("img")||el.querySelector("audio"))return;
@@ -2057,7 +2195,7 @@ function applyReadMore(id){
 function addUI(html,role,id,rawText){
   const w=document.createElement("div");w.className=`msg-wrap ${role}-wrap`;
   const safe=(rawText||"").replace(/"/g,"'").replace(/`/g,"'");
-  if(id==="welcome"){w.innerHTML=`<div style="text-align:center;padding:30px 0 20px"><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:28px;font-weight:700;color:var(--p);margin-bottom:7px;text-shadow:0 0 24px var(--glow)">Phraortes</div><p style="color:rgba(255,255,255,0.3);font-size:13px;font-family:'Space Mono',monospace;letter-spacing:1px">INTELLIGENCE PLATFORM ACTIVE</p></div>`}
+  if(id==="welcome"){w.innerHTML=`<div style="text-align:center;padding:50px 0 24px;display:flex;flex-direction:column;align-items:center;gap:16px"><div class="story-orb orb-pro" style="width:74px;height:74px;position:relative"><div class="story-orb-core"></div><div class="story-orb-ring r1"></div><div class="story-orb-ring r2"></div></div><div><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:26px;font-weight:700;color:var(--p);margin-bottom:6px;text-shadow:0 0 24px var(--glow)">Phraortes</div><p style="color:rgba(255,255,255,0.3);font-size:12px;font-family:'Space Mono',monospace;letter-spacing:1.5px">THE THRONE AWAITS YOUR WORD</p></div></div>`}
   else if(id==="welcome-persona"){const enc=encodeURIComponent(rawText||"");w.innerHTML=`<div class="msg ai" id="${id}">${html}</div><div class="listen-ops"><button class="l-btn" onclick="copyResp(this,'${enc}')"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div>`}
   else if(role==="user"){w.innerHTML=`<div class="msg user" id="${id}" onpointerdown="startPress(event,'user','${id}',\`${safe}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${html}</div>`}
   else{w.innerHTML=`<div class="msg ai" id="${id}">${html}</div>`}
@@ -2087,7 +2225,7 @@ function loadChat(id){
           <button class="l-btn" id="like-${i}" onclick="toggleReaction(this,'like-${i}')"><svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg></button>
           <button class="l-btn" id="dislike-${i}" onclick="toggleReaction(this,'dislike-${i}','dislike')"><svg viewBox="0 0 24 24" style="transform:rotate(180deg)"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg></button>
         </div>`;
-      chatBox.appendChild(w);setTimeout(()=>applyReadMore("a-"+i),50);
+      chatBox.appendChild(w);setTimeout(()=>{applyReadMore("a-"+i);enableChecklists("a-"+i,i)},50);
     });
   }else if(chat){if(!chat.persona){chat.persona=PERSONAS[Math.floor(Math.random()*PERSONAS.length)];save()}addUI(chat.persona,"ai","welcome-persona",chat.persona)}
   renderH();scrollToBottom();updateFilesBadge();
@@ -2116,7 +2254,7 @@ function renderH(){
   const search=document.querySelector(".session-search")?.value?.toLowerCase()||"";
   if(search)list=list.filter(c=>c.name.toLowerCase().includes(search)||JSON.stringify(c.msgs).toLowerCase().includes(search));
   if(sessionFilter!=="all")list=list.filter(c=>{const t=JSON.stringify(c).toLowerCase();if(sessionFilter==="code")return t.includes("```")||t.includes("code");if(sessionFilter==="image")return t.includes("img")||t.includes("/imagine");return true});
-  document.getElementById("h-list").innerHTML=list.map(c=>`<div class="h-item ${c.id==curId?"active-chat":""} ${c.pinned?"pinned-chat":""}" onclick="loadChat(${c.id})" onpointerdown="startPress(event,'session',${c.id},null)" onpointerup="cancelPress()" onpointerleave="cancelPress()"><span id="hname-${c.id}" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:175px;font-weight:${c.pinned?700:400}">${c.id===justNamedChatId?"":(c.pinned?"⭐ ":"")+c.name}</span></div>`).join("") || `<div style="text-align:center;padding:20px;color:#444;font-size:12px">No sessions found</div>`;
+  document.getElementById("h-list").innerHTML=list.map(c=>`<div class="h-item ${c.id==curId?"active-chat":""} ${c.pinned?"pinned-chat":""}" onclick="loadChat(${c.id})" onpointerdown="startPress(event,'session',${c.id},null)" onpointerup="cancelPress()" onpointerleave="cancelPress()"><span id="hname-${c.id}" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:175px;font-weight:${c.pinned?700:400}">${c.id===justNamedChatId?"":(c.pinned?"⭐ ":"")+c.name}</span></div>`).join("") || `<div style="text-align:center;padding:36px 14px;display:flex;flex-direction:column;align-items:center;gap:10px"><div style="font-size:26px;opacity:0.3">🔍</div><div style="color:rgba(255,255,255,0.35);font-size:12px;font-family:'Space Mono',monospace">No sessions found</div></div>`;
   if(justNamedChatId){
     const c=list.find(x=>x.id===justNamedChatId);
     const el=document.getElementById("hname-"+justNamedChatId);
@@ -2179,7 +2317,22 @@ function deleteMsg(msgId){
 }
 
 // ═══ SPEECH ═══
-function toggleSpeech(textId,btnId){if(speechUtt&&speechBtnId===btnId){stopSpeech();return}if(speechUtt)stopSpeech();const el=document.getElementById(textId);if(!el)return;const txt=el.innerText.replace(/[👍👎]/g,"").trim();const utt=new SpeechSynthesisUtterance(txt);speechUtt=utt;speechBtnId=btnId;const btn=document.getElementById(btnId);if(btn)btn.classList.add("active-speech");utt.onend=utt.onerror=()=>resetSpeech(btnId);speechSynthesis.speak(utt)}
+function toggleSpeech(textId,btnId){
+  if(speechUtt&&speechBtnId===btnId){stopSpeech();return}
+  if(speechUtt)stopSpeech();
+  const el=document.getElementById(textId);if(!el)return;
+  const txt=el.innerText.replace(/[👍👎]/g,"").trim();
+  const utt=new SpeechSynthesisUtterance(txt);
+  const lang=detectMsgLang(txt)==="fa"?"fa-IR":"en-US";
+  utt.lang=lang;utt.rate=0.98;
+  const voices=speechSynthesis.getVoices();
+  const voice=voices.find(v=>v.lang===lang)||voices.find(v=>v.lang.startsWith(lang.split("-")[0]));
+  if(voice)utt.voice=voice;
+  speechUtt=utt;speechBtnId=btnId;
+  const btn=document.getElementById(btnId);if(btn)btn.classList.add("active-speech");
+  utt.onend=utt.onerror=()=>resetSpeech(btnId);
+  speechSynthesis.speak(utt);
+}
 function stopSpeech(){speechSynthesis.cancel();if(speechBtnId)resetSpeech(speechBtnId)}
 function resetSpeech(id){const b=document.getElementById(id);if(b)b.classList.remove("active-speech");speechUtt=null;speechBtnId=null}
 
