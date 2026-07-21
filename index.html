@@ -518,6 +518,9 @@ footer{width:100%;padding:8px 8% 26px;background:linear-gradient(to top,rgba(0,0
 .mi-sub{font-family:'Space Grotesk',sans-serif;font-size:11px;color:rgba(255,255,255,0.4);padding-left:15px;margin-top:2px}
 .menu-header-label{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:2px;text-transform:uppercase;padding:2px 6px 9px;display:flex;align-items:center;gap:8px}
 .menu-header-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.15),transparent)}
+.gear-page-tabs{display:flex;gap:4px;margin-bottom:9px;background:rgba(255,255,255,0.03);padding:3px;border-radius:11px}
+.gear-tab-btn{flex:1;padding:7px;background:none;border:none;color:rgba(255,255,255,0.45);font-size:11px;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;transition:0.2s;letter-spacing:0.3px}
+.gear-tab-btn.active{background:rgba(255,255,255,0.09);color:#fff}
 .drop-menu.show .model-item{animation:miIn 0.4s var(--ease) backwards}
 .drop-menu.show .menu-group-box:first-of-type .model-item:nth-child(1){animation-delay:0.04s}
 .drop-menu.show .menu-group-box:first-of-type .model-item:nth-child(2){animation-delay:0.09s}
@@ -741,27 +744,67 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
 @keyframes pcError{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px) rotate(-6deg)}40%{transform:translateX(4px) rotate(6deg)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
 .phra-companion.errorstate .pc-eye{background:#ff453a}
 .loader-context{gap:12px}
-/* ONBOARDING */
-#onboard-screen{position:fixed;inset:0;z-index:99998;background:radial-gradient(circle at 50% 30%,#1c1408,#07070A 70%);display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;gap:16px}
+/* ONBOARDING — swipeable conversational carousel */
+#onboard-screen{position:fixed;inset:0;z-index:99998;background:radial-gradient(circle at 50% 30%,#1c1408,#07070A 70%);display:none;align-items:center;justify-content:center}
 #onboard-screen.show{display:flex}
-.onboard-orb-stage{margin-bottom:6px;opacity:0;animation:obFade 1s ease forwards 0.2s}
-.onboard-title{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;letter-spacing:2px;color:#E8C468;opacity:0;animation:obFade 1s ease forwards 0.6s}
-.onboard-tagline{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.4);opacity:0;animation:obFade 1s ease forwards 0.9s}
-.onboard-desc{max-width:300px;font-size:14px;color:rgba(255,255,255,0.55);line-height:1.7;opacity:0;animation:obFade 1s ease forwards 1.2s}
-.onboard-enter-btn{margin-top:8px;padding:14px 34px;background:linear-gradient(135deg,#C9A227,#E8C468);border:none;border-radius:30px;color:#1a1206;font-weight:700;font-size:14px;cursor:pointer;opacity:0;animation:obFade 1s ease forwards 1.6s;box-shadow:0 10px 30px rgba(201,162,39,0.35);font-family:inherit}
-@keyframes obFade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.onboard-carousel{display:flex;width:100%;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.onboard-carousel::-webkit-scrollbar{display:none}
+.onboard-card{flex:0 0 100%;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;text-align:center;gap:14px}
+.onboard-dots{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:2}
+.onboard-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);transition:0.3s}
+.onboard-dot.active{background:#E8C468;width:18px;border-radius:4px}
+.onboard-title{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;letter-spacing:2px;color:#E8C468}
+.onboard-tagline{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.4)}
+.onboard-hint{font-size:11px;color:rgba(255,255,255,0.3);font-family:'Space Mono',monospace;margin-top:6px}
+.onboard-q{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#fff;max-width:280px}
+.onboard-input{width:240px;padding:14px 18px;background:rgba(255,255,255,0.06);border:1px solid rgba(201,162,39,0.3);border-radius:30px;color:#fff;font-size:15px;text-align:center;font-family:inherit}
+.onboard-input:focus{outline:none;border-color:#E8C468}
+.onboard-tone-options{display:flex;flex-direction:column;gap:10px;width:240px}
+.onboard-tone-btn{padding:13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:16px;color:#fff;font-size:13px;cursor:pointer;font-family:inherit;transition:0.25s}
+.onboard-tone-btn.selected{border-color:#E8C468;background:rgba(201,162,39,0.12);color:#E8C468}
+.onboard-feature-list{display:flex;flex-direction:column;gap:14px;font-size:14px;color:rgba(255,255,255,0.75);text-align:left}
+.onboard-desc{max-width:280px;font-size:14px;color:rgba(255,255,255,0.55);line-height:1.7}
+.onboard-enter-btn{margin-top:6px;padding:14px 34px;background:linear-gradient(135deg,#C9A227,#E8C468);border:none;border-radius:30px;color:#1a1206;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 10px 30px rgba(201,162,39,0.35);font-family:inherit}
 </style>
 </head>
 <body onclick="closeMenus(event)">
 <div class="bg-glow"></div>
 <div id="onboard-screen">
-  <div class="onboard-orb-stage">
-    <div class="story-orb orb-pro" style="width:130px;height:130px;position:relative"><div class="story-orb-core"></div><div class="story-orb-ring r1"></div><div class="story-orb-ring r2"></div><div class="story-orb-ring r3"></div></div>
+  <div class="onboard-dots" id="onboard-dots"></div>
+  <div class="onboard-carousel" id="onboard-carousel">
+    <div class="onboard-card">
+      <div class="story-orb orb-pro" style="width:110px;height:110px;position:relative;margin:0 auto"><div class="story-orb-core"></div><div class="story-orb-ring r1"></div><div class="story-orb-ring r2"></div></div>
+      <div class="onboard-title">PHRAORTES</div>
+      <div class="onboard-tagline">Intelligence of the Ancient Throne</div>
+      <p class="onboard-hint">Swipe to begin →</p>
+    </div>
+    <div class="onboard-card">
+      <div class="onboard-q">What should the throne call you?</div>
+      <input type="text" id="onboard-name-input" class="onboard-input" placeholder="Your name...">
+      <p class="onboard-hint">Swipe to continue →</p>
+    </div>
+    <div class="onboard-card">
+      <div class="onboard-q">How should Phraortes speak with you?</div>
+      <div class="onboard-tone-options">
+        <button class="onboard-tone-btn" data-tone="Formal" onclick="selectOnboardTone(this)">Formal &amp; precise</button>
+        <button class="onboard-tone-btn" data-tone="Friendly" onclick="selectOnboardTone(this)">Warm &amp; friendly</button>
+        <button class="onboard-tone-btn" data-tone="Direct" onclick="selectOnboardTone(this)">Direct &amp; brief</button>
+      </div>
+    </div>
+    <div class="onboard-card">
+      <div class="onboard-q" style="margin-bottom:16px">Three Ranks of the Realm</div>
+      <div class="onboard-feature-list">
+        <div>🛰️ <b>Satrap</b> — everyday intelligence</div>
+        <div>🧠 <b>Immortal</b> — deep reasoning &amp; code</div>
+        <div>👑 <b>Shahanshah</b> — frontier-scale power</div>
+      </div>
+    </div>
+    <div class="onboard-card">
+      <div class="onboard-q" style="margin-bottom:8px">Ready.</div>
+      <p class="onboard-desc">Everything is set, <span id="onboard-final-name">friend</span>. The throne awaits your word.</p>
+      <button class="onboard-enter-btn" onclick="closeOnboarding()">Enter the Throne →</button>
+    </div>
   </div>
-  <div class="onboard-title">PHRAORTES</div>
-  <div class="onboard-tagline">Intelligence of the Ancient Throne</div>
-  <p class="onboard-desc">A council of cores — Satrap, Immortal, and Shahanshah — awaits your command. Speak, and the throne answers.</p>
-  <button class="onboard-enter-btn" onclick="closeOnboarding()">Enter the Throne →</button>
 </div>
 <div id="core-flash"></div>
 <div id="sidebar-overlay" onclick="toggleS(event)"></div>
@@ -786,6 +829,28 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
     <button onclick="closeFilesPanel()" style="background:none;border:none;color:#fff;font-size:19px;cursor:pointer">✕</button>
   </div>
   <div id="files-panel-body" style="max-height:56vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-top:4px"></div>
+</div>
+
+<div id="pomodoro-modal" style="display:none;position:fixed;inset:0;z-index:46000;background:rgba(0,0,0,0.85);backdrop-filter:blur(18px);align-items:center;justify-content:center" onclick="if(event.target===this)closePomodoro()">
+  <div style="background:rgba(13,13,18,0.98);border:1px solid rgba(201,162,39,0.25);border-radius:26px;padding:30px;max-width:300px;width:90%;text-align:center">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#fff">Focus Timer</div>
+      <button onclick="closePomodoro()" style="background:none;border:none;color:#888;font-size:18px;cursor:pointer">✕</button>
+    </div>
+    <div id="pomodoro-ring-wrap" style="display:flex;justify-content:center;margin-bottom:20px"></div>
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button id="pomo-start-btn" onclick="togglePomodoro()" style="flex:1;padding:11px;background:linear-gradient(135deg,#C9A227,#E8C468);border:none;border-radius:14px;color:#1a1206;font-weight:700;font-size:13px;cursor:pointer">Start</button>
+      <button onclick="resetPomodoro()" style="padding:11px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:14px;color:#fff;font-size:13px;cursor:pointer">Reset</button>
+    </div>
+  </div>
+</div>
+
+<div id="templates-panel" class="source-drawer-panel" onclick="event.stopPropagation()">
+  <div class="drawer-header">
+    <div style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:1px">TEMPLATES</div>
+    <button onclick="closeTemplatesPanel()" style="background:none;border:none;color:#fff;font-size:19px;cursor:pointer">✕</button>
+  </div>
+  <div id="templates-panel-body" style="max-height:56vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-top:4px"></div>
 </div>
 
 <div id="compare-modal" style="display:none;position:fixed;inset:0;z-index:45000;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);flex-direction:column;padding:20px;overflow-y:auto">
@@ -1136,27 +1201,38 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
 
   <!-- GEAR MENU -->
   <div id="gear-menu" class="drop-menu" onclick="event.stopPropagation()">
-    <div class="menu-header-label">Neural Cores</div>
-    <div class="menu-group-box" style="gap:2px;padding:5px">
-      <div class="model-item" id="m-24" onclick="selectModel('2.4')">
-        <div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#8888BB"></span>Prime <span style="opacity:0.5;font-weight:500">2.4</span></span><span class="model-tag tag-free">FREE</span></div>
-        <div class="mi-sub">Fast everyday tasks</div>
-      </div>
-      <div class="model-item" id="m-25" onclick="selectModel('2.5')">
-        <div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#bf5af2"></span>Intellect <span style="opacity:0.5;font-weight:500">2.5</span></span><span class="model-tag">SATRAP+</span></div>
-        <div class="mi-sub">Deep reasoning &amp; research</div>
-      </div>
-      <div class="model-item" id="m-26" onclick="selectModel('2.6')">
-        <div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#00ff88"></span>Apex <span style="opacity:0.5;font-weight:500">2.6</span></span><span class="model-tag">IMMORTAL+</span></div>
-        <div class="mi-sub">Senior developer matrix</div>
-      </div>
-      <div class="model-item" id="m-27" onclick="selectModel('2.7')">
-        <div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#E8C468"></span>Sovereign <span style="opacity:0.5;font-weight:500">2.7</span></span><span class="model-tag tag-top">SHAHANSHAH</span></div>
-        <div class="mi-sub">Frontier-scale, heavy professional builds</div>
+    <div class="gear-page-tabs">
+      <button class="gear-tab-btn active" onclick="switchGearPage('cores',this)">Cores</button>
+      <button class="gear-tab-btn" onclick="switchGearPage('tools',this)">Tools</button>
+    </div>
+    <div id="gear-page-cores">
+      <div class="menu-group-box" style="gap:2px;padding:5px">
+        <div class="model-item" id="m-24" onclick="selectModel('2.4')">
+          <div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#8888BB"></span>Prime <span style="opacity:0.5;font-weight:500">2.4</span></span><span class="model-tag tag-free">FREE</span></div>
+          <div class="mi-sub">Fast everyday tasks</div>
+        </div>
+        <div class="model-item" id="m-25" onclick="selectModel('2.5')">
+          <div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#bf5af2"></span>Intellect <span style="opacity:0.5;font-weight:500">2.5</span></span><span class="model-tag">SATRAP+</span></div>
+          <div class="mi-sub">Deep reasoning &amp; research</div>
+        </div>
+        <div class="model-item" id="m-26" onclick="selectModel('2.6')">
+          <div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#00ff88"></span>Apex <span style="opacity:0.5;font-weight:500">2.6</span></span><span class="model-tag">IMMORTAL+</span></div>
+          <div class="mi-sub">Senior developer matrix</div>
+        </div>
+        <div class="model-item" id="m-27" onclick="selectModel('2.7')">
+          <div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#E8C468"></span>Sovereign <span style="opacity:0.5;font-weight:500">2.7</span></span><span class="model-tag tag-top">SHAHANSHAH</span></div>
+          <div class="mi-sub">Frontier-scale, heavy professional builds</div>
+        </div>
       </div>
     </div>
-    <div class="menu-group-box" style="padding:3px">
-      <div onclick="callAura()" style="text-align:center;padding:12px;background:linear-gradient(135deg,rgba(201,162,39,0.16),rgba(122,46,46,0.1));border:1px solid rgba(201,162,39,0.3);border-radius:11px;font-size:12px;font-weight:bold;cursor:pointer;color:#E8C468;letter-spacing:0.5px">✦ CALL AURA · LIVE VOICE ✦</div>
+    <div id="gear-page-tools" style="display:none">
+      <div class="menu-group-box" style="padding:3px;margin-bottom:5px">
+        <div onclick="callAura()" style="text-align:center;padding:12px;background:linear-gradient(135deg,rgba(201,162,39,0.16),rgba(122,46,46,0.1));border:1px solid rgba(201,162,39,0.3);border-radius:11px;font-size:12px;font-weight:bold;cursor:pointer;color:#E8C468;letter-spacing:0.5px">✦ CALL AURA · LIVE VOICE ✦</div>
+      </div>
+      <div class="menu-group-box" style="padding:5px;gap:5px">
+        <div class="model-item" onclick="openPomodoro()"><div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#E8C468"></span>Focus Timer</span></div><div class="mi-sub">Ancient-style Pomodoro for deep work</div></div>
+        <div class="model-item" onclick="openTemplatesPanel()"><div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#2C5AA0"></span>Templates</span></div><div class="mi-sub">Ready-made prompts for common tasks</div></div>
+      </div>
     </div>
   </div>
 
@@ -1391,6 +1467,57 @@ function openTranslatePopup(text,rect){
       resEl.textContent=out;
     }catch(e){resEl.textContent="Translation failed."}
   });
+}
+
+// ═══ FOCUS TIMER (Pomodoro) ═══
+let pomoInterval=null,pomoSeconds=25*60,pomoPhase="focus",pomoRunning=false;
+function openPomodoro(){document.getElementById("gear-menu").classList.remove("show");document.getElementById("pomodoro-modal").style.display="flex";renderPomodoro()}
+function closePomodoro(){document.getElementById("pomodoro-modal").style.display="none"}
+function renderPomodoro(){
+  const total=pomoPhase==="focus"?25*60:5*60;
+  const pct=(1-pomoSeconds/total)*100;
+  const m=Math.floor(pomoSeconds/60),s=pomoSeconds%60;
+  const wrap=document.getElementById("pomodoro-ring-wrap");if(wrap)wrap.innerHTML=circularRing(pct,"#E8C468",`${m}:${String(s).padStart(2,"0")}`,pomoPhase==="focus"?"Focus":"Break");
+}
+function togglePomodoro(){
+  const btn=document.getElementById("pomo-start-btn");
+  if(pomoRunning){clearInterval(pomoInterval);pomoRunning=false;if(btn)btn.textContent="Resume";return}
+  pomoRunning=true;if(btn)btn.textContent="Pause";
+  pomoInterval=setInterval(()=>{
+    pomoSeconds--;
+    if(pomoSeconds<=0){
+      playSound("chime");haptic("success");
+      pomoPhase=pomoPhase==="focus"?"break":"focus";
+      pomoSeconds=pomoPhase==="focus"?25*60:5*60;
+      showToast(pomoPhase==="focus"?"Back to focus":"Take a short break","success");
+    }
+    renderPomodoro();
+  },1000);
+}
+function resetPomodoro(){clearInterval(pomoInterval);pomoRunning=false;pomoPhase="focus";pomoSeconds=25*60;const btn=document.getElementById("pomo-start-btn");if(btn)btn.textContent="Start";renderPomodoro()}
+
+// ═══ PROMPT TEMPLATES ═══
+const PROMPT_TEMPLATES=[
+  {icon:"📄",name:"Resume Bullet Points",prompt:"Help me write 3-4 strong resume bullet points for this role: [describe your job/project]. Focus on impact and metrics."},
+  {icon:"✉️",name:"Cover Letter",prompt:"Write a concise, professional cover letter for this position: [job title/company]. My background: [brief summary]."},
+  {icon:"🔍",name:"Code Review",prompt:"Review this code for bugs, security issues, and readability improvements:\n\n[paste code here]"},
+  {icon:"🐞",name:"Bug Report",prompt:"Help me write a clear bug report. Steps to reproduce: [...]. Expected: [...]. Actual: [...]."},
+  {icon:"📘",name:"README Generator",prompt:"Write a professional README.md for this project: [describe project, tech stack, how to run it]."},
+  {icon:"📧",name:"Professional Email",prompt:"Write a polite, professional email about: [topic]. Tone: [formal/friendly]."},
+  {icon:"🧪",name:"Unit Tests",prompt:"Write unit tests for this function, covering edge cases:\n\n[paste code here]"},
+  {icon:"📊",name:"Project Plan",prompt:"Break this project into a step-by-step task list with rough time estimates: [describe project]."}
+];
+function openTemplatesPanel(){
+  document.getElementById("gear-menu")?.classList.remove("show");
+  const body=document.getElementById("templates-panel-body");
+  body.innerHTML=PROMPT_TEMPLATES.map((t,i)=>`<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:13px;cursor:pointer" onclick="useTemplate(${i})"><span style="font-size:20px">${t.icon}</span><div style="font-size:13px;font-weight:600;color:#fff">${t.name}</div></div>`).join("");
+  document.getElementById("templates-panel").classList.add("show");
+  haptic("light");
+}
+function closeTemplatesPanel(){document.getElementById("templates-panel").classList.remove("show")}
+function useTemplate(i){
+  uiInput.value=PROMPT_TEMPLATES[i].prompt;autoResize(uiInput);
+  closeTemplatesPanel();uiInput.focus();
 }
 
 function companionHTML(id,state,small){
@@ -1682,11 +1809,36 @@ function initAccountParallax(){
     document.querySelectorAll(".glass-glow").forEach(el=>{el.style.transform=`translateY(${y*0.12}px) translateX(${y*0.04}px)`});
   },{passive:true});
 }
+function selectOnboardTone(btn){
+  document.querySelectorAll(".onboard-tone-btn").forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected");
+  localStorage.setItem("phraortes_tone_pref",btn.dataset.tone);
+  haptic("light");
+}
 function initOnboarding(){
   if(localStorage.getItem("phraortes_onboarded"))return;
   const el=document.getElementById("onboard-screen");if(el)el.classList.add("show");
+  const carousel=document.getElementById("onboard-carousel");
+  const cards=carousel.querySelectorAll(".onboard-card");
+  const dotsWrap=document.getElementById("onboard-dots");
+  dotsWrap.innerHTML=Array.from(cards).map((_,i)=>`<div class="onboard-dot ${i===0?"active":""}"></div>`).join("");
+  carousel.addEventListener("scroll",()=>{
+    const idx=Math.round(carousel.scrollLeft/carousel.clientWidth);
+    dotsWrap.querySelectorAll(".onboard-dot").forEach((d,i)=>d.classList.toggle("active",i===idx));
+  },{passive:true});
+  const nameInput=document.getElementById("onboard-name-input");
+  nameInput?.addEventListener("input",e=>{
+    const span=document.getElementById("onboard-final-name");
+    if(span)span.textContent=e.target.value.trim()||"friend";
+  });
 }
 function closeOnboarding(){
+  const nameInput=document.getElementById("onboard-name-input");
+  const name=nameInput?nameInput.value.trim():"";
+  if(name){
+    localStorage.setItem("phraortes_username",name);
+    if(!longMemory.some(f=>/name/i.test(f))){longMemory.push("User's name is "+name);localStorage.setItem("phraortes_longmemory",JSON.stringify(longMemory))}
+  }
   localStorage.setItem("phraortes_onboarded","1");
   const el=document.getElementById("onboard-screen");if(!el)return;
   el.style.transition="opacity 0.6s ease";el.style.opacity="0";
@@ -1986,6 +2138,7 @@ async function send(){
   else if(activeModel==="2.5")sys+="You are Intellect 2.5, expert in deep research and analysis.";
   else sys+="You are Prime 2.4, fast and precise for everyday tasks.";
   const toneHint=detectToneHint(txt);if(toneHint)sys+=" "+toneHint;
+  const tonePref=localStorage.getItem("phraortes_tone_pref");if(tonePref)sys+=` The user has indicated they generally prefer a ${tonePref.toLowerCase()} tone.`;
   sys+=getLongMemoryPrompt();
   const apiMsgs=[{role:"system",content:sys}];
   chat.msgs.forEach(m=>{apiMsgs.push({role:"user",content:m.uText||m.u});apiMsgs.push({role:"assistant",content:m.aRaw||m.a})});
@@ -2070,7 +2223,7 @@ function finishTurn(aiId,htmlContent,rawContent,chat,userHtml,userTxt,msgIndex,e
   const fuType=/^\[Image rendered/.test(rawContent)?"image":/```/.test(rawContent)?"code":activeModel==="2.5"?"think":"chat";
   const fuHTML=followupHTML(fuType,msgIndex);
   const srcChipHTML=srcs.length?`<div class="claude-source-chip" onclick="openSourceDrawer('${encSrc}','${qc}')">🌐 ${srcs.length} Source${srcs.length>1?"s":""}</div>`:"";
-  const speedHTML=elapsedS?`<div class="claude-source-chip" style="cursor:default">⚡ ${elapsedS}s · ~${estimateTokens(rawContent).toLocaleString()} tok</div>`:"";
+  const speedHTML=elapsedS?`<div class="claude-source-chip" style="cursor:default">⚡ ${elapsedS}s</div>`:"";
   wrap.innerHTML=`
     <div class="msg ai" id="${aiId}"></div>
     <div style="margin-top:6px;display:flex;align-items:center;flex-wrap:wrap;gap:5px">
@@ -2460,7 +2613,14 @@ function updateModelUI(m){
 }
 function toggleTheme(){const light=document.getElementById("theme-toggle").checked;document.body.classList.toggle("light-theme",light);localStorage.setItem("phraortes_theme",light?"light":"dark")}
 function toggleS(e){if(e)e.stopPropagation();document.getElementById("sidebar").classList.toggle("active");document.getElementById("sidebar-overlay").classList.toggle("show");closeMenus(null)}
-function toggleGear(e){e.stopPropagation();closeMenus(e);document.getElementById("gear-menu").classList.toggle("show")}
+function switchGearPage(page,btn){
+  document.getElementById("gear-page-cores").style.display=page==="cores"?"block":"none";
+  document.getElementById("gear-page-tools").style.display=page==="tools"?"block":"none";
+  document.querySelectorAll(".gear-tab-btn").forEach(b=>b.classList.remove("active"));
+  if(btn)btn.classList.add("active");
+  haptic("light");
+}
+function toggleGear(e){e.stopPropagation();closeMenus(e);const m=document.getElementById("gear-menu");const willShow=!m.classList.contains("show");m.classList.toggle("show");if(willShow)switchGearPage("cores",document.querySelector(".gear-tab-btn"))}
 function toggleMagicMenu(e){e.stopPropagation();closeMenus(e);document.getElementById("magic-menu").classList.toggle("show");haptic("light")}
 function closeMenus(e){if(e?.target?.closest(".input-bar,.btn-icon,.voice-btn,.wand-wrapper,.magic-menu,#gear-menu,.source-drawer-panel,.account-page"))return;document.getElementById("gear-menu").classList.remove("show");document.getElementById("magic-menu").classList.remove("show")}
 function applyEnhancement(type){closeMenus(null);if(!uiInput.value.trim()){showToast("Type something first.");return}const base=uiInput.value;const map={"Artistic Prompt":`[Artistic Render]:\nConcept: ${base}\nCinematic volumetric lighting, 8K, golden ratio composition.`,"Engineering Prompt":`[Engineering Architecture]:\nTask: ${base}\nRobust modular solution with error handling and documentation.`,"Academic Prompt":`[Academic Analysis]:\nTopic: ${base}\nAnalyze using formal structured academic methodology.`,"Iran Business":`[Iranian Corporate Matrix]:\nTopic: ${base}\nتحلیل بر اساس بازار ایران، قوانین کار، مالیات و قراردادها.`};uiInput.value=map[type]||base;autoResize(uiInput);showToast(`🪄 Enhanced!`)}
