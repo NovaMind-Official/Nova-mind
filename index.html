@@ -2133,10 +2133,10 @@ async function send(){
   const loaderType=activeModel==="2.7"?"think":isCodeQuery||activeModel==="2.6"?"code":activeModel==="2.5"?"think":"chat";
   startContextLoader("a-"+idx,loaderType,detectMsgLang(txt));
   let sys="You are Phraortes OS — an advanced intelligence assistant. Respond clearly and helpfully. Always respond in the same language the user just wrote in — match it exactly (Persian, English, Arabic, or any other language), regardless of what language earlier turns or these instructions are in. When giving a multi-step plan, checklist, or sequence of tasks, format it as a markdown task list using '- [ ] ' syntax for each step so it can be checked off. ";
-  if(activeModel==="2.7")sys+="You are Sovereign 2.7, Phraortes' most advanced core — built for large, complex, professional-grade projects. Provide thorough, precise, production-quality output, considering edge cases and long-term maintainability.";
+  if(activeModel==="2.7")sys+="You are Sovereign 2.7, Phraortes' most advanced core — built for large, complex, professional-grade projects. Take the time to think through edge cases and long-term maintainability; a longer, more deliberate, thorough response is expected and welcome here.";
   else if(activeModel==="2.6"||isCodeQuery)sys+="You are Apex 2.6, expert coder and senior developer. Think through the approach briefly, then write clean, correct, well-formatted code with proper syntax highlighting. Explain non-obvious parts concisely.";
   else if(activeModel==="2.5")sys+="You are Intellect 2.5, expert in deep research and analysis.";
-  else sys+="You are Prime 2.4, fast and precise for everyday tasks.";
+  else sys+="You are Prime 2.4, fast and precise for everyday tasks. Keep responses brief and to the point by default — don't over-elaborate or add lengthy reasoning unless the user's question genuinely calls for it.";
   const toneHint=detectToneHint(txt);if(toneHint)sys+=" "+toneHint;
   const tonePref=localStorage.getItem("phraortes_tone_pref");if(tonePref)sys+=` The user has indicated they generally prefer a ${tonePref.toLowerCase()} tone.`;
   sys+=getLongMemoryPrompt();
@@ -2296,9 +2296,11 @@ async function streamMarkdown(aiId,raw){
     el.innerHTML=marked.parse(preview)+`<div class="code-block-wrapper" style="display:flex;align-items:center;justify-content:space-between;padding:18px;margin-top:14px"><div style="display:flex;align-items:center;gap:13px"><span style="font-size:26px">📜</span><div><div style="font-weight:bold;color:#fff;font-family:'Space Mono',monospace">Full response (${raw.length.toLocaleString()} chars)</div><div style="font-size:11px;color:#666;margin-top:2px">Rendered as a document to keep things smooth</div></div></div><div style="display:flex;gap:6px"><button class="code-tool-btn" onclick="openVirtualEditor('${enc}','response.md',${raw.split("\\n").length})">⚡ Open</button><button class="code-tool-btn" onclick="downloadTextFile('phraortes-response.md',decodeURIComponent('${enc}'))">⬇ Save</button></div></div>`;
     playSound("chime");sendBtn.disabled=false;uiInput.disabled=false;return;
   }
-  let built="";let chunk=4,delay=6;
+  let built="";let chunk=6,delay=4;
+  if(activeModel==="2.4"){chunk=10;delay=3}
   if(activeModel==="2.6"){chunk=12;delay=2}
   if(activeModel==="2.5"){chunk=2;delay=18}
+  if(activeModel==="2.7"){chunk=2;delay=22}
   document.getElementById("ai-core")?.classList.add("speaking");
   for(let i=0;i<raw.length;i+=chunk){built+=raw.substring(i,i+chunk);if(el)el.innerHTML=marked.parse(built);if(!isScrolling)chatBox.scrollTo({top:chatBox.scrollHeight});await new Promise(r=>setTimeout(r,delay))}
   document.getElementById("ai-core")?.classList.remove("speaking");
