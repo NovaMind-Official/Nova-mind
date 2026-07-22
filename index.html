@@ -99,8 +99,9 @@ body.light-theme #core-header,body.light-theme #core-footer{color:#2b2313}
 .toast.error-toast{border-color:#ff453a}
 
 /* SIDEBAR */
-#sidebar{position:fixed;top:0;left:-300px;width:300px;height:100%;background:rgba(10,10,16,0.72);backdrop-filter:blur(40px);border-right:1px solid var(--brd);z-index:4000;transition:transform 0.6s var(--ease);box-shadow:20px 0 60px rgba(0,0,0,0.6);display:flex;flex-direction:column}
-#sidebar.active{transform:translateX(300px)}
+#sidebar{position:fixed;top:0;left:-300px;width:300px;height:100%;background:rgba(10,10,16,0.72);backdrop-filter:blur(40px);border-right:1px solid var(--brd);z-index:4000;transition:transform 0.6s var(--ease),clip-path 0.65s cubic-bezier(0.16,1,0.3,1);box-shadow:20px 0 60px rgba(0,0,0,0.6);display:flex;flex-direction:column;clip-path:inset(0 0 100% 0)}
+#sidebar.active{transform:translateX(300px);clip-path:inset(0 0 0% 0)}
+#sidebar::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,#7A2E2E,#C9A227,#7A2E2E);box-shadow:0 2px 10px rgba(201,162,39,0.4);z-index:2}
 #sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(5px);z-index:3999;opacity:0;pointer-events:none;transition:opacity 0.5s var(--ease)}
 #sidebar-overlay.show{opacity:1;pointer-events:all}
 .sidebar-top{padding:24px 18px 12px;display:flex;justify-content:space-between;align-items:center}
@@ -416,6 +417,23 @@ footer{width:100%;padding:8px 8% 26px;background:linear-gradient(to top,rgba(0,0
 .branch-indicator{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-family:'Space Mono',monospace;color:rgba(255,255,255,0.28);padding:3px 8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;cursor:pointer;transition:0.2s;width:fit-content}
 .branch-indicator:hover{color:var(--p);border-color:var(--p)}
 .branch-dot{width:5px;height:5px;border-radius:50%;background:var(--p)}
+
+/* DATE DIVIDER */
+.date-divider{display:flex;align-items:center;gap:14px;margin:4px 0;opacity:0.7;align-self:stretch}
+.date-divider::before,.date-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,162,39,0.35),transparent)}
+.date-divider span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,0.35);white-space:nowrap}
+
+/* CONSTELLATION MAP */
+#constellation-view{display:none;position:fixed;inset:0;z-index:9000;background:radial-gradient(circle at 50% 20%,#12102a,#03040A 75%);overflow-y:auto;overflow-x:hidden}
+#constellation-view.show{display:block}
+.const-header{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;padding:20px 22px;z-index:2;background:linear-gradient(to bottom,rgba(3,4,10,0.92),transparent)}
+#constellation-canvas{position:relative;min-height:900px;width:100%}
+.const-star{position:absolute;border-radius:50%;cursor:pointer;transform:translate(-50%,-50%);transition:transform 0.2s ease}
+.const-star:hover{transform:translate(-50%,-50%) scale(1.5)}
+.const-star.const-star-new{animation:constPulse 2s ease-in-out infinite}
+@keyframes constPulse{0%,100%{opacity:1}50%{opacity:0.5}}
+#constellation-preview{display:none;position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:rgba(13,13,18,0.97);border:1px solid rgba(201,162,39,0.32);border-radius:18px;padding:15px 18px;max-width:280px;width:85%;z-index:3;box-shadow:0 18px 48px rgba(0,0,0,0.6)}
+#constellation-preview.show{display:block}
 
 /* FOLLOW-UP CHIPS */
 .followup-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
@@ -765,23 +783,28 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
 .onboard-feature-list{display:flex;flex-direction:column;gap:14px;font-size:14px;color:rgba(255,255,255,0.75);text-align:left}
 .onboard-desc{max-width:280px;font-size:14px;color:rgba(255,255,255,0.55);line-height:1.7}
 .onboard-enter-btn{margin-top:6px;padding:14px 34px;background:linear-gradient(135deg,#C9A227,#E8C468);border:none;border-radius:30px;color:#1a1206;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 10px 30px rgba(201,162,39,0.35);font-family:inherit}
+.onboard-next-btn{margin-top:10px;padding:12px 28px;background:rgba(201,162,39,0.14);border:1px solid rgba(201,162,39,0.4);border-radius:26px;color:#E8C468;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;transition:0.25s}
+.onboard-next-btn:hover{background:rgba(201,162,39,0.24)}
+.onboard-back-btn{position:absolute;top:26px;left:20px;z-index:3;background:none;border:none;color:rgba(255,255,255,0.4);font-size:12px;font-family:'Space Mono',monospace;cursor:pointer;padding:8px}
+.onboard-back-btn:hover{color:#E8C468}
 </style>
 </head>
 <body onclick="closeMenus(event)">
 <div class="bg-glow"></div>
 <div id="onboard-screen">
   <div class="onboard-dots" id="onboard-dots"></div>
+  <button class="onboard-back-btn" id="onboard-back-btn" onclick="onboardGoTo(onboardCurrentIdx()-1)" style="display:none">← Back</button>
   <div class="onboard-carousel" id="onboard-carousel">
     <div class="onboard-card">
       <div class="story-orb orb-pro" style="width:110px;height:110px;position:relative;margin:0 auto"><div class="story-orb-core"></div><div class="story-orb-ring r1"></div><div class="story-orb-ring r2"></div></div>
       <div class="onboard-title">PHRAORTES</div>
       <div class="onboard-tagline">Intelligence of the Ancient Throne</div>
-      <p class="onboard-hint">Swipe to begin →</p>
+      <button class="onboard-next-btn" onclick="onboardGoTo(1)">Begin →</button>
     </div>
     <div class="onboard-card">
       <div class="onboard-q">What should the throne call you?</div>
-      <input type="text" id="onboard-name-input" class="onboard-input" placeholder="Your name...">
-      <p class="onboard-hint">Swipe to continue →</p>
+      <input type="text" id="onboard-name-input" class="onboard-input" placeholder="Your name..." onkeydown="if(event.key==='Enter')onboardGoTo(2)">
+      <button class="onboard-next-btn" onclick="onboardGoTo(2)">Continue →</button>
     </div>
     <div class="onboard-card">
       <div class="onboard-q">How should Phraortes speak with you?</div>
@@ -798,6 +821,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
         <div>🧠 <b>Immortal</b> — deep reasoning &amp; code</div>
         <div>👑 <b>Shahanshah</b> — frontier-scale power</div>
       </div>
+      <button class="onboard-next-btn" onclick="onboardGoTo(4)">Continue →</button>
     </div>
     <div class="onboard-card">
       <div class="onboard-q" style="margin-bottom:8px">Ready.</div>
@@ -808,6 +832,15 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
 </div>
 <div id="core-flash"></div>
 <div id="sidebar-overlay" onclick="toggleS(event)"></div>
+
+<div id="constellation-view">
+  <div class="const-header">
+    <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.5)">✦ STAR MAP OF SESSIONS</div>
+    <button class="btn-icon" onclick="closeConstellation()">✕</button>
+  </div>
+  <div id="constellation-canvas" onclick="document.getElementById('constellation-preview').classList.remove('show')"></div>
+  <div id="constellation-preview"></div>
+</div>
 <div id="toast-container"></div>
 <div id="context-overlay" onclick="closeContextSheet()"></div>
 <div id="floating-menu" onclick="event.stopPropagation()"></div>
@@ -1154,7 +1187,10 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
 <div id="sidebar" onclick="event.stopPropagation()">
   <div class="sidebar-top">
     <span class="sidebar-title">SESSIONS</span>
-    <button class="btn-icon" style="font-size:17px" onclick="toggleS(event)">✕</button>
+    <div style="display:flex;gap:4px;align-items:center">
+      <button class="btn-icon" style="font-size:14px" onclick="openConstellation()" title="Star Map">✦</button>
+      <button class="btn-icon" style="font-size:17px" onclick="toggleS(event)">✕</button>
+    </div>
   </div>
   <button class="btn-new-chat" onclick="newChat()">
     <div class="btn-new-chat-icon">✦</div>
@@ -1520,6 +1556,52 @@ function useTemplate(i){
   closeTemplatesPanel();uiInput.focus();
 }
 
+// ═══ CONSTELLATION STAR MAP ═══
+function hashStr(s){let h=0;for(let i=0;i<s.length;i++){h=(h<<5)-h+s.charCodeAt(i);h|=0}return Math.abs(h)}
+function openConstellation(){
+  if(document.getElementById("sidebar").classList.contains("active"))toggleS(null);
+  document.getElementById("constellation-view").classList.add("show");
+  setTimeout(renderConstellation,50);
+}
+function closeConstellation(){document.getElementById("constellation-view").classList.remove("show");document.getElementById("constellation-preview").classList.remove("show")}
+function renderConstellation(){
+  const canvas=document.getElementById("constellation-canvas");if(!canvas)return;
+  const sorted=[...chats].sort((a,b)=>a.id-b.id);
+  const H=Math.max(700,sorted.length*85+120);
+  canvas.style.height=H+"px";
+  const newestId=chats.length?Math.max(...chats.map(c=>c.id)):null;
+  const positions=sorted.map((c,i)=>{
+    const h=hashStr(String(c.id));
+    const x=14+(h%72);
+    const y=50+i*80+((h>>4)%36);
+    return {c,x,y};
+  });
+  let svg=`<svg width="100%" height="${H}" style="position:absolute;inset:0;pointer-events:none"><g>`;
+  for(let i=1;i<positions.length;i++){
+    const p1=positions[i-1],p2=positions[i];
+    svg+=`<line x1="${p1.x}%" y1="${p1.y}" x2="${p2.x}%" y2="${p2.y}" stroke="rgba(201,162,39,0.15)" stroke-width="1"/>`;
+  }
+  svg+="</g></svg>";
+  let stars="";
+  positions.forEach(({c,x,y})=>{
+    const size=c.pinned?17:10;
+    const glow=c.pinned?"rgba(245,215,138,0.95)":"rgba(180,190,220,0.65)";
+    const isNew=c.id===newestId;
+    stars+=`<div class="const-star ${isNew?"const-star-new":""}" style="left:${x}%;top:${y}px;width:${size}px;height:${size}px;background:${glow};box-shadow:0 0 ${size}px ${glow}" onclick="showConstPreview(event,${c.id})"></div>`;
+  });
+  canvas.innerHTML=svg+stars;
+}
+function showConstPreview(e,id){
+  e.stopPropagation();
+  const c=chats.find(x=>x.id===id);if(!c)return;
+  const lastMsg=c.msgs[c.msgs.length-1];
+  const preview=document.getElementById("constellation-preview");
+  preview.innerHTML=`<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:#fff;margin-bottom:4px">${c.name}</div><div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:12px">${(lastMsg?.uText||"No messages yet").substring(0,64)}</div><button onclick="openChatFromConstellation(${id})" style="width:100%;padding:9px;background:linear-gradient(135deg,#C9A227,#E8C468);border:none;border-radius:11px;color:#1a1206;font-weight:700;font-size:12px;cursor:pointer">Open Session</button>`;
+  preview.classList.add("show");
+  haptic("light");
+}
+function openChatFromConstellation(id){closeConstellation();loadChat(id)}
+
 function companionHTML(id,state,small){
   return `<div class="phra-companion ${state||""} ${small?"small":""}" id="${id}"><div class="pc-body"></div><div class="pc-crest"></div><div class="pc-eye l"></div><div class="pc-eye r"></div><div class="pc-beak"></div></div>`;
 }
@@ -1809,11 +1891,23 @@ function initAccountParallax(){
     document.querySelectorAll(".glass-glow").forEach(el=>{el.style.transform=`translateY(${y*0.12}px) translateX(${y*0.04}px)`});
   },{passive:true});
 }
+function onboardCurrentIdx(){
+  const carousel=document.getElementById("onboard-carousel");
+  return Math.round(carousel.scrollLeft/carousel.clientWidth);
+}
+function onboardGoTo(idx){
+  const carousel=document.getElementById("onboard-carousel");
+  const cards=carousel.querySelectorAll(".onboard-card");
+  idx=Math.max(0,Math.min(idx,cards.length-1));
+  carousel.scrollTo({left:carousel.clientWidth*idx,behavior:"smooth"});
+  haptic("light");
+}
 function selectOnboardTone(btn){
   document.querySelectorAll(".onboard-tone-btn").forEach(b=>b.classList.remove("selected"));
   btn.classList.add("selected");
   localStorage.setItem("phraortes_tone_pref",btn.dataset.tone);
   haptic("light");
+  setTimeout(()=>onboardGoTo(3),350);
 }
 function initOnboarding(){
   if(localStorage.getItem("phraortes_onboarded"))return;
@@ -1825,6 +1919,7 @@ function initOnboarding(){
   carousel.addEventListener("scroll",()=>{
     const idx=Math.round(carousel.scrollLeft/carousel.clientWidth);
     dotsWrap.querySelectorAll(".onboard-dot").forEach((d,i)=>d.classList.toggle("active",i===idx));
+    const backBtn=document.getElementById("onboard-back-btn");if(backBtn)backBtn.style.display=idx>0?"block":"none";
   },{passive:true});
   const nameInput=document.getElementById("onboard-name-input");
   nameInput?.addEventListener("input",e=>{
@@ -2125,6 +2220,10 @@ async function send(){
   if(attachedFiles.length){let gal='<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:9px">';attachedFiles.forEach(f=>{if(f.type==="image"){gal+=`<div style="width:58px;height:58px;border-radius:9px;overflow:hidden;cursor:pointer" onclick="openLightbox('${f.dataURL}')"><img src="${f.dataURL}" style="width:100%;height:100%;object-fit:cover"></div>`;useVision=true;if(!imgData)imgData=f.dataURL}else if(f.type==="doc"){gal+=`<div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:6px 11px;font-size:12px">📄 ${f.name}</div>`;if(f.text)docContext+=`\n\n[Attached document: ${f.name}]\n${f.text}`}});gal+="</div>";dispHtml=gal+(txt?"<br>"+txt:"");attachedFiles=[];renderPreviews()}
   const chat=chats.find(c=>c.id==curId);uiInput.value="";uiInput.style.height="44px";
   const idx=chat.msgs.length;
+  const lastMsg=chat.msgs[chat.msgs.length-1];
+  const lastDay=lastMsg?.ts?new Date(lastMsg.ts).toDateString():null;
+  const nowDay=new Date().toDateString();
+  if(lastDay!==nowDay)chatBox.insertAdjacentHTML("beforeend",dateDividerHTML(Date.now()));
   addUI(dispHtml||"[Media]","user","u-"+idx,txt);addUI("","ai","a-"+idx,"");
   const isImg=/^\/imagine/i.test(txt)||(/(عکس|تصویر|image|pic|photo)/i.test(txt)&&/(بساز|خلق|تولید|render|generate|create|draw)/i.test(txt));
   if(isImg){animImgLoader("a-"+idx,chat,dispHtml,txt,idx);return}
@@ -2347,6 +2446,14 @@ function applyReadMore(id){
 }
 
 // ═══ UI HELPERS ═══
+function formatDateDivider(ts){
+  const d=new Date(ts),now=new Date();
+  if(d.toDateString()===now.toDateString())return "Today";
+  const yest=new Date(now);yest.setDate(now.getDate()-1);
+  if(d.toDateString()===yest.toDateString())return "Yesterday";
+  return d.toLocaleDateString(undefined,{month:"long",day:"numeric",year:d.getFullYear()!==now.getFullYear()?"numeric":undefined});
+}
+function dateDividerHTML(ts){return `<div class="date-divider"><span>${formatDateDivider(ts)}</span></div>`}
 function addUI(html,role,id,rawText){
   const w=document.createElement("div");w.className=`msg-wrap ${role}-wrap`;
   const safe=(rawText||"").replace(/"/g,"'").replace(/`/g,"'");
@@ -2361,7 +2468,12 @@ function loadChat(id){
   uiInput.value=localStorage.getItem("draft_"+id)||"";autoResize(uiInput);
   chatBox.innerHTML="";addUI("","ai","welcome");
   if(chat?.msgs.length){
+    let lastDay=null;
     chat.msgs.forEach((m,i)=>{
+      if(m.ts){
+        const day=new Date(m.ts).toDateString();
+        if(day!==lastDay){chatBox.insertAdjacentHTML("beforeend",dateDividerHTML(m.ts));lastDay=day}
+      }
       addUI(m.u,"user","u-"+i,m.uText);
       const w=document.createElement("div");w.className="msg-wrap ai-wrap";
       const enc=encodeURIComponent(m.aRaw||""),sId=`sp-${i}-loaded`;
