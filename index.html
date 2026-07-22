@@ -256,11 +256,21 @@ main{flex:1;display:flex;flex-direction:column;position:relative;width:100%;heig
 .ai{background:transparent;color:#fff;border:none;padding:10px 0;-webkit-user-select:text;user-select:text}
 
 /* Tables */
-.ai table{border-collapse:collapse;width:100%;margin:14px 0;border-radius:12px;overflow:hidden;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);font-size:14px}
-.ai th{background:rgba(255,255,255,0.07);color:var(--p);font-weight:700;padding:11px 16px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.09);font-size:13px}
+/* Tables — now horizontally scrollable so wide tables never break mobile layout */
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px}
+.ai table{border-collapse:collapse;width:100%;min-width:420px;margin:0;border-radius:12px;overflow:hidden;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);font-size:14px}
+.ai th{background:rgba(255,255,255,0.07);color:var(--p);font-weight:700;padding:11px 16px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.09);font-size:13px;white-space:nowrap}
 .ai td{padding:9px 16px;border-bottom:1px solid rgba(255,255,255,0.04);color:rgba(255,255,255,0.85);line-height:1.5}
+.ai tbody tr:nth-child(even) td{background:rgba(255,255,255,0.015)}
 .ai tr:last-child td{border-bottom:none}
-.ai tr:hover td{background:rgba(255,255,255,0.03)}
+.ai tr:hover td{background:rgba(255,255,255,0.04)}
+
+/* Blockquotes & inline code — previously unstyled, using ugly browser defaults */
+.ai blockquote{margin:14px 0;padding:10px 18px;border-left:3px solid var(--p);background:rgba(255,255,255,0.03);border-radius:0 10px 10px 0;color:rgba(255,255,255,0.65)}
+.ai blockquote p{margin:4px 0}
+.ai code:not(pre code){background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:6px;font-family:"Fira Code",monospace;font-size:0.88em;color:var(--p)}
+.ai hr{border:none;border-top:1px solid rgba(255,255,255,0.1);margin:22px 0}
+.ai a{color:var(--p);text-decoration:underline;text-decoration-color:rgba(255,255,255,0.25);text-underline-offset:2px}
 .ai li:has(input[type="checkbox"]){list-style:none;margin-left:-22px;transition:opacity 0.3s}
 .ai input[type="checkbox"]{width:16px;height:16px;margin-right:9px;accent-color:var(--p);cursor:pointer;vertical-align:middle}
 .ai li.checked-item{opacity:0.45;text-decoration:line-through}
@@ -350,7 +360,8 @@ footer{width:100%;padding:8px 8% 26px;background:linear-gradient(to top,rgba(0,0
 .source-title{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* CODE BLOCKS */
-.code-block-wrapper{margin:16px 0;border-radius:16px;overflow:hidden;border:1px solid var(--brd);background:rgba(7,7,11,0.96);font-family:"Fira Code",monospace;max-width:100%;box-shadow:inset 0 4px 18px rgba(0,0,0,0.5),0 8px 24px rgba(0,0,0,0.3)}
+.code-block-wrapper{margin:16px 0;border-radius:16px;overflow:hidden;border:1px solid var(--brd);background:rgba(7,7,11,0.96);font-family:"Fira Code",monospace;max-width:100%;box-shadow:inset 0 4px 18px rgba(0,0,0,0.5),0 8px 24px rgba(0,0,0,0.3);position:relative}
+.code-block-wrapper::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#7A2E2E,#C9A227,#1B3A6B);opacity:0.55;z-index:1}
 .code-block-wrapper.success-pulse{border-color:var(--p);box-shadow:0 0 22px var(--glow)}
 .code-header{display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.5);padding:8px 15px;border-bottom:1px solid rgba(255,255,255,0.05)}
 .code-tools{display:flex;gap:4px;align-items:center}
@@ -360,6 +371,8 @@ footer{width:100%;padding:8px 8% 26px;background:linear-gradient(to top,rgba(0,0
 .code-block-wrapper pre code{-webkit-user-select:text;user-select:text}
 .code-fullscreen{position:fixed;inset:0;z-index:90000;border-radius:0;margin:0;max-width:100%;height:100vh;overflow-y:auto}
 .code-fullscreen pre{min-height:100%}
+.code-run-output{border-top:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.35)}
+.code-run-console{padding:12px 16px;font-family:"Fira Code",monospace;font-size:12px;line-height:1.7;max-height:200px;overflow-y:auto;color:rgba(255,255,255,0.8)}
 
 /* CONTEXT MENU */
 #context-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.26);backdrop-filter:blur(4px);z-index:19999;display:none;opacity:0;transition:opacity 0.3s}
@@ -1602,6 +1615,63 @@ function showConstPreview(e,id){
 }
 function openChatFromConstellation(id){closeConstellation();loadChat(id)}
 
+function escapeHtml(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function runCodeBlock(btn,encCode,lang){
+  const wrapper=btn.closest(".code-block-wrapper");
+  const existing=wrapper.querySelector(".code-run-output");
+  if(existing){existing.remove();return}
+  const code=decodeURIComponent(encCode);
+  const outputDiv=document.createElement("div");
+  outputDiv.className="code-run-output";
+  haptic("light");
+  if(lang==="html"){
+    outputDiv.innerHTML=`<iframe sandbox="allow-scripts" style="width:100%;height:260px;border:none;background:#fff;display:block"></iframe>`;
+    wrapper.appendChild(outputDiv);
+    outputDiv.querySelector("iframe").srcdoc=code;
+    return;
+  }
+  const runId="run-"+Date.now();
+  outputDiv.innerHTML=`<div class="code-run-console" id="${runId}">Running...</div>`;
+  wrapper.appendChild(outputDiv);
+  const iframe=document.createElement("iframe");
+  iframe.sandbox="allow-scripts";iframe.style.display="none";
+  const wrapped=`<script>
+    const logs=[];
+    ["log","error","warn"].forEach(m=>{const orig=console[m];console[m]=(...a)=>{logs.push({level:m,msg:a.map(x=>typeof x==="object"?JSON.stringify(x):String(x)).join(" ")});orig.apply(console,a)}});
+    try{${code}}catch(e){logs.push({level:"error",msg:e.message})}
+    parent.postMessage({type:"coderun",runId:"${runId}",logs},"*");
+  <\/script>`;
+  iframe.srcdoc=wrapped;
+  document.body.appendChild(iframe);
+  const handler=e=>{
+    if(e.data?.type==="coderun"&&e.data.runId===runId){
+      const consoleEl=document.getElementById(runId);
+      if(consoleEl)consoleEl.innerHTML=e.data.logs.length?e.data.logs.map(l=>`<div style="color:${l.level==="error"?"#ff453a":l.level==="warn"?"#dfb257":"#8fdc8f"}">${l.level==="error"?"✗ ":""}${escapeHtml(l.msg)}</div>`).join(""):'<div style="color:#666">No output (code ran without errors)</div>';
+      iframe.remove();window.removeEventListener("message",handler);
+    }
+  };
+  window.addEventListener("message",handler);
+  setTimeout(()=>{const consoleEl=document.getElementById(runId);if(consoleEl&&consoleEl.textContent==="Running..."){consoleEl.innerHTML='<div style="color:#dfb257">Timed out (possible infinite loop)</div>';window.removeEventListener("message",handler);if(iframe.parentNode)iframe.remove()}},3000);
+}
+function silentRunJS(code){
+  return new Promise(resolve=>{
+    const iframe=document.createElement("iframe");
+    iframe.sandbox="allow-scripts";iframe.style.display="none";
+    const wrapped=`<script>
+      let err=null;
+      try{${code}}catch(e){err=e.message}
+      parent.postMessage({type:"silentrun",err},"*");
+    <\/script>`;
+    iframe.srcdoc=wrapped;
+    const handler=e=>{
+      if(e.data?.type==="silentrun"){window.removeEventListener("message",handler);if(iframe.parentNode)iframe.remove();resolve(e.data.err)}
+    };
+    window.addEventListener("message",handler);
+    document.body.appendChild(iframe);
+    setTimeout(()=>{window.removeEventListener("message",handler);if(iframe.parentNode)iframe.remove();resolve(null)},2000);
+  });
+}
+
 function companionHTML(id,state,small){
   return `<div class="phra-companion ${state||""} ${small?"small":""}" id="${id}"><div class="pc-body"></div><div class="pc-crest"></div><div class="pc-eye l"></div><div class="pc-eye r"></div><div class="pc-beak"></div></div>`;
 }
@@ -2187,7 +2257,12 @@ renderer.code=function(code,lang){
   if(lines>500){const ext=l==="python"?"py":l==="javascript"?"js":"txt";return`<div class="code-block-wrapper" style="display:flex;align-items:center;justify-content:space-between;padding:20px"><div style="display:flex;align-items:center;gap:13px"><span style="font-size:28px">📄</span><div><div style="font-weight:bold;color:#fff;font-family:'Space Mono',monospace">generated_module.${ext}</div><div style="font-size:11px;color:#666;margin-top:2px">${lines} lines</div></div></div><button class="code-tool-btn" onclick="openVirtualEditor('${enc}','generated_module.${ext}',${lines})">⚡ Open</button></div>`}
   const valid=!!(lang&&hljs.getLanguage(lang));
   const hl=valid?hljs.highlight(str,{language:lang}).value:hljs.highlightAuto(str).value;
-  return`<div class="code-block-wrapper"><div class="code-header"><span style="font-size:12px;color:#888;font-family:'Space Mono',monospace;letter-spacing:0.5px">${l}</span><div class="code-tools"><button class="code-tool-btn" onclick="toggleFsCode(this)">⛶ Full</button><button class="code-tool-btn copy-code-btn" data-code="${enc}">⎘ Copy</button></div></div><pre><code class="hljs ${lang}">${hl}</code></pre></div>`;
+  const runnable=["javascript","js","html"].includes(l);
+  const runBtn=runnable?`<button class="code-tool-btn" onclick="runCodeBlock(this,'${enc}','${l}')">▶ Run</button>`:"";
+  return`<div class="code-block-wrapper"><div class="code-header"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#888;font-family:'Space Mono',monospace;letter-spacing:0.5px">${l}</span><span style="font-size:10px;color:#555;font-family:'Space Mono',monospace">· ${lines} ln</span></span><div class="code-tools">${runBtn}<button class="code-tool-btn" onclick="toggleFsCode(this)">⛶ Full</button><button class="code-tool-btn copy-code-btn" data-code="${enc}">⎘ Copy</button></div></div><pre><code class="hljs ${lang}">${hl}</code></pre></div>`;
+};
+renderer.table=function(header,body){
+  return `<div class="table-scroll"><table>\n<thead>\n${header}</thead>\n<tbody>\n${body}</tbody>\n</table></div>\n`;
 };
 marked.setOptions({renderer,breaks:true,gfm:true});
 document.addEventListener("click",e=>{
@@ -2245,7 +2320,27 @@ async function send(){
   if(imgData)apiMsgs.push({role:"user",content:[{type:"text",text:finalUserText||"Analyze this image."},{type:"image_url",image_url:{url:imgData}}]});
   else apiMsgs.push({role:"user",content:finalUserText});
   if(activePlan==="pro"||activePlan==="starter"){proSlotsUsed++;localStorage.setItem("phraortes_slots",proSlotsUsed);if(activePlan==="pro")updateProGauge();if(activePlan==="starter"&&proSlotsUsed>=PLAN_CFG.starter.advSlots)initPlanUI()}
-  try{const t0=performance.now();const full=await fetchAI(apiMsgs,useVision,isCodeQuery);const elapsedS=((performance.now()-t0)/1000).toFixed(1);trackTokenUsage(finalUserText,full);finishTurn("a-"+idx,marked.parse(full),full,chat,dispHtml,txt,idx,elapsedS)}
+  try{
+    const t0=performance.now();
+    let full=await fetchAI(apiMsgs,useVision,isCodeQuery);
+    let corrected=false;
+    if(isCodeQuery&&!useVision){
+      const jsMatch=full.match(/```(?:javascript|js)\n([\s\S]*?)```/);
+      if(jsMatch&&jsMatch[1].trim().length>5){
+        const err=await silentRunJS(jsMatch[1]);
+        if(err){
+          try{
+            const fixMsgs=[...apiMsgs,{role:"assistant",content:full},{role:"user",content:`Running that code produced this error: "${err}". Please fix it and reply with the corrected full response.`}];
+            const fixed=await fetchAI(fixMsgs,false,true);
+            if(fixed){full=fixed;corrected=true}
+          }catch(e){}
+        }
+      }
+    }
+    const elapsedS=((performance.now()-t0)/1000).toFixed(1);
+    trackTokenUsage(finalUserText,full);
+    finishTurn("a-"+idx,marked.parse(full),full,chat,dispHtml,txt,idx,elapsedS,corrected);
+  }
   catch(e){haptic("error");stopContextLoader("a-"+idx);const encTxt=encodeURIComponent(txt);showInlineError(e.message,encTxt,idx);const wrap=document.getElementById("a-"+idx)?.parentElement;const isPlanErr=e.message.includes("plan")||e.message.includes("Apex")||e.message.includes("Intellect");if(wrap)wrap.innerHTML=`<div class="msg ai" style="color:#ff453a;font-size:13px;padding:8px 0">⚠ ${isPlanErr?"Upgrade required to use this model.":"Connection error: "+e.message}</div>`;sendBtn.disabled=false;uiInput.disabled=false}
 }
 function showInlineError(msg,encTxt,idx){triggerGlitch();const f=document.querySelector("footer");const ex=f.querySelector(".inline-err");if(ex)ex.remove();const isLim=msg.includes("plan")||msg.includes("Apex")||msg.includes("Intellect")||msg.includes("limit");const d=document.createElement("div");d.className="inline-err";d.style.cssText="display:flex;align-items:center;gap:9px;padding:8px 14px;margin-bottom:7px;background:rgba(255,58,48,0.07);border:1px solid rgba(255,58,48,0.2);border-radius:17px;font-size:12px;color:rgba(255,255,255,0.65)";d.innerHTML=`${companionHTML("err-pc-"+idx,"errorstate",true)}<span style="flex:1;font-family:'Space Mono',monospace">⚠ ${isLim?"Upgrade required":"Connection error"}</span>${isLim?`<button onclick="openPremium();this.parentElement.remove()" style="padding:5px 12px;background:var(--pulse);border:none;border-radius:14px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Upgrade</button>`:`<button onclick="retryMsg(${idx},'${encTxt}');this.parentElement.remove()" style="padding:5px 12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:14px;color:#fff;font-size:11px;cursor:pointer;font-family:inherit">🔄 Retry</button>`}<button onclick="this.parentElement.remove()" style="background:none;border:none;color:#888;cursor:pointer;font-size:15px">✕</button>`;f.insertBefore(d,f.firstChild);setTimeout(()=>d.remove(),9000)}
@@ -2314,7 +2409,7 @@ async function animImgLoader(aiId,chat,dispHtml,txt,msgIndex){
 }
 
 // ═══ FINISH TURN ═══
-function finishTurn(aiId,htmlContent,rawContent,chat,userHtml,userTxt,msgIndex,elapsedS){
+function finishTurn(aiId,htmlContent,rawContent,chat,userHtml,userTxt,msgIndex,elapsedS,corrected){
   stopContextLoader(aiId);
   const wrap=document.getElementById(aiId)?.parentElement;if(!wrap)return;
   const enc=encodeURIComponent(rawContent),sId=`sp-${msgIndex}-${Date.now()}`,bHTML=getBranchHTML(msgIndex);
@@ -2323,10 +2418,12 @@ function finishTurn(aiId,htmlContent,rawContent,chat,userHtml,userTxt,msgIndex,e
   const fuHTML=followupHTML(fuType,msgIndex);
   const srcChipHTML=srcs.length?`<div class="claude-source-chip" onclick="openSourceDrawer('${encSrc}','${qc}')">🌐 ${srcs.length} Source${srcs.length>1?"s":""}</div>`:"";
   const speedHTML=elapsedS?`<div class="claude-source-chip" style="cursor:default">⚡ ${elapsedS}s</div>`:"";
+  const correctedHTML=corrected?`<div class="claude-source-chip" style="cursor:default;color:#8fdc8f;border-color:rgba(143,220,143,0.3)">✓ Tested &amp; auto-corrected</div>`:"";
   wrap.innerHTML=`
     <div class="msg ai" id="${aiId}"></div>
     <div style="margin-top:6px;display:flex;align-items:center;flex-wrap:wrap;gap:5px">
       ${speedHTML}
+      ${correctedHTML}
       ${srcChipHTML}
       ${bHTML}
     </div>
