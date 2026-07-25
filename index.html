@@ -2,8 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com 'unsafe-inline';
+  style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline';
+  font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+  img-src * data: blob:;
+  media-src *;
+  connect-src *;
+  frame-src 'self' blob:;
+  object-src 'none';
+  base-uri 'self';
+">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Phraortes — Intelligence Interface</title>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+<script src="security.js"></script>
+<script src="payment-verify.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
@@ -14,7 +29,7 @@
 @property --grad1{syntax:'<color>';inherits:true;initial-value:#12121a}
 @property --grad2{syntax:'<color>';inherits:true;initial-value:#08080d}
 @property --p{syntax:'<color>';inherits:true;initial-value:#b0b0b0}
-:root{--p:#b0b0b0;--bg:#0a0a0f;--txt:#fff;--grad1:#12121a;--grad2:#08080d;--brd:rgba(255,255,255,0.08);--ease:cubic-bezier(0.25,1,0.5,1);--glow:rgba(176,176,176,0.15);--pulse:#6C5CE7;--pulse-bright:#A855F7;--cyan-star:#06B6D4;--gold-star:#F59E0B;--nova:#EC4899;--text-primary:#F0F0FF;--text-secondary:#8888BB;--text-muted:#44446A;--glass-border:rgba(108,92,231,0.18);--glass-bg:rgba(13,14,28,0.75);--void:#03040A;--nebula-2:#12122A}
+:root{--p:#b0b0b0;--bg:#0a0a0f;--txt:#fff;--grad1:#12121a;--grad2:#08080d;--brd:rgba(255,255,255,0.08);--ease:cubic-bezier(0.16,1,0.3,1);--glow:rgba(176,176,176,0.15);--pulse:#6C5CE7;--pulse-bright:#A855F7;--cyan-star:#06B6D4;--gold-star:#F59E0B;--nova:#EC4899;--text-primary:#F0F0FF;--text-secondary:#8888BB;--text-muted:#44446A;--glass-border:rgba(108,92,231,0.18);--glass-bg:rgba(13,14,28,0.75);--void:#03040A;--nebula-2:#12122A}
 *{box-sizing:border-box;outline:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
 body{position:fixed;width:100%;margin:0;background:var(--bg);color:var(--txt);height:100dvh;display:flex;overflow:hidden;font-family:'Space Grotesk',-apple-system,sans-serif;transition:background 0.8s var(--ease),--grad1 0.9s var(--ease),--grad2 0.9s var(--ease),--p 0.9s var(--ease)}
 .bg-glow{position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 20% 30%,var(--grad1) 0%,transparent 70%),radial-gradient(circle at 80% 80%,var(--grad2) 0%,transparent 70%);filter:blur(60px);opacity:0.9;transition:1s var(--ease),--grad1 0.9s var(--ease),--grad2 0.9s var(--ease)}
@@ -41,7 +56,7 @@ body.sovereign-mode{--bg:#0a0805;--grad1:#1c1408;--grad2:#0a0700;--p:#E8C468;--g
 body.sovereign-mode .msg,body.sovereign-mode #ui{font-family:'Space Grotesk',sans-serif;font-size:15.5px}
 body.light-theme{--bg:#F7F2E7;--txt:#2b2313;--grad1:#EDE3C8;--grad2:#F7F2E7;--brd:rgba(43,35,19,0.12);--glow:rgba(201,162,39,0.18);--p:#8a6d1f}
 body.light-theme #sidebar{background:rgba(247,242,231,0.94);border-right:1px solid rgba(43,35,19,0.1)}
-body.light-theme header{background:rgba(247,242,231,0.8);border-bottom:1px solid rgba(43,35,19,0.1)}
+body.light-theme header{background:linear-gradient(to bottom,rgba(247,242,231,0.75) 0%,rgba(247,242,231,0.3) 65%,transparent 100%);border-bottom:none}
 body.light-theme .logo-main{color:#8a6d1f;text-shadow:none}
 body.light-theme .logo-sub{color:rgba(43,35,19,0.4)}
 body.light-theme .sidebar-title{color:#8a6d1f}
@@ -134,10 +149,10 @@ body.light-theme #core-header,body.light-theme #core-footer{color:#2b2313}
 .hf-btn.active,.hf-btn:hover{background:rgba(255,255,255,0.07);color:#fff;border-color:var(--p)}
 
 /* HEADER */
-header{height:66px;display:flex;justify-content:space-between;align-items:center;padding:0 20px;border-bottom:1px solid var(--brd);background:rgba(0,0,0,0.22);backdrop-filter:blur(22px);z-index:100;flex-shrink:0}
+header{height:58px;display:flex;justify-content:space-between;align-items:center;padding:0 18px;border-bottom:none;background:linear-gradient(to bottom,rgba(3,3,6,0.55) 0%,rgba(3,3,6,0.2) 65%,transparent 100%);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:100;flex-shrink:0;position:relative}
 
 /* LOGO - Beautiful */
-.logo{height:40px;display:flex;align-items:center;gap:10px;cursor:default}
+.logo{height:36px;display:flex;align-items:center;gap:9px;cursor:default}
 .logo-img{height:34px;width:auto;object-fit:contain;display:none}
 .logo-img.loaded{display:block}
 .logo-text-wrap{display:flex;flex-direction:column;line-height:1}
@@ -156,7 +171,7 @@ header{height:66px;display:flex;justify-content:space-between;align-items:center
 
 /* ACCOUNT AVATAR */
 .account-hub{position:relative;display:flex;align-items:center;gap:10px;cursor:pointer}
-.account-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,0.1),rgba(255,255,255,0.04));border:1.5px solid rgba(255,255,255,0.15);display:flex;justify-content:center;align-items:center;font-weight:600;font-size:13px;color:rgba(255,255,255,0.5);overflow:hidden;flex-shrink:0;transition:0.3s;position:relative}
+.account-avatar{width:33px;height:33px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,0.1),rgba(255,255,255,0.04));border:1.5px solid rgba(255,255,255,0.15);display:flex;justify-content:center;align-items:center;font-weight:600;font-size:13px;color:rgba(255,255,255,0.5);overflow:hidden;flex-shrink:0;transition:0.3s;position:relative}
 .account-avatar::after{content:'?';position:absolute;font-size:16px;color:rgba(255,255,255,0.2)}
 .account-avatar.logged-in{border-color:rgba(108,92,231,0.5);background:linear-gradient(135deg,var(--pulse),#222);box-shadow:0 0 12px rgba(108,92,231,0.3)}
 .account-avatar.logged-in::after{display:none}
@@ -448,6 +463,17 @@ footer{width:100%;padding:8px 8% 26px;background:linear-gradient(to top,rgba(0,0
 @keyframes constPulse{0%,100%{opacity:1}50%{opacity:0.5}}
 #constellation-preview{display:none;position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:rgba(13,13,18,0.97);border:1px solid rgba(201,162,39,0.32);border-radius:18px;padding:15px 18px;max-width:280px;width:85%;z-index:3;box-shadow:0 18px 48px rgba(0,0,0,0.6)}
 #constellation-preview.show{display:block}
+
+/* WORKSPACE / CANVAS — split-view panel */
+#workspace-panel{position:fixed;inset:0;z-index:41000;background:rgba(6,6,10,0.98);backdrop-filter:blur(20px);display:none;flex-direction:column}
+#workspace-panel.show{display:flex}
+.ws-panel-header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 0}
+.ws-panel-tabs{display:flex;gap:5px;background:rgba(255,255,255,0.04);padding:3px;border-radius:11px}
+.ws-tab-btn{padding:8px 18px;background:none;border:none;color:rgba(255,255,255,0.45);font-size:12px;font-weight:700;border-radius:9px;cursor:pointer;font-family:inherit;transition:0.2s}
+.ws-tab-btn.active{background:rgba(201,162,39,0.16);color:#E8C468}
+#ws-canvas-textarea{flex:1;background:transparent;border:none;color:#eee;padding:16px;font-family:"Fira Code",monospace;font-size:14px;line-height:1.7;resize:none;outline:none}
+.ws-file-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:13px;cursor:pointer;margin-bottom:8px}
+.ws-file-row:hover{background:rgba(201,162,39,0.06);border-color:rgba(201,162,39,0.25)}
 
 /* FOLLOW-UP CHIPS */
 .followup-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
@@ -892,6 +918,34 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
   </div>
 </div>
 
+<div id="workspace-panel">
+  <div class="ws-panel-header">
+    <div class="ws-panel-tabs">
+      <button class="ws-tab-btn" id="ws-tab-canvas" onclick="switchWorkspaceTab('canvas')">Canvas</button>
+      <button class="ws-tab-btn" id="ws-tab-files" onclick="switchWorkspaceTab('files')">Files</button>
+    </div>
+    <button class="btn-icon" onclick="closeWorkspace()">✕</button>
+  </div>
+  <div id="ws-canvas-view" style="display:none;flex:1;flex-direction:column;overflow:hidden">
+    <div id="ws-canvas-name" style="padding:10px 16px;font-size:12px;color:rgba(255,255,255,0.4);font-family:'Space Mono',monospace;border-bottom:1px solid rgba(255,255,255,0.06)">No file open</div>
+    <textarea id="ws-canvas-textarea" placeholder="Open a file from the Files tab, or just start writing here..." oninput="saveCanvasContent()"></textarea>
+  </div>
+  <div id="ws-files-view" style="display:none;flex:1;overflow-y:auto;padding:14px"></div>
+</div>
+
+<div id="memory-panel" class="source-drawer-panel" onclick="event.stopPropagation()">
+  <div class="drawer-header">
+    <div style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:1px">MEMORY</div>
+    <button onclick="closeMemoryManager()" style="background:none;border:none;color:#fff;font-size:19px;cursor:pointer">✕</button>
+  </div>
+  <div style="font-size:11px;color:rgba(255,255,255,0.35);padding:2px 2px 12px">What Phraortes remembers about you across chats. Remove anything you don't want kept.</div>
+  <div id="memory-panel-body" style="max-height:48vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px"></div>
+  <div style="display:flex;gap:8px;margin-top:12px">
+    <input type="text" id="memory-add-input" placeholder="Add something to remember..." style="flex:1;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;color:#fff;font-size:13px;font-family:inherit">
+    <button onclick="addMemoryFact()" style="padding:10px 16px;background:linear-gradient(135deg,#C9A227,#E8C468);border:none;border-radius:14px;color:#1a1206;font-weight:700;font-size:13px;cursor:pointer">Add</button>
+  </div>
+</div>
+
 <div id="templates-panel" class="source-drawer-panel" onclick="event.stopPropagation()">
   <div class="drawer-header">
     <div style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:1px">TEMPLATES</div>
@@ -962,7 +1016,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
         <div class="pay-lock-badge">🔒</div>
       </div>
       <div class="pay-body">
-        <div><div class="pay-label">SELECT NETWORK</div><select class="pay-select" id="pay-net" onchange="updatePayNet()"><option value="trc20">USDT — TRC20 (Tron)</option><option value="polygon">USDT — Polygon (Matic)</option></select></div>
+        <div><div class="pay-label">SELECT NETWORK</div><select class="pay-select" id="pay-net" onchange="updatePayNet()"><option value="bep20">USDT — BEP20 (BNB Smart Chain)</option></select></div>
         <div class="pay-qr-section"><div class="pay-qr-box"><canvas id="qr-canvas" width="130" height="130"></canvas></div></div>
         <div><div class="pay-label">WALLET ADDRESS</div><div class="pay-address-row"><input class="pay-address-input" id="pay-address" readonly onclick="copyAddress()"><button class="pay-copy-btn" onclick="copyAddress()">COPY</button></div></div>
         <div class="pay-info-row"><span>ℹ️</span><span>Send exactly the plan amount. After sending, paste your Transaction ID below.</span></div>
@@ -1232,7 +1286,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
         <span class="logo-sub">Intelligence OS</span>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px">
+    <div style="display:flex;align-items:center;gap:6px">
       <button class="btn-icon" id="files-btn" onclick="openFilesPanel()" style="position:relative">
         <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
         <span id="files-badge" style="display:none;position:absolute;top:-2px;right:-2px;background:var(--pulse-bright,#A855F7);color:#fff;font-size:9px;border-radius:50%;width:15px;height:15px;align-items:center;justify-content:center;font-family:'Space Mono',monospace;line-height:1">0</span>
@@ -1282,6 +1336,9 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
       <div class="menu-group-box" style="padding:5px;gap:5px">
         <div class="model-item" onclick="openPomodoro()"><div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#E8C468"></span>Focus Timer</span></div><div class="mi-sub">Ancient-style Pomodoro for deep work</div></div>
         <div class="model-item" onclick="openTemplatesPanel()"><div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#2C5AA0"></span>Templates</span></div><div class="mi-sub">Ready-made prompts for common tasks</div></div>
+        <div class="model-item" onclick="openWorkspace('canvas')"><div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#7A2E2E"></span>Canvas</span></div><div class="mi-sub">Edit a file side-by-side with chat</div></div>
+        <div class="model-item" onclick="openWorkspace('files')"><div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#00ff88"></span>Workspace</span></div><div class="mi-sub">All files &amp; code across this chat</div></div>
+        <div class="model-item" onclick="openMemoryManager()"><div class="mi-top"><span class="mi-name"><span class="mi-dot" style="background:#bf5af2"></span>Memory</span></div><div class="mi-sub">What Phraortes remembers about you</div></div>
       </div>
     </div>
   </div>
@@ -1299,7 +1356,15 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
     <div class="input-bar" id="main-input-bar" onclick="event.stopPropagation()">
       <input type="file" id="file-upload" style="display:none" multiple onchange="handleFiles(event)">
       <button class="btn-icon" onclick="document.getElementById('file-upload').click()">＋</button>
-      <button class="btn-icon" onclick="toggleGear(event)">⚙️</button>
+      <button class="btn-icon" onclick="toggleGear(event)" title="Astrolabe">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="9.5"/>
+          <circle cx="12" cy="12" r="5.5"/>
+          <line x1="12" y1="2.5" x2="12" y2="21.5"/>
+          <line x1="2.5" y1="12" x2="21.5" y2="12"/>
+          <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>
+        </svg>
+      </button>
       <textarea id="ui" placeholder="Message Phraortes..." spellcheck="false"></textarea>
       <!-- VOICE BUTTON -->
       <button class="voice-btn" id="voice-btn" onclick="toggleVoiceInput()" title="Voice input">
@@ -1327,7 +1392,7 @@ const GOOGLE_CLIENT_ID="961077952714-d1ba3ls025vrqou4hfr3jgvtdltsqh55.apps.googl
 const REDIRECT_URI="https://novamind-official.github.io/Nova-mind/";
 const PLAN_CFG={free:{name:"Free",msgLimit:5,advSlots:0,images:0,models:["2.4"]},starter:{name:"Satrap",msgLimit:null,advSlots:100,images:30,models:["2.4","2.5"]},pro:{name:"Immortal",msgLimit:null,advSlots:350,images:120,models:["2.4","2.5","2.6"]},ultimate:{name:"Shahanshah",msgLimit:null,advSlots:null,images:null,models:["2.4","2.5","2.6","2.7"]}};
 const PLAN_FEATURES={starter:["100 Advanced Reasoning Slots / month","30 HD Image Renders","Phraortes 2.4 Prime & 2.5 Intellect","Unlimited Standard Compute"],pro:["350 Premium Slots / month","120 Ultra-HD Studio Renders","All 3 cores incl. 2.6 Apex","API + Webhook access"],ultimate:["Truly Unlimited — All Models","Unlimited Commercial Artworks","Aura Live Voice Sessions","Priority support & early access"]};
-const WALLETS={trc20:"TXYourNobitexTRC20AddressHere9999",polygon:"0xYourNobitexPolygonAddressHere8888"};
+const WALLETS={bep20:"0xdd96c438bdf70ec037b6a51a34348eb85051a6eb"};
 
 let chats=JSON.parse(localStorage.getItem("phraortes_chats")||"[]");
 let curId=localStorage.getItem("phraortes_id");
@@ -1665,6 +1730,84 @@ function silentRunJS(code){
     document.body.appendChild(iframe);
     setTimeout(()=>{window.removeEventListener("message",handler);if(iframe.parentNode)iframe.remove();resolve(null)},2000);
   });
+}
+
+// ═══ WORKSPACE / CANVAS (split-view panel) ═══
+let wsCurrentFileId=null;
+function openWorkspace(tab){
+  document.getElementById("gear-menu")?.classList.remove("show");
+  document.getElementById("workspace-panel").classList.add("show");
+  switchWorkspaceTab(tab||"canvas");
+  haptic("light");
+}
+function closeWorkspace(){document.getElementById("workspace-panel").classList.remove("show")}
+function switchWorkspaceTab(tab){
+  document.getElementById("ws-canvas-view").style.display=tab==="canvas"?"flex":"none";
+  document.getElementById("ws-files-view").style.display=tab==="files"?"block":"none";
+  document.getElementById("ws-tab-canvas").classList.toggle("active",tab==="canvas");
+  document.getElementById("ws-tab-files").classList.toggle("active",tab==="files");
+  if(tab==="canvas")loadCanvasContent();
+  if(tab==="files")renderWorkspaceFiles();
+}
+function loadCanvasContent(){
+  const ta=document.getElementById("ws-canvas-textarea");
+  const nameEl=document.getElementById("ws-canvas-name");
+  if(wsCurrentFileId){
+    const chat=chats.find(c=>c.id==curId);
+    const f=chat?.files?.find(x=>x.id===wsCurrentFileId);
+    if(f){ta.value=f.content;nameEl.textContent=f.name;return}
+  }
+  ta.value=localStorage.getItem("canvas_scratch_"+curId)||"";
+  nameEl.textContent="Scratch note (not attached to any file)";
+}
+function saveCanvasContent(){
+  const ta=document.getElementById("ws-canvas-textarea");
+  if(wsCurrentFileId){
+    const chat=chats.find(c=>c.id==curId);
+    const f=chat?.files?.find(x=>x.id===wsCurrentFileId);
+    if(f){f.content=ta.value;save();return}
+  }
+  localStorage.setItem("canvas_scratch_"+curId,ta.value);
+}
+function renderWorkspaceFiles(){
+  const chat=chats.find(c=>c.id==curId);
+  const body=document.getElementById("ws-files-view");
+  const files=chat?.files||[];
+  if(!files.length){body.innerHTML='<div style="text-align:center;padding:40px 0;color:#555;font-size:13px">No files in this chat yet</div>';return}
+  const icons={code:"💻",image:"🖼️",doc:"📜"};
+  body.innerHTML=files.slice().reverse().map(f=>`<div class="ws-file-row" onclick="openFileInWorkspace('${f.id}','${f.type}')"><span style="font-size:20px">${icons[f.type]||"📄"}</span><div style="flex:1;overflow:hidden"><div style="font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${f.name}</div><div style="font-size:11px;color:#666">${new Date(f.ts).toLocaleString()}</div></div></div>`).join("");
+}
+function openFileInWorkspace(id,type){
+  if(type==="image"){
+    const chat=chats.find(c=>c.id==curId);
+    const f=chat?.files?.find(x=>x.id===id);
+    if(f)openLightbox(f.extra);
+    return;
+  }
+  wsCurrentFileId=id;
+  switchWorkspaceTab("canvas");
+}
+
+// ═══ MEMORY MANAGER ═══
+function openMemoryManager(){
+  document.getElementById("gear-menu")?.classList.remove("show");
+  renderMemoryPanel();
+  document.getElementById("memory-panel").classList.add("show");
+  haptic("light");
+}
+function closeMemoryManager(){document.getElementById("memory-panel").classList.remove("show")}
+function renderMemoryPanel(){
+  const body=document.getElementById("memory-panel-body");
+  if(!longMemory.length){body.innerHTML='<div style="text-align:center;padding:20px 0;color:#555;font-size:13px">Nothing remembered yet</div>';return}
+  body.innerHTML=longMemory.map((fact,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px"><span style="flex:1;font-size:13px;color:#ddd">${escapeHtml(fact)}</span><button onclick="deleteMemoryFact(${i})" style="background:none;border:none;color:#ff453a;font-size:16px;cursor:pointer">✕</button></div>`).join("");
+}
+function deleteMemoryFact(i){longMemory.splice(i,1);localStorage.setItem("phraortes_longmemory",JSON.stringify(longMemory));renderMemoryPanel();haptic("light")}
+function addMemoryFact(){
+  const input=document.getElementById("memory-add-input");
+  const val=input.value.trim();if(!val)return;
+  longMemory.push(val);if(longMemory.length>25)longMemory=longMemory.slice(-25);
+  localStorage.setItem("phraortes_longmemory",JSON.stringify(longMemory));
+  input.value="";renderMemoryPanel();haptic("success");showToast("Added to memory","success");
 }
 
 function companionHTML(id,state,small){
@@ -2110,7 +2253,7 @@ function openPayment(planName,price){
   const tick=setInterval(()=>{if(i>=steps.length){clearInterval(tick);setTimeout(()=>{document.getElementById("pay-loading").style.display="none";document.getElementById("pay-form").style.display="flex";updatePayNet()},500);return}fill.style.width=steps[i].p+"%";if(sub)sub.textContent=steps[i].t;i++},420);
 }
 function closePayment(){document.getElementById("payment-overlay").classList.remove("show")}
-function updatePayNet(){const net=document.getElementById("pay-net").value;const addr=WALLETS[net]||WALLETS.trc20;document.getElementById("pay-address").value=addr;drawQR(addr)}
+function updatePayNet(){const net=document.getElementById("pay-net").value;const addr=WALLETS[net]||WALLETS.bep20;document.getElementById("pay-address").value=addr;drawQR(addr)}
 function drawQR(text){
   const canvas=document.getElementById("qr-canvas");if(!canvas)return;
   const ctx=canvas.getContext("2d");ctx.fillStyle="#fff";ctx.fillRect(0,0,130,130);
@@ -2126,8 +2269,20 @@ async function verifyPayment(){
   if(!txid){showToast("Please enter your Transaction ID","error");return}
   const btn=document.getElementById("pay-verify-btn");
   btn.disabled=true;btn.classList.add("loading");btn.textContent="Verifying on blockchain...";haptic("double");
-  await new Promise(r=>setTimeout(r,2500));btn.textContent="Confirming transaction...";
-  await new Promise(r=>setTimeout(r,1500));
+  const priceText=document.getElementById("pay-plan-price").textContent;
+  const expectedAmount=parseFloat(priceText.replace(/[^0-9.]/g,""))||0;
+  if(!window.verifyBep20Payment){
+    btn.disabled=false;btn.classList.remove("loading");btn.textContent="✦ VERIFY PAYMENT & ACTIVATE PLAN";
+    showToast("Payment verification isn't set up yet — see payment-verify.js","error");
+    return;
+  }
+  const result=await verifyBep20Payment(txid,expectedAmount);
+  if(!result.ok){
+    btn.disabled=false;btn.classList.remove("loading");btn.textContent="✦ VERIFY PAYMENT & ACTIVATE PLAN";
+    showToast(result.reason,"error");haptic("error");
+    return;
+  }
+  btn.textContent="Confirming transaction...";
   const keyMap={"Satrap":"starter","Immortal":"pro","Shahanshah":"ultimate"};
   const key=keyMap[pendingPlan];
   if(key){activePlan=key;localStorage.setItem("phraortes_plan",activePlan);proSlotsUsed=0;trialCount=0;localStorage.setItem("phraortes_slots","0");localStorage.setItem("phraortes_trial","0");initPlanUI()}
@@ -2318,6 +2473,7 @@ async function send(){
   try{
     const t0=performance.now();
     let full=await fetchAI(apiMsgs,useVision,isCodeQuery);
+    if(window.sanitizeAIText)full=sanitizeAIText(full);
     let corrected=false;
     if(isCodeQuery&&!useVision){
       const jsMatch=full.match(/```(?:javascript|js)\n([\s\S]*?)```/);
@@ -2327,7 +2483,7 @@ async function send(){
           try{
             const fixMsgs=[...apiMsgs,{role:"assistant",content:full},{role:"user",content:`Running that code produced this error: "${err}". Please fix it and reply with the corrected full response.`}];
             const fixed=await fetchAI(fixMsgs,false,true);
-            if(fixed){full=fixed;corrected=true}
+            if(fixed){full=window.sanitizeAIText?sanitizeAIText(fixed):fixed;corrected=true}
           }catch(e){}
         }
       }
