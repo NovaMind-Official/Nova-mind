@@ -1,47 +1,105 @@
-// Reference implementation — compare this against your already-deployed Worker.
-// If your Worker's request/response shape differs, tell me and I'll adjust
-// the frontend's fetchAI() call to match instead of changing your Worker.
-
 const ALLOWED_ORIGIN = "https://novamind-official.github.io";
 
 export default {
   async fetch(request, env) {
-    // CORS preflight
+    const origin = request.headers.get("Origin");
+
     if (request.method === "OPTIONS") {
       return new Response(null, {
-        headers: {
-          "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
+        status: 204,
+        headers: corsHeaders(origin),
       });
     }
 
     if (request.method !== "POST") {
-      return new Response("Method not allowed", { status: 405 });
+      return new Response("Method Not Allowed", {
+        status: 405,
+        headers: corsHeaders(origin),
+      });
     }
 
-    const body = await request.json(); // { model, messages }
+    const url = new URL(request.url);
 
-    const upstream = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${env.AI_API_KEY}`,
-        "Content-Type": "application/json",
-        "HTTP-Referer": ALLOWED_ORIGIN,
-        "X-Title": "Phraortes",
-      },
-      body: JSON.stringify(body),
-    });
+    if (url.pathname !== "/api/chat") {
+      return new Response("Not Found", {
+        status: 404,
+        headers: corsHeaders(origin),
+      });
+    }
 
-    const data = await upstream.text(); // pass OpenRouter's JSON straight through
+    if (origin && origin !== ALLOWED_ORIGIN) {
+      return new Response("Forbidden", {
+        status: 403,
+        headers: corsHeaders(origin),
+      });
+    }
 
-    return new Response(data, {
-      status: upstream.status,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
-      },
-    });
+    try {
+      const body = await request.json();
+
+      if (!body || !Array.isArray(body.messages)) {
+        return new Response(
+          JSON.stringify({ error: "Invalid request body" }),
+          {
+            status: 400,
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders(origin),
+            },
+          }
+        );
+      }
+
+      const response = await fetch(
+        "https://api.x.ai/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${env.AI_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          // NovaMind's frontend sends OpenRouter-style model IDs (e.g. "openai/gpt-oss-120b:free"),
+          // which are not valid xAI model names. Normalize to a real Grok model here so the
+          // frontend's existing model-selection logic keeps working without changes.
+          body: JSON.stringify({ ...body, model: "grok-4.6" }),
+        }
+      );
+
+      const headers = new Headers(response.headers);
+
+      Object.entries(corsHeaders(origin)).forEach(([key, value]) => {
+        headers.set(key, value);
+      });
+
+      return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers,
+      });
+
+    } catch (error) {
+      return new Response(
+        JSON.stringify({
+          error: "Worker request failed",
+        }),
+        {
+          status: 500,
+          headers: {
+            "Content-Type": "application/json",
+            ...corsHeaders(origin),
+          },
+        }
+      );
+    }
   },
 };
+
+function corsHeaders(origin) {
+  return {
+    "Access-Control-Allow-Origin":
+      origin === ALLOWED_ORIGIN ? origin : ALLOWED_ORIGIN,
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Max-Age": "86400",
+  };
+}
