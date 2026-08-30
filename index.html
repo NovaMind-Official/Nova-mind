@@ -1395,8 +1395,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
 'use strict';
 function safeEnc(s){return encodeURIComponent(s||"").replace(/'/g,"%27")}
 if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-const _A="gsk_mIKxutVxzOYZdnFoMRbI",_B="WGdyb3FYuI7ZQoU2sZPIDQ0rmUc4GDhv";
-const OR_KEY="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";
+const OR_GATEWAY_URL="https://phraortes-api.esmaeilimatin20.workers.dev/api/chat"; // Cloudflare Worker proxies to OpenRouter; key lives server-side as AI_API_KEY
 const GOOGLE_CLIENT_ID="961077952714-d1ba3ls025vrqou4hfr3jgvtdltsqh55.apps.googleusercontent.com";
 const REDIRECT_URI="https://novamind-official.github.io/Nova-mind/";
 const PLAN_CFG={free:{name:"Free",msgLimit:5,advSlots:0,images:0,models:["2.4"]},starter:{name:"Satrap",msgLimit:null,advSlots:100,images:30,models:["2.4","2.5"]},pro:{name:"Immortal",msgLimit:null,advSlots:350,images:120,models:["2.4","2.5","2.6"]},ultimate:{name:"Shahanshah",msgLimit:null,advSlots:null,images:null,models:["2.4","2.5","2.6","2.7"]}};
@@ -2575,30 +2574,22 @@ async function fetchAI(messages,useVision,isCodeQuery){
   if(activeModel==="2.7"&&activePlan!=="ultimate")throw new Error("Sovereign 2.7 requires the Shahanshah plan.");
   // Model routing: OpenRouter's free catalog changes often (models lose :free status without notice),
   // so we try a short ordered list and fall back through it instead of hardcoding one model.
-  let orCandidates,grM;
-  if(useVision){orCandidates=["google/gemma-4-31b-it:free","openrouter/free"];grM="llama-3.2-11b-vision-preview"}
-  else if(activeModel==="2.7"){orCandidates=["openai/gpt-oss-120b:free","nvidia/nemotron-3-super-120b-a12b:free","google/gemma-4-31b-it:free","openrouter/free"];grM="llama-3.3-70b-versatile"}
-  else if(isCodeQuery||activeModel==="2.6"){orCandidates=["openai/gpt-oss-120b:free","nvidia/nemotron-3-super-120b-a12b:free","openrouter/free"];grM="llama-3.3-70b-versatile"}
-  else if(activeModel==="2.5"){orCandidates=["nvidia/nemotron-3-super-120b-a12b:free","google/gemma-4-31b-it:free","openrouter/free"];grM="llama-3.3-70b-versatile"}
-  else{orCandidates=["openrouter/free","openai/gpt-oss-120b:free"];grM="llama-3.3-70b-versatile"}
+  let orCandidates;
+  if(useVision){orCandidates=["google/gemma-4-31b-it:free","openrouter/free"]}
+  else if(activeModel==="2.7"){orCandidates=["openai/gpt-oss-120b:free","nvidia/nemotron-3-super-120b-a12b:free","google/gemma-4-31b-it:free","openrouter/free"]}
+  else if(isCodeQuery||activeModel==="2.6"){orCandidates=["openai/gpt-oss-120b:free","nvidia/nemotron-3-super-120b-a12b:free","openrouter/free"]}
+  else if(activeModel==="2.5"){orCandidates=["nvidia/nemotron-3-super-120b-a12b:free","google/gemma-4-31b-it:free","openrouter/free"]}
+  else{orCandidates=["openrouter/free","openai/gpt-oss-120b:free"]}
   for(let pass=0;pass<2;pass++){
     const errors=[];
-    if(OR_KEY){
-      for(const orM of orCandidates){
-        try{
-          const r=await fetch("https://openrouter.ai/api/v1/chat/completions",{method:"POST",headers:{Authorization:`Bearer ${OR_KEY}`,"Content-Type":"application/json","HTTP-Referer":location.href,"X-Title":"Phraortes"},body:JSON.stringify({model:orM,messages})});
-          const d=await r.json();
-          if(!d.error&&d.choices?.[0])return d.choices[0].message.content;
-          if(d.error)errors.push(`OR:${orM} → ${d.error.message||JSON.stringify(d.error)}`);
-        }catch(e){errors.push(`OR:${orM} → ${e.message}`)}
-      }
+    for(const orM of orCandidates){
+      try{
+        const r=await fetch(OR_GATEWAY_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:orM,messages})});
+        const d=await r.json();
+        if(!d.error&&d.choices?.[0])return d.choices[0].message.content;
+        if(d.error)errors.push(`OR:${orM} → ${d.error.message||JSON.stringify(d.error)}`);
+      }catch(e){errors.push(`OR:${orM} → ${e.message}`)}
     }
-    try{
-      const r=await fetch("https://api.groq.com/openai/v1/chat/completions",{method:"POST",headers:{Authorization:`Bearer ${_A+_B}`,"Content-Type":"application/json"},body:JSON.stringify({model:grM,messages})});
-      const d=await r.json();
-      if(!d.error)return d.choices[0].message.content;
-      errors.push(`Groq → ${d.error.message}`);
-    }catch(e){errors.push(`Groq → ${e.message}`)}
     if(pass===0){await new Promise(r=>setTimeout(r,1300));continue}
     console.error("Phraortes AI errors (after auto-retry):",errors);
     throw new Error(errors.length?errors[0]:"All providers failed");
