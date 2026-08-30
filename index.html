@@ -1395,7 +1395,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
 'use strict';
 function safeEnc(s){return encodeURIComponent(s||"").replace(/'/g,"%27")}
 if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-const OR_GATEWAY_URL="https://phraortes-api.esmaeilimatin20.workers.dev/api/chat"; // Cloudflare Worker proxies to OpenRouter; key lives server-side as AI_API_KEY
+const OR_GATEWAY_URL="https://phraortes-api.esmaeilimatin20.workers.dev/api/chat"; // Cloudflare Worker proxies to xAI Grok; key lives server-side as AI_API_KEY
 const GOOGLE_CLIENT_ID="961077952714-d1ba3ls025vrqou4hfr3jgvtdltsqh55.apps.googleusercontent.com";
 const REDIRECT_URI="https://novamind-official.github.io/Nova-mind/";
 const PLAN_CFG={free:{name:"Free",msgLimit:5,advSlots:0,images:0,models:["2.4"]},starter:{name:"Satrap",msgLimit:null,advSlots:100,images:30,models:["2.4","2.5"]},pro:{name:"Immortal",msgLimit:null,advSlots:350,images:120,models:["2.4","2.5","2.6"]},ultimate:{name:"Shahanshah",msgLimit:null,advSlots:null,images:null,models:["2.4","2.5","2.6","2.7"]}};
@@ -2572,14 +2572,14 @@ async function fetchAI(messages,useVision,isCodeQuery){
   if(activeModel==="2.5"&&activePlan==="free")throw new Error("Intellect 2.5 requires the Satrap plan or above.");
   if(activeModel==="2.6"&&activePlan!=="pro"&&activePlan!=="ultimate")throw new Error("Apex 2.6 requires the Immortal plan or above.");
   if(activeModel==="2.7"&&activePlan!=="ultimate")throw new Error("Sovereign 2.7 requires the Shahanshah plan.");
-  // Model routing: OpenRouter's free catalog changes often (models lose :free status without notice),
-  // so we try a short ordered list and fall back through it instead of hardcoding one model.
+  // Model routing: candidates are real xAI Grok model IDs (see docs.x.ai/developers/models).
+  // xAI has no free API tier, so this list is priority order, not a free/paid fallback chain.
   let orCandidates;
-  if(useVision){orCandidates=["google/gemma-4-31b-it:free","openrouter/free"]}
-  else if(activeModel==="2.7"){orCandidates=["openai/gpt-oss-120b:free","nvidia/nemotron-3-super-120b-a12b:free","google/gemma-4-31b-it:free","openrouter/free"]}
-  else if(isCodeQuery||activeModel==="2.6"){orCandidates=["openai/gpt-oss-120b:free","nvidia/nemotron-3-super-120b-a12b:free","openrouter/free"]}
-  else if(activeModel==="2.5"){orCandidates=["nvidia/nemotron-3-super-120b-a12b:free","google/gemma-4-31b-it:free","openrouter/free"]}
-  else{orCandidates=["openrouter/free","openai/gpt-oss-120b:free"]}
+  if(useVision){orCandidates=["grok-4.6"]}
+  else if(activeModel==="2.7"){orCandidates=["grok-4.6"]}
+  else if(isCodeQuery||activeModel==="2.6"){orCandidates=["grok-4.20-multi-agent-0309"]}
+  else if(activeModel==="2.5"){orCandidates=["grok-4.20-0309-reasoning"]}
+  else{orCandidates=["grok-4.3"]}
   for(let pass=0;pass<2;pass++){
     const errors=[];
     for(const orM of orCandidates){
