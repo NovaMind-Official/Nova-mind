@@ -731,6 +731,7 @@ body.sovereign-mode .bg-glow{opacity:0.85;background-image:repeating-linear-grad
 .story-orb.orb-ultimate::after{content:'';position:absolute;inset:-58px;border-radius:50%;background:conic-gradient(from 0deg,rgba(245,215,138,0.4),transparent 18deg,rgba(245,215,138,0.4) 36deg,transparent 54deg,rgba(245,215,138,0.4) 72deg,transparent 90deg,rgba(245,215,138,0.4) 108deg,transparent 126deg,rgba(245,215,138,0.4) 144deg,transparent 162deg,rgba(245,215,138,0.4) 180deg,transparent 198deg,rgba(245,215,138,0.4) 216deg,transparent 234deg,rgba(245,215,138,0.4) 252deg,transparent 270deg,rgba(245,215,138,0.4) 288deg,transparent 306deg,rgba(245,215,138,0.4) 324deg,transparent 342deg,rgba(245,215,138,0.4) 360deg);filter:blur(7px);opacity:0.65;animation:iconSpin 14s linear infinite}
 
 .story-chapter-inner{position:relative;padding:26px 0}
+.popular-ribbon{position:absolute;top:0;right:0;background:linear-gradient(135deg,var(--pulse-bright),var(--cyan-star));color:#0a0a0f;font-family:'Space Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:1.5px;padding:5px 12px;border-radius:20px;box-shadow:0 4px 14px rgba(108,92,231,0.4)}
 .story-chapter-inner::before,.story-chapter-inner::after{content:'';position:absolute;left:0;width:64px;height:1px;background:linear-gradient(90deg,var(--gold-royal-bright),transparent)}
 .story-chapter-inner::before{top:0}
 .story-chapter-inner::after{bottom:0}
@@ -1283,6 +1284,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
       </div>
       <div class="story-chapter" data-chapter="pro">
         <div class="story-chapter-inner">
+          <div class="popular-ribbon">MOST POPULAR</div>
           <span class="plan-icon">🧠</span>
           <h3>Immortal</h3>
           <p class="story-lede">For builders pushing the limits of AI cognition.</p>
@@ -1322,13 +1324,12 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
       <div class="qc-row reveal" onclick="openPayment('Shahanshah','119.99')"><span class="qc-name">Shahanshah</span><span class="qc-price">$119.99/mo</span><span class="qc-arrow">→</span></div>
     </section>
     <section class="addons-section">
-      <div class="section-label reveal">Power-Up Modules</div>
-      <h2 class="plans-headline reveal reveal-delay-1" style="text-align:center">Inject more power.</h2>
+      <div class="section-label reveal">Need More, Right Now?</div>
+      <h2 class="plans-headline reveal reveal-delay-1" style="text-align:center">Buy Extra Usage</h2>
+      <p class="reveal reveal-delay-1" style="text-align:center;color:var(--text-secondary);font-size:13px;max-width:420px;margin:0 auto 26px">Ran out of Advanced Reasoning Slots before your reset? Top up instantly — no plan change, no waiting.</p>
       <div class="addons-grid">
-        <div class="addon-card reveal reveal-delay-1" onclick="openPayment('Premium Artistic Suite','4.99')"><div class="addon-icon">📸</div><div class="addon-info"><div class="addon-name">Premium Artistic Suite</div><div class="addon-desc">100 Ultra-HD 4K Renders + AI Upscaler</div></div><div class="addon-price">$4.99</div></div>
-        <div class="addon-card reveal reveal-delay-2" onclick="openPayment('Codebase Auditor','9.99')"><div class="addon-icon">🧠</div><div class="addon-info"><div class="addon-name">Codebase Auditor Matrix</div><div class="addon-desc">500 Premium Slots + Bug Mapping</div></div><div class="addon-price">$9.99</div></div>
-        <div class="addon-card reveal reveal-delay-1" onclick="openPayment('Mega Context Vault','3.99')"><div class="addon-icon">📝</div><div class="addon-info"><div class="addon-name">Mega Context Vault</div><div class="addon-desc">1M Context Window + 2GB Sandbox</div></div><div class="addon-price">$3.99</div></div>
-        <div class="addon-card reveal reveal-delay-2" onclick="openPayment('Iranian Corporate Matrix','8.99')"><div class="addon-icon">⚖️</div><div class="addon-info"><div class="addon-name">Iranian Corporate Matrix</div><div class="addon-desc">دستیار تخصصی بازار، مالیات و قراردادهای ایران</div></div><div class="addon-price">$8.99</div></div>
+        <div class="addon-card reveal reveal-delay-1" onclick="openTopupPayment('slots50')"><div class="addon-icon">⚡</div><div class="addon-info"><div class="addon-name">+50 Extra Slots</div><div class="addon-desc">Instant top-up, added the moment you pay</div></div><div class="addon-price">$2.99</div></div>
+        <div class="addon-card reveal reveal-delay-2" onclick="openTopupPayment('slots200')"><div class="addon-icon">⚡</div><div class="addon-info"><div class="addon-name">+200 Extra Slots</div><div class="addon-desc">Best value — for heavy usage days</div></div><div class="addon-price">$8.99</div></div>
       </div>
     </section>
     <section class="prem-footer-cta">
@@ -1502,7 +1503,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
 'use strict';
 function safeEnc(s){return encodeURIComponent(s||"").replace(/'/g,"%27")}
 if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-const OR_GATEWAY_URL="https://phraortes-api.esmaeilimatin20.workers.dev/api/chat"; // Cloudflare Worker proxies to xAI Grok; key lives server-side as AI_API_KEY
+const OR_GATEWAY_URL="https://phraortes-api.esmaeilimatin20.workers.dev/api/chat"; // Cloudflare Worker proxies to OpenRouter; key lives server-side as AI_API_KEY
 const WORKER_BASE_URL="https://phraortes-api.esmaeilimatin20.workers.dev";
 const SEARCH_ENDPOINT=WORKER_BASE_URL+"/api/search";
 // ═══ TOOL CALLING: schema the model can invoke mid-response (OpenAI/xAI-compatible "tools" format) ═══
@@ -1534,6 +1535,7 @@ function licenseAuthHeader(){
 const GOOGLE_CLIENT_ID="961077952714-d1ba3ls025vrqou4hfr3jgvtdltsqh55.apps.googleusercontent.com";
 const REDIRECT_URI="https://novamind-official.github.io/Nova-mind/";
 const PLAN_CFG={free:{name:"Free",msgLimit:5,advSlots:0,images:0,models:["2.4"]},starter:{name:"Satrap",msgLimit:null,advSlots:100,images:30,models:["2.4","2.5"]},pro:{name:"Immortal",msgLimit:null,advSlots:350,images:120,models:["2.4","2.5","2.6"]},ultimate:{name:"Shahanshah",msgLimit:null,advSlots:null,images:null,models:["2.4","2.5","2.6","2.7"]}};
+function effectiveAdvSlots(plan){const base=PLAN_CFG[plan]?.advSlots;return base===null||base===undefined?base:base+extraSlots}
 const PLAN_FEATURES={starter:["100 Advanced Reasoning Slots / month","30 HD Image Renders","Phraortes 2.4 Prime & 2.5 Intellect","Unlimited Standard Compute"],pro:["350 Premium Slots / month","120 Ultra-HD Studio Renders","All 3 cores incl. 2.6 Apex","API + Webhook access"],ultimate:["Truly Unlimited — All Models","Unlimited Commercial Artworks","Aura Live Voice Sessions","Priority support & early access"]};
 const WALLETS={bep20:"0xdd96c438bdf70ec037b6a51a34348eb85051a6eb"};
 
@@ -1548,6 +1550,9 @@ let proSlotsUsed=parseInt(localStorage.getItem("phraortes_slots")||"0");
 let billing=JSON.parse(localStorage.getItem("phraortes_billing")||"[]");
 let branches=JSON.parse(localStorage.getItem("phraortes_branches")||"{}");
 let attachedFiles=[],pendingPlan="",editMsgId=null;
+let extraSlots=parseInt(localStorage.getItem("phraortes_extra_slots")||"0",10);
+let pendingTopupKey=null;
+const TOPUP_PACKS={slots50:{label:"+50 Extra Slots",price:2.99,slots:50},slots200:{label:"+200 Extra Slots",price:8.99,slots:200}};
 let speechUtt=null,speechBtnId=null,isScrolling=false,audioCtx=null,isAnnual=false;
 let cTimer=null,sTimer=null,asTimer=null,animFId=null,freeSeconds=parseInt(localStorage.getItem("phraortes_freesec")||String(5*3600)),starterSeconds=3*3600;
 let mediaRecorder=null,isRecording=false,recognitionObj=null;
@@ -2329,8 +2334,8 @@ function updateAccountCompanion(tab){
   else if(tab==="usage"){
     let exhausted=false;
     if(activePlan==="free")exhausted=trialCount>=PLAN_CFG.free.msgLimit;
-    else if(activePlan==="starter")exhausted=proSlotsUsed>=PLAN_CFG.starter.advSlots;
-    else if(activePlan==="pro")exhausted=proSlotsUsed>=PLAN_CFG.pro.advSlots;
+    else if(activePlan==="starter")exhausted=proSlotsUsed>=effectiveAdvSlots("starter");
+    else if(activePlan==="pro")exhausted=proSlotsUsed>=effectiveAdvSlots("pro");
     pc.classList.add(exhausted?"errorstate":"happy");
   }else if(tab==="settings"){pc.classList.add("thinking")}
 }
@@ -2379,11 +2384,11 @@ function renderUsageTab(){
     html=circularRing(pct,"var(--p)",`${used}/${total}`,"Messages");
     if(used>=total)html+=`<div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">⏳ Resets in ${fmtTime(freeSeconds)}</div>`;
   }else if(activePlan==="starter"){
-    const used=proSlotsUsed,total=PLAN_CFG.starter.advSlots,pct=used/total*100;
+    const used=proSlotsUsed,total=effectiveAdvSlots("starter"),pct=used/total*100;
     html=circularRing(pct,"var(--p)",`${used}/${total}`,"Advanced Slots")+`<div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">Standard requests: unlimited</div>`;
     if(used>=total)html+=`<div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px">⏳ Slots reset in ${fmtTime(starterSeconds)}</div>`;
   }else if(activePlan==="pro"){
-    const used=proSlotsUsed,total=PLAN_CFG.pro.advSlots,pct=used/total*100;
+    const used=proSlotsUsed,total=effectiveAdvSlots("pro"),pct=used/total*100;
     html=circularRing(pct,"var(--p)",`${used}/${total}`,"Premium Slots")+`<div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">Standard requests: unlimited</div>`;
   }else{
     html=`<div style="text-align:center;padding:16px 0;color:#F5D78A;font-family:'Space Mono',monospace;font-size:13px">✦ Shahanshah — truly unlimited</div>`;
@@ -2557,11 +2562,11 @@ function initPlanUI(){
   if(cTimer)clearInterval(cTimer);if(sTimer)clearInterval(sTimer);
   if(activePlan==="ultimate"){bars.orb.classList.add("show")}
   else if(activePlan==="pro"){bars.pro.classList.add("show");updateProGauge()}
-  else if(activePlan==="starter"){if(proSlotsUsed>=PLAN_CFG.starter.advSlots){bars.starter.classList.add("show");sTimer=setInterval(()=>{starterSeconds--;const el=document.getElementById("starter-reset-timer");if(el)el.textContent="Reset in "+fmtTime(starterSeconds);if(starterSeconds<=0){starterSeconds=3*3600;proSlotsUsed=0;localStorage.setItem("phraortes_slots","0");bars.starter.classList.remove("show");clearInterval(sTimer);showToast("Slots refreshed! ✅")}},1000)}}
+  else if(activePlan==="starter"){if(proSlotsUsed>=effectiveAdvSlots("starter")){bars.starter.classList.add("show");sTimer=setInterval(()=>{starterSeconds--;const el=document.getElementById("starter-reset-timer");if(el)el.textContent="Reset in "+fmtTime(starterSeconds);if(starterSeconds<=0){starterSeconds=3*3600;proSlotsUsed=0;localStorage.setItem("phraortes_slots","0");bars.starter.classList.remove("show");clearInterval(sTimer);showToast("Slots refreshed! ✅")}},1000)}}
   else{if(trialCount>=PLAN_CFG.free.msgLimit){bars.time.classList.add("show");document.getElementById("timer-countdown").textContent=fmtTime(freeSeconds);cTimer=setInterval(()=>{freeSeconds--;localStorage.setItem("phraortes_freesec",freeSeconds);const el=document.getElementById("timer-countdown");if(el)el.textContent=fmtTime(freeSeconds);if(freeSeconds<=0){freeSeconds=5*3600;trialCount=0;localStorage.setItem("phraortes_trial","0");localStorage.setItem("phraortes_freesec",String(freeSeconds));bars.time.classList.remove("show");clearInterval(cTimer);showToast("Compute slot refreshed! ✅")}},1000)}}
   updatePlanCTAs();updateAcPlanBadge();updateCorePillVisibility();
 }
-function updateProGauge(){const left=PLAN_CFG.pro.advSlots-proSlotsUsed,pct=Math.max(0,(left/PLAN_CFG.pro.advSlots)*100);const f=document.getElementById("pro-gauge-fill"),c=document.getElementById("pro-slots-count");if(f)f.style.width=pct+"%";if(c)c.textContent=left+"/"+PLAN_CFG.pro.advSlots}
+function updateProGauge(){const total=effectiveAdvSlots("pro"),left=total-proSlotsUsed,pct=Math.max(0,(left/total)*100);const f=document.getElementById("pro-gauge-fill"),c=document.getElementById("pro-slots-count");if(f)f.style.width=pct+"%";if(c)c.textContent=left+"/"+total}
 function updatePlanCTAs(){["starter","pro","ultimate"].forEach(p=>{const btn=document.getElementById("cta-"+p);if(!btn)return;const labels={starter:"Pledge as Satrap →",pro:"Ascend to Immortal →",ultimate:"Claim Shahanshah →"};if(activePlan===p){btn.textContent="✓ Current Plan";btn.classList.add("cta-current")}else{btn.textContent=labels[p];btn.classList.remove("cta-current")}})}
 function fmtTime(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(sc).padStart(2,"0")}`}
 
@@ -2569,6 +2574,7 @@ function fmtTime(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60
 const PLAN_PRICE_DATA={Satrap:{monthly:14.99,annual:10.49,annualTotal:125.88},Immortal:{monthly:49.99,annual:34.99,annualTotal:419.88},Shahanshah:{monthly:119.99,annual:83.99,annualTotal:1007.88}};
 function openPayment(planName,fallbackPrice){
   pendingPlan=planName;
+  pendingTopupKey=null; // a regular plan purchase always clears any stale top-up intent
   const pd=PLAN_PRICE_DATA[planName];
   const priceText=pd?(isAnnual?pd.annualTotal:pd.monthly).toFixed(2):fallbackPrice;
   const periodText=pd?(isAnnual?" / year":" / month"):" / one-time";
@@ -2587,6 +2593,13 @@ function openPayment(planName,fallbackPrice){
   const tick=setInterval(()=>{if(i>=steps.length){clearInterval(tick);setTimeout(()=>{document.getElementById("pay-loading").style.display="none";document.getElementById("pay-form").style.display="flex";updatePayNet()},500);return}fill.style.width=steps[i].p+"%";if(sub)sub.textContent=steps[i].t;i++},420);
 }
 function closePayment(){document.getElementById("payment-overlay").classList.remove("show")}
+function openTopupPayment(packKey){
+  const pack=TOPUP_PACKS[packKey];if(!pack)return;
+  if(activePlan==="free"){showToast("Extra Slots require the Satrap plan or above.","error");openPremium();return}
+  if(activePlan==="ultimate"){showToast("Shahanshah already has unlimited usage — no top-up needed.","error");return}
+  openPayment(pack.label,pack.price.toFixed(2));
+  pendingTopupKey=packKey; // set AFTER openPayment, which clears it by default
+}
 function updatePayNet(){const net=document.getElementById("pay-net").value;const addr=WALLETS[net]||WALLETS.bep20;document.getElementById("pay-address").value=addr;drawQR(addr)}
 function drawQR(text){
   const canvas=document.getElementById("qr-canvas");if(!canvas)return;
@@ -2603,6 +2616,38 @@ async function verifyPayment(){
   if(!txid){showToast("Please enter your Transaction ID","error");return}
   const btn=document.getElementById("pay-verify-btn");
   btn.disabled=true;btn.classList.add("loading");btn.textContent="Verifying on blockchain...";haptic("double");
+
+  if(pendingTopupKey){
+    const pack=TOPUP_PACKS[pendingTopupKey];
+    let result;
+    try{
+      const r=await fetchWithTimeout(WORKER_BASE_URL+"/api/verify-topup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({txHash:txid,pack:pendingTopupKey})},12000);
+      result=await r.json();
+    }catch(e){
+      btn.disabled=false;btn.classList.remove("loading");btn.textContent="✦ VERIFY PAYMENT & ACTIVATE PLAN";
+      showToast("Couldn't reach the verification server — check your connection.","error");haptic("error");
+      return;
+    }
+    if(!result.ok){
+      btn.disabled=false;btn.classList.remove("loading");btn.textContent="✦ VERIFY PAYMENT & ACTIVATE PLAN";
+      showToast(result.reason||"Verification failed.","error");haptic("error");
+      return;
+    }
+    extraSlots+=result.slots||0;localStorage.setItem("phraortes_extra_slots",String(extraSlots));
+    updatePlanCTAs();
+    billing.unshift({date:new Date().toLocaleDateString("en-GB"),item:pack?.label||"Extra Slots",txid:txid.substring(0,12)+"...",amount:document.getElementById("pay-plan-price").textContent});
+    localStorage.setItem("phraortes_billing",JSON.stringify(billing));renderBilling();haptic("success");
+    document.getElementById("pay-form").style.display="none";
+    const success=document.getElementById("pay-success");success.style.display="flex";
+    document.getElementById("pay-success-title").textContent="Slots Added! ⚡";
+    document.getElementById("pay-success-sub").textContent=`+${result.slots} extra slots were added to your account instantly.`;
+    document.getElementById("pay-success-badge").textContent="TOP-UP";
+    document.getElementById("pay-success-features").innerHTML="";
+    showToast(`✅ +${result.slots} slots added!`,"success");playSound("chime");
+    pendingTopupKey=null;
+    return;
+  }
+
   const keyMap={"Satrap":"starter","Immortal":"pro","Shahanshah":"ultimate"};
   const key=keyMap[pendingPlan];
   if(!key){btn.disabled=false;btn.classList.remove("loading");btn.textContent="✦ VERIFY PAYMENT & ACTIVATE PLAN";showToast("Unknown plan.","error");return}
@@ -2815,7 +2860,7 @@ async function send(){
   const finalUserText=(txt||(docContext?"Please analyze the attached document.":""))+docContext;
   if(imgData)apiMsgs.push({role:"user",content:[{type:"text",text:finalUserText||"Analyze this image."},{type:"image_url",image_url:{url:imgData}}]});
   else apiMsgs.push({role:"user",content:finalUserText});
-  if(activePlan==="pro"||activePlan==="starter"){proSlotsUsed++;localStorage.setItem("phraortes_slots",proSlotsUsed);if(activePlan==="pro")updateProGauge();if(activePlan==="starter"&&proSlotsUsed>=PLAN_CFG.starter.advSlots)initPlanUI()}
+  if(activePlan==="pro"||activePlan==="starter"){proSlotsUsed++;localStorage.setItem("phraortes_slots",proSlotsUsed);if(activePlan==="pro")updateProGauge();if(activePlan==="starter"&&proSlotsUsed>=effectiveAdvSlots("starter"))initPlanUI()}
   try{
     const t0=performance.now();
     let full=await fetchAI(apiMsgs,useVision,isCodeQuery,{enableTools:true,elId:"a-"+idx});
