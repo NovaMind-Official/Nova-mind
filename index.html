@@ -17,22 +17,24 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Phraortes — Intelligence Interface</title>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
-<script src="security.js"></script>
 <!-- payment-verify.js removed: verification now happens server-side in the Worker's /api/verify-payment route (see index.js) -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
 <style>
 @property --grad1{syntax:'<color>';inherits:true;initial-value:#12121a}
 @property --grad2{syntax:'<color>';inherits:true;initial-value:#08080d}
 @property --p{syntax:'<color>';inherits:true;initial-value:#b0b0b0}
-:root{--p:#b0b0b0;--bg:#0a0a0f;--txt:#fff;--grad1:#12121a;--grad2:#08080d;--brd:rgba(255,255,255,0.08);--ease:cubic-bezier(0.16,1,0.3,1);--glow:rgba(176,176,176,0.15);--pulse:#6C5CE7;--pulse-bright:#A855F7;--cyan-star:#06B6D4;--gold-star:#F59E0B;--nova:#EC4899;--text-primary:#F0F0FF;--text-secondary:#8888BB;--text-muted:#44446A;--glass-border:rgba(108,92,231,0.18);--glass-bg:rgba(13,14,28,0.75);--void:#03040A;--nebula-2:#12122A}
+:root{--p:#D4A24C;--bg:#0f0a06;--txt:#fff;--grad1:#2a1608;--grad2:#140a04;--brd:rgba(212,162,76,0.12);--ease:cubic-bezier(0.16,1,0.3,1);--glow:rgba(212,162,76,0.18);--pulse:#C9722E;--pulse-bright:#E8934A;--cyan-star:#2E8B7A;--gold-star:#F0B429;--nova:#C2410C;--text-primary:#F5EEDD;--text-secondary:#B39B7A;--text-muted:#5C4E3A;--glass-border:rgba(201,114,46,0.2);--glass-bg:rgba(26,16,10,0.75);--void:#0A0603;--nebula-2:#22140A}
 *{box-sizing:border-box;outline:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
 body{position:fixed;width:100%;margin:0;background:var(--bg);color:var(--txt);height:100dvh;display:flex;overflow:hidden;font-family:'Space Grotesk',-apple-system,sans-serif;transition:background 0.8s var(--ease),--grad1 0.9s var(--ease),--grad2 0.9s var(--ease),--p 0.9s var(--ease)}
 .bg-glow{position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 20% 30%,var(--grad1) 0%,transparent 70%),radial-gradient(circle at 80% 80%,var(--grad2) 0%,transparent 70%);filter:blur(60px);opacity:0.9;transition:1s var(--ease),--grad1 0.9s var(--ease),--grad2 0.9s var(--ease)}
+.bg-lattice{position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:repeating-linear-gradient(45deg,rgba(212,162,76,0.03) 0,rgba(212,162,76,0.03) 1px,transparent 1px,transparent 58px),repeating-linear-gradient(-45deg,rgba(212,162,76,0.03) 0,rgba(212,162,76,0.03) 1px,transparent 1px,transparent 58px);transition:0.6s var(--ease)}
+body.sovereign-mode .bg-lattice{background-image:repeating-linear-gradient(45deg,rgba(232,196,104,0.06) 0,rgba(232,196,104,0.06) 1px,transparent 1px,transparent 46px),repeating-linear-gradient(-45deg,rgba(232,196,104,0.06) 0,rgba(232,196,104,0.06) 1px,transparent 1px,transparent 46px)}
 
 /* MOODS */
 body.mood-cyber{--grad1:#021a0c;--grad2:#000a04;--p:#00ff88;--glow:rgba(0,255,136,0.2)}
@@ -368,6 +370,11 @@ footer{width:100%;padding:8px 5% 26px;background:linear-gradient(to top,rgba(0,0
 
 /* Voice button */
 .voice-btn{background:none;border:none;color:rgba(255,255,255,0.45);cursor:pointer;padding:6px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all 0.3s;flex-shrink:0}
+.aura-call-btn{background:linear-gradient(135deg,#7A2E2E,#C9A227);border:none;color:#1a1206;cursor:pointer;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 14px rgba(201,162,39,0.4),inset 0 1px 0 rgba(255,255,255,0.25);transition:0.25s;position:relative}
+.aura-call-btn::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1.5px solid rgba(201,162,39,0.4);opacity:0;transition:0.25s}
+.aura-call-btn:hover{transform:scale(1.08);box-shadow:0 6px 20px rgba(201,162,39,0.55),inset 0 1px 0 rgba(255,255,255,0.3)}
+.aura-call-btn:hover::after{opacity:1;inset:-5px}
+.aura-call-btn:active{transform:scale(0.94)}
 .voice-btn:hover{color:var(--pulse-bright);background:rgba(108,92,231,0.1);transform:scale(1.1)}
 .voice-btn.recording{color:#ff3b30;animation:recPulse 1s infinite}
 @keyframes recPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,59,48,0.4)}50%{box-shadow:0 0 0 8px rgba(255,59,48,0)}}
@@ -426,6 +433,16 @@ footer{width:100%;padding:8px 5% 26px;background:linear-gradient(to top,rgba(0,0
 
 /* CODE BLOCKS */
 .code-block-wrapper{margin:16px 0;border-radius:16px;overflow:hidden;border:1px solid var(--brd);background:rgba(7,7,11,0.96);font-family:"Fira Code",monospace;max-width:100%;box-shadow:inset 0 4px 18px rgba(0,0,0,0.5),0 8px 24px rgba(0,0,0,0.3);position:relative}
+.code-file-card{margin:16px 0;display:flex;align-items:center;gap:13px;padding:14px 16px;border-radius:16px;border:1px solid rgba(255,255,255,0.09);background:linear-gradient(135deg,rgba(255,255,255,0.035),rgba(255,255,255,0.01));cursor:pointer;transition:0.2s;max-width:420px}
+.code-file-card:hover{border-color:var(--lc);transform:translateY(-1px);box-shadow:0 10px 28px rgba(0,0,0,0.35)}
+.code-file-card:active{transform:scale(0.98)}
+.cfc-icon{width:38px;height:38px;border-radius:11px;background:color-mix(in srgb,var(--lc) 18%,transparent);color:var(--lc);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cfc-info{flex:1;min-width:0}
+.cfc-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13.5px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cfc-meta{font-family:'Space Mono',monospace;font-size:10.5px;color:rgba(255,255,255,0.4);margin-top:2px;text-transform:capitalize}
+.cfc-copy-btn{flex-shrink:0;display:flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0}
+body.light-theme .code-file-card{background:linear-gradient(135deg,rgba(0,0,0,0.02),rgba(0,0,0,0.005));border-color:rgba(0,0,0,0.08)}
+body.light-theme .cfc-name{color:#2b2313}
 .code-block-wrapper::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#7A2E2E,#C9A227,#1B3A6B);opacity:0.55;z-index:1}
 .code-block-wrapper.success-pulse{border-color:var(--p);box-shadow:0 0 22px var(--glow)}
 .code-header{display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.5);padding:8px 15px;border-bottom:1px solid rgba(255,255,255,0.05)}
@@ -517,7 +534,7 @@ body.light-theme .h-group-label span{color:rgba(43,35,19,0.45)}
 /* Sovereign tier gets its own quiet signature: a hairline gold lattice, evoking Achaemenid
    tilework, sitting far behind everything else — reinforces "the top tier looks different"
    without competing with the existing per-tier fonts. */
-body.sovereign-mode .bg-glow{opacity:0.85;background-image:repeating-linear-gradient(45deg,rgba(232,196,104,0.05) 0,rgba(232,196,104,0.05) 1px,transparent 1px,transparent 46px),repeating-linear-gradient(-45deg,rgba(232,196,104,0.05) 0,rgba(232,196,104,0.05) 1px,transparent 1px,transparent 46px),radial-gradient(circle at 20% 30%,var(--grad1) 0%,transparent 70%),radial-gradient(circle at 80% 80%,var(--grad2) 0%,transparent 70%)}
+
 
 /* CONSTELLATION MAP */
 #constellation-view{display:none;position:fixed;inset:0;z-index:9000;background:radial-gradient(circle at 50% 20%,#12102a,#03040A 75%);overflow-y:auto;overflow-x:hidden}
@@ -539,6 +556,11 @@ body.sovereign-mode .bg-glow{opacity:0.85;background-image:repeating-linear-grad
 .ws-tab-btn{padding:8px 18px;background:none;border:none;color:rgba(255,255,255,0.45);font-size:12px;font-weight:700;border-radius:9px;cursor:pointer;font-family:inherit;transition:0.2s}
 .ws-tab-btn.active{background:rgba(201,162,39,0.16);color:#E8C468}
 #ws-canvas-textarea{flex:1;background:transparent;border:none;color:#eee;padding:16px;font-family:"Fira Code",monospace;font-size:14px;line-height:1.7;resize:none;outline:none}
+.canvas-toolbar{display:flex;gap:7px;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.06);flex-wrap:wrap}
+.canvas-tool-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:6px 13px;font-size:11.5px;font-family:'Space Grotesk',sans-serif;font-weight:600;color:rgba(255,255,255,0.75);cursor:pointer;transition:0.18s}
+.canvas-tool-btn:hover{background:rgba(255,255,255,0.1);border-color:var(--p)}
+.canvas-tool-btn:active{transform:scale(0.96)}
+.canvas-tool-btn-danger:hover{border-color:#ff453a;color:#ff453a}
 .ws-file-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:13px;cursor:pointer;margin-bottom:8px}
 .ws-file-row:hover{background:rgba(201,162,39,0.06);border-color:rgba(201,162,39,0.25)}
 
@@ -868,17 +890,29 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
 .pc-body{position:absolute;inset:0;border-radius:50% 50% 46% 46%;background:linear-gradient(160deg,var(--gold-royal-bright,#E8C468),var(--gold-royal,#C9A227));box-shadow:0 3px 10px rgba(0,0,0,0.35),inset -3px -3px 6px rgba(0,0,0,0.25),inset 2px 2px 4px rgba(255,255,255,0.3);animation:pcFloat 2.6s ease-in-out infinite}
 @keyframes pcFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-3px) rotate(-2deg)}}
 .pc-crest{position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:7px solid var(--gold-royal-bright,#E8C468)}
-.pc-eye{position:absolute;top:44%;width:4px;height:4px;border-radius:50%;background:#1a1206;transition:all 0.25s ease}
+.pc-eye{position:relative;top:44%;width:4px;height:4px;border-radius:50%;background:#1a1206;transition:all 0.25s ease}
 .pc-eye.l{left:30%}
 .pc-eye.r{right:30%}
+.pc-pupil{position:absolute;width:1.6px;height:1.6px;border-radius:50%;background:rgba(255,255,255,0.85);top:0.6px;left:1px;animation:pcLookAround 4.5s ease-in-out infinite}
+.phra-companion.small .pc-pupil{display:none}
+@keyframes pcLookAround{0%,100%{transform:translateX(0)}20%{transform:translateX(0.6px)}40%{transform:translateX(-0.5px)}60%{transform:translateX(0.4px)}80%{transform:translateX(0)}}
+.pc-wing{position:absolute;top:48%;width:8px;height:11px;border-radius:60% 40% 50% 50%;background:linear-gradient(160deg,var(--gold-royal-bright,#E8C468),var(--gold-royal,#C9A227));opacity:0.9;transform-origin:top center;animation:pcWingIdle 2.6s ease-in-out infinite}
+.pc-wing.l{left:-4px;transform:rotate(18deg)}
+.pc-wing.r{right:-4px;transform:rotate(-18deg) scaleX(-1)}
+@keyframes pcWingIdle{0%,100%{transform:rotate(18deg)}50%{transform:rotate(12deg)}}
+@keyframes pcWingFlap{0%,100%{transform:rotate(18deg)}50%{transform:rotate(-25deg)}}
+.pc-tail{position:absolute;bottom:6%;left:-2px;width:6px;height:8px;border-radius:0 60% 60% 0;background:var(--gold-royal,#C9A227);opacity:0.75;transform-origin:top right;animation:pcTailWag 1.8s ease-in-out infinite;z-index:-1}
+@keyframes pcTailWag{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-10deg)}}
 .pc-beak{position:absolute;bottom:32%;left:50%;transform:translateX(-50%);width:0;height:0;border-left:3px solid transparent;border-right:3px solid transparent;border-top:4px solid rgba(0,0,0,0.3)}
 .phra-companion.thinking .pc-eye{height:1.5px;border-radius:1px}
+.phra-companion.thinking .pc-pupil{display:none}
 .phra-companion.thinking .pc-body{animation:pcThink 1.1s ease-in-out infinite}
 @keyframes pcThink{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
 .phra-companion.coding .pc-eye{width:3px;height:3px}
 .phra-companion.coding .pc-body::after{content:'';position:absolute;bottom:-4px;right:-4px;width:10px;height:10px;border-radius:50%;border:2px solid rgba(0,0,0,0.4);background:transparent}
 .phra-companion.happy .pc-eye{height:2px;border-radius:2px;top:42%;transform:scaleX(1.5)}
 .phra-companion.happy .pc-body{animation:pcHappy 0.55s cubic-bezier(0.34,1.56,0.64,1)}
+.phra-companion.happy .pc-wing{animation:pcWingFlap 0.35s ease-in-out 2}
 @keyframes pcHappy{0%{transform:scale(1) rotate(0)}40%{transform:scale(1.22) rotate(6deg)}70%{transform:scale(0.94) rotate(-3deg)}100%{transform:scale(1) rotate(0)}}
 .phra-companion.errorstate .pc-body{animation:pcError 0.5s ease}
 @keyframes pcError{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px) rotate(-6deg)}40%{transform:translateX(4px) rotate(6deg)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
@@ -887,9 +921,21 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
 .phra-companion.curious .pc-body{animation:pcCurious 1.3s ease-in-out infinite}
 @keyframes pcCurious{0%,100%{transform:rotate(0deg) translateY(0)}50%{transform:rotate(9deg) translateY(-2px)}}
 .phra-companion.celebrate .pc-body{animation:pcCelebrate 0.7s cubic-bezier(0.34,1.56,0.64,1)}
+.phra-companion.celebrate .pc-wing{animation:pcWingFlap 0.3s ease-in-out 3}
 @keyframes pcCelebrate{0%{transform:scale(1) rotate(0)}30%{transform:scale(1.4) rotate(-12deg) translateY(-7px)}60%{transform:scale(1.12) rotate(8deg) translateY(-3px)}100%{transform:scale(1) rotate(0) translateY(0)}}
 .phra-companion.celebrate::after{content:'✨';position:absolute;top:-11px;right:-9px;font-size:13px;animation:sparklePop 0.7s ease forwards;pointer-events:none}
+.phra-companion.celebrate::before{content:'✨';position:absolute;top:2px;left:-13px;font-size:10px;animation:sparklePop 0.7s ease 0.1s forwards;pointer-events:none;opacity:0}
 @keyframes sparklePop{0%{opacity:0;transform:scale(0)}40%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:scale(0.8) translateY(-11px)}}
+.phra-companion.excited .pc-eye{height:5px;width:5px;top:41%}
+.phra-companion.excited .pc-body{animation:pcExcited 0.4s ease-in-out infinite}
+.phra-companion.excited .pc-wing{animation:pcWingFlap 0.25s ease-in-out infinite}
+@keyframes pcExcited{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-5px) rotate(3deg)}}
+.phra-companion.love .pc-eye{background:transparent;width:7px;height:6px}
+.phra-companion.love .pc-eye::before{content:'♥';position:absolute;top:-4px;left:-2px;font-size:8px;color:#ff3c7d;line-height:1}
+.phra-companion.love .pc-pupil{display:none}
+.phra-companion.love .pc-body{animation:pcHappy 0.6s ease-in-out infinite alternate}
+.phra-companion.wink .pc-eye.l{height:1px !important;border-radius:1px;transform:none}
+.phra-companion.wink .pc-eye.r{height:5px;width:5px}
 .phra-companion.blink .pc-eye{height:1px !important;border-radius:1px}
 .loader-context{gap:12px}
 /* ONBOARDING — swipeable conversational carousel */
@@ -921,6 +967,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
 </head>
 <body onclick="closeMenus(event)">
 <div class="bg-glow"></div>
+<div class="bg-lattice"></div>
 <div id="onboard-screen">
   <div class="onboard-dots" id="onboard-dots"></div>
   <button class="onboard-back-btn" id="onboard-back-btn" onclick="onboardGoTo(onboardCurrentIdx()-1)" style="display:none">← Back</button>
@@ -1018,6 +1065,11 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
   </div>
   <div id="ws-canvas-view" style="display:none;flex:1;flex-direction:column;overflow:hidden">
     <div id="ws-canvas-name" style="padding:10px 16px;font-size:12px;color:rgba(255,255,255,0.4);font-family:'Space Mono',monospace;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:6px"><span style="color:#8fdc8f">🔗</span> Scratch note (not attached to any file)</div>
+    <div class="canvas-toolbar">
+      <button class="canvas-tool-btn" onclick="generateCanvasWithAI(this)">✨ Generate with AI</button>
+      <button class="canvas-tool-btn" onclick="exportCanvasPDF()">📄 Export PDF</button>
+      <button class="canvas-tool-btn canvas-tool-btn-danger" onclick="clearCanvas()">🗑 Clear</button>
+    </div>
     <textarea id="ws-canvas-textarea" dir="auto" placeholder="Write or paste anything here. Phraortes can see this — ask it to edit, continue, or fix what's here, right from the chat." oninput="saveCanvasContent()"></textarea>
   </div>
   <div id="ws-files-view" style="display:none;flex:1;overflow-y:auto;padding:14px"></div>
@@ -1064,6 +1116,8 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;justify-content:flex-end">
       <input type="text" class="editor-search" placeholder="Search code..." oninput="searchInEditor(this.value)">
+      <button onclick="copyEditorContent()" class="code-tool-btn" style="flex-shrink:0">⎘ Copy</button>
+      <button onclick="downloadEditorContent()" class="code-tool-btn" style="flex-shrink:0">⇩ Download</button>
       <button onclick="closeVirtualEditor()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.09);color:#fff;padding:7px 14px;border-radius:9px;cursor:pointer;font-family:inherit;flex-shrink:0">Close</button>
     </div>
   </div>
@@ -1423,11 +1477,6 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
   <div id="tools-menu" class="drop-menu" onclick="event.stopPropagation()">
     <div class="menu-header-label"><span>Tools</span></div>
 
-    <div class="aura-tile" onclick="callAura()">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-      <div class="aura-tile-text"><span class="aura-tile-title">Call Aura</span><span class="aura-tile-sub">Live voice</span></div>
-    </div>
-
     <div class="tool-group-label">Workspace</div>
     <div class="tools-grid">
       <div class="tool-tile" style="--tile-color:#7A2E2E" onclick="openWorkspace('canvas')">
@@ -1481,11 +1530,15 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
           <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>
         </svg>
       </button>
-      <div class="phra-companion small" id="footer-companion" style="flex-shrink:0;margin-left:2px"><div class="pc-body"></div><div class="pc-crest"></div><div class="pc-eye l"></div><div class="pc-eye r"></div><div class="pc-beak"></div></div>
       <textarea id="ui" dir="auto" placeholder="Message Phraortes..." spellcheck="false"></textarea>
-      <!-- VOICE BUTTON -->
-      <button class="voice-btn" id="voice-btn" onclick="toggleVoiceInput()" title="Voice input">
-        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path fill="none" stroke="currentColor" stroke-width="1.8" d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+      <button class="aura-call-btn" id="aura-call-btn" onclick="callAura()" title="Call Aura — live voice">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round">
+          <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>
+          <path d="M12 6.5a5.5 5.5 0 0 1 0 11" stroke-width="1.8"/>
+          <path d="M12 6.5a5.5 5.5 0 0 0 0 11" stroke-width="1.8" opacity="0.55"/>
+          <path d="M12 2.5a9.5 9.5 0 0 1 0 19" stroke-width="1.5" opacity="0.4"/>
+          <path d="M12 2.5a9.5 9.5 0 0 0 0 19" stroke-width="1.5" opacity="0.22"/>
+        </svg>
       </button>
       <button id="cancel-edit-btn" class="btn-icon" onclick="cancelEdit()" style="display:none;color:#ff3b30"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
       <button id="send-btn" class="btn-icon" onclick="send()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
@@ -1660,12 +1713,12 @@ async function triggerCompare(idx){
     body.innerHTML=`
       <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px">
         <div style="font-size:11px;color:#888;margin-bottom:8px;font-family:'Space Mono',monospace">ORIGINAL</div>
-        <div style="font-size:14px;color:#eee;line-height:1.7">${marked.parse(chat.msgs[idx].aRaw||"")}</div>
+        <div style="font-size:14px;color:#eee;line-height:1.7">${renderMD(chat.msgs[idx].aRaw||"")}</div>
         <button onclick="closeCompareModal()" style="margin-top:12px;padding:9px 16px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;color:#fff;font-size:12px;cursor:pointer">Keep This</button>
       </div>
       <div style="background:rgba(201,162,39,0.06);border:1px solid rgba(201,162,39,0.28);border-radius:16px;padding:16px">
         <div style="font-size:11px;color:#E8C468;margin-bottom:8px;font-family:'Space Mono',monospace">ALTERNATE</div>
-        <div style="font-size:14px;color:#eee;line-height:1.7">${marked.parse(alt)}</div>
+        <div style="font-size:14px;color:#eee;line-height:1.7">${renderMD(alt)}</div>
         <button onclick="useAlternate(${idx},'${safeEnc(alt)}')" style="margin-top:12px;padding:9px 16px;background:linear-gradient(135deg,#C9A227,#E8C468);border:none;border-radius:12px;color:#1a1206;font-weight:700;font-size:12px;cursor:pointer">Use This Instead</button>
       </div>`;
   }catch(e){body.innerHTML=`<div style="text-align:center;padding:40px 0;color:#ff453a;font-size:13px">Couldn't generate an alternate: ${e.message}</div>`}
@@ -1673,7 +1726,7 @@ async function triggerCompare(idx){
 function useAlternate(idx,encAlt){
   const alt=decodeURIComponent(encAlt);
   const chat=chats.find(c=>c.id==curId);if(!chat||!chat.msgs[idx])return;
-  chat.msgs[idx].a=marked.parse(alt);chat.msgs[idx].aRaw=alt;save();
+  chat.msgs[idx].a=renderMD(alt);chat.msgs[idx].aRaw=alt;save();
   closeCompareModal();loadChat(curId);showToast("Switched to the alternate response","success");
 }
 function closeCompareModal(){document.getElementById("compare-modal").style.display="none"}
@@ -2049,6 +2102,45 @@ function saveCanvasContent(){
   }
   localStorage.setItem("canvas_scratch_"+curId,ta.value);
 }
+async function generateCanvasWithAI(btn){
+  const ta=document.getElementById("ws-canvas-textarea");
+  const existing=ta.value.trim();
+  const instruction=prompt(existing?"What should Phraortes do with the canvas? (e.g. 'continue this', 'turn into a table', 'add a summary')":"What should Phraortes write here? (e.g. 'a comparison table of X vs Y', 'a project plan for launch week')");
+  if(!instruction)return;
+  const original=btn.textContent;btn.disabled=true;btn.textContent="✨ Writing...";haptic("light");
+  try{
+    const sysMsg={role:"system",content:"You write directly into a canvas document for the user. Reply with ONLY the final content in clean markdown — use real markdown tables (| syntax) whenever a table, comparison, or structured data is requested. No commentary, no 'Here is...', no code fence wrapping the whole response."};
+    const userMsg={role:"user",content:existing?`Current canvas content:\n\n${existing}\n\nInstruction: ${instruction}`:instruction};
+    const result=await fetchAI([sysMsg,userMsg],false,false);
+    if(result){ta.value=result.trim();saveCanvasContent();showToast("✨ Canvas updated");haptic("success")}
+  }catch(e){showToast("Couldn't generate — please try again.","error")}
+  finally{btn.disabled=false;btn.textContent=original}
+}
+function exportCanvasPDF(){
+  const ta=document.getElementById("ws-canvas-textarea");
+  const text=ta.value.trim();
+  if(!text){showToast("Canvas is empty — nothing to export.","error");return}
+  const staging=document.createElement("div");
+  staging.style.cssText="position:fixed;left:-9999px;top:0;width:700px;background:#fff;color:#111;padding:40px;font-family:'Space Grotesk',sans-serif;line-height:1.6";
+  staging.innerHTML=renderMD(text);
+  // Dark-theme app CSS doesn't translate to a white PDF page — force print-safe colors for the export only.
+  staging.querySelectorAll("h1,h2,h3,h4,strong").forEach(el=>el.style.color="#111");
+  staging.querySelectorAll("table").forEach(el=>{el.style.width="100%";el.style.borderCollapse="collapse";el.style.border="1px solid #ccc"});
+  staging.querySelectorAll("th").forEach(el=>{el.style.border="1px solid #ccc";el.style.padding="8px 10px";el.style.background="#f2f2f2"});
+  staging.querySelectorAll("td").forEach(el=>{el.style.border="1px solid #ccc";el.style.padding="8px 10px"});
+  staging.querySelectorAll("blockquote").forEach(el=>{el.style.borderLeft="3px solid #999";el.style.paddingLeft="14px";el.style.color="#555"});
+  document.body.appendChild(staging);
+  showToast("📄 Building your PDF...");
+  html2pdf().set({margin:14,filename:"phraortes-canvas.pdf",html2canvas:{scale:2},jsPDF:{unit:"pt",format:"a4"}}).from(staging).save()
+    .then(()=>{staging.remove();haptic("success")})
+    .catch(()=>{staging.remove();showToast("PDF export failed — try again.","error")});
+}
+function clearCanvas(){
+  const ta=document.getElementById("ws-canvas-textarea");
+  if(!ta.value.trim())return;
+  if(!confirm("Clear the canvas? This can't be undone."))return;
+  ta.value="";saveCanvasContent();showToast("Canvas cleared");haptic("light");
+}
 function renderWorkspaceFiles(){
   const chat=chats.find(c=>c.id==curId);
   const body=document.getElementById("ws-files-view");
@@ -2118,7 +2210,7 @@ setInterval(()=>{
 },3200);
 
 function companionHTML(id,state,small){
-  return `<div class="phra-companion ${state||""} ${small?"small":""}" id="${id}"><div class="pc-body"></div><div class="pc-crest"></div><div class="pc-eye l"></div><div class="pc-eye r"></div><div class="pc-beak"></div></div>`;
+  return `<div class="phra-companion ${state||""} ${small?"small":""}" id="${id}"><div class="pc-tail"></div><div class="pc-wing l"></div><div class="pc-wing r"></div><div class="pc-body"></div><div class="pc-crest"></div><div class="pc-eye l"><div class="pc-pupil"></div></div><div class="pc-eye r"><div class="pc-pupil"></div></div><div class="pc-beak"></div></div>`;
 }
 
 // ═══ CONTEXT-AWARE LOADER (icon + rotating text per domain, matched to the user's own language) ═══
@@ -2215,7 +2307,18 @@ window.addEventListener("load",()=>{
   handleOAuthRedirect();
   if(!chats.length)newChat();else loadChat(curId);
   renderBilling();updateModelUI(activeModel);initPlanUI();
-  uiInput.addEventListener("input",()=>{localStorage.setItem("draft_"+curId,uiInput.value);autoResize(uiInput);analyzeMood(uiInput.value);autoCtxSwitch(uiInput.value);updateTokenEstimate();footerCompanionCurious()});
+  let inputIdleTimer=null;
+  uiInput.addEventListener("input",()=>{
+    autoResize(uiInput); // must stay instant — the textarea needs to grow as you type
+    clearTimeout(inputIdleTimer);
+    inputIdleTimer=setTimeout(()=>{
+      localStorage.setItem("draft_"+curId,uiInput.value);
+      analyzeMood(uiInput.value);
+      autoCtxSwitch(uiInput.value);
+      updateTokenEstimate();
+      footerCompanionCurious();
+    },300); // fires once typing pauses, not on every keystroke — this was the main cause of typing lag
+  });
   uiInput.addEventListener("keydown",e=>{if(!["Enter","Backspace","Shift"].includes(e.key))playSound("click");if(e.key==="Enter"&&(e.shiftKey||e.ctrlKey)){e.preventDefault();send()}});
   uiInput.addEventListener("focus",()=>{const ws=chatBox.querySelectorAll(".msg-wrap");if(ws.length)ws[ws.length-1].classList.add("last-typing-session");document.body.classList.add("isolation-active")});
   uiInput.addEventListener("blur",()=>{document.body.classList.remove("isolation-active");setTimeout(()=>window.scrollTo(0,0),50)});
@@ -2755,7 +2858,8 @@ function analyzeMood(t){
   else if(/(خلاق|ایده|ابتکار|نوآوری|طراحی|create|creative|idea|innovate|design|imagine|invent|artistic)/i.test(t)){mood="mood-creative";f=50;a=60;c=90}
   else if(/(هیجان|جیجان|واو|وای|هوووو|excited|wow|omg|amazing|incredible|unbelievable)/i.test(t)){mood="mood-excited";f=60;a=40;c=80}
   else if(/(آرامش|مدیتیشن|یوگا|صبر|calm|meditate|peaceful|patient|tranquil|serene|mindful)/i.test(t)){mood="mood-calm";f=80;a=40;c=40}
-  document.body.className=mood||"";updateModelUI(activeModel);
+  [...document.body.classList].forEach(c=>{if(c.startsWith("mood-"))document.body.classList.remove(c)});
+  if(mood)document.body.classList.add(mood);
   if(document.getElementById("theme-toggle")?.checked)document.body.classList.add("light-theme");
   [["p-foc","b-foc",f],["p-ana","b-ana",a],["p-cre","b-cre",c]].forEach(([p,b,v])=>{const pe=document.getElementById(p),be=document.getElementById(b);if(pe)pe.textContent=v+"%";if(be)be.style.width=v+"%"});
 }
@@ -2785,10 +2889,19 @@ function restoreBranch(idx,vIdx){const v=branches[String(idx)]?.[vIdx];if(!v)ret
 
 // ═══ MARKED / CODE RENDERER ═══
 const renderer=new marked.Renderer();
+const LANG_EXT_MAP={javascript:"js",js:"js",python:"py",py:"py",typescript:"ts",ts:"ts",html:"html",css:"css",json:"json",bash:"sh",shell:"sh",sql:"sql",java:"java",c:"c",cpp:"cpp","c++":"cpp",go:"go",rust:"rs",php:"php",ruby:"rb",swift:"swift",kotlin:"kt"};
+const LANG_COLOR_MAP={javascript:"#f0db4f",js:"#f0db4f",typescript:"#3178c6",ts:"#3178c6",python:"#3776ab",py:"#3776ab",html:"#e34c26",css:"#2965f1",json:"#8fc7f5",bash:"#8fdc8f",shell:"#8fdc8f",sql:"#e8934a",java:"#e76f51",cpp:"#00599c","c++":"#00599c",c:"#5c6bc0",go:"#00add8",rust:"#dea584",php:"#787cb5",ruby:"#cc342d",swift:"#f05138",kotlin:"#7f52ff"};
 renderer.code=function(code,lang){
   const raw=typeof code==="object"?(code.text||""):(code||"");
   const str=String(raw);const lines=str.split("\n").length;const l=(lang||"code").toLowerCase();const enc=safeEnc(str);
-  if(lines>500){const ext=l==="python"?"py":l==="javascript"?"js":"txt";return`<div class="code-block-wrapper" style="display:flex;align-items:center;justify-content:space-between;padding:20px"><div style="display:flex;align-items:center;gap:13px"><span style="font-size:28px">📄</span><div><div style="font-weight:bold;color:#fff;font-family:'Space Mono',monospace">generated_module.${ext}</div><div style="font-size:11px;color:#666;margin-top:2px">${lines} lines</div></div></div><button class="code-tool-btn" onclick="openVirtualEditor('${enc}','generated_module.${ext}',${lines})">⚡ Open</button></div>`}
+  if(lines>40){
+    const ext=LANG_EXT_MAP[l]||l||"txt";const lc=LANG_COLOR_MAP[l]||"#8888BB";
+    return`<div class="code-file-card" style="--lc:${lc}" onclick="openVirtualEditor('${enc}','snippet.${ext}',${lines},'${l}')">
+      <div class="cfc-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+      <div class="cfc-info"><div class="cfc-name">snippet.${ext}</div><div class="cfc-meta">${l} · ${lines} lines</div></div>
+      <button class="cfc-copy-btn code-tool-btn copy-code-btn" data-code="${enc}" onclick="event.stopPropagation()" title="Copy"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+    </div>`;
+  }
   const valid=!!(lang&&hljs.getLanguage(lang));
   const hl=valid?hljs.highlight(str,{language:lang}).value:hljs.highlightAuto(str).value;
   const runnable=["javascript","js","html"].includes(l);
@@ -2799,6 +2912,15 @@ renderer.table=function(header,body){
   return `<div class="table-scroll"><table>\n<thead>\n${header}</thead>\n<tbody>\n${body}</tbody>\n</table></div>\n`;
 };
 marked.setOptions({renderer,breaks:true,gfm:true});
+// Every AI (and user) message gets rendered through here — never call renderMD() directly
+// anywhere else. Without this, raw HTML in a model's output (or text it read from a web page via
+// the read_url tool — classic indirect prompt injection) would execute directly in the browser.
+// onclick is allowed ONLY on our own .code-tool-btn buttons (Run/Copy/Canvas/Full on code blocks);
+// it's stripped from everything else, including anything the model tries to sneak into raw HTML.
+DOMPurify.addHook("uponSanitizeAttribute",(node,data)=>{
+  if(data.attrName==="onclick"&&!node.classList?.contains("code-tool-btn"))data.keepAttr=false;
+});
+function renderMD(raw){return DOMPurify.sanitize(marked.parse(raw||""),{ADD_ATTR:["onclick"]})}
 document.addEventListener("click",e=>{
   const btn=e.target.closest(".copy-code-btn");if(!btn)return;haptic("send");
   const enc=btn.getAttribute("data-code");if(!enc)return;
@@ -2864,7 +2986,6 @@ async function send(){
   try{
     const t0=performance.now();
     let full=await fetchAI(apiMsgs,useVision,isCodeQuery,{enableTools:true,elId:"a-"+idx});
-    if(window.sanitizeAIText)full=sanitizeAIText(full);
     let corrected=false;
     if(isCodeQuery&&!useVision){
       const jsMatch=full.match(/```(?:javascript|js)\n([\s\S]*?)```/);
@@ -2874,7 +2995,7 @@ async function send(){
           try{
             const fixMsgs=[...apiMsgs,{role:"assistant",content:full},{role:"user",content:`Running that code produced this error: "${err}". Please fix it and reply with the corrected full response.`}];
             const fixed=await fetchAI(fixMsgs,false,true);
-            if(fixed){full=window.sanitizeAIText?sanitizeAIText(fixed):fixed;corrected=true}
+            if(fixed){full=fixed;corrected=true}
           }catch(e){}
         }
       }
@@ -2889,7 +3010,7 @@ async function send(){
       const fpc=document.getElementById("footer-companion");if(fpc){fpc.classList.add("celebrate");setTimeout(()=>fpc.classList.remove("celebrate"),700)}
     }
     trackTokenUsage(finalUserText,full);
-    finishTurn("a-"+idx,marked.parse(full),full,chat,dispHtml,txt,idx,elapsedS,corrected);
+    finishTurn("a-"+idx,renderMD(full),full,chat,dispHtml,txt,idx,elapsedS,corrected);
     ensureRollingSummary(chat); // fire-and-forget: compacts old turns into chat.ctxSummary for the *next* send(), keeps context bounded on long chats
   }
   catch(e){haptic("error");stopContextLoader("a-"+idx);const encTxt=safeEnc(txt);showInlineError(e.message,encTxt,idx);const wrap=document.getElementById("a-"+idx)?.parentElement;const isPlanErr=e.message.includes("plan")||e.message.includes("Apex")||e.message.includes("Intellect");const friendlyMsg=isPlanErr?e.message:"Phraortes couldn't finish that response — please try again in a moment.";if(wrap)wrap.innerHTML=`<div class="msg ai" style="color:#ff453a;font-size:13px;padding:8px 0">⚠ ${friendlyMsg}</div>`;sendBtn.disabled=false;uiInput.disabled=false}
@@ -3052,7 +3173,7 @@ async function streamMarkdown(aiId,raw){
     trackFile("doc",`response_${(chats.find(c=>c.id==curId)?.files||[]).filter(f=>f.type==="doc").length+1}.md`,raw);
     const preview=raw.substring(0,420).trim();
     const enc=safeEnc(raw);
-    el.innerHTML=marked.parse(preview)+`<div class="code-block-wrapper" style="display:flex;align-items:center;justify-content:space-between;padding:18px;margin-top:14px"><div style="display:flex;align-items:center;gap:13px"><span style="font-size:26px">📜</span><div><div style="font-weight:bold;color:#fff;font-family:'Space Mono',monospace">Full response (${raw.length.toLocaleString()} chars)</div><div style="font-size:11px;color:#666;margin-top:2px">Rendered as a document to keep things smooth</div></div></div><div style="display:flex;gap:6px"><button class="code-tool-btn" onclick="openVirtualEditor('${enc}','response.md',${raw.split("\\n").length})">⚡ Open</button><button class="code-tool-btn" onclick="downloadTextFile('phraortes-response.md',decodeURIComponent('${enc}'))">⬇ Save</button></div></div>`;
+    el.innerHTML=renderMD(preview)+`<div class="code-block-wrapper" style="display:flex;align-items:center;justify-content:space-between;padding:18px;margin-top:14px"><div style="display:flex;align-items:center;gap:13px"><span style="font-size:26px">📜</span><div><div style="font-weight:bold;color:#fff;font-family:'Space Mono',monospace">Full response (${raw.length.toLocaleString()} chars)</div><div style="font-size:11px;color:#666;margin-top:2px">Rendered as a document to keep things smooth</div></div></div><div style="display:flex;gap:6px"><button class="code-tool-btn" onclick="openVirtualEditor('${enc}','response.md',${raw.split("\\n").length})">⚡ Open</button><button class="code-tool-btn" onclick="downloadTextFile('phraortes-response.md',decodeURIComponent('${enc}'))">⬇ Save</button></div></div>`;
     playSound("chime");sendBtn.disabled=false;uiInput.disabled=false;return;
   }
   let built="";let chunk=6,delay=4;
@@ -3061,9 +3182,9 @@ async function streamMarkdown(aiId,raw){
   if(activeModel==="2.5"){chunk=2;delay=18}
   if(activeModel==="2.7"){chunk=2;delay=22}
   document.getElementById("ai-core")?.classList.add("speaking");
-  for(let i=0;i<raw.length;i+=chunk){built+=raw.substring(i,i+chunk);if(el)el.innerHTML=marked.parse(built)+'<span class="stream-caret"></span>';if(!isScrolling)chatBox.scrollTo({top:chatBox.scrollHeight});await new Promise(r=>setTimeout(r,delay))}
+  for(let i=0;i<raw.length;i+=chunk){built+=raw.substring(i,i+chunk);if(el)el.innerHTML=renderMD(built)+'<span class="stream-caret"></span>';if(!isScrolling)chatBox.scrollTo({top:chatBox.scrollHeight});await new Promise(r=>setTimeout(r,delay))}
   document.getElementById("ai-core")?.classList.remove("speaking");
-  playSound("chime");if(el)el.innerHTML=marked.parse(raw);
+  playSound("chime");if(el)el.innerHTML=renderMD(raw);
   // Fix: apply read more after render
   setTimeout(()=>{applyReadMore(aiId);const m=aiId.match(/^a-(\d+)$/);if(m)enableChecklists(aiId,parseInt(m[1]))},100);
   sendBtn.disabled=false;uiInput.disabled=false;
@@ -3138,7 +3259,7 @@ function loadChat(id){
       const w=document.createElement("div");w.className="msg-wrap ai-wrap";
       const enc=safeEnc(m.aRaw||""),sId=`sp-${i}-loaded`;
       const isLong=(m.aRaw||"").length>LONG_TEXT_THRESHOLD;
-      const bodyHtml=isLong?marked.parse((m.aRaw||"").substring(0,420).trim())+`<div class="code-block-wrapper" style="display:flex;align-items:center;justify-content:space-between;padding:18px;margin-top:14px"><div style="display:flex;align-items:center;gap:13px"><span style="font-size:26px">📜</span><div><div style="font-weight:bold;color:#fff;font-family:'Space Mono',monospace">Full response (${(m.aRaw||"").length.toLocaleString()} chars)</div></div></div><div style="display:flex;gap:6px"><button class="code-tool-btn" onclick="openVirtualEditor('${enc}','response.md',${(m.aRaw||"").split("\\n").length})">⚡ Open</button><button class="code-tool-btn" onclick="downloadTextFile('phraortes-response.md',decodeURIComponent('${enc}'))">⬇ Save</button></div></div>`:m.a;
+      const bodyHtml=isLong?renderMD((m.aRaw||"").substring(0,420).trim())+`<div class="code-block-wrapper" style="display:flex;align-items:center;justify-content:space-between;padding:18px;margin-top:14px"><div style="display:flex;align-items:center;gap:13px"><span style="font-size:26px">📜</span><div><div style="font-weight:bold;color:#fff;font-family:'Space Mono',monospace">Full response (${(m.aRaw||"").length.toLocaleString()} chars)</div></div></div><div style="display:flex;gap:6px"><button class="code-tool-btn" onclick="openVirtualEditor('${enc}','response.md',${(m.aRaw||"").split("\\n").length})">⚡ Open</button><button class="code-tool-btn" onclick="downloadTextFile('phraortes-response.md',decodeURIComponent('${enc}'))">⬇ Save</button></div></div>`:m.a;
       const srcs=m.realSources||[],encSrc=safeEnc(JSON.stringify(srcs)),bHTML=getBranchHTML(i);
       const srcChipHTML=srcs.length?`<div class="claude-source-chip" onclick="openSourceDrawer('${encSrc}','Archived')">🌐 ${srcs.length} Source${srcs.length>1?"s":""}</div>`:"";
       const hCoreColor=MODEL_COLORS[m.coreUsed]||"",hCoreShort=(MODEL_NAMES[m.coreUsed]||"").split(" ")[0];
@@ -3451,7 +3572,10 @@ function toggleDropMenu(e,menuId,anchor){
 function toggleMagicMenu(e){e.stopPropagation();closeMenus(e);document.getElementById("magic-menu").classList.toggle("show");haptic("light")}
 function closeMenus(e){if(e?.target?.closest(".input-bar,.btn-icon,.voice-btn,.core-pill,#core-menu,#tools-menu,.source-drawer-panel,.account-page"))return;closeAllDropMenus()}
 function applyEnhancement(type){closeMenus(null);if(!uiInput.value.trim()){showToast("Type something first.");return}const base=uiInput.value;const map={"Artistic Prompt":`[Artistic Render]:\nConcept: ${base}\nCinematic volumetric lighting, 8K, golden ratio composition.`,"Engineering Prompt":`[Engineering Architecture]:\nTask: ${base}\nRobust modular solution with error handling and documentation.`,"Academic Prompt":`[Academic Analysis]:\nTopic: ${base}\nAnalyze using formal structured academic methodology.`,"Iran Business":`[Iranian Corporate Matrix]:\nTopic: ${base}\nتحلیل بر اساس بازار ایران، قوانین کار، مالیات و قراردادها.`};uiInput.value=map[type]||base;autoResize(uiInput);showToast(`🪄 Enhanced!`)}
-function openVirtualEditor(enc,name,lines){const raw=decodeURIComponent(enc);document.getElementById("editor-filename").textContent=name;document.getElementById("editor-lines-count").textContent=lines+" lines";document.getElementById("editor-textarea-core").value=raw;let mini="";raw.split("\n").slice(0,60).forEach(l=>{mini+=(l.trim().substring(0,25)||"...")+"\n"});document.getElementById("editor-minimap-core").textContent=mini;document.getElementById("virtual-code-editor").classList.add("show")}
+let currentEditorFilename="file.txt";
+function openVirtualEditor(enc,name,lines,lang){const raw=decodeURIComponent(enc);currentEditorFilename=name;document.getElementById("editor-filename").textContent=name;document.getElementById("editor-lines-count").textContent=lines+" lines"+(lang?" · "+lang:"");document.getElementById("editor-textarea-core").value=raw;let mini="";raw.split("\n").slice(0,60).forEach(l=>{mini+=(l.trim().substring(0,25)||"...")+"\n"});document.getElementById("editor-minimap-core").textContent=mini;document.getElementById("virtual-code-editor").classList.add("show")}
+function copyEditorContent(){const ta=document.getElementById("editor-textarea-core");navigator.clipboard?.writeText(ta.value).then(()=>{showToast("Copied to clipboard");haptic("light")}).catch(()=>{ta.select();document.execCommand("copy");showToast("Copied to clipboard")})}
+function downloadEditorContent(){const ta=document.getElementById("editor-textarea-core");const blob=new Blob([ta.value],{type:"text/plain"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=currentEditorFilename||"file.txt";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);haptic("success")}
 function closeVirtualEditor(){document.getElementById("virtual-code-editor").classList.remove("show")}
 function searchInEditor(val){const ta=document.getElementById("editor-textarea-core");if(!val)return;const idx=ta.value.toLowerCase().indexOf(val.toLowerCase());if(idx<0)return;ta.focus();ta.setSelectionRange(idx,idx+val.length);ta.scrollTop=ta.value.substr(0,idx).split("\n").length*16}
 function openSourceDrawer(encSrc,query){haptic("light");const sources=JSON.parse(decodeURIComponent(encSrc));document.getElementById("drawer-title-context").textContent=`SOURCES: ${query.toUpperCase()}`;const c=document.getElementById("drawer-sources-container");c.innerHTML="";sources.forEach(s=>{const icon=s.domain.charAt(0).toUpperCase();c.innerHTML+=`<a href="${s.url||("https://"+s.domain)}" target="_blank" class="source-item-link"><div class="source-meta"><div class="source-icon">${icon}</div><span>${s.domain}</span></div><div class="source-title">${s.title}</div></a>`});document.getElementById("global-source-drawer").classList.add("show")}
