@@ -1607,7 +1607,12 @@ let extraSlots=parseInt(localStorage.getItem("phraortes_extra_slots")||"0",10);
 let pendingTopupKey=null;
 const TOPUP_PACKS={slots50:{label:"+50 Extra Slots",price:2.99,slots:50},slots200:{label:"+200 Extra Slots",price:8.99,slots:200}};
 let speechUtt=null,speechBtnId=null,isScrolling=false,audioCtx=null,isAnnual=false;
-let cTimer=null,sTimer=null,asTimer=null,animFId=null,freeSeconds=parseInt(localStorage.getItem("phraortes_freesec")||String(5*3600)),starterSeconds=3*3600;
+let cTimer=null,sTimer=null,asTimer=null,animFId=null;
+function secondsUntilReset(storageKey,fallbackDurationSec){
+  const resetAt=parseInt(localStorage.getItem(storageKey)||"0",10);
+  if(!resetAt)return fallbackDurationSec;
+  return Math.max(0,Math.round((resetAt-Date.now())/1000));
+}
 let mediaRecorder=null,isRecording=false,recognitionObj=null;
 const chatBox=document.getElementById("chat-box"),uiInput=document.getElementById("ui"),sendBtn=document.getElementById("send-btn");
 const PERSONAS=["Hello. I'm your logical partner.","Hi there. Let's talk.","Welcome! Let's think outside the box."];
@@ -2485,11 +2490,11 @@ function renderUsageTab(){
   if(activePlan==="free"){
     const used=trialCount,total=PLAN_CFG.free.msgLimit,pct=used/total*100;
     html=circularRing(pct,"var(--p)",`${used}/${total}`,"Messages");
-    if(used>=total)html+=`<div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">⏳ Resets in ${fmtTime(freeSeconds)}</div>`;
+    if(used>=total)html+=`<div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">⏳ Resets in ${fmtTime(secondsUntilReset("phraortes_free_reset_at",5*3600))}</div>`;
   }else if(activePlan==="starter"){
     const used=proSlotsUsed,total=effectiveAdvSlots("starter"),pct=used/total*100;
     html=circularRing(pct,"var(--p)",`${used}/${total}`,"Advanced Slots")+`<div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">Standard requests: unlimited</div>`;
-    if(used>=total)html+=`<div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px">⏳ Slots reset in ${fmtTime(starterSeconds)}</div>`;
+    if(used>=total)html+=`<div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px">⏳ Slots reset in ${fmtTime(secondsUntilReset("phraortes_starter_reset_at",3*3600))}</div>`;
   }else if(activePlan==="pro"){
     const used=proSlotsUsed,total=effectiveAdvSlots("pro"),pct=used/total*100;
     html=circularRing(pct,"var(--p)",`${used}/${total}`,"Premium Slots")+`<div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px">Standard requests: unlimited</div>`;
@@ -2665,8 +2670,32 @@ function initPlanUI(){
   if(cTimer)clearInterval(cTimer);if(sTimer)clearInterval(sTimer);
   if(activePlan==="ultimate"){bars.orb.classList.add("show")}
   else if(activePlan==="pro"){bars.pro.classList.add("show");updateProGauge()}
-  else if(activePlan==="starter"){if(proSlotsUsed>=effectiveAdvSlots("starter")){bars.starter.classList.add("show");sTimer=setInterval(()=>{starterSeconds--;const el=document.getElementById("starter-reset-timer");if(el)el.textContent="Reset in "+fmtTime(starterSeconds);if(starterSeconds<=0){starterSeconds=3*3600;proSlotsUsed=0;localStorage.setItem("phraortes_slots","0");bars.starter.classList.remove("show");clearInterval(sTimer);showToast("Slots refreshed! ✅")}},1000)}}
-  else{if(trialCount>=PLAN_CFG.free.msgLimit){bars.time.classList.add("show");document.getElementById("timer-countdown").textContent=fmtTime(freeSeconds);cTimer=setInterval(()=>{freeSeconds--;localStorage.setItem("phraortes_freesec",freeSeconds);const el=document.getElementById("timer-countdown");if(el)el.textContent=fmtTime(freeSeconds);if(freeSeconds<=0){freeSeconds=5*3600;trialCount=0;localStorage.setItem("phraortes_trial","0");localStorage.setItem("phraortes_freesec",String(freeSeconds));bars.time.classList.remove("show");clearInterval(cTimer);showToast("Compute slot refreshed! ✅")}},1000)}}
+  else if(activePlan==="starter"){
+    if(proSlotsUsed>=effectiveAdvSlots("starter")){
+      bars.starter.classList.add("show");
+      let resetAt=parseInt(localStorage.getItem("phraortes_starter_reset_at")||"0",10);
+      if(!resetAt||resetAt<=Date.now()){resetAt=Date.now()+3*3600*1000;localStorage.setItem("phraortes_starter_reset_at",String(resetAt))}
+      const tick=()=>{
+        const remain=Math.max(0,Math.round((resetAt-Date.now())/1000));
+        const el=document.getElementById("starter-reset-timer");if(el)el.textContent="Reset in "+fmtTime(remain);
+        if(remain<=0){proSlotsUsed=0;localStorage.setItem("phraortes_slots","0");localStorage.removeItem("phraortes_starter_reset_at");bars.starter.classList.remove("show");clearInterval(sTimer);showToast("Slots refreshed! ✅")}
+      };
+      tick();sTimer=setInterval(tick,1000);
+    }
+  }
+  else{
+    if(trialCount>=PLAN_CFG.free.msgLimit){
+      bars.time.classList.add("show");
+      let resetAt=parseInt(localStorage.getItem("phraortes_free_reset_at")||"0",10);
+      if(!resetAt||resetAt<=Date.now()){resetAt=Date.now()+5*3600*1000;localStorage.setItem("phraortes_free_reset_at",String(resetAt))}
+      const tick=()=>{
+        const remain=Math.max(0,Math.round((resetAt-Date.now())/1000));
+        const el=document.getElementById("timer-countdown");if(el)el.textContent=fmtTime(remain);
+        if(remain<=0){trialCount=0;localStorage.setItem("phraortes_trial","0");localStorage.removeItem("phraortes_free_reset_at");bars.time.classList.remove("show");clearInterval(cTimer);showToast("Compute slot refreshed! ✅")}
+      };
+      tick();cTimer=setInterval(tick,1000);
+    }
+  }
   updatePlanCTAs();updateAcPlanBadge();updateCorePillVisibility();
 }
 function updateProGauge(){const total=effectiveAdvSlots("pro"),left=total-proSlotsUsed,pct=Math.max(0,(left/total)*100);const f=document.getElementById("pro-gauge-fill"),c=document.getElementById("pro-slots-count");if(f)f.style.width=pct+"%";if(c)c.textContent=left+"/"+total}
