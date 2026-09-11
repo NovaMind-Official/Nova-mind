@@ -151,6 +151,23 @@ body.light-theme #core-header,body.light-theme #core-footer{color:#2b2313}
 #h-list::-webkit-scrollbar{width:3px}
 #h-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
 .h-item{padding:12px 14px;border-radius:14px;margin-bottom:7px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:space-between;font-size:13px;border:1px solid rgba(255,255,255,0.05);transition:all 0.3s var(--ease);cursor:pointer}
+#select-mode-btn.active{color:var(--p);background:rgba(212,162,76,0.14)}
+.h-item-icon{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-right:9px}
+.focus-reader-overlay{position:fixed;inset:0;background:var(--bg);z-index:36000;display:none;overflow-y:auto;padding:70px 24px 100px}
+.focus-reader-overlay.show{display:block;animation:fadeIn 0.25s ease}
+.focus-reader-content{max-width:680px;margin:0 auto;font-size:18px;line-height:1.95;color:var(--text-primary);font-family:'Georgia',serif}
+.focus-reader-content h1,.focus-reader-content h2,.focus-reader-content h3{font-family:'Space Grotesk',sans-serif}
+.focus-reader-close{position:fixed;top:22px;right:22px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:36001}
+.bulk-action-bar{display:none;align-items:center;justify-content:space-between;gap:8px;padding:9px 14px;margin:0 14px 10px;background:rgba(212,162,76,0.1);border:1px solid rgba(212,162,76,0.25);border-radius:13px;font-size:12px;color:var(--p);font-family:'Space Grotesk',sans-serif;font-weight:600}
+.bulk-action-bar.show{display:flex}
+.bulk-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:5px 10px;font-size:11px;color:#fff;cursor:pointer;font-family:inherit;transition:0.15s}
+.bulk-btn:hover{background:rgba(255,255,255,0.12)}
+.bulk-btn.danger:hover{background:rgba(255,69,58,0.18);border-color:rgba(255,69,58,0.4);color:#ff453a}
+.h-item-checkbox{width:17px;height:17px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.25);flex-shrink:0;margin-right:10px;display:flex;align-items:center;justify-content:center;transition:0.15s}
+.h-item.selected{background:rgba(212,162,76,0.1);border-color:rgba(212,162,76,0.35)}
+.h-item.selected .h-item-checkbox{background:var(--p);border-color:var(--p)}
+.h-item-checkbox svg{opacity:0;transition:0.15s;color:#1a1206}
+.h-item.selected .h-item-checkbox svg{opacity:1}
 .h-item:hover{background:rgba(255,255,255,0.065);border-color:rgba(255,255,255,0.13)}
 .h-item.active-chat{border-color:var(--p);background:rgba(255,255,255,0.07);box-shadow:0 4px 14px var(--glow)}
 .h-item.pinned-chat{border-left:3px solid var(--p)}
@@ -420,6 +437,32 @@ footer{width:100%;padding:8px 5% 26px;background:linear-gradient(to top,rgba(0,0
 .claude-source-chip{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:2px 9px;border-radius:9px;font-size:11px;font-weight:600;color:var(--p);cursor:pointer;margin-left:4px;vertical-align:middle;transition:background 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
 .claude-source-chip:hover{background:rgba(255,255,255,0.1)}
 .source-drawer-panel{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,18,0.97);backdrop-filter:blur(30px);border-top:1px solid rgba(255,255,255,0.09);border-top-left-radius:22px;border-top-right-radius:22px;padding:18px 22px;z-index:10000;transform:translateY(100%);transition:transform 0.28s var(--ease);box-shadow:0 -14px 38px rgba(0,0,0,0.6)}
+.persona-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;max-height:56vh;overflow-y:auto;padding-bottom:4px}
+.persona-card{position:relative;border-radius:18px;padding:16px 14px;cursor:pointer;transition:0.2s;overflow:hidden;min-height:118px;display:flex;flex-direction:column;justify-content:space-between;border:1.5px solid transparent}
+.persona-card:active{transform:scale(0.96)}
+.persona-card.active{border-color:#fff}
+.persona-card.active::after{content:'✓ ACTIVE';position:absolute;top:8px;right:8px;font-size:8px;font-weight:800;letter-spacing:0.5px;background:rgba(0,0,0,0.35);padding:3px 6px;border-radius:20px;color:#fff}
+.persona-card-emoji{font-size:26px;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.3))}
+.persona-card-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#fff;margin-top:8px;line-height:1.25}
+.persona-card-desc{font-size:10px;color:rgba(255,255,255,0.65);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.persona-card-edit{position:absolute;bottom:8px;right:8px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:#fff}
+.persona-new-card{border-radius:18px;border:1.5px dashed rgba(255,255,255,0.18);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;min-height:118px;color:rgba(255,255,255,0.4);transition:0.2s}
+.persona-new-card:hover{border-color:var(--p);color:var(--p);background:rgba(212,162,76,0.06)}
+.persona-editor-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(18px);z-index:31000;display:none;align-items:center;justify-content:center;padding:20px}
+.persona-editor-overlay.show{display:flex}
+.persona-editor-card{background:rgba(15,10,6,0.97);border:1px solid rgba(212,162,76,0.2);border-radius:22px;padding:20px;width:100%;max-width:400px;max-height:85vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.6)}
+.persona-editor-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.persona-emoji-preview{width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+#persona-name-input{flex:1;padding:12px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;color:#fff;font-size:14px;font-family:inherit;font-weight:600}
+.persona-emoji-picker,.persona-color-picker{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.pe-swatch{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;background:rgba(255,255,255,0.05);border:1.5px solid transparent;transition:0.15s}
+.pe-swatch.selected{border-color:#fff;transform:scale(1.08)}
+.pe-color-swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:0.15s}
+.pe-color-swatch.selected{border-color:#fff;transform:scale(1.15)}
+#persona-instructions-input{width:100%;padding:12px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;color:#fff;font-size:13px;font-family:inherit;resize:vertical;line-height:1.6;margin-bottom:14px}
+.persona-save-btn{width:100%;padding:13px;background:linear-gradient(135deg,#C9A227,#E8C468);border:none;border-radius:14px;color:#1a1206;font-weight:800;font-size:13.5px;cursor:pointer;font-family:inherit}
+.active-persona-pill{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:20px;padding:2px 9px 2px 7px;cursor:pointer;margin-top:2px}
+.active-persona-pill span{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;color:#fff;max-width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .source-drawer-panel.show{transform:translateY(0)}
 .drawer-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
 .drawer-scroll-wrapper{display:flex;gap:11px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch}
@@ -434,6 +477,10 @@ footer{width:100%;padding:8px 5% 26px;background:linear-gradient(to top,rgba(0,0
 /* CODE BLOCKS */
 .code-block-wrapper{margin:16px 0;border-radius:16px;overflow:hidden;border:1px solid var(--brd);background:rgba(7,7,11,0.96);font-family:"Fira Code",monospace;max-width:100%;box-shadow:inset 0 4px 18px rgba(0,0,0,0.5),0 8px 24px rgba(0,0,0,0.3);position:relative}
 .code-file-card{margin:16px 0;display:flex;align-items:center;gap:13px;padding:14px 16px;border-radius:16px;border:1px solid rgba(255,255,255,0.09);background:linear-gradient(135deg,rgba(255,255,255,0.035),rgba(255,255,255,0.01));cursor:pointer;transition:0.2s;max-width:420px}
+.design-card-canvas{padding:24px;display:flex;align-items:center;justify-content:center;background:repeating-conic-gradient(rgba(255,255,255,0.04) 0% 25%,transparent 0% 50%) 50%/16px 16px;min-height:120px}
+.design-card-canvas svg{max-width:100%;max-height:420px;width:auto;height:auto}
+.code-fullscreen .design-card-canvas{min-height:calc(100vh - 60px)}
+.code-fullscreen .design-card-canvas svg{max-height:calc(100vh - 120px)}
 .code-file-card:hover{border-color:var(--lc);transform:translateY(-1px);box-shadow:0 10px 28px rgba(0,0,0,0.35)}
 .code-file-card:active{transform:scale(0.98)}
 .cfc-icon{width:38px;height:38px;border-radius:11px;background:color-mix(in srgb,var(--lc) 18%,transparent);color:var(--lc);display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -530,6 +577,13 @@ body.light-theme .cfc-name{color:#2b2313}
 .h-group-label:first-child{margin-top:2px}
 .h-group-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(201,162,39,0.32),transparent)}
 .h-group-label span{font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,0.38);white-space:nowrap}
+.folder-header{display:flex;align-items:center;justify-content:space-between;padding:9px 8px;margin-bottom:2px;border-radius:10px;cursor:pointer;transition:0.15s;font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:700;color:rgba(255,255,255,0.85)}
+.folder-header:hover{background:rgba(255,255,255,0.04)}
+.folder-header-left{display:flex;align-items:center;gap:6px}
+.folder-chevron{transition:transform 0.2s;flex-shrink:0;opacity:0.5}
+.folder-chevron.collapsed{transform:rotate(-90deg)}
+.folder-count{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,0.35);background:rgba(255,255,255,0.05);padding:2px 7px;border-radius:10px}
+.folder-chats{padding-left:6px;margin-bottom:6px;border-left:1.5px solid rgba(255,255,255,0.06);margin-left:11px}
 body.light-theme .h-group-label span{color:rgba(43,35,19,0.45)}
 /* Sovereign tier gets its own quiet signature: a hairline gold lattice, evoking Achaemenid
    tilework, sitting far behind everything else — reinforces "the top tier looks different"
@@ -1088,6 +1142,67 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
   </div>
 </div>
 
+<!-- PERSONA MANAGER — grid of custom assistant cards -->
+<div id="persona-manager" class="source-drawer-panel" onclick="event.stopPropagation()" style="max-height:82vh">
+  <div class="drawer-header">
+    <div style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:1px">MY ASSISTANTS</div>
+    <button onclick="closePersonaManager()" style="background:none;border:none;color:#fff;font-size:19px;cursor:pointer"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+  </div>
+  <div style="font-size:11px;color:rgba(255,255,255,0.35);padding:2px 2px 14px">Build assistants with their own personality and instructions — activate one to shape every reply in this chat, like your own custom GPTs.</div>
+  <div id="persona-grid" class="persona-grid"></div>
+</div>
+
+<!-- PERSONA EDITOR — create/edit modal -->
+<div id="persona-editor-overlay" class="persona-editor-overlay" onclick="event.target===this&&closePersonaEditor()">
+  <div class="persona-editor-card" onclick="event.stopPropagation()">
+    <div class="drawer-header">
+      <div id="persona-editor-title" style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:1px">NEW ASSISTANT</div>
+      <button onclick="closePersonaEditor()" style="background:none;border:none;color:#fff;font-size:19px;cursor:pointer"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+    </div>
+    <input type="hidden" id="persona-edit-id">
+    <div class="persona-editor-row">
+      <div class="persona-emoji-preview" id="persona-emoji-preview">🤖</div>
+      <input type="text" id="persona-name-input" placeholder="Assistant name (e.g. My Accountant)" maxlength="30">
+    </div>
+    <div class="persona-emoji-picker" id="persona-emoji-picker"></div>
+    <div class="persona-color-picker" id="persona-color-picker"></div>
+    <textarea id="persona-instructions-input" placeholder="What should this assistant know, do, and how should it behave? e.g. 'You are a strict Persian tax accountant. Always answer with exact legal references and be concise.'" rows="5"></textarea>
+    <button class="persona-save-btn" onclick="savePersona()">Save Assistant</button>
+  </div>
+</div>
+
+<!-- FOLDER PICKER — move a chat into/out of a folder -->
+<div id="folder-picker-overlay" class="persona-editor-overlay" onclick="event.target===this&&closeFolderPicker()">
+  <div class="persona-editor-card" style="max-width:320px">
+    <div class="drawer-header">
+      <div style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:1px">MOVE TO FOLDER</div>
+      <button onclick="closeFolderPicker()" style="background:none;border:none;color:#fff;font-size:19px;cursor:pointer"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+    </div>
+    <div id="folder-picker-list" style="display:flex;flex-direction:column;gap:6px;max-height:50vh;overflow-y:auto"></div>
+  </div>
+</div>
+<div id="focus-reader-overlay" class="focus-reader-overlay" onclick="event.target===this&&closeFocusReader()">
+  <button class="focus-reader-close" onclick="closeFocusReader()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+  <div class="focus-reader-content" id="focus-reader-text"></div>
+</div>
+<div id="chat-icon-picker-overlay" class="persona-editor-overlay" onclick="event.target===this&&closeChatIconPicker()">
+  <div class="persona-editor-card" style="max-width:320px">
+    <div class="drawer-header">
+      <div style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:1px">CHAT ICON</div>
+      <button onclick="closeChatIconPicker()" style="background:none;border:none;color:#fff;font-size:19px;cursor:pointer"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+    </div>
+    <div style="display:flex;justify-content:center;margin-bottom:14px">
+      <div class="persona-emoji-preview" id="chat-icon-preview" style="width:56px;height:56px;font-size:28px"></div>
+    </div>
+    <div class="persona-emoji-picker" id="chat-icon-emoji-picker"></div>
+    <div class="persona-color-picker" id="chat-icon-color-picker"></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="persona-save-btn" style="background:rgba(255,255,255,0.08);color:#fff;flex:1" onclick="removeChatIcon()">Remove</button>
+      <button class="persona-save-btn" style="flex:1" onclick="saveChatIcon()">Save</button>
+    </div>
+  </div>
+</div>
+
 <div id="templates-panel" class="source-drawer-panel" onclick="event.stopPropagation()">
   <div class="drawer-header">
     <div style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:1px">TEMPLATES</div>
@@ -1401,6 +1516,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
     <span class="sidebar-title">SESSIONS</span>
     <div style="display:flex;gap:4px;align-items:center">
       <button class="btn-icon" style="font-size:14px" onclick="openConstellation()" title="Star Map">✦</button>
+      <button class="btn-icon" id="select-mode-btn" onclick="toggleSelectMode()" title="Select multiple"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></button>
       <button class="btn-icon" id="sidebar-close-btn" onclick="toggleS(event)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
     </div>
   </div>
@@ -1417,6 +1533,14 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
     <button class="hf-btn" onclick="filterHistory('code',this)">Code</button>
     <button class="hf-btn" onclick="filterHistory('image',this)">Images</button>
   </div>
+  <div id="bulk-action-bar" class="bulk-action-bar">
+    <span id="bulk-selected-count">0 selected</span>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="bulk-btn" onclick="bulkPinSelected()">⭐ Pin</button>
+      <button class="bulk-btn danger" onclick="bulkDeleteSelected()">🗑 Delete</button>
+      <button class="bulk-btn" onclick="toggleSelectMode()">Cancel</button>
+    </div>
+  </div>
   <div id="h-list"></div>
 </div>
 
@@ -1431,6 +1555,9 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
           <span id="core-pill-name">Prime 2.4</span>
           <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
         </button>
+        <div class="active-persona-pill" id="active-persona-badge" style="display:none" onclick="openPersonaManager()">
+          <span class="ap-emoji">🤖</span><span></span>
+        </div>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:6px">
@@ -1502,6 +1629,10 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
       <div class="tool-tile" style="--tile-color:#bf5af2" onclick="openMemoryManager()">
         <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24A2.5 2.5 0 0 1 7 4.5 2.5 2.5 0 0 1 9.5 2z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24A2.5 2.5 0 0 0 17 4.5 2.5 2.5 0 0 0 14.5 2z"/></svg>
         <span>Memory</span>
+      </div>
+      <div class="tool-tile" style="--tile-color:#C9722E" onclick="openPersonaManager()">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+        <span>My Assistants</span>
       </div>
     </div>
   </div>
@@ -1603,6 +1734,10 @@ let proSlotsUsed=parseInt(localStorage.getItem("phraortes_slots")||"0");
 let billing=JSON.parse(localStorage.getItem("phraortes_billing")||"[]");
 let branches=JSON.parse(localStorage.getItem("phraortes_branches")||"{}");
 let attachedFiles=[],pendingPlan="",editMsgId=null;
+let selectMode=false,selectedChatIds=new Set();
+let folders=JSON.parse(localStorage.getItem("phraortes_folders")||"[]");
+let collapsedFolders=new Set();
+let editingFolderChatId=null;
 let extraSlots=parseInt(localStorage.getItem("phraortes_extra_slots")||"0",10);
 let pendingTopupKey=null;
 const TOPUP_PACKS={slots50:{label:"+50 Extra Slots",price:2.99,slots:50},slots200:{label:"+200 Extra Slots",price:8.99,slots:200}};
@@ -1884,6 +2019,31 @@ function showConstPreview(e,id){
 function openChatFromConstellation(id){closeConstellation();loadChat(id)}
 
 function escapeHtml(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function downloadDesignSVG(btn){
+  const svgEl=btn.closest(".design-card")?.querySelector("svg");if(!svgEl)return;
+  const blob=new Blob([svgEl.outerHTML],{type:"image/svg+xml"});
+  const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="phraortes-design.svg";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);haptic("success");showToast("SVG downloaded");
+}
+function downloadDesignPNG(btn){
+  const svgEl=btn.closest(".design-card")?.querySelector("svg");if(!svgEl)return;
+  const svgStr=new XMLSerializer().serializeToString(svgEl);
+  const svgBlob=new Blob([svgStr],{type:"image/svg+xml;charset=utf-8"});
+  const url=URL.createObjectURL(svgBlob);
+  const img=new Image();
+  img.onload=()=>{
+    const vb=svgEl.viewBox?.baseVal;
+    const w=vb?.width||svgEl.width?.baseVal?.value||600,h=vb?.height||svgEl.height?.baseVal?.value||600;
+    const scale=2; // export at 2x for crisp download
+    const canvas=document.createElement("canvas");canvas.width=w*scale;canvas.height=h*scale;
+    const ctx=canvas.getContext("2d");ctx.scale(scale,scale);ctx.drawImage(img,0,0,w,h);
+    URL.revokeObjectURL(url);
+    canvas.toBlob(pngBlob=>{
+      const pngUrl=URL.createObjectURL(pngBlob);const a=document.createElement("a");a.href=pngUrl;a.download="phraortes-design.png";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(pngUrl);haptic("success");showToast("PNG downloaded");
+    },"image/png");
+  };
+  img.onerror=()=>{URL.revokeObjectURL(url);showToast("Couldn't export PNG — try SVG instead.","error")};
+  img.src=url;
+}
 function runCodeBlock(btn,encCode,lang){
   const wrapper=btn.closest(".code-block-wrapper");
   const existing=wrapper.querySelector(".code-run-output");
@@ -2173,6 +2333,202 @@ function openMemoryManager(){
   haptic("light");
 }
 function closeMemoryManager(){document.getElementById("memory-panel").classList.remove("show")}
+
+// ═══ CUSTOM PERSONAS — user-built assistants with their own instructions, like custom GPTs ═══
+let customPersonas=JSON.parse(localStorage.getItem("phraortes_personas")||"[]");
+let activePersonaId=localStorage.getItem("phraortes_active_persona")||null;
+const PERSONA_EMOJIS=["🤖","🧮","⚖️","📚","💼","🩺","🎨","🍳","🏋️","✈️","💻","📈","🌱","🎓","🗣️","🧘"];
+const PERSONA_COLORS=["#C9722E","#2E8B7A","#E8934A","#7A2E2E","#4A6741","#8B5A8C","#C2410C","#2C5AA0"];
+let editingEmoji="🤖",editingColor=PERSONA_COLORS[0];
+
+function openPersonaManager(){closeAllDropMenus();renderPersonaGrid();document.getElementById("persona-manager").classList.add("show");haptic("light")}
+function closePersonaManager(){document.getElementById("persona-manager").classList.remove("show")}
+
+function renderPersonaGrid(){
+  const grid=document.getElementById("persona-grid");
+  let html=customPersonas.map(p=>`
+    <div class="persona-card ${p.id===activePersonaId?"active":""}" style="background:linear-gradient(150deg,${p.color}33,${p.color}11)" onclick="activatePersona('${p.id}')">
+      <div class="persona-card-emoji">${p.emoji}</div>
+      <div><div class="persona-card-name">${escapeHtml(p.name)}</div><div class="persona-card-desc">${escapeHtml(p.instructions)}</div></div>
+      <div class="persona-card-edit" onclick="event.stopPropagation();openPersonaEditor('${p.id}')"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></div>
+    </div>`).join("");
+  html+=`<div class="persona-new-card" onclick="openPersonaEditor()"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span style="font-size:11px;font-weight:600">New Assistant</span></div>`;
+  grid.innerHTML=html;
+  updateActivePersonaBadge();
+}
+
+function openPersonaEditor(id){
+  const p=id?customPersonas.find(x=>x.id===id):null;
+  document.getElementById("persona-edit-id").value=id||"";
+  document.getElementById("persona-editor-title").textContent=p?"EDIT ASSISTANT":"NEW ASSISTANT";
+  document.getElementById("persona-name-input").value=p?.name||"";
+  document.getElementById("persona-instructions-input").value=p?.instructions||"";
+  editingEmoji=p?.emoji||"🤖";editingColor=p?.color||PERSONA_COLORS[0];
+  document.getElementById("persona-emoji-preview").textContent=editingEmoji;
+  document.getElementById("persona-emoji-picker").innerHTML=PERSONA_EMOJIS.map(e=>`<div class="pe-swatch ${e===editingEmoji?"selected":""}" onclick="selectPersonaEmoji('${e}',this)">${e}</div>`).join("");
+  document.getElementById("persona-color-picker").innerHTML=PERSONA_COLORS.map(c=>`<div class="pe-color-swatch ${c===editingColor?"selected":""}" style="background:${c}" onclick="selectPersonaColor('${c}',this)"></div>`).join("");
+  document.getElementById("persona-editor-overlay").classList.add("show");
+}
+function closePersonaEditor(){document.getElementById("persona-editor-overlay").classList.remove("show")}
+function selectPersonaEmoji(e,el){editingEmoji=e;document.getElementById("persona-emoji-preview").textContent=e;el.parentElement.querySelectorAll(".pe-swatch").forEach(s=>s.classList.remove("selected"));el.classList.add("selected")}
+function selectPersonaColor(c,el){editingColor=c;el.parentElement.querySelectorAll(".pe-color-swatch").forEach(s=>s.classList.remove("selected"));el.classList.add("selected")}
+
+function savePersona(){
+  const id=document.getElementById("persona-edit-id").value;
+  const name=document.getElementById("persona-name-input").value.trim();
+  const instructions=document.getElementById("persona-instructions-input").value.trim();
+  if(!name){showToast("Give your assistant a name.","error");return}
+  if(!instructions){showToast("Describe what this assistant should do.","error");return}
+  if(id){
+    const p=customPersonas.find(x=>x.id===id);
+    if(p){p.name=name;p.instructions=instructions;p.emoji=editingEmoji;p.color=editingColor}
+  }else{
+    customPersonas.push({id:"p"+Date.now(),name,instructions,emoji:editingEmoji,color:editingColor,createdAt:Date.now()});
+  }
+  localStorage.setItem("phraortes_personas",JSON.stringify(customPersonas));
+  closePersonaEditor();renderPersonaGrid();haptic("success");showToast("Assistant saved ✨");
+}
+function deletePersona(id){
+  if(!confirm("Delete this assistant?"))return;
+  customPersonas=customPersonas.filter(p=>p.id!==id);
+  if(activePersonaId===id){activePersonaId=null;localStorage.removeItem("phraortes_active_persona")}
+  localStorage.setItem("phraortes_personas",JSON.stringify(customPersonas));
+  renderPersonaGrid();closePersonaEditor();showToast("Assistant deleted");
+}
+function activatePersona(id){
+  activePersonaId=(activePersonaId===id)?null:id; // tap active card again to deactivate
+  if(activePersonaId)localStorage.setItem("phraortes_active_persona",activePersonaId);
+  else localStorage.removeItem("phraortes_active_persona");
+  renderPersonaGrid();
+  const p=customPersonas.find(x=>x.id===activePersonaId);
+  showToast(p?`${p.emoji} ${p.name} is now active`:"Back to default Phraortes");
+  haptic("double");
+}
+function updateActivePersonaBadge(){
+  const p=customPersonas.find(x=>x.id===activePersonaId);
+  const badge=document.getElementById("active-persona-badge");
+  if(!badge)return;
+  if(p){badge.style.display="flex";badge.querySelector("span").textContent=p.name;badge.querySelector(".ap-emoji").textContent=p.emoji}
+  else badge.style.display="none";
+}
+
+// ═══ PER-CHAT ICON/COLOR — Notion-style custom icon for each session in the sidebar ═══
+let editingChatIconId=null,editingChatIconEmoji=null,editingChatIconColor=null;
+const CHAT_ICON_EMOJIS=["💬","💻","🎨","📊","✍️","🎯","🚀","📚","💡","⚡","🔬","🏆","🌍","🎬","🍽️","⚖️"];
+function openChatIconPicker(id){
+  const c=chats.find(x=>x.id==id);if(!c)return;
+  editingChatIconId=id;editingChatIconEmoji=c.icon||"💬";editingChatIconColor=c.color||PERSONA_COLORS[0];
+  document.getElementById("chat-icon-preview").textContent=editingChatIconEmoji;
+  document.getElementById("chat-icon-preview").style.background=editingChatIconColor+"33";
+  document.getElementById("chat-icon-emoji-picker").innerHTML=CHAT_ICON_EMOJIS.map(e=>`<div class="pe-swatch ${e===editingChatIconEmoji?"selected":""}" onclick="selectChatIconEmoji('${e}',this)">${e}</div>`).join("");
+  document.getElementById("chat-icon-color-picker").innerHTML=PERSONA_COLORS.map(c2=>`<div class="pe-color-swatch ${c2===editingChatIconColor?"selected":""}" style="background:${c2}" onclick="selectChatIconColor('${c2}',this)"></div>`).join("");
+  document.getElementById("chat-icon-picker-overlay").classList.add("show");
+}
+function closeChatIconPicker(){document.getElementById("chat-icon-picker-overlay").classList.remove("show")}
+function selectChatIconEmoji(e,el){editingChatIconEmoji=e;document.getElementById("chat-icon-preview").textContent=e;el.parentElement.querySelectorAll(".pe-swatch").forEach(s=>s.classList.remove("selected"));el.classList.add("selected")}
+function selectChatIconColor(c,el){editingChatIconColor=c;document.getElementById("chat-icon-preview").style.background=c+"33";el.parentElement.querySelectorAll(".pe-color-swatch").forEach(s=>s.classList.remove("selected"));el.classList.add("selected")}
+function saveChatIcon(){
+  const c=chats.find(x=>x.id==editingChatIconId);if(!c)return;
+  c.icon=editingChatIconEmoji;c.color=editingChatIconColor;
+  save();renderH();closeChatIconPicker();haptic("success");
+}
+function removeChatIcon(){
+  const c=chats.find(x=>x.id==editingChatIconId);if(!c)return;
+  delete c.icon;delete c.color;
+  save();renderH();closeChatIconPicker();showToast("Icon removed");
+}
+
+// ═══ FOCUS READER — distraction-free fullscreen view ═══
+function openFocusReader(id){
+  const el=document.getElementById(id);if(!el)return;
+  document.getElementById("focus-reader-text").innerHTML=el.innerHTML;
+  document.getElementById("focus-reader-overlay").classList.add("show");
+  document.body.style.overflow="hidden";haptic("light");
+}
+function closeFocusReader(){document.getElementById("focus-reader-overlay").classList.remove("show");document.body.style.overflow=""}
+
+// ═══ FOLDERS — group chats into collapsible sections in the sidebar ═══
+function openFolderPicker(chatId){
+  editingFolderChatId=chatId;
+  const c=chats.find(x=>x.id==chatId);
+  const list=document.getElementById("folder-picker-list");
+  let html=folders.map(f=>`<div class="model-item" onclick="assignChatToFolder('${f.id}')"><div class="mi-top"><span class="mi-name"><span class="h-item-icon" style="background:${f.color}33;margin-right:8px">${f.icon}</span>${escapeHtml(f.name)}</span>${c?.folderId===f.id?'<span style="color:var(--p);font-size:13px">✓</span>':""}</div></div>`).join("");
+  html+=`<div class="model-item" onclick="assignChatToFolder(null)"><div class="mi-top"><span class="mi-name">🚫 No folder</span></div></div>`;
+  html+=`<div class="model-item" onclick="createNewFolderPrompt()"><div class="mi-top"><span class="mi-name" style="color:var(--p)">➕ New folder</span></div></div>`;
+  list.innerHTML=html;
+  document.getElementById("folder-picker-overlay").classList.add("show");
+}
+function closeFolderPicker(){document.getElementById("folder-picker-overlay").classList.remove("show")}
+function createNewFolderPrompt(){
+  const name=prompt("Folder name:");
+  if(!name)return;
+  const f={id:"f"+Date.now(),name:name.trim(),icon:"📁",color:PERSONA_COLORS[folders.length%PERSONA_COLORS.length]};
+  folders.push(f);localStorage.setItem("phraortes_folders",JSON.stringify(folders));
+  assignChatToFolder(f.id);
+}
+function assignChatToFolder(folderId){
+  const c=chats.find(x=>x.id==editingFolderChatId);if(!c)return;
+  if(folderId)c.folderId=folderId;else delete c.folderId;
+  save();renderH();closeFolderPicker();
+  showToast(folderId?"Moved to folder 📁":"Removed from folder");
+}
+function toggleFolderCollapse(id){
+  if(collapsedFolders.has(id))collapsedFolders.delete(id);else collapsedFolders.add(id);
+  renderH();
+}
+
+// ═══ SHARE AS IMAGE CARD — branded quote card for Instagram/Telegram stories ═══
+function wrapCanvasText(ctx,text,maxWidth){
+  const words=text.split(/\s+/);const lines=[];let line="";
+  for(const w of words){
+    const test=line?line+" "+w:w;
+    if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=w}
+    else line=test;
+  }
+  if(line)lines.push(line);
+  return lines.slice(0,14); // cap so it never overflows the card
+}
+async function shareMessageAsCard(id){
+  const el=document.getElementById(id);if(!el)return;
+  const text=el.innerText.trim().slice(0,500);
+  if(!text){showToast("Nothing to share yet.","error");return}
+  showToast("🎴 Building your card...");
+  const W=1080,H=1350;
+  const canvas=document.createElement("canvas");canvas.width=W;canvas.height=H;
+  const ctx=canvas.getContext("2d");
+  const bgGrad=ctx.createLinearGradient(0,0,W,H);bgGrad.addColorStop(0,"#1a0f08");bgGrad.addColorStop(1,"#0f0a06");
+  ctx.fillStyle=bgGrad;ctx.fillRect(0,0,W,H);
+  const barGrad=ctx.createLinearGradient(0,0,W,0);barGrad.addColorStop(0,"#7A2E2E");barGrad.addColorStop(0.5,"#C9A227");barGrad.addColorStop(1,"#7A2E2E");
+  ctx.fillStyle=barGrad;ctx.fillRect(0,0,W,10);
+  ctx.textAlign="left";ctx.direction="ltr";
+  ctx.fillStyle="#C9A227";ctx.font="700 34px Georgia, serif";ctx.fillText("PHRAORTES",72,120);
+  ctx.fillStyle="rgba(255,255,255,0.35)";ctx.font="400 18px 'Courier New', monospace";ctx.fillText("AI INTELLIGENCE",72,148);
+  const isRTL=/[\u0600-\u06FF]/.test(text);
+  ctx.direction=isRTL?"rtl":"ltr";ctx.textAlign=isRTL?"right":"left";
+  const textX=isRTL?W-72:72,maxWidth=W-144;
+  let fontSize=46,lines;
+  do{
+    ctx.font=`400 ${fontSize}px Georgia, serif`;
+    lines=wrapCanvasText(ctx,text,maxWidth);
+    fontSize-=2;
+  }while(lines.length*fontSize*1.45>H-440&&fontSize>22);
+  ctx.font=`400 ${fontSize}px Georgia, serif`;ctx.fillStyle="#F5EEDD";
+  const lineHeight=fontSize*1.45,totalH=lines.length*lineHeight,startY=(H-totalH)/2+fontSize;
+  lines.forEach((line,i)=>ctx.fillText(line,textX,startY+i*lineHeight));
+  ctx.textAlign="center";ctx.direction="ltr";ctx.fillStyle="rgba(255,255,255,0.3)";ctx.font="400 18px 'Courier New', monospace";
+  ctx.fillText("phraortes.ai",W/2,H-60);
+  canvas.toBlob(async blob=>{
+    if(!blob){showToast("Couldn't generate image.","error");return}
+    try{
+      const file=new File([blob],"phraortes-quote.png",{type:"image/png"});
+      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+        await navigator.share({files:[file],title:"Phraortes"});haptic("success");return;
+      }
+    }catch(e){}
+    const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="phraortes-quote.png";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    showToast("Image downloaded — share it anywhere!");haptic("success");
+  },"image/png");
+}
 function renderMemoryPanel(){
   const body=document.getElementById("memory-panel-body");
   if(!longMemory.length){body.innerHTML='<div style="text-align:center;padding:20px 0;color:#555;font-size:13px">Nothing remembered yet</div>';return}
@@ -2311,7 +2667,7 @@ window.addEventListener("load",()=>{
   if(localStorage.getItem("phraortes_theme")==="light"){document.body.classList.add("light-theme");document.getElementById("theme-toggle").checked=true}
   handleOAuthRedirect();
   if(!chats.length)newChat();else loadChat(curId);
-  renderBilling();updateModelUI(activeModel);initPlanUI();
+  renderBilling();updateModelUI(activeModel);initPlanUI();updateActivePersonaBadge();
   let inputIdleTimer=null;
   uiInput.addEventListener("input",()=>{
     autoResize(uiInput); // must stay instant — the textarea needs to grow as you type
@@ -2923,6 +3279,12 @@ const LANG_COLOR_MAP={javascript:"#f0db4f",js:"#f0db4f",typescript:"#3178c6",ts:
 renderer.code=function(code,lang){
   const raw=typeof code==="object"?(code.text||""):(code||"");
   const str=String(raw);const lines=str.split("\n").length;const l=(lang||"code").toLowerCase();const enc=safeEnc(str);
+  if(l==="svg"&&str.trim().startsWith("<svg")){
+    return`<div class="design-card code-block-wrapper">
+      <div class="code-header"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#888;font-family:'Space Mono',monospace;letter-spacing:0.5px">✦ design</span></span><div class="code-tools"><button class="code-tool-btn" onclick="downloadDesignSVG(this)">⇩ SVG</button><button class="code-tool-btn" onclick="downloadDesignPNG(this)">⇩ PNG</button><button class="code-tool-btn" onclick="toggleFsCode(this)">⛶ Full</button></div></div>
+      <div class="design-card-canvas">${str}</div>
+    </div>`;
+  }
   if(lines>40){
     const ext=LANG_EXT_MAP[l]||l||"txt";const lc=LANG_COLOR_MAP[l]||"#8888BB";
     return`<div class="code-file-card" style="--lc:${lc}" onclick="openVirtualEditor('${enc}','snippet.${ext}',${lines},'${l}')">
@@ -2972,7 +3334,14 @@ async function send(){
     cancelEdit();
   }
   if(!txt&&!attachedFiles.length)return;
-  if(activePlan==="free"){if(trialCount>=PLAN_CFG.free.msgLimit){initPlanUI();openPremium();showToast(`Free limit: ${PLAN_CFG.free.msgLimit} messages used.`,"error");return}trialCount++;localStorage.setItem("phraortes_trial",trialCount);if(trialCount>=PLAN_CFG.free.msgLimit)initPlanUI()}
+  if(activePlan==="free"){
+    // Check the real wall-clock reset FIRST — otherwise the very first message attempt right
+    // after the reset time passes would still see the stale trialCount and get blocked once more.
+    const freeResetAt=parseInt(localStorage.getItem("phraortes_free_reset_at")||"0",10);
+    if(freeResetAt&&freeResetAt<=Date.now()){trialCount=0;localStorage.setItem("phraortes_trial","0");localStorage.removeItem("phraortes_free_reset_at")}
+    if(trialCount>=PLAN_CFG.free.msgLimit){initPlanUI();openPremium();showToast(`Free limit: ${PLAN_CFG.free.msgLimit} messages used.`,"error");return}
+    trialCount++;localStorage.setItem("phraortes_trial",trialCount);if(trialCount>=PLAN_CFG.free.msgLimit)initPlanUI();
+  }
   haptic("send");playSound("woosh");sendBtn.disabled=true;uiInput.disabled=true;autoCtxSwitch(txt);localStorage.removeItem("draft_"+curId);footerCompanionHappy();
   turnToolLog=[];
   if(txt)updateLongMemory(txt);
@@ -2992,7 +3361,9 @@ async function send(){
   const isCodeQuery=/(code|bug|debug|python|javascript|html|css|react|api|sql|function|algorithm|باگ|کد|پایتون|دیباگ|برنامه|الگوریتم)/i.test(txt);
   const loaderType=activeModel==="2.7"?"think":isCodeQuery||activeModel==="2.6"?"code":activeModel==="2.5"?"think":"chat";
   startContextLoader("a-"+idx,loaderType,detectMsgLang(txt));
-  let sys="You are Phraortes OS — an advanced intelligence assistant. Respond clearly and helpfully. Always respond in the same language the user just wrote in — match it exactly (Persian, English, Arabic, or any other language), regardless of what language earlier turns or these instructions are in. When giving a multi-step plan, checklist, or sequence of tasks, format it as a markdown task list using '- [ ] ' syntax for each step so it can be checked off. When a question depends on current, time-sensitive, or verifiable-online information (news, prices, recent releases, live facts) — use the web_search tool rather than answering from memory alone; the user sees exactly which real sources you used, so don't claim to have looked something up unless you actually called the tool. For genuinely multi-step tasks, chain tools together before answering — e.g. search, then read_url on the most promising result, then write_file to save a deliverable — rather than stopping after one call; the user can see each step happen live. ";
+  let sys="You are Phraortes OS — an advanced intelligence assistant. Respond clearly and helpfully. Always respond in the same language the user just wrote in — match it exactly (Persian, English, Arabic, or any other language), regardless of what language earlier turns or these instructions are in. When giving a multi-step plan, checklist, or sequence of tasks, format it as a markdown task list using '- [ ] ' syntax for each step so it can be checked off. When a question depends on current, time-sensitive, or verifiable-online information (news, prices, recent releases, live facts) — use the web_search tool rather than answering from memory alone; the user sees exactly which real sources you used, so don't claim to have looked something up unless you actually called the tool. For genuinely multi-step tasks, chain tools together before answering — e.g. search, then read_url on the most promising result, then write_file to save a deliverable — rather than stopping after one call; the user can see each step happen live. When the user asks you to design, draw, or create a visual (a poster, logo, banner, icon, UI mockup, diagram, or any graphic) — reply with real, complete SVG markup in a \`\`\`svg code block (starting with <svg viewBox=\"...\">), not a text description of what it would look like; it renders live in the chat as an actual visual the user can download as SVG or PNG. Follow these rules strictly — they are what separates a professional result from an amateur one: (1) FONTS — SVG cannot load custom web fonts, so only ever use these safe stacks: \"Helvetica Neue,Arial,sans-serif\" for clean/modern, \"Georgia,serif\" for elegant/editorial, \"Courier New,monospace\" for technical — never name a Google Font or any font that isn't one of these, it will silently fall back to a broken default and ruin the design. (2) PALETTE — pick exactly 2-4 colors with clear roles (one dominant, one accent, one neutral background, optionally one highlight) and use ONLY those; never scatter many unrelated colors. (3) HIERARCHY — one element must clearly dominate (largest/boldest); everything else is visibly secondary. Vary font-size deliberately (e.g. a headline at 3-4x the body size), never use near-uniform sizing for everything. (4) GRID & ALIGNMENT — align elements to a consistent grid (shared x/y positions, even margins on all sides); nothing should look randomly placed. (5) NEGATIVE SPACE — leave real breathing room; do not fill the entire canvas edge-to-edge. (6) CANVAS SHAPE — match the viewBox proportions to the request: roughly square (e.g. 0 0 400 400) for a logo/icon, portrait (e.g. 0 0 600 850) for a poster, landscape (e.g. 0 0 1200 630) for a banner. (7) RESTRAINT — prefer flat design or a single simple 2-stop linearGradient over busy effects, filters, or many overlapping shapes; a clean simple design always reads as more professional than a cluttered one. ";
+  const activePersonaObj=customPersonas.find(p=>p.id===activePersonaId);
+  if(activePersonaObj)sys+=` You are currently acting as a custom assistant the user built and named "${activePersonaObj.name}". Follow these user-defined instructions closely and stay in this persona consistently for the rest of the conversation: ${activePersonaObj.instructions}`;
   if(activeModel==="2.7")sys+="You are Sovereign 2.7, Phraortes' most advanced core — built for large, complex, professional-grade projects. Take the time to think through edge cases and long-term maintainability; a longer, more deliberate, thorough response is expected and welcome here.";
   else if(activeModel==="2.6"||isCodeQuery)sys+="You are Apex 2.6, expert coder and senior developer. Think through the approach briefly, then write clean, correct, well-formatted code with proper syntax highlighting. Explain non-obvious parts concisely.";
   else if(activeModel==="2.5")sys+="You are Intellect 2.5, expert in deep research and analysis.";
@@ -3139,7 +3510,7 @@ function finishTurn(aiId,htmlContent,rawContent,chat,userHtml,userTxt,msgIndex,e
   const coreColor=MODEL_COLORS[activeModel]||"#8888BB",coreShort=(MODEL_NAMES[activeModel]||"").split(" ")[0];
   const coreChipHTML=coreShort?`<div class="claude-source-chip" style="cursor:default;color:${coreColor};border-color:${coreColor}55"><span class="mi-dot" style="background:${coreColor};display:inline-block;margin-right:5px"></span>${coreShort}</div>`:"";
   wrap.innerHTML=`
-    <div class="msg ai" id="${aiId}" dir="auto"></div>
+    <div class="msg ai" id="${aiId}" dir="auto" onpointerdown="startPress(event,'ai','${aiId}',null)" onpointerup="cancelPress()" onpointerleave="cancelPress()"></div>
     <div style="margin-top:6px;display:flex;align-items:center;flex-wrap:wrap;gap:5px">
       ${coreChipHTML}
       ${speedHTML}
@@ -3158,6 +3529,12 @@ function finishTurn(aiId,htmlContent,rawContent,chat,userHtml,userTxt,msgIndex,e
       </button>
       <button class="l-btn" onclick="regenerate(${msgIndex})" title="Regenerate">
         <svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38"/></svg>
+      </button>
+      <button class="l-btn" onclick="openFocusReader('${aiId}')" title="Focus mode">
+        <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18-5h-3a2 2 0 0 0-2 2v3M3 16v3a2 2 0 0 0 2 2h3m11-5v3a2 2 0 0 1-2 2h-3"/></svg>
+      </button>
+      <button class="l-btn" onclick="shareMessageAsCard('${aiId}')" title="Share as image">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
       </button>
       <div class="listen-sep"></div>
       <button class="l-btn" id="like-${msgIndex}" onclick="toggleReaction(this,'like-${msgIndex}')" title="Like">
@@ -3270,7 +3647,7 @@ function addUI(html,role,id,rawText){
   if(id==="welcome"){w.innerHTML=`<div style="text-align:center;padding:50px 0 24px;display:flex;flex-direction:column;align-items:center;gap:16px"><div class="story-orb orb-pro" style="width:74px;height:74px;position:relative"><div class="story-orb-core"></div><div class="story-orb-ring r1"></div><div class="story-orb-ring r2"></div></div><div><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:26px;font-weight:700;color:var(--p);margin-bottom:6px;text-shadow:0 0 24px var(--glow)">Phraortes</div><p style="color:rgba(255,255,255,0.3);font-size:12px;font-family:'Space Mono',monospace;letter-spacing:1.5px">THE THRONE AWAITS YOUR WORD</p></div></div>`}
   else if(id==="welcome-persona"){const enc=safeEnc(rawText||"");w.innerHTML=`<div class="msg ai" id="${id}">${html}</div><div class="listen-ops"><button class="l-btn" onclick="copyResp(this,'${enc}')"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div>`}
   else if(role==="user"){w.innerHTML=`<div class="msg user" id="${id}" dir="auto" onpointerdown="startPress(event,'user','${id}',\`${safe}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${html}</div>`}
-  else{w.innerHTML=`<div class="msg ai" id="${id}" dir="auto">${html}</div>`}
+  else{w.innerHTML=`<div class="msg ai" id="${id}" dir="auto" onpointerdown="startPress(event,'ai','${id}',null)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${html}</div>`}
   chatBox.appendChild(w);if(!isScrolling)scrollToBottom();
 }
 function loadChat(id){
@@ -3293,13 +3670,15 @@ function loadChat(id){
       const srcChipHTML=srcs.length?`<div class="claude-source-chip" onclick="openSourceDrawer('${encSrc}','Archived')">🌐 ${srcs.length} Source${srcs.length>1?"s":""}</div>`:"";
       const hCoreColor=MODEL_COLORS[m.coreUsed]||"",hCoreShort=(MODEL_NAMES[m.coreUsed]||"").split(" ")[0];
       const hCoreChipHTML=hCoreShort?`<div class="claude-source-chip" style="cursor:default;color:${hCoreColor};border-color:${hCoreColor}55"><span class="mi-dot" style="background:${hCoreColor};display:inline-block;margin-right:5px"></span>${hCoreShort}</div>`:"";
-      w.innerHTML=`<div class="msg ai" id="a-${i}" dir="auto">${bodyHtml}</div>
+      w.innerHTML=`<div class="msg ai" id="a-${i}" dir="auto" onpointerdown="startPress(event,'ai','a-${i}',null)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${bodyHtml}</div>
         <div style="margin-top:6px;display:flex;align-items:center;flex-wrap:wrap;gap:5px">${hCoreChipHTML}${srcChipHTML}${bHTML}</div>
         <div class="listen-ops">
           ${companionHTML("pcdock-"+i,"",true)}
           <button class="l-btn" onclick="copyResp(this,'${enc}')"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
           <button class="l-btn" id="${sId}" onclick="toggleSpeech('a-${i}','${sId}')"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></button>
           <button class="l-btn" onclick="regenerate(${i})"><svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38"/></svg></button>
+          <button class="l-btn" onclick="openFocusReader('a-${i}')" title="Focus mode"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18-5h-3a2 2 0 0 0-2 2v3M3 16v3a2 2 0 0 0 2 2h3m11-5v3a2 2 0 0 1-2 2h-3"/></svg></button>
+          <button class="l-btn" onclick="shareMessageAsCard('a-${i}')" title="Share as image"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
           <div class="listen-sep"></div>
           <button class="l-btn" id="like-${i}" onclick="toggleReaction(this,'like-${i}')"><svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg></button>
           <button class="l-btn" id="dislike-${i}" onclick="toggleReaction(this,'dislike-${i}','dislike')"><svg viewBox="0 0 24 24" style="transform:rotate(180deg)"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg></button>
@@ -3334,17 +3713,42 @@ function renderH(){
   if(search)list=list.filter(c=>c.name.toLowerCase().includes(search)||JSON.stringify(c.msgs).toLowerCase().includes(search));
   if(sessionFilter!=="all")list=list.filter(c=>{const t=JSON.stringify(c).toLowerCase();if(sessionFilter==="code")return t.includes("```")||t.includes("code");if(sessionFilter==="image")return t.includes("img")||t.includes("/imagine");return true});
 
-  const itemHTML=c=>`<div class="h-item ${c.id==curId?"active-chat":""} ${c.pinned?"pinned-chat":""}" onclick="loadChat(${c.id})" onpointerdown="startPress(event,'session',${c.id},null)" onpointerup="cancelPress()" onpointerleave="cancelPress()"><span id="hname-${c.id}" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:175px;font-weight:${c.pinned?700:400}">${c.id===justNamedChatId?"":(c.pinned?"⭐ ":"")+c.name}</span></div>`;
+  const itemHTML=c=>{
+    if(selectMode){
+      const sel=selectedChatIds.has(c.id);
+      return `<div class="h-item ${sel?"selected":""}" onclick="toggleChatSelection(${c.id})">
+        <div class="h-item-checkbox"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;font-weight:${c.pinned?700:400}">${(c.pinned?"⭐ ":"")+c.name}</span>
+      </div>`;
+    }
+    return `<div class="h-item ${c.id==curId?"active-chat":""} ${c.pinned?"pinned-chat":""}" onclick="loadChat(${c.id})" onpointerdown="startPress(event,'session',${c.id},null)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${c.icon?`<span class="h-item-icon" style="background:${c.color}33">${c.icon}</span>`:""}<span id="hname-${c.id}" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:${c.icon?"148px":"175px"};font-weight:${c.pinned?700:400}">${c.id===justNamedChatId?"":(c.pinned?"⭐ ":"")+c.name}</span></div>`;
+  };
 
   if(!list.length){
     document.getElementById("h-list").innerHTML=`<div style="text-align:center;padding:36px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">${companionHTML("hlist-empty-companion","curious",true)}<div style="color:rgba(255,255,255,0.4);font-size:12px;font-family:'Space Mono',monospace">${search?"Hmm, nothing matches that":"No sessions yet — say something"}</div></div>`;
     return;
   }
 
+  let html="";
+  // Folders first — each a collapsible section holding its own chats.
+  const folderedIds=new Set();
+  folders.forEach(f=>{
+    const chatsInFolder=list.filter(c=>c.folderId===f.id).sort((a,b)=>b.id-a.id);
+    chatsInFolder.forEach(c=>folderedIds.add(c.id));
+    if(!chatsInFolder.length)return;
+    const isCollapsed=collapsedFolders.has(f.id);
+    html+=`<div class="folder-header" onclick="toggleFolderCollapse('${f.id}')">
+      <span class="folder-header-left"><svg class="folder-chevron ${isCollapsed?"collapsed":""}" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg><span class="h-item-icon" style="background:${f.color}33;margin-right:7px">${f.icon}</span><span>${escapeHtml(f.name)}</span></span>
+      <span class="folder-count">${chatsInFolder.length}</span>
+    </div>`;
+    if(!isCollapsed)html+=`<div class="folder-chats">${chatsInFolder.map(itemHTML).join("")}</div>`;
+  });
+  const unfolderedList=list.filter(c=>!folderedIds.has(c.id));
+
   // Time-grouped like a native app: pinned first, then Today / Yesterday / Previous 7 Days / Older.
   // (chat.id is a Date.now() timestamp already, so no new field is needed for this.)
-  const pinned=list.filter(c=>c.pinned).sort((a,b)=>b.id-a.id);
-  const unpinned=list.filter(c=>!c.pinned).sort((a,b)=>b.id-a.id);
+  const pinned=unfolderedList.filter(c=>c.pinned).sort((a,b)=>b.id-a.id);
+  const unpinned=unfolderedList.filter(c=>!c.pinned).sort((a,b)=>b.id-a.id);
   const now=new Date();
   const startOfToday=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
   const startOfYesterday=startOfToday-86400000;
@@ -3356,7 +3760,6 @@ function renderH(){
     else if(c.id>=startOfWeek)groups.week.push(c);
     else groups.older.push(c);
   });
-  let html="";
   if(pinned.length)html+=`<div class="h-group-label"><span>⭐ Pinned</span></div>`+pinned.map(itemHTML).join("");
   if(groups.today.length)html+=`<div class="h-group-label"><span>Today</span></div>`+groups.today.map(itemHTML).join("");
   if(groups.yesterday.length)html+=`<div class="h-group-label"><span>Yesterday</span></div>`+groups.yesterday.map(itemHTML).join("");
@@ -3374,6 +3777,42 @@ function renderH(){
 function searchSessions(val){renderH()}
 function filterHistory(type,btn){sessionFilter=type;document.querySelectorAll(".hf-btn").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");renderH()}
 function delH(id){chats=chats.filter(c=>c.id!=id);if(!chats.length)newChat();else loadChat(chats[0].id);save();renderH()}
+function toggleSelectMode(){
+  selectMode=!selectMode;
+  selectedChatIds.clear();
+  document.getElementById("select-mode-btn").classList.toggle("active",selectMode);
+  document.getElementById("bulk-action-bar").classList.toggle("show",selectMode);
+  updateBulkCount();
+  renderH();
+}
+function toggleChatSelection(id){
+  if(selectedChatIds.has(id))selectedChatIds.delete(id);else selectedChatIds.add(id);
+  updateBulkCount();
+  renderH();
+  haptic("light");
+}
+function updateBulkCount(){
+  const el=document.getElementById("bulk-selected-count");if(el)el.textContent=selectedChatIds.size+" selected";
+}
+function bulkPinSelected(){
+  if(!selectedChatIds.size)return;
+  chats.forEach(c=>{if(selectedChatIds.has(c.id))c.pinned=true});
+  save();showToast(`⭐ Pinned ${selectedChatIds.size} chat${selectedChatIds.size>1?"s":""}`);
+  toggleSelectMode();
+}
+function bulkDeleteSelected(){
+  if(!selectedChatIds.size)return;
+  if(!confirm(`Delete ${selectedChatIds.size} selected chat${selectedChatIds.size>1?"s":""}? This can't be undone.`))return;
+  const wasCurrent=selectedChatIds.has(curId);
+  chats=chats.filter(c=>!selectedChatIds.has(c.id));
+  save();
+  showToast(`🗑 Deleted ${selectedChatIds.size} chat${selectedChatIds.size>1?"s":""}`);
+  selectMode=false;selectedChatIds.clear();
+  document.getElementById("select-mode-btn").classList.remove("active");
+  document.getElementById("bulk-action-bar").classList.remove("show");
+  if(wasCurrent||!chats.length){if(!chats.length)newChat();else loadChat(chats[0].id)}
+  renderH();
+}
 function renameSession(id){const c=chats.find(c=>c.id==id);if(!c)return;const n=prompt("Rename:",c.name);if(n){c.name=n;save();renderH()}}
 function togglePinSession(id){const c=chats.find(c=>c.id==id);if(!c)return;c.pinned=!c.pinned;save();renderH();showToast(c.pinned?"Pinned ⭐":"Unpinned.")}
 function regenerate(idx){const chat=chats.find(c=>c.id==curId);if(!chat)return;const txt=chat.msgs[idx]?.uText;if(!txt)return;chat.msgs.splice(idx);save();loadChat(curId);uiInput.value=txt;send()}
@@ -3400,7 +3839,14 @@ function cancelPress(){clearTimeout(pressTimer)}
 function showContext(type,id,textData,x,y){
   const enc=safeEnc(textData||"");let btns=[];
   if(type==="user"){btns.push({text:"COPY",action:`navigator.clipboard.writeText(decodeURIComponent('${enc}'));closeContextSheet();showToast('Copied!','success')`});btns.push({text:"EDIT",action:`initEdit('${id}',decodeURIComponent('${enc}'));closeContextSheet()`});btns.push({text:"DEL",action:`deleteMsg('${id}');closeContextSheet()`,danger:true})}
-  else if(type==="session"){const c=chats.find(c=>c.id==id);btns.push({text:"RENAME",action:`renameSession(${id});closeContextSheet()`});btns.push({text:c?.pinned?"UNPIN":"PIN",action:`togglePinSession(${id});closeContextSheet()`});btns.push({text:"DEL",action:`delH(${id});closeContextSheet()`,danger:true})}
+  else if(type==="ai"){
+    btns.push({text:"COPY",action:`navigator.clipboard.writeText(document.getElementById('${id}').innerText);closeContextSheet();showToast('Copied!','success')`});
+    btns.push({text:"READ",action:`toggleSpeech('${id}','${id}-ctx-speech');closeContextSheet()`});
+    const m=id.match(/^a-(\d+)$/);
+    if(m)btns.push({text:"REGEN",action:`regenerate(${m[1]});closeContextSheet()`});
+    btns.push({text:"DEL",action:`deleteMsg('${id}');closeContextSheet()`,danger:true});
+  }
+  else if(type==="session"){const c=chats.find(c=>c.id==id);btns.push({text:"RENAME",action:`renameSession(${id});closeContextSheet()`});btns.push({text:"ICON",action:`openChatIconPicker(${id});closeContextSheet()`});btns.push({text:"MOVE",action:`openFolderPicker(${id});closeContextSheet()`});btns.push({text:c?.pinned?"UNPIN":"PIN",action:`togglePinSession(${id});closeContextSheet()`});btns.push({text:"DEL",action:`delH(${id});closeContextSheet()`,danger:true})}
   const menu=document.getElementById("floating-menu");menu.innerHTML="";
   const px=Math.min(Math.max(x,80),window.innerWidth-80),py=Math.min(Math.max(y,110),window.innerHeight-50);
   menu.style.left=px+"px";menu.style.top=py+"px";
