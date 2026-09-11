@@ -3413,7 +3413,20 @@ async function send(){
     finishTurn("a-"+idx,renderMD(full),full,chat,dispHtml,txt,idx,elapsedS,corrected);
     ensureRollingSummary(chat); // fire-and-forget: compacts old turns into chat.ctxSummary for the *next* send(), keeps context bounded on long chats
   }
-  catch(e){haptic("error");stopContextLoader("a-"+idx);const encTxt=safeEnc(txt);showInlineError(e.message,encTxt,idx);const wrap=document.getElementById("a-"+idx)?.parentElement;const isPlanErr=e.message.includes("plan")||e.message.includes("Apex")||e.message.includes("Intellect");const friendlyMsg=isPlanErr?e.message:"Phraortes couldn't finish that response — please try again in a moment.";if(wrap)wrap.innerHTML=`<div class="msg ai" style="color:#ff453a;font-size:13px;padding:8px 0">⚠ ${friendlyMsg}</div>`;sendBtn.disabled=false;uiInput.disabled=false}
+  catch(e){
+    haptic("error");stopContextLoader("a-"+idx);
+    if(e.message==="phraortes_free_limit_reached"){
+      // The server's real, IP-based check said no — this is authoritative regardless of what
+      // local storage thinks. Sync local state to match and show the real upgrade prompt.
+      trialCount=PLAN_CFG.free.msgLimit;localStorage.setItem("phraortes_trial",String(trialCount));
+      initPlanUI();openPremium();showToast(`Free limit: ${PLAN_CFG.free.msgLimit} messages used.`,"error");
+      const wrap=document.getElementById("a-"+idx)?.parentElement;
+      if(wrap)wrap.remove();
+      sendBtn.disabled=false;uiInput.disabled=false;
+      return;
+    }
+    const encTxt=safeEnc(txt);showInlineError(e.message,encTxt,idx);const wrap=document.getElementById("a-"+idx)?.parentElement;const isPlanErr=e.message.includes("plan")||e.message.includes("Apex")||e.message.includes("Intellect");const friendlyMsg=isPlanErr?e.message:"Phraortes couldn't finish that response — please try again in a moment.";if(wrap)wrap.innerHTML=`<div class="msg ai" style="color:#ff453a;font-size:13px;padding:8px 0">⚠ ${friendlyMsg}</div>`;sendBtn.disabled=false;uiInput.disabled=false;
+  }
 }
 function showInlineError(msg,encTxt,idx){triggerGlitch();footerCompanionError();const f=document.querySelector("footer");const ex=f.querySelector(".inline-err");if(ex)ex.remove();const isLim=msg.includes("plan")||msg.includes("Apex")||msg.includes("Intellect")||msg.includes("limit");const d=document.createElement("div");d.className="inline-err";d.style.cssText="display:flex;align-items:center;gap:9px;padding:8px 14px;margin-bottom:7px;background:rgba(255,58,48,0.07);border:1px solid rgba(255,58,48,0.2);border-radius:17px;font-size:12px;color:rgba(255,255,255,0.65)";d.innerHTML=`${companionHTML("err-pc-"+idx,"errorstate",true)}<span style="flex:1;font-family:'Space Mono',monospace">⚠ ${isLim?"Upgrade required":"Connection error"}</span>${isLim?`<button onclick="openPremium();this.parentElement.remove()" style="padding:5px 12px;background:var(--pulse);border:none;border-radius:14px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Upgrade</button>`:`<button onclick="retryMsg(${idx},'${encTxt}');this.parentElement.remove()" style="padding:5px 12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:14px;color:#fff;font-size:11px;cursor:pointer;font-family:inherit">🔄 Retry</button>`}<button onclick="this.parentElement.remove()" style="background:none;border:none;color:#888;cursor:pointer;font-size:15px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>`;f.insertBefore(d,f.firstChild);setTimeout(()=>d.remove(),9000)}
 function retryMsg(idx,encTxt){uiInput.value=decodeURIComponent(encTxt);autoResize(uiInput);const chat=chats.find(c=>c.id==curId);if(chat?.msgs[idx])chat.msgs.splice(idx);send()}
@@ -3444,6 +3457,12 @@ async function fetchAI(messages,useVision,isCodeQuery,opts){
       try{
         const r=await fetch(OR_GATEWAY_URL,{method:"POST",headers:{"Content-Type":"application/json",...licenseAuthHeader()},body:JSON.stringify({...payloadBase,model:orM})});
         const d=await r.json();
+        if(r.status===429&&d.error&&/free plan limit/i.test(d.error)){
+          // This is the SERVER's real, IP-based quota check — immune to localStorage being
+          // cleared (incognito mode, browser data clearing, a different device, etc). It is
+          // the actual source of truth; surface it distinctly instead of retrying uselessly.
+          throw new Error("phraortes_free_limit_reached");
+        }
         if(!d.error&&d.choices?.[0]){
           const msg=d.choices[0].message;
           if(useTools&&msg.tool_calls&&msg.tool_calls.length){
@@ -3458,7 +3477,10 @@ async function fetchAI(messages,useVision,isCodeQuery,opts){
           return msg.content;
         }
         if(d.error)errors.push(`OR:${orM} → ${d.error.message||JSON.stringify(d.error)}`);
-      }catch(e){errors.push(`OR:${orM} → ${e.message}`)}
+      }catch(e){
+        if(e.message==="phraortes_free_limit_reached")throw e; // real server signal — never retried or swallowed
+        errors.push(`OR:${orM} → ${e.message}`);
+      }
     }
     if(pass===0){await new Promise(r=>setTimeout(r,1300));continue}
     console.error("Phraortes AI errors (after auto-retry):",errors); // developer-only detail — never shown to the user
