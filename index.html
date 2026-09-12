@@ -24,6 +24,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
 <style>
 @property --grad1{syntax:'<color>';inherits:true;initial-value:#12121a}
@@ -90,7 +91,7 @@ body.light-theme .l-btn{color:rgba(43,35,19,0.5)}
 body.light-theme .followup-chip{background:rgba(43,35,19,0.04);border-color:rgba(43,35,19,0.12);color:rgba(43,35,19,0.75)}
 body.light-theme .followup-chip:hover{background:rgba(43,35,19,0.08);color:#2b2313}
 body.light-theme .loader-text{color:rgba(43,35,19,0.55)}
-body.light-theme .claude-source-chip{background:rgba(43,35,19,0.05);border-color:rgba(43,35,19,0.1);color:#8a6d1f}
+body.light-theme .source-chip{background:rgba(43,35,19,0.05);border-color:rgba(43,35,19,0.1);color:#8a6d1f}
 body.light-theme .drop-menu,body.light-theme .magic-menu{background:rgba(255,255,255,0.98);border-color:rgba(43,35,19,0.12)}
 body.light-theme .mi-name{color:#2b2313}
 body.light-theme .mi-sub{color:rgba(43,35,19,0.45)}
@@ -252,6 +253,12 @@ body.sovereign-mode .ai-core-glyph{color:#E8C468}
 .ac-tab-btn.active{color:#fff;background:rgba(108,92,231,0.15);border-color:rgba(108,92,231,0.35);box-shadow:0 4px 16px rgba(108,92,231,0.15)}
 .ac-page-body{padding:24px 32px 40px;max-width:700px;margin:0 auto}
 .ac-section{background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:22px;margin-bottom:16px;box-shadow:0 8px 32px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.04)}
+.ac-hero-card{position:relative;overflow:hidden;background:linear-gradient(160deg,rgba(212,162,76,0.09),rgba(122,46,46,0.04));border:1px solid rgba(212,162,76,0.18);border-radius:24px;padding:28px 22px 22px;margin-bottom:16px;box-shadow:0 14px 40px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.05);display:flex;flex-direction:column;align-items:center;text-align:center}
+.ac-hero-glow{position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,rgba(212,162,76,0.25),transparent 70%);pointer-events:none}
+.ac-hero-plan-badge{margin-top:10px;padding:6px 16px;border-radius:20px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,0.55)}
+.ac-hero-plan-badge.tier-starter{background:rgba(212,162,76,0.14);border-color:rgba(212,162,76,0.3);color:var(--p)}
+.ac-hero-plan-badge.tier-pro{background:rgba(46,139,122,0.16);border-color:rgba(46,139,122,0.35);color:var(--cyan-star)}
+.ac-hero-plan-badge.tier-ultimate{background:linear-gradient(135deg,rgba(232,196,104,0.22),rgba(122,46,46,0.16));border-color:rgba(232,196,104,0.45);color:#E8C468}
 .ac-section-title{font-size:11px;font-weight:800;color:var(--p);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;font-family:'Space Mono',monospace}
 .ac-avatar-big{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02));border:2px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:28px;color:rgba(255,255,255,0.2);margin-bottom:16px;overflow:hidden;position:relative;box-shadow:0 8px 24px rgba(0,0,0,0.4)}
 .ac-avatar-big.logged-in{border-color:rgba(108,92,231,0.5);box-shadow:0 0 24px rgba(108,92,231,0.3)}
@@ -434,8 +441,8 @@ footer{width:100%;padding:8px 5% 26px;background:linear-gradient(to top,rgba(0,0
 .listen-sep{width:1px;height:14px;background:rgba(255,255,255,0.08);margin:0 3px}
 
 /* SOURCE CHIP + DRAWER */
-.claude-source-chip{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:2px 9px;border-radius:9px;font-size:11px;font-weight:600;color:var(--p);cursor:pointer;margin-left:4px;vertical-align:middle;transition:background 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
-.claude-source-chip:hover{background:rgba(255,255,255,0.1)}
+.source-chip{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:2px 9px;border-radius:9px;font-size:11px;font-weight:600;color:var(--p);cursor:pointer;margin-left:4px;vertical-align:middle;transition:background 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.source-chip:hover{background:rgba(255,255,255,0.1)}
 .source-drawer-panel{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,18,0.97);backdrop-filter:blur(30px);border-top:1px solid rgba(255,255,255,0.09);border-top-left-radius:22px;border-top-right-radius:22px;padding:18px 22px;z-index:10000;transform:translateY(100%);transition:transform 0.28s var(--ease);box-shadow:0 -14px 38px rgba(0,0,0,0.6)}
 .persona-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;max-height:56vh;overflow-y:auto;padding-bottom:4px}
 .persona-card{position:relative;border-radius:18px;padding:16px 14px;cursor:pointer;transition:0.2s;overflow:hidden;min-height:118px;display:flex;flex-direction:column;justify-content:space-between;border:1.5px solid transparent}
@@ -776,8 +783,7 @@ body.light-theme .h-group-label span{color:rgba(43,35,19,0.45)}
 .scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,var(--pulse),transparent);animation:scrollPulse 2s ease-in-out infinite}
 @keyframes scrollPulse{0%,100%{opacity:0.3}50%{opacity:1}}
 /* SCROLL-STORY: sticky rotating orb + per-plan chapters */
-.plan-story{display:grid;grid-template-columns:1fr 1fr;gap:30px;max-width:1080px;margin:20px auto 0;padding:0 22px;position:relative}
-.story-orb-stage{position:sticky;top:8vh;height:74vh;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:2;perspective:900px}
+.plan-story{display:grid;grid-template-columns:1fr;gap:30px;max-width:640px;margin:20px auto 0;padding:0 22px;position:relative}
 .story-orb{position:relative;width:210px;height:210px;transform-style:preserve-3d;will-change:transform}
 .story-orb-core{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--orb-c1,#E8C468),var(--orb-c2,#C9A227) 55%,transparent 78%);box-shadow:0 0 100px var(--orb-glow,rgba(201,162,39,0.5)),inset -22px -22px 60px rgba(0,0,0,0.55),inset 0 0 0 2px rgba(232,196,104,0.4);transition:background 1s ease,box-shadow 1s ease}
 .story-orb-core::after{content:'';position:absolute;inset:14px;border-radius:50%;border:1px dashed rgba(255,255,255,0.35);opacity:0.6}
@@ -787,14 +793,14 @@ body.light-theme .h-group-label span{color:rgba(43,35,19,0.45)}
 .story-orb.orb-starter{--orb-c1:#2C5AA0;--orb-c2:#1B3A6B;--orb-glow:rgba(44,90,160,0.55)}
 .story-orb.orb-pro{--orb-c1:#E8C468;--orb-c2:#C9A227;--orb-glow:rgba(201,162,39,0.6)}
 .story-orb.orb-ultimate{--orb-c1:#F5D78A;--orb-c2:#dfb257;--orb-glow:rgba(245,215,138,0.65)}
-.story-chapter{grid-column:2;min-height:82vh;display:flex;flex-direction:column;justify-content:center}
-.story-chapter-inner{max-width:380px;opacity:0.25;transform:translateY(18px) scale(0.97);transition:opacity 0.5s var(--ease),transform 0.5s var(--ease)}
+.story-chapter{min-height:auto;display:flex;flex-direction:column;justify-content:center}
+.story-chapter-inner{opacity:0.25;transform:translateY(18px) scale(0.97);transition:opacity 0.5s var(--ease),transform 0.5s var(--ease)}
 .story-chapter.active .story-chapter-inner{opacity:1;transform:translateY(0) scale(1)}
 .story-chapter-inner .plan-icon{font-size:38px;display:block;margin-bottom:14px}
 .story-chapter-inner h3{font-family:'Syne',sans-serif;font-size:clamp(26px,4vw,38px);font-weight:800;margin-bottom:10px}
 .story-chapter-inner p{color:var(--text-secondary);font-size:14px;line-height:1.7;margin-bottom:6px}
 .story-chapter-inner .story-price{font-family:'Space Mono',monospace;font-size:13px;color:var(--pulse-bright);margin-top:12px;letter-spacing:0.5px}
-@media(max-width:800px){.plan-story{grid-template-columns:1fr}.story-orb-stage{position:sticky;top:4vh;height:30vh;grid-column:1}.story-orb{width:130px;height:130px}.story-chapter{grid-column:1;min-height:60vh}}
+@media(max-width:800px){.story-chapter{min-height:auto}}
 
 /* ---- Full rewrite: story intro, distinct medallions per rank, ornamental text frame, staggered features, CTA, quick-compare ---- */
 .story-intro{grid-column:1/-1;text-align:center;max-width:560px;margin:0 auto 50px;padding:0 22px}
@@ -806,7 +812,8 @@ body.light-theme .h-group-label span{color:rgba(43,35,19,0.45)}
 .story-orb.orb-ultimate{width:250px;height:250px}
 .story-orb.orb-ultimate::after{content:'';position:absolute;inset:-58px;border-radius:50%;background:conic-gradient(from 0deg,rgba(245,215,138,0.4),transparent 18deg,rgba(245,215,138,0.4) 36deg,transparent 54deg,rgba(245,215,138,0.4) 72deg,transparent 90deg,rgba(245,215,138,0.4) 108deg,transparent 126deg,rgba(245,215,138,0.4) 144deg,transparent 162deg,rgba(245,215,138,0.4) 180deg,transparent 198deg,rgba(245,215,138,0.4) 216deg,transparent 234deg,rgba(245,215,138,0.4) 252deg,transparent 270deg,rgba(245,215,138,0.4) 288deg,transparent 306deg,rgba(245,215,138,0.4) 324deg,transparent 342deg,rgba(245,215,138,0.4) 360deg);filter:blur(7px);opacity:0.65;animation:iconSpin 14s linear infinite}
 
-.story-chapter-inner{position:relative;padding:26px 0}
+.story-chapter-inner{position:relative;padding:32px 28px;background:linear-gradient(160deg,rgba(255,255,255,0.035),rgba(255,255,255,0.01));border:1.5px solid rgba(255,255,255,0.09);border-radius:26px;box-shadow:0 18px 46px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.05)}
+.story-chapter.active .story-chapter-inner{border-color:rgba(212,162,76,0.3)}
 .popular-ribbon{position:absolute;top:0;right:0;background:linear-gradient(135deg,var(--pulse-bright),var(--cyan-star));color:#0a0a0f;font-family:'Space Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:1.5px;padding:5px 12px;border-radius:20px;box-shadow:0 4px 14px rgba(108,92,231,0.4)}
 .story-chapter-inner::before,.story-chapter-inner::after{content:'';position:absolute;left:0;width:64px;height:1px;background:linear-gradient(90deg,var(--gold-royal-bright),transparent)}
 .story-chapter-inner::before{top:0}
@@ -1148,7 +1155,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
     <div style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:1px">MY ASSISTANTS</div>
     <button onclick="closePersonaManager()" style="background:none;border:none;color:#fff;font-size:19px;cursor:pointer"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
   </div>
-  <div style="font-size:11px;color:rgba(255,255,255,0.35);padding:2px 2px 14px">Build assistants with their own personality and instructions — activate one to shape every reply in this chat, like your own custom GPTs.</div>
+  <div style="font-size:11px;color:rgba(255,255,255,0.35);padding:2px 2px 14px">Build assistants with their own personality and instructions — activate one to shape every reply in this chat.</div>
   <div id="persona-grid" class="persona-grid"></div>
 </div>
 
@@ -1300,7 +1307,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
   <div class="ac-sheet-handle" onclick="closeAccountPage()"></div>
   <div class="ac-page-header">
     <div style="display:flex;align-items:center;gap:11px">
-      <div class="phra-companion" id="account-companion"><div class="pc-body"></div><div class="pc-crest"></div><div class="pc-eye l"></div><div class="pc-eye r"></div><div class="pc-beak"></div></div>
+      <div class="phra-companion" id="account-companion"><div class="pc-tail"></div><div class="pc-wing l"></div><div class="pc-wing r"></div><div class="pc-body"></div><div class="pc-crest"></div><div class="pc-eye l"><div class="pc-pupil"></div></div><div class="pc-eye r"><div class="pc-pupil"></div></div><div class="pc-beak"></div></div>
       <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800">Account</div>
     </div>
     <button class="ac-page-close" onclick="closeAccountPage()"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
@@ -1315,12 +1322,13 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
   <div class="ac-page-body">
     <!-- PROFILE -->
     <div id="actab-profile">
-      <div class="ac-section">
-        <div class="ac-section-title">Identity</div>
+      <div class="ac-hero-card" id="ac-hero-card">
+        <div class="ac-hero-glow"></div>
         <div class="ac-avatar-big" id="ac-avatar-big"><span id="ac-avatar-placeholder" style="font-size:28px;color:rgba(255,255,255,0.15)">?</span></div>
         <div id="ac-user-name-big" class="ac-user-name" style="color:rgba(255,255,255,0.3)">Not signed in</div>
         <div id="ac-user-email-big" class="ac-user-email"></div>
-        <div style="height:16px"></div>
+        <div class="ac-hero-plan-badge" id="ac-hero-plan-badge">Free Tier</div>
+        <div style="height:14px"></div>
         <button class="google-btn" id="google-btn" onclick="initiateGoogleOAuth()">
           <svg viewBox="0 0 24 24" width="17" height="17"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.69c-.29 1.5-1.14 3.01-2.4 3.94v3.36h3.9c2.28-2.1 3.6-5.19 3.6-8.84-.04-.37-.01-.74-.01-1.11z"/><path fill="#34A853" d="M12 24c3.24 0 5.97-1.08 7.96-2.91l-3.9-3.36c-1.08.72-2.46 1.15-4.06 1.15-3.12 0-5.77-2.11-6.71-4.95H1.27v3.47C3.25 21.18 7.31 24 12 24z"/><path fill="#FBBC05" d="M5.29 14.93A7.27 7.27 0 0 1 4.8 12c0-1.02.18-2 .49-2.93V5.6H1.27A11.99 11.99 0 0 0 0 12c0 1.93.46 3.75 1.27 5.4l4.02-3.47z"/><path fill="#EA4335" d="M12 4.75c1.76-.03 3.44.64 4.7 1.84l3.5-3.5C18.01 1.05 15.15 0 12 0 7.31 0 3.25 2.82 1.27 6.94l4.02 3.47C6.23 7.57 8.88 4.75 12 4.75z"/></svg>
           <span id="google-btn-text">Sign in with Google</span>
@@ -1347,9 +1355,9 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
       <div class="ac-section">
         <div class="ac-section-title">Appearance & Experience</div>
         <div class="toggle-row"><div><div class="toggle-row-label">Dark / Light Theme</div><div class="toggle-row-sub">Switch between dark and light mode</div></div><label class="switch"><input type="checkbox" id="theme-toggle" onchange="toggleTheme()"><span class="slider"></span></label></div>
-        <div class="toggle-row"><div><div class="toggle-row-label">Luxury Soundscapes</div><div class="toggle-row-sub">UI audio feedback on interactions</div></div><label class="switch"><input type="checkbox" id="sound-toggle" checked><span class="slider"></span></label></div>
-        <div class="toggle-row"><div><div class="toggle-row-label">Haptic Feedback</div><div class="toggle-row-sub">Vibration on mobile devices</div></div><label class="switch"><input type="checkbox" id="haptic-toggle" checked><span class="slider"></span></label></div>
-        <div class="toggle-row"><div><div class="toggle-row-label">Auto Context Switch</div><div class="toggle-row-sub">AI model switches based on your input</div></div><label class="switch"><input type="checkbox" id="auto-switch-toggle" checked><span class="slider"></span></label></div>
+        <div class="toggle-row"><div><div class="toggle-row-label">Luxury Soundscapes</div><div class="toggle-row-sub">UI audio feedback on interactions</div></div><label class="switch"><input type="checkbox" id="sound-toggle" onchange="localStorage.setItem('phraortes_sound',this.checked?'1':'0')"><span class="slider"></span></label></div>
+        <div class="toggle-row"><div><div class="toggle-row-label">Haptic Feedback</div><div class="toggle-row-sub">Vibration on mobile devices</div></div><label class="switch"><input type="checkbox" id="haptic-toggle" onchange="localStorage.setItem('phraortes_haptic',this.checked?'1':'0')"><span class="slider"></span></label></div>
+        <div class="toggle-row"><div><div class="toggle-row-label">Auto Context Switch</div><div class="toggle-row-sub">AI model switches based on your input</div></div><label class="switch"><input type="checkbox" id="auto-switch-toggle" onchange="localStorage.setItem('phraortes_autoswitch',this.checked?'1':'0')"><span class="slider"></span></label></div>
       </div>
     </div>
     <!-- USAGE -->
@@ -1395,7 +1403,7 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
       </div>
       <div class="ac-section">
         <div class="ac-section-title">Recent Notifications</div>
-        <div class="notif-item"><div class="notif-dot"></div><div><div class="notif-title">Phraortes 2.6 Apex — Now Available</div><div class="notif-body">The latest coding core is now live. Apex supports full-stack architecture generation.</div><div class="notif-time">2 hours ago</div></div></div>
+        <div class="notif-item"><div class="notif-dot"></div><div><div class="notif-title">A New Engine Is Live</div><div class="notif-body">Our senior developer-grade core is now live, supporting full-stack architecture generation.</div><div class="notif-time">2 hours ago</div></div></div>
         <div class="notif-item"><div class="notif-dot read"></div><div><div class="notif-title">Galaxy Interface Update</div><div class="notif-body">The premium viewport has been upgraded with a real Milky Way simulation.</div><div class="notif-time">1 day ago</div></div></div>
         <div class="notif-item"><div class="notif-dot read"></div><div><div class="notif-title">System Maintenance Complete</div><div class="notif-body">All nodes are operating at full capacity. Response times improved by 40%.</div><div class="notif-time">3 days ago</div></div></div>
       </div>
@@ -1427,14 +1435,6 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
           <span class="save-badge">Save 30%</span>
         </div>
       </div>
-      <div class="story-orb-stage">
-        <div class="story-orb orb-starter" id="story-orb">
-          <div class="story-orb-core"></div>
-          <div class="story-orb-ring r1"></div>
-          <div class="story-orb-ring r2"></div>
-          <div class="story-orb-ring r3"></div>
-        </div>
-      </div>
       <div class="story-chapter" data-chapter="starter">
         <div class="story-chapter-inner">
           <span class="plan-icon">🛰️</span>
@@ -1443,9 +1443,10 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
           <p class="story-desc">A steady hand to govern your daily work — unrestricted conversation, sharp reasoning on demand, and your first two neural cores at the ready.</p>
           <ul class="story-features">
             <li style="--d:0">Unlimited Standard requests</li>
-            <li style="--d:1">100 Advanced Reasoning Slots / month</li>
-            <li style="--d:2">30 HD Image Renders</li>
-            <li style="--d:3">Phraortes 2.4 Prime + 2.5 Intellect</li>
+            <li style="--d:1">100 Advanced Reasoning Slots/month — buy more anytime</li>
+            <li style="--d:2">Access to Phraortes' core intelligence engine</li>
+            <li style="--d:3">Real tools: live web search, weather, crypto prices</li>
+            <li style="--d:4">30 HD Image Renders</li>
           </ul>
           <div class="price-block"><div class="price-amount"><span class="price-currency">$</span><span class="price-num" id="price-starter" data-monthly="14.99" data-annual="10.49">14.99</span></div><div class="price-period">/ month · billed monthly</div><div class="price-annual" id="annual-starter">≈ $125.88 / year</div></div>
           <button class="story-cta cta-starter" id="cta-starter" onclick="openPayment('Satrap','14.99')">Pledge as Satrap →</button>
@@ -1457,12 +1458,13 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
           <span class="plan-icon">🧠</span>
           <h3>Immortal</h3>
           <p class="story-lede">For builders pushing the limits of AI cognition.</p>
-          <p class="story-desc">Named for the royal guard of ten thousand, always kept at full strength. 350 premium slots, all three cores including Apex 2.6, and full API access.</p>
+          <p class="story-desc">Named for the royal guard of ten thousand, always kept at full strength. 350 premium slots, the senior developer-grade engine, and full API access.</p>
           <ul class="story-features">
-            <li style="--d:0">Unlimited Standard + 350 Premium Slots</li>
-            <li style="--d:1">120 Ultra-HD Studio Renders</li>
-            <li style="--d:2">All 3 cores incl. 2.6 Apex</li>
-            <li style="--d:3">API access + Webhook integration</li>
+            <li style="--d:0">Everything in Satrap, plus:</li>
+            <li style="--d:1">350 Premium Slots/month — buy more anytime</li>
+            <li style="--d:2">Unlocks the senior developer-grade engine</li>
+            <li style="--d:3">Full Workspace: files, Canvas with real PDF export</li>
+            <li style="--d:4">API access + Webhook integration</li>
           </ul>
           <div class="price-block"><div class="price-amount"><span class="price-currency">$</span><span class="price-num" id="price-pro" data-monthly="49.99" data-annual="34.99">49.99</span></div><div class="price-period">/ month · billed monthly</div><div class="price-annual" id="annual-pro">≈ $419.88 / year</div></div>
           <button class="story-cta cta-pro" id="cta-pro" onclick="openPayment('Immortal','49.99')">Ascend to Immortal →</button>
@@ -1475,10 +1477,11 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
           <p class="story-lede">Maximum power. Zero constraints.</p>
           <p class="story-desc">King of Kings. Truly unlimited access across every core, unlimited commercial renders, and Aura live voice — the full weight of the throne, yours.</p>
           <ul class="story-features">
-            <li style="--d:0">Truly Unlimited — All Models</li>
-            <li style="--d:1">Unlimited Commercial Artworks</li>
-            <li style="--d:2">Phraortes 2.6 Apex — coding matrix</li>
-            <li style="--d:3">Aura Live Voice — unlimited sessions</li>
+            <li style="--d:0">Everything in Immortal, fully unlimited</li>
+            <li style="--d:1">Exclusive access to our most powerful engine</li>
+            <li style="--d:2">Aura — unlimited live voice conversations</li>
+            <li style="--d:3">Unlimited Custom Assistants — build your own AI personas</li>
+            <li style="--d:4">Unlimited commercial-use image renders</li>
           </ul>
           <div class="price-block"><div class="price-amount"><span class="price-currency">$</span><span class="price-num" id="price-ult" data-monthly="119.99" data-annual="83.99">119.99</span></div><div class="price-period">/ month · billed monthly</div><div class="price-annual" id="annual-ult">≈ $1,007.88 / year</div></div>
           <button class="story-cta cta-ultimate" id="cta-ultimate" onclick="openPayment('Shahanshah','119.99')">Claim Shahanshah →</button>
@@ -1700,7 +1703,9 @@ const AI_TOOLS=[
   {type:"function",function:{name:"run_javascript",description:"Execute a short JavaScript snippet in a sandbox and return its console output. Use for precise math, date arithmetic, string/JSON transforms, or verifying logic before answering — NOT for anything needing network or DOM access. Always end with console.log(...) of the result.",parameters:{type:"object",properties:{code:{type:"string",description:"JavaScript source code"}},required:["code"]}}},
   {type:"function",function:{name:"list_files",description:"List the files currently saved in this chat's Workspace (name, type, size). Call this before reading or writing a file to see what already exists.",parameters:{type:"object",properties:{}}}},
   {type:"function",function:{name:"read_file",description:"Read the full content of a file from this chat's Workspace by its exact name.",parameters:{type:"object",properties:{name:{type:"string",description:"Exact file name as returned by list_files"}},required:["name"]}}},
-  {type:"function",function:{name:"write_file",description:"Create a new file or overwrite an existing one in this chat's Workspace, visible to the user in the Files panel — use this to save code, drafts, research notes, or any deliverable, instead of only putting it in your reply text.",parameters:{type:"object",properties:{name:{type:"string",description:"File name, including extension (e.g. notes.md, script.py)"},content:{type:"string",description:"Full file content"}},required:["name","content"]}}}
+  {type:"function",function:{name:"write_file",description:"Create a new file or overwrite an existing one in this chat's Workspace, visible to the user in the Files panel — use this to save code, drafts, research notes, or any deliverable, instead of only putting it in your reply text.",parameters:{type:"object",properties:{name:{type:"string",description:"File name, including extension (e.g. notes.md, script.py)"},content:{type:"string",description:"Full file content"}},required:["name","content"]}}},
+  {type:"function",function:{name:"remember_fact",description:"Save a specific fact about the user for future conversations — a name, preference, job, recurring project, or anything worth remembering long-term. Use this proactively when the user shares something meaningful; don't wait to be asked.",parameters:{type:"object",properties:{fact:{type:"string",description:"A short, specific fact stated in third person, e.g. 'Prefers concise answers' or 'Works as a backend developer in Tehran'"}},required:["fact"]}}},
+  {type:"function",function:{name:"recall_memory",description:"Search everything remembered about this user across all past conversations. Use when the user asks what you remember about them, or to check a specific detail before answering.",parameters:{type:"object",properties:{query:{type:"string",description:"What to search for, e.g. 'name' or 'job'. Use 'everything' to get the full list."}},required:["query"]}}}
 ];
 // Every tool call gets a hard client-side timeout too — belt-and-suspenders alongside the
 // Worker's own timeouts, so a stuck network request can never freeze the whole conversation.
@@ -1720,7 +1725,7 @@ const GOOGLE_CLIENT_ID="961077952714-d1ba3ls025vrqou4hfr3jgvtdltsqh55.apps.googl
 const REDIRECT_URI="https://novamind-official.github.io/Nova-mind/";
 const PLAN_CFG={free:{name:"Free",msgLimit:5,advSlots:0,images:0,models:["2.4"]},starter:{name:"Satrap",msgLimit:null,advSlots:100,images:30,models:["2.4","2.5"]},pro:{name:"Immortal",msgLimit:null,advSlots:350,images:120,models:["2.4","2.5","2.6"]},ultimate:{name:"Shahanshah",msgLimit:null,advSlots:null,images:null,models:["2.4","2.5","2.6","2.7"]}};
 function effectiveAdvSlots(plan){const base=PLAN_CFG[plan]?.advSlots;return base===null||base===undefined?base:base+extraSlots}
-const PLAN_FEATURES={starter:["100 Advanced Reasoning Slots / month","30 HD Image Renders","Phraortes 2.4 Prime & 2.5 Intellect","Unlimited Standard Compute"],pro:["350 Premium Slots / month","120 Ultra-HD Studio Renders","All 3 cores incl. 2.6 Apex","API + Webhook access"],ultimate:["Truly Unlimited — All Models","Unlimited Commercial Artworks","Aura Live Voice Sessions","Priority support & early access"]};
+const PLAN_FEATURES={starter:["100 Advanced Reasoning Slots / month","30 HD Image Renders","Access to our core intelligence engine","Unlimited Standard Compute"],pro:["350 Premium Slots / month","120 Ultra-HD Studio Renders","Unlocks the senior developer-grade engine","API + Webhook access"],ultimate:["Truly Unlimited — Every Engine","Unlimited Commercial Artworks","Aura Live Voice Sessions","Priority support & early access"]};
 const WALLETS={bep20:"0xdd96c438bdf70ec037b6a51a34348eb85051a6eb"};
 
 let chats=JSON.parse(localStorage.getItem("phraortes_chats")||"[]");
@@ -2174,6 +2179,18 @@ async function execTool(name,argsStr){
       save();updateFilesBadge();
       return `Saved ${args.name} (${(args.content||"").length} chars) to Workspace.`;
     }
+    if(name==="remember_fact"){
+      const fact=(args.fact||"").trim();
+      if(!fact)return "No fact provided.";
+      if(!longMemory.includes(fact)){longMemory.push(fact);if(longMemory.length>25)longMemory=longMemory.slice(-25);localStorage.setItem("phraortes_longmemory",JSON.stringify(longMemory))}
+      return "Remembered: "+fact;
+    }
+    if(name==="recall_memory"){
+      if(!longMemory.length)return "Nothing remembered about this user yet.";
+      const q=(args.query||"").toLowerCase().trim();
+      const matches=(q&&q!=="everything")?longMemory.filter(f=>f.toLowerCase().includes(q)):longMemory;
+      return matches.length?JSON.stringify(matches):"No match for that query. Full memory: "+JSON.stringify(longMemory);
+    }
     return "Unknown tool: "+name;
   }catch(e){return "Tool error: "+e.message}
 }
@@ -2195,6 +2212,8 @@ function announceTool(elId,toolCalls){
       else if(tc.function.name==="list_files")label="Checking Workspace files";
       else if(tc.function.name==="read_file")label=`Reading file: ${args.name||""}`;
       else if(tc.function.name==="write_file")label=`Writing file: ${args.name||""}`;
+      else if(tc.function.name==="remember_fact")label="Remembering that...";
+      else if(tc.function.name==="recall_memory")label="Checking memory...";
     }catch(e){}
     if(stepsEl){
       const prevActive=stepsEl.querySelector(".agent-step.active");
@@ -2668,6 +2687,10 @@ window.addEventListener("load",()=>{
   handleOAuthRedirect();
   if(!chats.length)newChat();else loadChat(curId);
   renderBilling();updateModelUI(activeModel);initPlanUI();updateActivePersonaBadge();
+  const soundT=document.getElementById("sound-toggle"),hapticT=document.getElementById("haptic-toggle"),autoT=document.getElementById("auto-switch-toggle");
+  if(soundT)soundT.checked=localStorage.getItem("phraortes_sound")!=="0";
+  if(hapticT)hapticT.checked=localStorage.getItem("phraortes_haptic")!=="0";
+  if(autoT)autoT.checked=localStorage.getItem("phraortes_autoswitch")!=="0";
   let inputIdleTimer=null;
   uiInput.addEventListener("input",()=>{
     autoResize(uiInput); // must stay instant — the textarea needs to grow as you type
@@ -3004,10 +3027,11 @@ function triggerGlitch(){document.body.classList.add("glitch-active");setTimeout
 
 // ==== Radar chart: core comparison ====
 function updateAcPlanBadge(){
-  const badge=document.getElementById("ac-plan-badge");if(!badge)return;
+  const badge=document.getElementById("ac-plan-badge");
   const names={free:"Free Tier",starter:"Satrap",pro:"Immortal",ultimate:"Shahanshah"};
-  badge.textContent=names[activePlan]||"Free Tier";
-  badge.className="plan-badge "+activePlan;
+  if(badge){badge.textContent=names[activePlan]||"Free Tier";badge.className="plan-badge "+activePlan}
+  const hero=document.getElementById("ac-hero-plan-badge");
+  if(hero){hero.textContent=names[activePlan]||"Free Tier";hero.className="ac-hero-plan-badge "+(activePlan!=="free"?"tier-"+activePlan:"")}
 }
 
 // ═══ PLAN UI ═══
@@ -3285,6 +3309,20 @@ renderer.code=function(code,lang){
       <div class="design-card-canvas">${str}</div>
     </div>`;
   }
+  if(l==="qr"){
+    try{
+      const qr=qrcode(0,"M");
+      qr.addData(str.trim());
+      qr.make();
+      const svgTag=qr.createSvgTag({cellSize:6,margin:4,scalable:true});
+      return`<div class="design-card code-block-wrapper">
+        <div class="code-header"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#888;font-family:'Space Mono',monospace;letter-spacing:0.5px">✦ qr code</span></span><div class="code-tools"><button class="code-tool-btn" onclick="downloadDesignSVG(this)">⇩ SVG</button><button class="code-tool-btn" onclick="downloadDesignPNG(this)">⇩ PNG</button></div></div>
+        <div class="design-card-canvas" style="background:#fff">${svgTag}</div>
+      </div>`;
+    }catch(e){
+      return`<div class="code-file-card"><div class="cfc-icon">⚠</div><div class="cfc-info"><div class="cfc-name">QR generation failed</div><div class="cfc-meta">${escapeHtml(str.slice(0,60))}</div></div></div>`;
+    }
+  }
   if(lines>40){
     const ext=LANG_EXT_MAP[l]||l||"txt";const lc=LANG_COLOR_MAP[l]||"#8888BB";
     return`<div class="code-file-card" style="--lc:${lc}" onclick="openVirtualEditor('${enc}','snippet.${ext}',${lines},'${l}')">
@@ -3361,7 +3399,7 @@ async function send(){
   const isCodeQuery=/(code|bug|debug|python|javascript|html|css|react|api|sql|function|algorithm|باگ|کد|پایتون|دیباگ|برنامه|الگوریتم)/i.test(txt);
   const loaderType=activeModel==="2.7"?"think":isCodeQuery||activeModel==="2.6"?"code":activeModel==="2.5"?"think":"chat";
   startContextLoader("a-"+idx,loaderType,detectMsgLang(txt));
-  let sys="You are Phraortes OS — an advanced intelligence assistant. Respond clearly and helpfully. Always respond in the same language the user just wrote in — match it exactly (Persian, English, Arabic, or any other language), regardless of what language earlier turns or these instructions are in. When giving a multi-step plan, checklist, or sequence of tasks, format it as a markdown task list using '- [ ] ' syntax for each step so it can be checked off. When a question depends on current, time-sensitive, or verifiable-online information (news, prices, recent releases, live facts) — use the web_search tool rather than answering from memory alone; the user sees exactly which real sources you used, so don't claim to have looked something up unless you actually called the tool. For genuinely multi-step tasks, chain tools together before answering — e.g. search, then read_url on the most promising result, then write_file to save a deliverable — rather than stopping after one call; the user can see each step happen live. When the user asks you to design, draw, or create a visual (a poster, logo, banner, icon, UI mockup, diagram, or any graphic) — reply with real, complete SVG markup in a \`\`\`svg code block (starting with <svg viewBox=\"...\">), not a text description of what it would look like; it renders live in the chat as an actual visual the user can download as SVG or PNG. Follow these rules strictly — they are what separates a professional result from an amateur one: (1) FONTS — SVG cannot load custom web fonts, so only ever use these safe stacks: \"Helvetica Neue,Arial,sans-serif\" for clean/modern, \"Georgia,serif\" for elegant/editorial, \"Courier New,monospace\" for technical — never name a Google Font or any font that isn't one of these, it will silently fall back to a broken default and ruin the design. (2) PALETTE — pick exactly 2-4 colors with clear roles (one dominant, one accent, one neutral background, optionally one highlight) and use ONLY those; never scatter many unrelated colors. (3) HIERARCHY — one element must clearly dominate (largest/boldest); everything else is visibly secondary. Vary font-size deliberately (e.g. a headline at 3-4x the body size), never use near-uniform sizing for everything. (4) GRID & ALIGNMENT — align elements to a consistent grid (shared x/y positions, even margins on all sides); nothing should look randomly placed. (5) NEGATIVE SPACE — leave real breathing room; do not fill the entire canvas edge-to-edge. (6) CANVAS SHAPE — match the viewBox proportions to the request: roughly square (e.g. 0 0 400 400) for a logo/icon, portrait (e.g. 0 0 600 850) for a poster, landscape (e.g. 0 0 1200 630) for a banner. (7) RESTRAINT — prefer flat design or a single simple 2-stop linearGradient over busy effects, filters, or many overlapping shapes; a clean simple design always reads as more professional than a cluttered one. ";
+  let sys="You are Phraortes OS — an advanced intelligence assistant. Respond clearly and helpfully. Always respond in the same language the user just wrote in — match it exactly (Persian, English, Arabic, or any other language), regardless of what language earlier turns or these instructions are in. When giving a multi-step plan, checklist, or sequence of tasks, format it as a markdown task list using '- [ ] ' syntax for each step so it can be checked off. When a question depends on current, time-sensitive, or verifiable-online information (news, prices, recent releases, live facts) — use the web_search tool rather than answering from memory alone; the user sees exactly which real sources you used, so don't claim to have looked something up unless you actually called the tool. For genuinely multi-step tasks, chain tools together before answering — e.g. search, then read_url on the most promising result, then write_file to save a deliverable — rather than stopping after one call; the user can see each step happen live. When the user asks you to design, draw, or create a visual (a poster, logo, banner, icon, UI mockup, diagram, or any graphic) — reply with real, complete SVG markup in a \`\`\`svg code block (starting with <svg viewBox=\"...\">), not a text description of what it would look like; it renders live in the chat as an actual visual the user can download as SVG or PNG. Follow these rules strictly — they are what separates a professional result from an amateur one: (1) FONTS — SVG cannot load custom web fonts, so only ever use these safe stacks: \"Helvetica Neue,Arial,sans-serif\" for clean/modern, \"Georgia,serif\" for elegant/editorial, \"Courier New,monospace\" for technical — never name a Google Font or any font that isn't one of these, it will silently fall back to a broken default and ruin the design. (2) PALETTE — pick exactly 2-4 colors with clear roles (one dominant, one accent, one neutral background, optionally one highlight) and use ONLY those; never scatter many unrelated colors. (3) HIERARCHY — one element must clearly dominate (largest/boldest); everything else is visibly secondary. Vary font-size deliberately (e.g. a headline at 3-4x the body size), never use near-uniform sizing for everything. (4) GRID & ALIGNMENT — align elements to a consistent grid (shared x/y positions, even margins on all sides); nothing should look randomly placed. (5) NEGATIVE SPACE — leave real breathing room; do not fill the entire canvas edge-to-edge. (6) CANVAS SHAPE — match the viewBox proportions to the request: roughly square (e.g. 0 0 400 400) for a logo/icon, portrait (e.g. 0 0 600 850) for a poster, landscape (e.g. 0 0 1200 630) for a banner. (7) RESTRAINT — prefer flat design or a single simple 2-stop linearGradient over busy effects, filters, or many overlapping shapes; a clean simple design always reads as more professional than a cluttered one. When the user asks for a QR code, reply with ONLY the raw text/URL to encode in a \`\`\`qr code block (nothing else in that block) — it renders as a real, scannable QR code the user can download. Use the remember_fact tool proactively whenever the user shares something worth remembering long-term (name, preferences, job, recurring projects) — don't wait to be asked, and use recall_memory when the user asks what you remember about them. ";
   const activePersonaObj=customPersonas.find(p=>p.id===activePersonaId);
   if(activePersonaObj)sys+=` You are currently acting as a custom assistant the user built and named "${activePersonaObj.name}". Follow these user-defined instructions closely and stay in this persona consistently for the rest of the conversation: ${activePersonaObj.instructions}`;
   if(activeModel==="2.7")sys+="You are Sovereign 2.7, Phraortes' most advanced core — built for large, complex, professional-grade projects. Take the time to think through edge cases and long-term maintainability; a longer, more deliberate, thorough response is expected and welcome here.";
@@ -3523,14 +3561,14 @@ function finishTurn(aiId,htmlContent,rawContent,chat,userHtml,userTxt,msgIndex,e
   turnRealSources=[];
   const fuType=/^\[Image rendered/.test(rawContent)?"image":/```/.test(rawContent)?"code":activeModel==="2.5"?"think":"chat";
   const fuHTML=followupHTML(fuType,msgIndex);
-  const srcChipHTML=srcs.length?`<div class="claude-source-chip" onclick="openSourceDrawer('${encSrc}','${qc}')">🌐 ${srcs.length} Source${srcs.length>1?"s":""}</div>`:"";
-  const speedHTML=elapsedS?`<div class="claude-source-chip" style="cursor:default">⚡ ${elapsedS}s</div>`:"";
-  const correctedHTML=corrected?`<div class="claude-source-chip" style="cursor:default;color:#8fdc8f;border-color:rgba(143,220,143,0.3)">✓ Tested &amp; auto-corrected</div>`:"";
-  const toolLabels={web_search:"🔍 Searched the web",read_url:"📖 Read a page",get_weather:"🌤️ Checked weather",get_crypto_price:"💰 Checked price",run_javascript:"🧮 Ran a calculation",get_current_datetime:"🕐 Checked the time",list_files:"🗂️ Checked files",read_file:"📄 Read a file",write_file:"💾 Saved a file"};
-  const toolChipHTML=turnToolLog.map(t=>`<div class="claude-source-chip" style="cursor:default;color:#8fc7f5;border-color:rgba(143,199,245,0.3)">${toolLabels[t.name]||t.name}</div>`).join("");
+  const srcChipHTML=srcs.length?`<div class="source-chip" onclick="openSourceDrawer('${encSrc}','${qc}')">🌐 ${srcs.length} Source${srcs.length>1?"s":""}</div>`:"";
+  const speedHTML=elapsedS?`<div class="source-chip" style="cursor:default">⚡ ${elapsedS}s</div>`:"";
+  const correctedHTML=corrected?`<div class="source-chip" style="cursor:default;color:#8fdc8f;border-color:rgba(143,220,143,0.3)">✓ Tested &amp; auto-corrected</div>`:"";
+  const toolLabels={web_search:"🔍 Searched the web",read_url:"📖 Read a page",get_weather:"🌤️ Checked weather",get_crypto_price:"💰 Checked price",run_javascript:"🧮 Ran a calculation",get_current_datetime:"🕐 Checked the time",list_files:"🗂️ Checked files",read_file:"📄 Read a file",write_file:"💾 Saved a file",remember_fact:"🧠 Remembered something",recall_memory:"🧠 Recalled memory"};
+  const toolChipHTML=turnToolLog.map(t=>`<div class="source-chip" style="cursor:default;color:#8fc7f5;border-color:rgba(143,199,245,0.3)">${toolLabels[t.name]||t.name}</div>`).join("");
   turnToolLog=[];
   const coreColor=MODEL_COLORS[activeModel]||"#8888BB",coreShort=(MODEL_NAMES[activeModel]||"").split(" ")[0];
-  const coreChipHTML=coreShort?`<div class="claude-source-chip" style="cursor:default;color:${coreColor};border-color:${coreColor}55"><span class="mi-dot" style="background:${coreColor};display:inline-block;margin-right:5px"></span>${coreShort}</div>`:"";
+  const coreChipHTML=coreShort?`<div class="source-chip" style="cursor:default;color:${coreColor};border-color:${coreColor}55"><span class="mi-dot" style="background:${coreColor};display:inline-block;margin-right:5px"></span>${coreShort}</div>`:"";
   wrap.innerHTML=`
     <div class="msg ai" id="${aiId}" dir="auto" onpointerdown="startPress(event,'ai','${aiId}',null)" onpointerup="cancelPress()" onpointerleave="cancelPress()"></div>
     <div style="margin-top:6px;display:flex;align-items:center;flex-wrap:wrap;gap:5px">
@@ -3689,9 +3727,9 @@ function loadChat(id){
       const isLong=(m.aRaw||"").length>LONG_TEXT_THRESHOLD;
       const bodyHtml=isLong?renderMD((m.aRaw||"").substring(0,420).trim())+`<div class="code-block-wrapper" style="display:flex;align-items:center;justify-content:space-between;padding:18px;margin-top:14px"><div style="display:flex;align-items:center;gap:13px"><span style="font-size:26px">📜</span><div><div style="font-weight:bold;color:#fff;font-family:'Space Mono',monospace">Full response (${(m.aRaw||"").length.toLocaleString()} chars)</div></div></div><div style="display:flex;gap:6px"><button class="code-tool-btn" onclick="openVirtualEditor('${enc}','response.md',${(m.aRaw||"").split("\\n").length})">⚡ Open</button><button class="code-tool-btn" onclick="downloadTextFile('phraortes-response.md',decodeURIComponent('${enc}'))">⬇ Save</button></div></div>`:m.a;
       const srcs=m.realSources||[],encSrc=safeEnc(JSON.stringify(srcs)),bHTML=getBranchHTML(i);
-      const srcChipHTML=srcs.length?`<div class="claude-source-chip" onclick="openSourceDrawer('${encSrc}','Archived')">🌐 ${srcs.length} Source${srcs.length>1?"s":""}</div>`:"";
+      const srcChipHTML=srcs.length?`<div class="source-chip" onclick="openSourceDrawer('${encSrc}','Archived')">🌐 ${srcs.length} Source${srcs.length>1?"s":""}</div>`:"";
       const hCoreColor=MODEL_COLORS[m.coreUsed]||"",hCoreShort=(MODEL_NAMES[m.coreUsed]||"").split(" ")[0];
-      const hCoreChipHTML=hCoreShort?`<div class="claude-source-chip" style="cursor:default;color:${hCoreColor};border-color:${hCoreColor}55"><span class="mi-dot" style="background:${hCoreColor};display:inline-block;margin-right:5px"></span>${hCoreShort}</div>`:"";
+      const hCoreChipHTML=hCoreShort?`<div class="source-chip" style="cursor:default;color:${hCoreColor};border-color:${hCoreColor}55"><span class="mi-dot" style="background:${hCoreColor};display:inline-block;margin-right:5px"></span>${hCoreShort}</div>`:"";
       w.innerHTML=`<div class="msg ai" id="a-${i}" dir="auto" onpointerdown="startPress(event,'ai','a-${i}',null)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${bodyHtml}</div>
         <div style="margin-top:6px;display:flex;align-items:center;flex-wrap:wrap;gap:5px">${hCoreChipHTML}${srcChipHTML}${bHTML}</div>
         <div class="listen-ops">
@@ -3981,21 +4019,15 @@ function renderBilling(){const list=document.getElementById("billing-scroll");if
 
 // ═══ PREMIUM VIEWPORT ═══
 function initPlanStory(){
-  const orb=document.getElementById("story-orb");
   const chapters=document.querySelectorAll(".story-chapter");
   const viewport=document.getElementById("premium-immersive-viewport");
-  if(!orb||!chapters.length||!viewport)return;
+  if(!chapters.length||!viewport)return;
   const io=new IntersectionObserver(entries=>{
     entries.forEach(e=>{
       e.target.classList.toggle("active",e.isIntersecting&&e.intersectionRatio>0.45);
-      if(e.isIntersecting&&e.intersectionRatio>0.45){orb.className="story-orb orb-"+e.target.dataset.chapter}
     });
   },{threshold:[0,0.45,0.9],root:viewport});
   chapters.forEach(c=>io.observe(c));
-  viewport.addEventListener("scroll",()=>{
-    const y=viewport.scrollTop;
-    orb.style.transform=`rotateY(${y*0.18}deg) rotateX(${Math.sin(y*0.0025)*10}deg)`;
-  },{passive:true});
 }
 
 function openPremium(){closeMenus(null);document.getElementById("premium-immersive-viewport").classList.add("show");initGalaxyCanvas();updatePlanCTAs();initPlanStory()}
