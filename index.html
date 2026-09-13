@@ -21,6 +21,7 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -456,8 +457,20 @@ footer{width:100%;padding:8px 5% 26px;background:linear-gradient(to top,rgba(0,0
 .persona-new-card{border-radius:18px;border:1.5px dashed rgba(255,255,255,0.18);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;min-height:118px;color:rgba(255,255,255,0.4);transition:0.2s}
 .persona-new-card:hover{border-color:var(--p);color:var(--p);background:rgba(212,162,76,0.06)}
 .persona-editor-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(18px);z-index:31000;display:none;align-items:center;justify-content:center;padding:20px}
-.persona-editor-overlay.show{display:flex}
+.persona-editor-overlay.show{display:flex;animation:fadeIn 0.22s ease}
+.persona-editor-overlay.show .persona-editor-card{animation:depthPop 0.28s var(--ease)}
 .persona-editor-card{background:rgba(15,10,6,0.97);border:1px solid rgba(212,162,76,0.2);border-radius:22px;padding:20px;width:100%;max-width:400px;max-height:85vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.6)}
+.wn-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 14px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.wn-header-title{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:16px;color:var(--p)}
+.wn-header-sub{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px}
+.wn-list{padding:16px 18px 20px;display:flex;flex-direction:column;gap:16px;max-height:64vh;overflow-y:auto}
+.wn-entry{display:flex;gap:13px}
+.wn-entry-img{width:56px;height:56px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.wn-entry-img svg{width:100%;height:100%}
+.wn-entry-body{flex:1;min-width:0}
+.wn-entry-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13.5px;color:#fff}
+.wn-entry-date{font-family:'Space Mono',monospace;font-size:9.5px;color:rgba(255,255,255,0.3);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px}
+.wn-entry-desc{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.6;margin-top:3px}
 .persona-editor-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .persona-emoji-preview{width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
 #persona-name-input{flex:1;padding:12px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;color:#fff;font-size:14px;font-family:inherit;font-weight:600}
@@ -1178,7 +1191,16 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
   </div>
 </div>
 
-<!-- FOLDER PICKER — move a chat into/out of a folder -->
+<!-- WHAT'S NEW — changelog with illustrated entries -->
+<div id="whats-new-overlay" class="persona-editor-overlay" onclick="event.target===this&&closeWhatsNew()">
+  <div class="persona-editor-card" style="max-width:400px;padding:0">
+    <div class="wn-header">
+      <div><div class="wn-header-title">✦ What's New</div><div class="wn-header-sub">The latest from Phraortes</div></div>
+      <button onclick="closeWhatsNew()" style="background:rgba(255,255,255,0.06);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+    </div>
+    <div id="whats-new-list" class="wn-list"></div>
+  </div>
+</div>
 <div id="folder-picker-overlay" class="persona-editor-overlay" onclick="event.target===this&&closeFolderPicker()">
   <div class="persona-editor-card" style="max-width:320px">
     <div class="drawer-header">
@@ -1564,6 +1586,10 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:6px">
+      <button class="btn-icon" id="whats-new-btn" onclick="openWhatsNew(false)" style="position:relative" title="What's New">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.2H22l-6 4.4 2.3 7.2L12 16.4l-6.3 4.4 2.3-7.2-6-4.4h7.6z"/></svg>
+        <span id="whats-new-dot" style="display:none;position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:var(--p)"></span>
+      </button>
       <button class="btn-icon" id="files-btn" onclick="openFilesPanel()" style="position:relative">
         <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
         <span id="files-badge" style="display:none;position:absolute;top:-2px;right:-2px;background:var(--pulse-bright,#A855F7);color:#fff;font-size:9px;border-radius:50%;width:15px;height:15px;align-items:center;justify-content:center;font-family:'Space Mono',monospace;line-height:1">0</span>
@@ -2496,6 +2522,38 @@ function toggleFolderCollapse(id){
   renderH();
 }
 
+// ═══ WHAT'S NEW — illustrated changelog ═══
+const WHATS_NEW=[
+  {id:"agent-tools",date:"This week",title:"Phraortes can now act, not just chat",desc:"Real-time web search, live weather, crypto prices, reading full web pages, and its own file Workspace — all as genuine tool calls, with a live step-by-step trace so you watch it work.",
+    svg:`<svg viewBox="0 0 56 56"><rect width="56" height="56" rx="14" fill="#C9722E"/><circle cx="28" cy="28" r="14" fill="none" stroke="#F5EEDD" stroke-width="2.2"/><circle cx="28" cy="28" r="3" fill="#F5EEDD"/><line x1="28" y1="14" x2="28" y2="18" stroke="#F5EEDD" stroke-width="2.2" stroke-linecap="round"/><line x1="28" y1="38" x2="28" y2="42" stroke="#F5EEDD" stroke-width="2.2" stroke-linecap="round"/><line x1="14" y1="28" x2="18" y2="28" stroke="#F5EEDD" stroke-width="2.2" stroke-linecap="round"/><line x1="38" y1="28" x2="42" y2="28" stroke="#F5EEDD" stroke-width="2.2" stroke-linecap="round"/></svg>`},
+  {id:"design-gen",date:"This week",title:"Live design generation, right in chat",desc:"Ask for a logo, poster, banner, or QR code — a real, professional visual renders instantly, downloadable as SVG or PNG. No separate design tool needed.",
+    svg:`<svg viewBox="0 0 56 56"><rect width="56" height="56" rx="14" fill="#E8934A"/><rect x="14" y="14" width="28" height="28" rx="4" fill="none" stroke="#1a1206" stroke-width="2.2"/><circle cx="22" cy="23" r="3" fill="#1a1206"/><path d="M14 34l8-8 6 6 8-10 6 6" fill="none" stroke="#1a1206" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`},
+  {id:"personas",date:"This week",title:"Build your own custom assistants",desc:"Give Phraortes a new personality and instructions — an accountant, a language tutor, a strict code reviewer — save it, and switch between your assistants anytime.",
+    svg:`<svg viewBox="0 0 56 56"><rect width="56" height="56" rx="14" fill="#8B5A8C"/><circle cx="28" cy="22" r="8" fill="#F5EEDD"/><path d="M14 44v-2a14 14 0 0 1 28 0v2" fill="none" stroke="#F5EEDD" stroke-width="2.2" stroke-linecap="round"/></svg>`},
+  {id:"excel",date:"This week",title:"Real Excel & CSV understanding",desc:"Upload a spreadsheet and Phraortes actually parses every sheet — rows, columns, and all — instead of seeing a blind file. Built for real work, not just chat.",
+    svg:`<svg viewBox="0 0 56 56"><rect width="56" height="56" rx="14" fill="#4A6741"/><rect x="15" y="14" width="26" height="28" rx="3" fill="none" stroke="#F5EEDD" stroke-width="2"/><line x1="15" y1="22" x2="41" y2="22" stroke="#F5EEDD" stroke-width="1.6"/><line x1="15" y1="30" x2="41" y2="30" stroke="#F5EEDD" stroke-width="1.6"/><line x1="25" y1="14" x2="25" y2="42" stroke="#F5EEDD" stroke-width="1.6"/></svg>`},
+  {id:"folders-personal",date:"This week",title:"Folders, chat icons & real memory",desc:"Organize sessions into color-coded folders, give any chat its own icon, and Phraortes now actively remembers — and recalls — real facts about you across every conversation.",
+    svg:`<svg viewBox="0 0 56 56"><rect width="56" height="56" rx="14" fill="#2E8B7A"/><path d="M14 20a2 2 0 0 1 2-2h8l3 3h13a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2z" fill="#F5EEDD"/></svg>`},
+];
+function checkWhatsNew(){
+  const lastSeen=localStorage.getItem("phraortes_whatsnew_seen");
+  const hasUnseen=lastSeen!==WHATS_NEW[0].id;
+  const dot=document.getElementById("whats-new-dot");
+  if(dot)dot.style.display=hasUnseen?"block":"none";
+  if(hasUnseen){
+    setTimeout(()=>openWhatsNew(true),1400); // small delay so it doesn't collide with initial load
+  }
+}
+function openWhatsNew(isAuto){
+  const list=document.getElementById("whats-new-list");
+  list.innerHTML=WHATS_NEW.map(w=>`<div class="wn-entry"><div class="wn-entry-img">${w.svg}</div><div class="wn-entry-body"><div class="wn-entry-date">${w.date}</div><div class="wn-entry-title">${w.title}</div><div class="wn-entry-desc">${w.desc}</div></div></div>`).join("");
+  document.getElementById("whats-new-overlay").classList.add("show");
+  localStorage.setItem("phraortes_whatsnew_seen",WHATS_NEW[0].id);
+  const dot=document.getElementById("whats-new-dot");if(dot)dot.style.display="none";
+  if(!isAuto)haptic("light");
+}
+function closeWhatsNew(){document.getElementById("whats-new-overlay").classList.remove("show")}
+
 // ═══ SHARE AS IMAGE CARD — branded quote card for Instagram/Telegram stories ═══
 function wrapCanvasText(ctx,text,maxWidth){
   const words=text.split(/\s+/);const lines=[];let line="";
@@ -2686,7 +2744,7 @@ window.addEventListener("load",()=>{
   if(localStorage.getItem("phraortes_theme")==="light"){document.body.classList.add("light-theme");document.getElementById("theme-toggle").checked=true}
   handleOAuthRedirect();
   if(!chats.length)newChat();else loadChat(curId);
-  renderBilling();updateModelUI(activeModel);initPlanUI();updateActivePersonaBadge();
+  renderBilling();updateModelUI(activeModel);initPlanUI();updateActivePersonaBadge();checkWhatsNew();
   const soundT=document.getElementById("sound-toggle"),hapticT=document.getElementById("haptic-toggle"),autoT=document.getElementById("auto-switch-toggle");
   if(soundT)soundT.checked=localStorage.getItem("phraortes_sound")!=="0";
   if(hapticT)hapticT.checked=localStorage.getItem("phraortes_haptic")!=="0";
@@ -3978,7 +4036,23 @@ function handleFiles(e){
     }else if(file.name.toLowerCase().endsWith(".docx")){
       attachedFiles.push({id,file,type:"doc",name:file.name,size:sz,dataURL:null,text:"",loading:true});renderPreviews();
       extractDocxText(file).then(text=>{const f=attachedFiles.find(x=>x.id===id);if(f){f.text=text;f.loading=false;renderPreviews()}}).catch(()=>{const f=attachedFiles.find(x=>x.id===id);if(f){f.text="[Could not extract text from this document]";f.loading=false;renderPreviews()}showToast("Couldn't read that Word file","error")});
-    }else if(/\.(txt|md|csv|json|js|py|html|css)$/i.test(file.name)){
+    }else if(/\.(xlsx|xls)$/i.test(file.name)){
+      attachedFiles.push({id,file,type:"doc",name:file.name,size:sz,dataURL:null,text:"",loading:true});renderPreviews();
+      extractSpreadsheetText(file).then(text=>{const f=attachedFiles.find(x=>x.id===id);if(f){f.text=text;f.loading=false;renderPreviews()}}).catch(()=>{const f=attachedFiles.find(x=>x.id===id);if(f){f.text="[Could not read this spreadsheet]";f.loading=false;renderPreviews()}showToast("Couldn't read that spreadsheet","error")});
+    }else if(/\.csv$/i.test(file.name)){
+      const reader=new FileReader();
+      reader.onload=ev=>{
+        let text=ev.target.result;
+        try{
+          // Route through SheetJS's CSV parser too — correctly handles quoted commas, embedded
+          // newlines, etc. instead of trusting the raw file text verbatim.
+          const wb=XLSX.read(text,{type:"string"});
+          text=XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]]).slice(0,9000);
+        }catch(e){}
+        attachedFiles.push({id,file,type:"doc",name:file.name,size:sz,dataURL:null,text});renderPreviews();
+      };
+      reader.readAsText(file);
+    }else if(/\.(txt|md|json|js|py|html|css)$/i.test(file.name)){
       const reader=new FileReader();
       reader.onload=ev=>{attachedFiles.push({id,file,type:"doc",name:file.name,size:sz,dataURL:null,text:ev.target.result});renderPreviews()};
       reader.readAsText(file);
@@ -3999,6 +4073,18 @@ async function extractPdfText(file){
     text+=content.items.map(it=>it.str).join(" ")+"\n\n";
   }
   return text.trim().substring(0,20000);
+}
+async function extractSpreadsheetText(file){
+  const buf=await file.arrayBuffer();
+  const wb=XLSX.read(buf,{type:"array"});
+  let out="";
+  wb.SheetNames.slice(0,5).forEach(sheetName=>{ // cap at 5 sheets so one huge workbook can't blow up the context
+    const sheet=wb.Sheets[sheetName];
+    const csv=XLSX.utils.sheet_to_csv(sheet).slice(0,8000);
+    out+=`### Sheet: ${sheetName}\n${csv}\n\n`;
+  });
+  if(wb.SheetNames.length>5)out+=`(...and ${wb.SheetNames.length-5} more sheet(s) not shown)`;
+  return out.trim()||"[Empty spreadsheet]";
 }
 async function extractDocxText(file){
   const buf=await file.arrayBuffer();
