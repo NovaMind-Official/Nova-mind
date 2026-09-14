@@ -2326,13 +2326,11 @@ async function generateCanvasWithAI(btn){
   }catch(e){showToast("Couldn't generate — please try again.","error")}
   finally{btn.disabled=false;btn.textContent=original}
 }
-function exportCanvasPDF(){
-  const ta=document.getElementById("ws-canvas-textarea");
-  const text=ta.value.trim();
-  if(!text){showToast("Canvas is empty — nothing to export.","error");return}
+function buildAndDownloadPDF(markdownText,filename){
+  if(!markdownText||!markdownText.trim()){showToast("Nothing to export.","error");return}
   const staging=document.createElement("div");
   staging.style.cssText="position:fixed;left:-9999px;top:0;width:700px;background:#fff;color:#111;padding:40px;font-family:'Space Grotesk',sans-serif;line-height:1.6";
-  staging.innerHTML=renderMD(text);
+  staging.innerHTML=renderMD(markdownText);
   // Dark-theme app CSS doesn't translate to a white PDF page — force print-safe colors for the export only.
   staging.querySelectorAll("h1,h2,h3,h4,strong").forEach(el=>el.style.color="#111");
   staging.querySelectorAll("table").forEach(el=>{el.style.width="100%";el.style.borderCollapse="collapse";el.style.border="1px solid #ccc"});
@@ -2341,9 +2339,19 @@ function exportCanvasPDF(){
   staging.querySelectorAll("blockquote").forEach(el=>{el.style.borderLeft="3px solid #999";el.style.paddingLeft="14px";el.style.color="#555"});
   document.body.appendChild(staging);
   showToast("📄 Building your PDF...");
-  html2pdf().set({margin:14,filename:"phraortes-canvas.pdf",html2canvas:{scale:2},jsPDF:{unit:"pt",format:"a4"}}).from(staging).save()
+  html2pdf().set({margin:14,filename:filename||"phraortes-document.pdf",html2canvas:{scale:2},jsPDF:{unit:"pt",format:"a4"}}).from(staging).save()
     .then(()=>{staging.remove();haptic("success")})
     .catch(()=>{staging.remove();showToast("PDF export failed — try again.","error")});
+}
+function exportCanvasPDF(){
+  const ta=document.getElementById("ws-canvas-textarea");
+  buildAndDownloadPDF(ta.value.trim(),"phraortes-canvas.pdf");
+}
+function exportChatPDF(enc,titleEnc){
+  const text=decodeURIComponent(enc);
+  const title=titleEnc?decodeURIComponent(titleEnc):"phraortes-report";
+  const safeName=title.replace(/[^a-z0-9\-_ ]/gi,"").trim().slice(0,50)||"phraortes-report";
+  buildAndDownloadPDF(text,safeName+".pdf");
 }
 function clearCanvas(){
   const ta=document.getElementById("ws-canvas-textarea");
@@ -2777,7 +2785,13 @@ window.addEventListener("load",()=>{
   initSelectionTranslate();
   initAccountParallax();
   initOnboarding();
-  document.getElementById("premium-immersive-viewport").addEventListener("scroll",e=>{const y=e.target.scrollTop;[[".blob-1",[0.03,0.05]],[".blob-2",[-0.04,0.03]],[".blob-3",[0.02,-0.04]]].forEach(([s,t])=>{const el=document.querySelector(s);if(el)el.style.transform=`translate(${y*t[0]}px,${y*t[1]}px)`})},{passive:true});
+  {
+    const blobEls=[[document.querySelector(".blob-1"),[0.03,0.05]],[document.querySelector(".blob-2"),[-0.04,0.03]],[document.querySelector(".blob-3"),[0.02,-0.04]]].filter(([el])=>el);
+    document.getElementById("premium-immersive-viewport").addEventListener("scroll",e=>{
+      const y=e.target.scrollTop;
+      blobEls.forEach(([el,t])=>{el.style.transform=`translate(${y*t[0]}px,${y*t[1]}px)`});
+    },{passive:true});
+  }
 });
 function autoResize(el){el.style.height="44px";el.style.height=Math.min(el.scrollHeight,148)+"px"}
 function estimateTokens(text){return Math.max(0,Math.round((text||"").length/4))}
@@ -2965,9 +2979,10 @@ function renderWeeklyStats(){
 // ==== Magnetic drag-drop ====
 function initAccountParallax(){
   const pg=document.getElementById("account-page");if(!pg)return;
+  const glows=pg.querySelectorAll(".glass-glow"); // queried once — these are static, never added/removed
   pg.addEventListener("scroll",()=>{
     const y=pg.scrollTop;
-    document.querySelectorAll(".glass-glow").forEach(el=>{el.style.transform=`translateY(${y*0.12}px) translateX(${y*0.04}px)`});
+    glows.forEach(el=>{el.style.transform=`translateY(${y*0.12}px) translateX(${y*0.04}px)`});
   },{passive:true});
 }
 function onboardCurrentIdx(){
@@ -2995,10 +3010,11 @@ function initOnboarding(){
   const cards=carousel.querySelectorAll(".onboard-card");
   const dotsWrap=document.getElementById("onboard-dots");
   dotsWrap.innerHTML=Array.from(cards).map((_,i)=>`<div class="onboard-dot ${i===0?"active":""}"></div>`).join("");
+  const dots=dotsWrap.querySelectorAll(".onboard-dot"),backBtn=document.getElementById("onboard-back-btn");
   carousel.addEventListener("scroll",()=>{
     const idx=Math.round(carousel.scrollLeft/carousel.clientWidth);
-    dotsWrap.querySelectorAll(".onboard-dot").forEach((d,i)=>d.classList.toggle("active",i===idx));
-    const backBtn=document.getElementById("onboard-back-btn");if(backBtn)backBtn.style.display=idx>0?"block":"none";
+    dots.forEach((d,i)=>d.classList.toggle("active",i===idx));
+    if(backBtn)backBtn.style.display=idx>0?"block":"none";
   },{passive:true});
   const nameInput=document.getElementById("onboard-name-input");
   nameInput?.addEventListener("input",e=>{
@@ -3367,6 +3383,29 @@ renderer.code=function(code,lang){
       <div class="design-card-canvas">${str}</div>
     </div>`;
   }
+  if(l==="pdf-report"){
+    const enc=safeEnc(str);
+    const titleMatch=str.match(/^#\s+(.+)$/m);
+    const title=titleMatch?titleMatch[1].trim():"Report";
+    const titleEnc=safeEnc(title);
+    return`<div class="code-file-card" style="cursor:default" onclick="event.stopPropagation()">
+      <div class="cfc-icon" style="--lc:#E8934A;background:#E8934A22;color:#E8934A"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="12" y2="11"/></svg></div>
+      <div class="cfc-info"><div class="cfc-name">${escapeHtml(title)}</div><div class="cfc-meta">Tap to generate PDF</div></div>
+      <button class="cfc-copy-btn code-tool-btn" onclick="event.stopPropagation();exportChatPDF('${enc}','${titleEnc}')" title="Download PDF"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+    </div>`;
+  }
+  if(l==="chart"){
+    try{
+      const data=JSON.parse(str);
+      const svgTag=renderChartSVG(data);
+      return`<div class="design-card code-block-wrapper">
+        <div class="code-header"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#888;font-family:'Space Mono',monospace;letter-spacing:0.5px">✦ chart</span></span><div class="code-tools"><button class="code-tool-btn" onclick="downloadDesignSVG(this)">⇩ SVG</button><button class="code-tool-btn" onclick="downloadDesignPNG(this)">⇩ PNG</button></div></div>
+        <div class="design-card-canvas">${svgTag}</div>
+      </div>`;
+    }catch(e){
+      return`<div class="code-file-card"><div class="cfc-icon">⚠</div><div class="cfc-info"><div class="cfc-name">Chart data invalid</div><div class="cfc-meta">${escapeHtml(str.slice(0,60))}</div></div></div>`;
+    }
+  }
   if(l==="qr"){
     try{
       const qr=qrcode(0,"M");
@@ -3457,7 +3496,7 @@ async function send(){
   const isCodeQuery=/(code|bug|debug|python|javascript|html|css|react|api|sql|function|algorithm|باگ|کد|پایتون|دیباگ|برنامه|الگوریتم)/i.test(txt);
   const loaderType=activeModel==="2.7"?"think":isCodeQuery||activeModel==="2.6"?"code":activeModel==="2.5"?"think":"chat";
   startContextLoader("a-"+idx,loaderType,detectMsgLang(txt));
-  let sys="You are Phraortes OS — an advanced intelligence assistant. Respond clearly and helpfully. Always respond in the same language the user just wrote in — match it exactly (Persian, English, Arabic, or any other language), regardless of what language earlier turns or these instructions are in. When giving a multi-step plan, checklist, or sequence of tasks, format it as a markdown task list using '- [ ] ' syntax for each step so it can be checked off. When a question depends on current, time-sensitive, or verifiable-online information (news, prices, recent releases, live facts) — use the web_search tool rather than answering from memory alone; the user sees exactly which real sources you used, so don't claim to have looked something up unless you actually called the tool. For genuinely multi-step tasks, chain tools together before answering — e.g. search, then read_url on the most promising result, then write_file to save a deliverable — rather than stopping after one call; the user can see each step happen live. When the user asks you to design, draw, or create a visual (a poster, logo, banner, icon, UI mockup, diagram, or any graphic) — reply with real, complete SVG markup in a \`\`\`svg code block (starting with <svg viewBox=\"...\">), not a text description of what it would look like; it renders live in the chat as an actual visual the user can download as SVG or PNG. Follow these rules strictly — they are what separates a professional result from an amateur one: (1) FONTS — SVG cannot load custom web fonts, so only ever use these safe stacks: \"Helvetica Neue,Arial,sans-serif\" for clean/modern, \"Georgia,serif\" for elegant/editorial, \"Courier New,monospace\" for technical — never name a Google Font or any font that isn't one of these, it will silently fall back to a broken default and ruin the design. (2) PALETTE — pick exactly 2-4 colors with clear roles (one dominant, one accent, one neutral background, optionally one highlight) and use ONLY those; never scatter many unrelated colors. (3) HIERARCHY — one element must clearly dominate (largest/boldest); everything else is visibly secondary. Vary font-size deliberately (e.g. a headline at 3-4x the body size), never use near-uniform sizing for everything. (4) GRID & ALIGNMENT — align elements to a consistent grid (shared x/y positions, even margins on all sides); nothing should look randomly placed. (5) NEGATIVE SPACE — leave real breathing room; do not fill the entire canvas edge-to-edge. (6) CANVAS SHAPE — match the viewBox proportions to the request: roughly square (e.g. 0 0 400 400) for a logo/icon, portrait (e.g. 0 0 600 850) for a poster, landscape (e.g. 0 0 1200 630) for a banner. (7) RESTRAINT — prefer flat design or a single simple 2-stop linearGradient over busy effects, filters, or many overlapping shapes; a clean simple design always reads as more professional than a cluttered one. When the user asks for a QR code, reply with ONLY the raw text/URL to encode in a \`\`\`qr code block (nothing else in that block) — it renders as a real, scannable QR code the user can download. Use the remember_fact tool proactively whenever the user shares something worth remembering long-term (name, preferences, job, recurring projects) — don't wait to be asked, and use recall_memory when the user asks what you remember about them. ";
+  let sys="You are Phraortes OS — an advanced intelligence assistant. Respond clearly and helpfully. Always respond in the same language the user just wrote in — match it exactly (Persian, English, Arabic, or any other language), regardless of what language earlier turns or these instructions are in. When giving a multi-step plan, checklist, or sequence of tasks, format it as a markdown task list using '- [ ] ' syntax for each step so it can be checked off. When a question depends on current, time-sensitive, or verifiable-online information (news, prices, recent releases, live facts) — use the web_search tool rather than answering from memory alone; the user sees exactly which real sources you used, so don't claim to have looked something up unless you actually called the tool. For genuinely multi-step tasks, chain tools together before answering — e.g. search, then read_url on the most promising result, then write_file to save a deliverable — rather than stopping after one call; the user can see each step happen live. When the user asks you to design, draw, or create a visual (a poster, logo, banner, icon, UI mockup, diagram, or any graphic) — reply with real, complete SVG markup in a \`\`\`svg code block (starting with <svg viewBox=\"...\">), not a text description of what it would look like; it renders live in the chat as an actual visual the user can download as SVG or PNG. Follow these rules strictly — they are what separates a professional result from an amateur one: (1) FONTS — SVG cannot load custom web fonts, so only ever use these safe stacks: \"Helvetica Neue,Arial,sans-serif\" for clean/modern, \"Georgia,serif\" for elegant/editorial, \"Courier New,monospace\" for technical — never name a Google Font or any font that isn't one of these, it will silently fall back to a broken default and ruin the design. (2) PALETTE — pick exactly 2-4 colors with clear roles (one dominant, one accent, one neutral background, optionally one highlight) and use ONLY those; never scatter many unrelated colors. (3) HIERARCHY — one element must clearly dominate (largest/boldest); everything else is visibly secondary. Vary font-size deliberately (e.g. a headline at 3-4x the body size), never use near-uniform sizing for everything. (4) GRID & ALIGNMENT — align elements to a consistent grid (shared x/y positions, even margins on all sides); nothing should look randomly placed. (5) NEGATIVE SPACE — leave real breathing room; do not fill the entire canvas edge-to-edge. (6) CANVAS SHAPE — match the viewBox proportions to the request: roughly square (e.g. 0 0 400 400) for a logo/icon, portrait (e.g. 0 0 600 850) for a poster, landscape (e.g. 0 0 1200 630) for a banner. (7) RESTRAINT — prefer flat design or a single simple 2-stop linearGradient over busy effects, filters, or many overlapping shapes; a clean simple design always reads as more professional than a cluttered one. When the user asks for a QR code, reply with ONLY the raw text/URL to encode in a \`\`\`qr code block (nothing else in that block) — it renders as a real, scannable QR code the user can download. When the user asks for a chart, graph, or visual comparison of numbers, reply with a \`\`\`chart code block containing ONLY valid JSON in this exact shape: {\"type\":\"bar\"|\"line\"|\"pie\",\"title\":\"...\",\"labels\":[...],\"values\":[...]} — it renders as a real, colored chart the user can download. When the user asks for a PDF, report, or downloadable document, reply with a \`\`\`pdf-report code block containing the full content in clean markdown, starting with a single # heading as the title — it renders as a card the user taps once to generate a real, properly formatted PDF, no separate tool needed. Use the remember_fact tool proactively whenever the user shares something worth remembering long-term (name, preferences, job, recurring projects) — don't wait to be asked, and use recall_memory when the user asks what you remember about them. ";
   const activePersonaObj=customPersonas.find(p=>p.id===activePersonaId);
   if(activePersonaObj)sys+=` You are currently acting as a custom assistant the user built and named "${activePersonaObj.name}". Follow these user-defined instructions closely and stay in this persona consistently for the rest of the conversation: ${activePersonaObj.instructions}`;
   if(activeModel==="2.7")sys+="You are Sovereign 2.7, Phraortes' most advanced core — built for large, complex, professional-grade projects. Take the time to think through edge cases and long-term maintainability; a longer, more deliberate, thorough response is expected and welcome here.";
@@ -4085,6 +4124,49 @@ async function extractSpreadsheetText(file){
   });
   if(wb.SheetNames.length>5)out+=`(...and ${wb.SheetNames.length-5} more sheet(s) not shown)`;
   return out.trim()||"[Empty spreadsheet]";
+}
+function renderChartSVG(data){
+  const W=640,H=420,pad={left:56,right:26,top:50,bottom:56};
+  const plotW=W-pad.left-pad.right,plotH=H-pad.top-pad.bottom;
+  const colors=["#C9722E","#E8934A","#2E8B7A","#D4A24C","#8B5A8C","#4A6741","#C2410C","#3178c6"];
+  const labels=data.labels||[],values=(data.values||[]).map(Number);
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica Neue, Arial, sans-serif"><rect width="${W}" height="${H}" fill="#160d06"/>`;
+  if(data.title)svg+=`<text x="${W/2}" y="30" text-anchor="middle" fill="#F5EEDD" font-size="17" font-weight="700">${escapeHtml(data.title)}</text>`;
+  if(data.type==="pie"){
+    const total=values.reduce((a,b)=>a+b,0)||1;
+    let angle=-Math.PI/2;const cx=W*0.38,cy=H/2+12,r=Math.min(plotW,plotH)/2;
+    values.forEach((v,i)=>{
+      const slice=(v/total)*Math.PI*2;
+      const x1=cx+r*Math.cos(angle),y1=cy+r*Math.sin(angle);angle+=slice;
+      const x2=cx+r*Math.cos(angle),y2=cy+r*Math.sin(angle);
+      const large=slice>Math.PI?1:0;
+      svg+=`<path d="M${cx},${cy} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${large} 1 ${x2.toFixed(1)},${y2.toFixed(1)} Z" fill="${colors[i%colors.length]}" stroke="#160d06" stroke-width="2"/>`;
+    });
+    labels.forEach((l,i)=>{
+      const pct=total?Math.round(values[i]/total*100):0;
+      svg+=`<rect x="${W-172}" y="${44+i*23}" width="11" height="11" rx="2" fill="${colors[i%colors.length]}"/><text x="${W-155}" y="${53+i*23}" fill="#F5EEDD" font-size="11">${escapeHtml(l)} — ${pct}%</text>`;
+    });
+  }else if(data.type==="line"){
+    const maxV=Math.max(...values,0)*1.15||1;
+    const stepX=plotW/Math.max(1,labels.length-1);
+    svg+=`<line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${H-pad.bottom}" stroke="rgba(255,255,255,0.18)"/><line x1="${pad.left}" y1="${H-pad.bottom}" x2="${W-pad.right}" y2="${H-pad.bottom}" stroke="rgba(255,255,255,0.18)"/>`;
+    let points="";
+    values.forEach((v,i)=>{
+      const x=pad.left+i*stepX,y=H-pad.bottom-(v/maxV)*plotH;
+      points+=`${x.toFixed(1)},${y.toFixed(1)} `;
+      svg+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4" fill="${colors[0]}"/><text x="${x.toFixed(1)}" y="${H-pad.bottom+20}" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10">${escapeHtml(labels[i]||"")}</text>`;
+    });
+    svg+=`<polyline points="${points}" fill="none" stroke="${colors[0]}" stroke-width="2.5" stroke-linejoin="round"/>`;
+  }else{
+    const maxV=Math.max(...values,0)*1.15||1;
+    const n=Math.max(1,values.length),barW=plotW/n*0.58,gap=plotW/n*0.42;
+    svg+=`<line x1="${pad.left}" y1="${H-pad.bottom}" x2="${W-pad.right}" y2="${H-pad.bottom}" stroke="rgba(255,255,255,0.18)"/>`;
+    values.forEach((v,i)=>{
+      const barH=(v/maxV)*plotH,x=pad.left+i*(barW+gap)+gap/2,y=H-pad.bottom-barH;
+      svg+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" fill="${colors[i%colors.length]}" rx="5"/><text x="${(x+barW/2).toFixed(1)}" y="${H-pad.bottom+20}" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10">${escapeHtml(labels[i]||"")}</text><text x="${(x+barW/2).toFixed(1)}" y="${(y-8).toFixed(1)}" text-anchor="middle" fill="#F5EEDD" font-size="11" font-weight="600">${v}</text>`;
+    });
+  }
+  return svg+"</svg>";
 }
 async function extractDocxText(file){
   const buf=await file.arrayBuffer();
