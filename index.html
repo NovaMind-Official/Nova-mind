@@ -155,6 +155,24 @@ body.light-theme #core-header,body.light-theme #core-footer{color:#2b2313}
 .h-item{padding:12px 14px;border-radius:14px;margin-bottom:7px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:space-between;font-size:13px;border:1px solid rgba(255,255,255,0.05);transition:all 0.3s var(--ease);cursor:pointer}
 #select-mode-btn.active{color:var(--p);background:rgba(212,162,76,0.14)}
 .h-item-icon{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-right:9px}
+.hall-dashboard{text-align:center;padding:44px 20px 20px;display:flex;flex-direction:column;align-items:center;gap:4px;animation:fadeIn 0.4s ease}
+.hall-wordmark{font-family:'Playfair Display',serif;font-style:italic;font-size:26px;font-weight:700;color:var(--p);text-shadow:0 0 24px var(--glow);margin-top:6px}
+.hall-tagline{color:rgba(255,255,255,0.3);font-size:11.5px;font-family:'Space Mono',monospace;letter-spacing:1.5px;margin-bottom:6px}
+.hall-status-row{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-bottom:22px}
+.hall-status-pill{padding:5px 13px;border-radius:20px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);font-family:'Space Mono',monospace;font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.55);letter-spacing:0.3px}
+.hall-section-label{font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:9px}
+.hall-quick-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:420px}
+.hall-chip{padding:9px 16px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);font-size:12.5px;font-weight:600;color:rgba(255,255,255,0.8);cursor:pointer;transition:0.18s;font-family:'Space Grotesk',sans-serif}
+.hall-chip:hover{background:rgba(212,162,76,0.1);border-color:var(--hc,var(--p))}
+.hall-chip:active{transform:scale(0.96)}
+.chat-search-bar{position:absolute;top:10px;left:50%;transform:translateX(-50%) translateY(-140%);width:min(92%,480px);z-index:900;display:flex;align-items:center;gap:9px;padding:9px 14px;background:rgba(18,18,26,0.92);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,0.12);border-radius:30px;box-shadow:0 14px 40px rgba(0,0,0,0.45);transition:transform 0.25s var(--ease),opacity 0.25s var(--ease);opacity:0}
+.chat-search-bar.show{transform:translateX(-50%) translateY(0);opacity:1}
+#chat-search-input{flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:13.5px;font-family:inherit;min-width:0}
+#chat-search-count{font-family:'Space Mono',monospace;font-size:10.5px;color:rgba(255,255,255,0.4);white-space:nowrap;flex-shrink:0}
+.chat-search-bar button{background:none;border:none;color:rgba(255,255,255,0.55);cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:6px;transition:0.15s}
+.chat-search-bar button:hover{color:#fff;background:rgba(255,255,255,0.08)}
+.search-match-highlight{animation:searchPulse 1.1s ease 2;border-radius:14px}
+@keyframes searchPulse{0%,100%{box-shadow:0 0 0 0 rgba(212,162,76,0)}50%{box-shadow:0 0 0 6px rgba(212,162,76,0.18)}}
 .focus-reader-overlay{position:fixed;inset:0;background:var(--bg);z-index:36000;display:none;overflow-y:auto;padding:70px 24px 100px}
 .focus-reader-overlay.show{display:block;animation:fadeIn 0.25s ease}
 .focus-reader-content{max-width:680px;margin:0 auto;font-size:18px;line-height:1.95;color:var(--text-primary);font-family:'Georgia',serif}
@@ -1586,6 +1604,9 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:6px">
+      <button class="btn-icon" id="chat-search-btn" onclick="openChatSearch()" title="Search this conversation">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
       <button class="btn-icon" id="whats-new-btn" onclick="openWhatsNew(false)" style="position:relative" title="What's New">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.2H22l-6 4.4 2.3 7.2L12 16.4l-6.3 4.4 2.3-7.2-6-4.4h7.6z"/></svg>
         <span id="whats-new-dot" style="display:none;position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:var(--p)"></span>
@@ -1601,6 +1622,14 @@ body.glitch-active #chat-box{animation:screenGlitch 0.38s steps(2,end)}
     </div>
   </header>
 
+  <div id="chat-search-bar" class="chat-search-bar">
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.5"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="chat-search-input" placeholder="Search this conversation..." oninput="performChatSearch(this.value)" onkeydown="if(event.key==='Enter')jumpChatSearch(event.shiftKey?-1:1);if(event.key==='Escape')closeChatSearch()">
+    <span id="chat-search-count">0/0</span>
+    <button onclick="jumpChatSearch(-1)" title="Previous"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg></button>
+    <button onclick="jumpChatSearch(1)" title="Next"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+    <button onclick="closeChatSearch()" title="Close"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+  </div>
   <div id="chat-box" onscroll="handleScroll()" ondblclick="toggleZen()"></div>
   <button id="scroll-down-btn" onclick="scrollToBottom()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
@@ -1766,6 +1795,52 @@ let billing=JSON.parse(localStorage.getItem("phraortes_billing")||"[]");
 let branches=JSON.parse(localStorage.getItem("phraortes_branches")||"{}");
 let attachedFiles=[],pendingPlan="",editMsgId=null;
 let selectMode=false,selectedChatIds=new Set();
+let currentSendController=null;
+function resetSendBtn(){sendBtn.onclick=send;sendBtn.innerHTML=SEND_ICON_SVG;currentSendController=null}
+function stopGeneration(){
+  if(currentSendController){currentSendController.abort();currentSendController=null}
+  haptic("double");
+}
+
+// ═══ IN-CHAT SEARCH — find and jump between matches in the current conversation ═══
+let chatSearchMatches=[],chatSearchIndex=-1;
+function openChatSearch(){
+  document.getElementById("chat-search-bar").classList.add("show");
+  document.getElementById("chat-search-input").focus();
+  haptic("light");
+}
+function closeChatSearch(){
+  document.getElementById("chat-search-bar").classList.remove("show");
+  document.getElementById("chat-search-input").value="";
+  document.querySelectorAll(".search-match-highlight").forEach(el=>el.classList.remove("search-match-highlight"));
+  chatSearchMatches=[];chatSearchIndex=-1;
+  updateChatSearchCount();
+}
+function performChatSearch(q){
+  document.querySelectorAll(".search-match-highlight").forEach(el=>el.classList.remove("search-match-highlight"));
+  q=q.trim().toLowerCase();
+  if(!q){chatSearchMatches=[];chatSearchIndex=-1;updateChatSearchCount();return}
+  const all=[...chatBox.querySelectorAll(".msg.user, .msg.ai")];
+  chatSearchMatches=all.filter(el=>el.innerText.toLowerCase().includes(q));
+  chatSearchIndex=chatSearchMatches.length?0:-1;
+  updateChatSearchCount();
+  if(chatSearchIndex>=0)jumpToChatMatch();
+}
+function jumpChatSearch(dir){
+  if(!chatSearchMatches.length)return;
+  chatSearchIndex=(chatSearchIndex+dir+chatSearchMatches.length)%chatSearchMatches.length;
+  jumpToChatMatch();
+}
+function jumpToChatMatch(){
+  document.querySelectorAll(".search-match-highlight").forEach(el=>el.classList.remove("search-match-highlight"));
+  const el=chatSearchMatches[chatSearchIndex];
+  if(el){el.classList.add("search-match-highlight");el.scrollIntoView({behavior:"smooth",block:"center"})}
+  updateChatSearchCount();
+}
+function updateChatSearchCount(){
+  const el=document.getElementById("chat-search-count");
+  if(el)el.textContent=chatSearchMatches.length?(chatSearchIndex+1)+"/"+chatSearchMatches.length:"0/0";
+}
 let folders=JSON.parse(localStorage.getItem("phraortes_folders")||"[]");
 let collapsedFolders=new Set();
 let editingFolderChatId=null;
@@ -2655,6 +2730,41 @@ setInterval(()=>{
   });
 },3200);
 
+function fillAndFocus(text){uiInput.value=text;autoResize(uiInput);uiInput.focus()}
+function renderHallDashboard(){
+  const persona=customPersonas.find(p=>p.id===activePersonaId);
+  const coreLabel=MODEL_NAMES[activeModel]||"Prime 2.4";
+  const recentChats=chats.filter(c=>c.msgs&&c.msgs.length).sort((a,b)=>b.id-a.id).slice(0,3);
+
+  let quickHTML;
+  if(customPersonas.length){
+    quickHTML=`<div class="hall-section-label">Your Assistants</div><div class="hall-quick-row">`+
+      customPersonas.slice(0,4).map(p=>`<div class="hall-chip" style="--hc:${p.color}" onclick="activatePersona('${p.id}');uiInput.focus()">${p.emoji} ${escapeHtml(p.name)}</div>`).join("")+
+      `</div>`;
+  }else if(recentChats.length){
+    quickHTML=`<div class="hall-section-label">Recent</div><div class="hall-quick-row">`+
+      recentChats.map(c=>`<div class="hall-chip" onclick="loadChat(${c.id})">${c.icon||"💬"} ${escapeHtml(c.name)}</div>`).join("")+
+      `</div>`;
+  }else{
+    const suggestions=["Draft a professional email","Explain something simply","Help me plan my week"];
+    quickHTML=`<div class="hall-section-label">Try asking</div><div class="hall-quick-row">`+
+      suggestions.map(s=>`<div class="hall-chip" onclick="fillAndFocus(${JSON.stringify(s)})">${escapeHtml(s)}</div>`).join("")+
+      `</div>`;
+  }
+
+  return `<div class="hall-dashboard">
+    <div class="story-orb orb-pro" style="width:64px;height:64px;position:relative;margin:0 auto 14px">
+      <div class="story-orb-core"></div><div class="story-orb-ring r1"></div><div class="story-orb-ring r2"></div>
+    </div>
+    <div class="hall-wordmark">Phraortes</div>
+    <p class="hall-tagline">THE THRONE AWAITS YOUR WORD</p>
+    <div class="hall-status-row">
+      <div class="hall-status-pill">${coreLabel}</div>
+      ${persona?`<div class="hall-status-pill" style="border-color:${persona.color}55;color:${persona.color}">${persona.emoji} ${escapeHtml(persona.name)}</div>`:""}
+    </div>
+    ${quickHTML}
+  </div>`;
+}
 function companionHTML(id,state,small){
   return `<div class="phra-companion ${state||""} ${small?"small":""}" id="${id}"><div class="pc-tail"></div><div class="pc-wing l"></div><div class="pc-wing r"></div><div class="pc-body"></div><div class="pc-crest"></div><div class="pc-eye l"><div class="pc-pupil"></div></div><div class="pc-eye r"><div class="pc-pupil"></div></div><div class="pc-beak"></div></div>`;
 }
@@ -3477,7 +3587,10 @@ async function send(){
     if(trialCount>=PLAN_CFG.free.msgLimit){initPlanUI();openPremium();showToast(`Free limit: ${PLAN_CFG.free.msgLimit} messages used.`,"error");return}
     trialCount++;localStorage.setItem("phraortes_trial",trialCount);if(trialCount>=PLAN_CFG.free.msgLimit)initPlanUI();
   }
-  haptic("send");playSound("woosh");sendBtn.disabled=true;uiInput.disabled=true;autoCtxSwitch(txt);localStorage.removeItem("draft_"+curId);footerCompanionHappy();
+  haptic("send");playSound("woosh");uiInput.disabled=true;autoCtxSwitch(txt);localStorage.removeItem("draft_"+curId);footerCompanionHappy();
+  currentSendController=new AbortController();
+  sendBtn.onclick=stopGeneration;
+  sendBtn.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
   turnToolLog=[];
   if(txt)updateLongMemory(txt);
   let dispHtml=txt,useVision=false,imgData=null;
@@ -3550,6 +3663,12 @@ async function send(){
   }
   catch(e){
     haptic("error");stopContextLoader("a-"+idx);
+    if(e.name==="AbortError"){
+      const wrap=document.getElementById("a-"+idx)?.parentElement;
+      if(wrap)wrap.innerHTML=`<div class="msg ai" style="color:rgba(255,255,255,0.4);font-size:13px;padding:8px 0;font-style:italic">Stopped.</div>`;
+      resetSendBtn();sendBtn.disabled=false;uiInput.disabled=false;
+      return;
+    }
     if(e.message==="phraortes_free_limit_reached"){
       // The server's real, IP-based check said no — this is authoritative regardless of what
       // local storage thinks. Sync local state to match and show the real upgrade prompt.
@@ -3557,10 +3676,10 @@ async function send(){
       initPlanUI();openPremium();showToast(`Free limit: ${PLAN_CFG.free.msgLimit} messages used.`,"error");
       const wrap=document.getElementById("a-"+idx)?.parentElement;
       if(wrap)wrap.remove();
-      sendBtn.disabled=false;uiInput.disabled=false;
+      resetSendBtn();sendBtn.disabled=false;uiInput.disabled=false;
       return;
     }
-    const encTxt=safeEnc(txt);showInlineError(e.message,encTxt,idx);const wrap=document.getElementById("a-"+idx)?.parentElement;const isPlanErr=e.message.includes("plan")||e.message.includes("Apex")||e.message.includes("Intellect");const friendlyMsg=isPlanErr?e.message:"Phraortes couldn't finish that response — please try again in a moment.";if(wrap)wrap.innerHTML=`<div class="msg ai" style="color:#ff453a;font-size:13px;padding:8px 0">⚠ ${friendlyMsg}</div>`;sendBtn.disabled=false;uiInput.disabled=false;
+    const encTxt=safeEnc(txt);showInlineError(e.message,encTxt,idx);const wrap=document.getElementById("a-"+idx)?.parentElement;const isPlanErr=e.message.includes("plan")||e.message.includes("Apex")||e.message.includes("Intellect");const friendlyMsg=isPlanErr?e.message:"Phraortes couldn't finish that response — please try again in a moment.";if(wrap)wrap.innerHTML=`<div class="msg ai" style="color:#ff453a;font-size:13px;padding:8px 0">⚠ ${friendlyMsg}</div>`;resetSendBtn();sendBtn.disabled=false;uiInput.disabled=false;
   }
 }
 function showInlineError(msg,encTxt,idx){triggerGlitch();footerCompanionError();const f=document.querySelector("footer");const ex=f.querySelector(".inline-err");if(ex)ex.remove();const isLim=msg.includes("plan")||msg.includes("Apex")||msg.includes("Intellect")||msg.includes("limit");const d=document.createElement("div");d.className="inline-err";d.style.cssText="display:flex;align-items:center;gap:9px;padding:8px 14px;margin-bottom:7px;background:rgba(255,58,48,0.07);border:1px solid rgba(255,58,48,0.2);border-radius:17px;font-size:12px;color:rgba(255,255,255,0.65)";d.innerHTML=`${companionHTML("err-pc-"+idx,"errorstate",true)}<span style="flex:1;font-family:'Space Mono',monospace">⚠ ${isLim?"Upgrade required":"Connection error"}</span>${isLim?`<button onclick="openPremium();this.parentElement.remove()" style="padding:5px 12px;background:var(--pulse);border:none;border-radius:14px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Upgrade</button>`:`<button onclick="retryMsg(${idx},'${encTxt}');this.parentElement.remove()" style="padding:5px 12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:14px;color:#fff;font-size:11px;cursor:pointer;font-family:inherit">🔄 Retry</button>`}<button onclick="this.parentElement.remove()" style="background:none;border:none;color:#888;cursor:pointer;font-size:15px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>`;f.insertBefore(d,f.firstChild);setTimeout(()=>d.remove(),9000)}
@@ -3590,7 +3709,7 @@ async function fetchAI(messages,useVision,isCodeQuery,opts){
     const errors=[];
     for(const orM of orCandidates){
       try{
-        const r=await fetch(OR_GATEWAY_URL,{method:"POST",headers:{"Content-Type":"application/json",...licenseAuthHeader()},body:JSON.stringify({...payloadBase,model:orM})});
+        const r=await fetch(OR_GATEWAY_URL,{method:"POST",headers:{"Content-Type":"application/json",...licenseAuthHeader()},body:JSON.stringify({...payloadBase,model:orM}),signal:currentSendController?.signal});
         const d=await r.json();
         if(r.status===429&&d.error&&/free plan limit/i.test(d.error)){
           // This is the SERVER's real, IP-based quota check — immune to localStorage being
@@ -3614,6 +3733,7 @@ async function fetchAI(messages,useVision,isCodeQuery,opts){
         if(d.error)errors.push(`OR:${orM} → ${d.error.message||JSON.stringify(d.error)}`);
       }catch(e){
         if(e.message==="phraortes_free_limit_reached")throw e; // real server signal — never retried or swallowed
+        if(e.name==="AbortError")throw e; // user hit Stop — don't retry, don't treat as a real error
         errors.push(`OR:${orM} → ${e.message}`);
       }
     }
@@ -3737,7 +3857,7 @@ async function streamMarkdown(aiId,raw){
     const preview=raw.substring(0,420).trim();
     const enc=safeEnc(raw);
     el.innerHTML=renderMD(preview)+`<div class="code-block-wrapper" style="display:flex;align-items:center;justify-content:space-between;padding:18px;margin-top:14px"><div style="display:flex;align-items:center;gap:13px"><span style="font-size:26px">📜</span><div><div style="font-weight:bold;color:#fff;font-family:'Space Mono',monospace">Full response (${raw.length.toLocaleString()} chars)</div><div style="font-size:11px;color:#666;margin-top:2px">Rendered as a document to keep things smooth</div></div></div><div style="display:flex;gap:6px"><button class="code-tool-btn" onclick="openVirtualEditor('${enc}','response.md',${raw.split("\\n").length})">⚡ Open</button><button class="code-tool-btn" onclick="downloadTextFile('phraortes-response.md',decodeURIComponent('${enc}'))">⬇ Save</button></div></div>`;
-    playSound("chime");sendBtn.disabled=false;uiInput.disabled=false;return;
+    playSound("chime");resetSendBtn();sendBtn.disabled=false;uiInput.disabled=false;return;
   }
   let built="";let chunk=6,delay=4;
   if(activeModel==="2.4"){chunk=10;delay=3}
@@ -3750,7 +3870,7 @@ async function streamMarkdown(aiId,raw){
   playSound("chime");if(el)el.innerHTML=renderMD(raw);
   // Fix: apply read more after render
   setTimeout(()=>{applyReadMore(aiId);const m=aiId.match(/^a-(\d+)$/);if(m)enableChecklists(aiId,parseInt(m[1]))},100);
-  sendBtn.disabled=false;uiInput.disabled=false;
+  resetSendBtn();sendBtn.disabled=false;uiInput.disabled=false;
 }
 
 // ═══ READ MORE - with animation ═══
@@ -3801,7 +3921,7 @@ function dateDividerHTML(ts){return `<div class="date-divider"><span>${formatDat
 function addUI(html,role,id,rawText){
   const w=document.createElement("div");w.className=`msg-wrap ${role}-wrap`;
   const safe=(rawText||"").replace(/"/g,"'").replace(/`/g,"'");
-  if(id==="welcome"){w.innerHTML=`<div style="text-align:center;padding:50px 0 24px;display:flex;flex-direction:column;align-items:center;gap:16px"><div class="story-orb orb-pro" style="width:74px;height:74px;position:relative"><div class="story-orb-core"></div><div class="story-orb-ring r1"></div><div class="story-orb-ring r2"></div></div><div><div style="font-family:'Playfair Display',serif;font-style:italic;font-size:26px;font-weight:700;color:var(--p);margin-bottom:6px;text-shadow:0 0 24px var(--glow)">Phraortes</div><p style="color:rgba(255,255,255,0.3);font-size:12px;font-family:'Space Mono',monospace;letter-spacing:1.5px">THE THRONE AWAITS YOUR WORD</p></div></div>`}
+  if(id==="welcome"){w.innerHTML=renderHallDashboard()}
   else if(id==="welcome-persona"){const enc=safeEnc(rawText||"");w.innerHTML=`<div class="msg ai" id="${id}">${html}</div><div class="listen-ops"><button class="l-btn" onclick="copyResp(this,'${enc}')"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div>`}
   else if(role==="user"){w.innerHTML=`<div class="msg user" id="${id}" dir="auto" onpointerdown="startPress(event,'user','${id}',\`${safe}\`)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${html}</div>`}
   else{w.innerHTML=`<div class="msg ai" id="${id}" dir="auto" onpointerdown="startPress(event,'ai','${id}',null)" onpointerup="cancelPress()" onpointerleave="cancelPress()">${html}</div>`}
