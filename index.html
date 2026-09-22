@@ -5,8 +5,8 @@
 <meta http-equiv="Content-Security-Policy" content="
   default-src 'self';
   script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com 'unsafe-inline';
-  style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com 'unsafe-inline';
-  font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+  style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net 'unsafe-inline';
+  font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
   img-src * data: blob:;
   media-src *;
   connect-src *;
@@ -26,7 +26,10 @@
 <title>Phraortes — Intelligence Interface</title>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script src="security.js"></script>
+<script src="artifacts.js"></script>
 <script src="payment.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
@@ -1250,6 +1253,14 @@ footer{padding-bottom:max(22px,calc(env(safe-area-inset-bottom,0px) + 8px))}
    while toolbars/buttons inside the answer stay non-selectable */
 .msg.ai p,.msg.ai li,.msg.ai h1,.msg.ai h2,.msg.ai h3,.msg.ai h4,.msg.ai h5,.msg.ai h6,.msg.ai blockquote,.msg.ai td,.msg.ai th,.msg.ai strong,.msg.ai em,.msg.ai a,.msg.ai code,.msg.ai .stream-body{-webkit-user-select:text;user-select:text}
 
+/* ═══════════ v2 · MATH (KaTeX) ═══════════ */
+.katex{direction:ltr;unicode-bidi:isolate;font-size:1.06em}
+.msg.ai .katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 2px;margin:.85em 0;text-align:center;-webkit-user-select:text;user-select:text}
+.katex-display>.katex{white-space:nowrap}
+.msg.ai .katex{-webkit-user-select:text;user-select:text}
+.phr-tex{font-family:'Space Mono',monospace;font-size:.92em;color:var(--p)}
+.phr-tex[data-d="1"]{display:block;text-align:center;margin:.6em 0}
+
 </style>
 </head>
 <body onclick="closeMenus(event)">
@@ -2179,6 +2190,8 @@ function typewriterText(el,text,speed){
 let justNamedChatId=null;
 
 const FOLLOWUP_SETS={
+  study:["Explain step by step","Give me a practice quiz","Show it on a graph","One more example"],
+  studyfa:["گام‌به‌گام توضیح بده","یک آزمون تمرینی بده","روی نمودار نشانم بده","یک مثال دیگر بزن"],
   code:["Explain this code","Add error handling","Optimize for performance"],
   think:["Summarize the key points","What's the counterargument?","Give a real-world example"],
   image:["Try a different style","Make it more colorful","Generate a variation"],
@@ -2213,6 +2226,7 @@ function extractAndTrackFiles(rawContent){
   const re=/```(\w*)\n([\s\S]*?)```/g;let m;let idx=(chat.files||[]).filter(f=>f.type==="code").length;
   while((m=re.exec(rawContent))){
     const lang=(m[1]||"txt").toLowerCase();const code=m[2];
+    if(window.PHRW&&PHRW.kindOf(lang))continue; // graph / sim / solution / quiz / flashcards are artifacts, not files
     if(code.trim().split("\n").length<3)continue;
     idx++;
     const ext=lang==="python"?"py":(lang==="javascript"||lang==="js")?"js":lang==="html"?"html":lang==="css"?"css":lang==="json"?"json":"txt";
@@ -3720,6 +3734,7 @@ const _phrCode=function(code,lang){
   if(!/^[\w+#.\-]{1,24}$/.test(lang))lang=""; // lang is interpolated into attributes/handlers of trusted markup — allow only safe characters
   const raw=typeof code==="object"?(code.text||""):(code||"");
   const str=String(raw);const lines=str.split("\n").length;const l=(lang||"code").toLowerCase();const enc=safeEnc(str);
+  { const _k=window.PHRW&&PHRW.kindOf(l); if(_k)return PHRW.html(_k,str,!!window.PHR_STREAMING); } // study artifacts (graph / sim / solution / quiz / flashcards)
   if(l==="svg"&&str.trim().startsWith("<svg")){
     return`<div class="design-card code-block-wrapper">
       <div class="code-header"><span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#888;font-family:'Space Mono',monospace;letter-spacing:0.5px">✦ design</span></span><div class="code-tools"><button class="code-tool-btn" onclick="downloadDesignSVG(this)">⇩ SVG</button><button class="code-tool-btn" onclick="downloadDesignPNG(this)">⇩ PNG</button><button class="code-tool-btn" onclick="toggleFsCode(this)">⛶ Full</button></div></div>
@@ -3808,12 +3823,29 @@ function paintStream(elId,text){
   const el=document.getElementById(elId);if(!el)return;
   const sb=el.querySelector(".stream-body");if(!sb)return;
   if(text.length>LONG_TEXT_THRESHOLD){ // huge answers are shown as a document card at the end — don't re-render megabytes per frame
-    sb.innerHTML=renderMD(text.substring(0,420).trim())+`<div class="stream-long-note">✍︎ Writing a long response… ${text.length.toLocaleString()} chars</div>`;
+    sb.innerHTML=renderMDLive(text.substring(0,420).trim())+`<div class="stream-long-note">✍︎ Writing a long response… ${text.length.toLocaleString()} chars</div>`;
   }else{
-    sb.innerHTML=renderMD(text)+'<span class="stream-caret"></span>';
+    sb.innerHTML=renderMDLive(text)+'<span class="stream-caret"></span>';
   }
   if(!isScrolling)chatBox.scrollTo({top:chatBox.scrollHeight});
 }
+
+// ═══ STUDY MODE: teach the model the artifact blocks — only when the conversation looks like maths/physics/science ═══
+const STEM_RE=/(\d\s*[\+\-\*\/\^=]\s*[\dx(]|x\^|\\frac|∫|√|π|\b(sin|cos|tan|log|ln)\b|معادله|انتگرال|مشتق|ماتریس|هندسه|مثلث|زاویه|فیزیک|ریاضی|شیمی|زیست|سرعت|شتاب|نیرو|انرژی|جرم|تابع|نمودار|بردار|احتمال|آمار|محاسبه کن|حل کن|solve|equation|derivative|integral|limit of|physics|math|calculus|algebra|geometry|trigonometry|graph|plot|velocity|acceleration|momentum|projectile|pendulum|quiz|flashcard|آزمون|فلش.?کارت|تست بده)/i;
+const STEM_TEXT="STUDY MODE (the user is doing maths / physics / science work). Write EVERY formula in LaTeX — inline $...$ and display $$...$$ (never plain-text formulas). Reason step by step and state the final answer clearly. When it genuinely helps understanding, add at most TWO interactive blocks per reply, each with one short sentence before it. A block is a fenced code block whose language is the block name:\n"+
+"```graph — plots, one setting per line:  f1: sin(x)   f2: x^2/4   x: -6..6   y: -3..5   title: ...   fill: f1 from 0 to pi   points: A(1,2) B(3,4)   param: x=cos(t), y=sin(t), t=0..2*pi   polar: r=1+cos(t), t=0..2*pi   (write * for multiplication and ^ for powers)\n"+
+"```sim — physics simulation. First line  type: projectile | pendulum | spring | wave | incline  then any starting values: projectile: v0 angle h0 g · pendulum: L theta0 g damping · spring: m k c x0 · wave: A1 lambda1 f1 A2 lambda2 f2 second: reverse · incline: theta mu m g L\n"+
+"```solution — worked solution:  title: ...  given: ...  find: ...  then one line per step  step: short label | LaTeX  then  answer: LaTeX  and optionally  check: ...\n"+
+"```quiz — practice:  title: ...  then per question  q: ...  a: wrong option  a*: correct option  explain: why  (3–4 options each)\n"+
+"```flashcards — one card per line:  card: term | definition\n"+
+"Add the line  lang: fa  inside a block when the user writes Persian. Give numeric results in your normal text too; blocks are for visual understanding. Never use these blocks for non-study topics.";
+function stemGuide(chat,txt){
+  try{
+    const recent=chat.msgs.slice(-4).map(m=>(m.uText||"")+" "+String(m.aRaw||"").slice(0,300)).join(" ")+" "+(txt||"");
+    return STEM_RE.test(recent)?"\n\n"+STEM_TEXT:"";
+  }catch(e){return ""}
+}
+function renderMDLive(t){window.PHR_STREAMING=true;try{return renderMD(t)}finally{window.PHR_STREAMING=false}}
 
 async function send(){
   const raw=uiInput.value;const txt=raw.trim().replace(/\n{3,}/g,"\n\n");
@@ -3869,6 +3901,7 @@ async function send(){
   const toneHint=detectToneHint(txt);if(toneHint)sys+=" "+toneHint;
   const tonePref=localStorage.getItem("phraortes_tone_pref");if(tonePref)sys+=` The user has indicated they generally prefer a ${tonePref.toLowerCase()} tone.`;
   sys+=getLongMemoryPrompt();
+  sys+=stemGuide(chat,txt);
   const canvasText=getCurrentCanvasText();
   if(canvasText&&canvasText.trim().length>0){
     sys+=`\n\nThe user has a Canvas open (a side document/code file they're editing alongside this chat) with this current content:\n---\n${canvasText.substring(0,4000)}\n---\nIf — and only if — the user asks you to edit, rewrite, continue, or fix this content, reply with the COMPLETE updated version inside a single fenced block tagged \`\`\`canvas (put ONLY the raw updated content inside it, nothing else in that block). You may still add a brief note outside the block. If the user is just chatting normally and not referring to the Canvas, ignore it and respond normally.`;
@@ -3939,7 +3972,13 @@ async function send(){
       resetSendBtn();sendBtn.disabled=false;uiInput.disabled=false;
       return;
     }
-    const encTxt=safeEnc(txt);showInlineError(e.message,encTxt,idx);const wrap=document.getElementById("a-"+idx)?.parentElement;const isPlanErr=e.message.includes("plan")||e.message.includes("Apex")||e.message.includes("Intellect");const friendlyMsg=isPlanErr?e.message:"Phraortes couldn't finish that response — please try again in a moment.";if(wrap)wrap.innerHTML=`<div class="msg ai" style="color:#ff453a;font-size:13px;padding:8px 0">⚠ ${friendlyMsg}</div>`;resetSendBtn();sendBtn.disabled=false;uiInput.disabled=false;
+    if(!e.message.includes("plan")&&!e.message.includes("Apex")&&!e.message.includes("Intellect")&&sState.started&&sState.partial.trim().length>0){ // connection dropped mid-stream — keep what already arrived instead of wiping it, same as Stop
+    cancelStreamPaint();window.__phrStreamed=true;
+    finishTurn("a-"+idx,renderMD(sState.partial),sState.partial,chat,dispHtml,txt,idx,null,false);
+    try{showToast("⚠ Connection lost — showing the partial response","error")}catch(_){}
+    return;
+  }
+  const encTxt=safeEnc(txt);showInlineError(e.message,encTxt,idx);const wrap=document.getElementById("a-"+idx)?.parentElement;const isPlanErr=e.message.includes("plan")||e.message.includes("Apex")||e.message.includes("Intellect");const friendlyMsg=isPlanErr?e.message:"Phraortes couldn't finish that response — please try again in a moment.";if(wrap)wrap.innerHTML=`<div class="msg ai" style="color:#ff453a;font-size:13px;padding:8px 0">⚠ ${friendlyMsg}</div>`;resetSendBtn();sendBtn.disabled=false;uiInput.disabled=false;
   }
 }
 function showInlineError(msg,encTxt,idx){triggerGlitch();footerCompanionError();const f=document.querySelector("footer");const ex=f.querySelector(".inline-err");if(ex)ex.remove();const isLim=msg.includes("plan")||msg.includes("Apex")||msg.includes("Intellect")||msg.includes("limit");const d=document.createElement("div");d.className="inline-err";d.style.cssText="display:flex;align-items:center;gap:9px;padding:8px 14px;margin-bottom:7px;background:rgba(255,58,48,0.07);border:1px solid rgba(255,58,48,0.2);border-radius:17px;font-size:12px;color:rgba(255,255,255,0.65)";d.innerHTML=`${companionHTML("err-pc-"+idx,"errorstate",true)}<span style="flex:1;font-family:'Space Mono',monospace">⚠ ${isLim?"Upgrade required":"Connection error"}</span>${isLim?`<button onclick="openPremium();this.parentElement.remove()" style="padding:5px 12px;background:var(--pulse);border:none;border-radius:14px;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Upgrade</button>`:`<button onclick="retryMsg(${idx},'${encTxt}');this.parentElement.remove()" style="padding:5px 12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:14px;color:#fff;font-size:11px;cursor:pointer;font-family:inherit">🔄 Retry</button>`}<button onclick="this.parentElement.remove()" style="background:none;border:none;color:#888;cursor:pointer;font-size:15px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>`;f.insertBefore(d,f.firstChild);setTimeout(()=>d.remove(),9000)}
@@ -3951,7 +3990,7 @@ function retryMsg(idx,encTxt){uiInput.value=decodeURIComponent(encTxt);autoResiz
 // (returns JSON instead), the reply is handled exactly like before, and after two such misses
 // this session stops asking for a stream.
 let _streamFails=0;
-async function readSSE(resp,onDelta){
+async function readSSE(resp,onDelta,onProgress){
   const reader=resp.body.getReader(),dec=new TextDecoder();
   let buf="",content="",err=null;const tcs=[];
   const feed=()=>{
@@ -3979,6 +4018,7 @@ async function readSSE(resp,onDelta){
   for(;;){
     const {done,value}=await reader.read();
     if(done)break;
+    if(onProgress)onProgress(); // any bytes at all (including keep-alive pings) prove the connection is still alive
     buf+=dec.decode(value,{stream:true});
     feed();
   }
@@ -4006,47 +4046,80 @@ async function fetchAI(messages,useVision,isCodeQuery,opts){
   const payloadBase={messages};
   if(useTools){payloadBase.tools=AI_TOOLS;payloadBase.tool_choice="auto"}
 
+  // Watchdog constants. A stuck connection (Worker accepted the request but the upstream model never
+  // answers, or a stream opens and then goes silent) used to hang the fetch() promise forever — no error,
+  // no retry, the composer just stayed disabled. Every attempt below is now bounded: waiting for the first
+  // byte times out at RESP_TIMEOUT_MS, a live stream that goes quiet for STALL_TIMEOUT_MS is treated as dead,
+  // and HARD_CAP_MS is an absolute ceiling regardless of keep-alive trickle. A timeout throws an ordinary
+  // Error (not AbortError), so it flows into the SAME retry-next-candidate / retry-next-pass logic as a real
+  // network error — only an actual tap on Stop produces the AbortError that skips retries.
+  const RESP_TIMEOUT_MS=40000,STALL_TIMEOUT_MS=25000,HARD_CAP_MS=90000;
+
   // One HTTP attempt. Resolves to an assistant message ({content,tool_calls?}) or throws.
   const requestOnce=async(orM,stream)=>{
     const body={...payloadBase,model:orM};
     if(stream)body.stream=true;
-    const r=await fetch(OR_GATEWAY_URL,{method:"POST",headers:{"Content-Type":"application/json",...licenseAuthHeader()},body:JSON.stringify(body),signal:currentSendController?.signal});
-    const ct=r.headers.get("content-type")||"";
-    if(stream&&r.ok&&ct.includes("text/event-stream")&&r.body){
-      const out=await readSSE(r,opts.onDelta);
-      if(out.error)throw new Error(out.error.message||JSON.stringify(out.error));
-      if(!out.content&&!out.tool_calls.length)throw new Error("empty stream");
-      _streamFails=0;
-      return {role:"assistant",content:out.content||null,tool_calls:out.tool_calls.length?out.tool_calls:undefined};
+    const localCtl=new AbortController();
+    let userAborted=!!currentSendController?.signal.aborted; // already aborted before this attempt even started
+    const onParentAbort=()=>{userAborted=true;localCtl.abort()};
+    currentSendController?.signal.addEventListener("abort",onParentAbort,{once:true});
+    if(userAborted)localCtl.abort();
+    let wdTimer=null,timedOut=false;
+    const armWatchdog=ms=>{clearTimeout(wdTimer);wdTimer=setTimeout(()=>{timedOut=true;localCtl.abort()},ms)};
+    const hardCap=setTimeout(()=>{timedOut=true;localCtl.abort()},HARD_CAP_MS);
+    const cleanup=()=>{clearTimeout(wdTimer);clearTimeout(hardCap);currentSendController?.signal.removeEventListener("abort",onParentAbort)};
+    armWatchdog(RESP_TIMEOUT_MS);
+    try{
+      const r=await fetch(OR_GATEWAY_URL,{method:"POST",headers:{"Content-Type":"application/json",...licenseAuthHeader()},body:JSON.stringify(body),signal:localCtl.signal});
+      const ct=r.headers.get("content-type")||"";
+      if(stream&&r.ok&&ct.includes("text/event-stream")&&r.body){
+        armWatchdog(STALL_TIMEOUT_MS);
+        const out=await readSSE(r,opts.onDelta,()=>armWatchdog(STALL_TIMEOUT_MS));
+        if(out.error)throw new Error(out.error.message||JSON.stringify(out.error));
+        if(!out.content&&!out.tool_calls.length)throw new Error("empty stream");
+        _streamFails=0;
+        return {role:"assistant",content:out.content||null,tool_calls:out.tool_calls.length?out.tool_calls:undefined};
+      }
+      armWatchdog(RESP_TIMEOUT_MS); // headers arrived — give the (non-streamed) body its own window to finish arriving
+      const d=await r.json();
+      if(r.status===429&&d.error&&/free plan limit/i.test(d.error)){
+        // The SERVER's real, IP-based quota check — immune to localStorage being cleared
+        // (incognito, other device...). Surface it distinctly instead of retrying uselessly.
+        throw new Error("phraortes_free_limit_reached");
+      }
+      if(!d.error&&d.choices?.[0]){
+        if(stream)throw Object.assign(new Error("stream not supported by gateway"),{notSSE:true,message0:d.choices[0].message});
+        return d.choices[0].message;
+      }
+      throw new Error(`OR:${orM} → ${d.error?.message||(typeof d.error==="string"?d.error:JSON.stringify(d.error||d))}`);
+    }catch(e){
+      // `currentSendController` may already have been set to null by stopGeneration() (it aborts, THEN nulls the
+      // reference, synchronously — before this catch runs as a microtask), so it can't be trusted here. The
+      // listener above captured the real signal at the moment it fired, independent of that later nulling.
+      if(userAborted){const ae=new Error("aborted");ae.name="AbortError";throw ae} // the user tapped Stop — never retried
+      if(timedOut||e.name==="AbortError"){const te=new Error(stream?"stream stalled — no data from the server":"no response from the server (timed out)");te.isTimeout=true;throw te}
+      throw e;
+    }finally{
+      cleanup();
     }
-    const d=await r.json();
-    if(r.status===429&&d.error&&/free plan limit/i.test(d.error)){
-      // The SERVER's real, IP-based quota check — immune to localStorage being cleared
-      // (incognito, other device...). Surface it distinctly instead of retrying uselessly.
-      throw new Error("phraortes_free_limit_reached");
-    }
-    if(!d.error&&d.choices?.[0]){
-      if(stream)throw Object.assign(new Error("stream not supported by gateway"),{notSSE:true,message0:d.choices[0].message});
-      return d.choices[0].message;
-    }
-    throw new Error(`OR:${orM} → ${d.error?.message||(typeof d.error==="string"?d.error:JSON.stringify(d.error||d))}`);
   };
 
   for(let pass=0;pass<2;pass++){
     const errors=[];
     for(const orM of orCandidates){
       try{
-        let msg=null,streamMissed=false;
+        let msg=null,streamMissed=false,skipFallback=false;
         if(opts.onDelta&&_streamFails<2){
           try{msg=await requestOnce(orM,true)}
           catch(e){
             if(e.message==="phraortes_free_limit_reached"||e.name==="AbortError")throw e;
             streamMissed=true;
             if(e.notSSE){msg=e.message0} // gateway answered normally without streaming: use that reply, don't pay twice
+            else if(e.isTimeout){skipFallback=true;throw e} // dead connection — retrying the same endpoint without streaming would just double the wait
             else errors.push(`stream:${orM} → ${e.message}`);
           }
         }
-        if(!msg)msg=await requestOnce(orM,false);
+        if(!msg&&!skipFallback)msg=await requestOnce(orM,false);
         if(streamMissed)_streamFails++;
         if(useTools&&msg.tool_calls&&msg.tool_calls.length){
           if(elId)announceTool(elId,msg.tool_calls);
@@ -4115,7 +4188,10 @@ function finishTurn(aiId,htmlContent,rawContent,chat,userHtml,userTxt,msgIndex,e
   const enc=safeEnc(rawContent),sId=`sp-${msgIndex}-${Date.now()}`,bHTML=getBranchHTML(msgIndex);
   const srcs=turnRealSources.slice(),encSrc=safeEnc(JSON.stringify(srcs)),qc=(userTxt||"").substring(0,14).replace(/['"\\`]/g,"");
   turnRealSources=[];
-  const fuType=/^\[Image rendered/.test(rawContent)?"image":/```/.test(rawContent)?"code":activeModel==="2.5"?"think":"chat";
+  const _studyFence=/```(?:graph|plot|function-plot|sim|simulation|physics|solution|steps|worked|quiz|practice|flashcards?|cards)\b[\s\S]*?```/gi;
+  const _hasStudy=_studyFence.test(rawContent);
+  const _codeOnly=rawContent.replace(_studyFence,"");
+  const fuType=/^\[Image rendered/.test(rawContent)?"image":_hasStudy?(/[\u0600-\u06FF]/.test(rawContent)?"studyfa":"study"):/```/.test(_codeOnly)?"code":activeModel==="2.5"?"think":"chat";
   const fuHTML=followupHTML(fuType,msgIndex);
   const srcChipHTML=srcs.length?`<div class="source-chip" onclick="openSourceDrawer('${encSrc}','${qc}')">🌐 ${srcs.length} Source${srcs.length>1?"s":""}</div>`:"";
   const speedHTML=elapsedS?`<div class="source-chip" style="cursor:default">⚡ ${elapsedS}s</div>`:"";
@@ -4211,7 +4287,7 @@ async function streamMarkdown(aiId,raw){
   if(activeModel==="2.5"){chunk=2;delay=18}
   if(activeModel==="2.7"){chunk=2;delay=22}
   document.getElementById("ai-core")?.classList.add("speaking");
-  for(let i=0;i<raw.length;i+=chunk){built+=raw.substring(i,i+chunk);if(el)el.innerHTML=renderMD(built)+'<span class="stream-caret"></span>';if(!isScrolling)chatBox.scrollTo({top:chatBox.scrollHeight});await new Promise(r=>setTimeout(r,delay))}
+  for(let i=0;i<raw.length;i+=chunk){built+=raw.substring(i,i+chunk);if(el)el.innerHTML=renderMDLive(built)+'<span class="stream-caret"></span>';if(!isScrolling)chatBox.scrollTo({top:chatBox.scrollHeight});await new Promise(r=>setTimeout(r,delay))}
   document.getElementById("ai-core")?.classList.remove("speaking");
   playSound("chime");if(el)el.innerHTML=renderMD(raw);
   // Fix: apply read more after render
@@ -4238,7 +4314,7 @@ function enableChecklists(elId,msgIndex){
 }
 function applyReadMore(id){
   const el=document.getElementById(id);
-  if(!el||el.innerText.length<380||el.querySelector("img")||el.querySelector("audio"))return;
+  if(!el||el.innerText.length<380||el.querySelector("img")||el.querySelector("audio")||el.querySelector(".phr-w"))return;
   // Wrap content in expandable div
   const wrapper=document.createElement("div");
   wrapper.className="msg-expandable collapsed";
@@ -4876,6 +4952,7 @@ function showToast(msg,type=""){const c=document.getElementById("toast-container
     var s=document.createElement("script");
     s.text=code;
     document.body.appendChild(s);
+    window.PHR_haptic=function(t){try{haptic(t)}catch(e){}}; // used by the study widgets
     try{pwaInit()}catch(e){console.warn("[Phraortes] pwaInit",e)}
     try{premiumInit()}catch(e){console.warn("[Phraortes] premiumInit",e)}
     try{headerMenuInit()}catch(e){console.warn("[Phraortes] headerMenuInit",e)}
