@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://novamind-official.github.io/Nova-mind/sitemap.xml
